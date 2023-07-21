@@ -34,7 +34,7 @@ public class UnitController : MonoBehaviour
     bool isAtt = false;
 
     float archerAttDis = 1.5f;
-    float warriorRay = 1.0f;
+    float warriorRay = 0.7f;
     float archerRay = 3.0f;
 
     Rigidbody2D rig;
@@ -52,15 +52,16 @@ public class UnitController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.DrawRay(rig.position, Vector3.right, Color.red);
         if(unitClass == UnitClass.Warrior)
         {
             hit = Physics2D.Raycast(rig.position, Vector3.right, warriorRay, LayerMask.GetMask("Monster"));
+            Debug.DrawRay(rig.position, Vector3.right * warriorRay, Color.red);
 
         }
         else if(unitClass == UnitClass.Archer)
         {
             hit = Physics2D.Raycast(rig.position, Vector3.right, archerRay, LayerMask.GetMask("Monster"));
+            Debug.DrawRay(rig.position, Vector3.right * archerRay, Color.red);
 
         }
 
@@ -77,10 +78,10 @@ public class UnitController : MonoBehaviour
 
                 if (hit.collider != null)
                 {
-                    Debug.Log(hit.collider.gameObject.name);
 
                     if (unitClass == UnitClass.Archer)
                     {
+                        Debug.Log(hit.distance);
 
                         if (hit.distance < archerAttDis)
                         {
@@ -91,14 +92,16 @@ public class UnitController : MonoBehaviour
                     }
                     else if(unitClass == UnitClass.Warrior)
                     {
-                        if (hit.distance < 0.5f)
+                        Debug.Log(hit.distance);
+
+                        if (hit.distance < 0.25f)
                         {
                             isRun = false;
                             anim.SetBool("Run", isRun);
                             state = UnitState.Attack;
                         }
                     }
-   
+
                 }
                 break;
             case UnitState.Attack:
