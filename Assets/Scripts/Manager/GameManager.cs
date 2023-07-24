@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     //테스트용으로 게임매니저에 UI연결해서 동작만 확인
+    public static GameManager instance;
     //나중에 UI따로 관리해서 게임매니저에 연결
 
     public Button uiUnitSword;
@@ -43,24 +44,24 @@ public class GameManager : MonoBehaviour
                 monsterSpawnTimer = 0.0f;
                 int ran = Random.Range(0, 2);
                 int ranPos = Random.Range(0, 3);
-                GameObject obj = Instantiate(monsters[ran]);
-                obj.transform.position = monsterSpawnPos[ranPos].position;
-                switch(ranPos)
-                {
-                    case 0:
-                     SpriteRenderer sp = obj.GetComponent<SpriteRenderer>();
-                        sp.sortingOrder = 8;
-                        break;
-                    case 1:
-                        SpriteRenderer sp1 = obj.GetComponent<SpriteRenderer>();
-                        sp1.sortingOrder = 9;
-                        break;
-                    case 2:
-                        SpriteRenderer sp2 = obj.GetComponent<SpriteRenderer>();
-                        sp2.sortingOrder = 10;
-                        break;
-                }
-                monsterSpawnTimer = 2.5f;
+                GameObject obj = Instantiate(monsters[ran], monsterSpawnPos[ranPos].position,Quaternion.identity);
+                //obj.transform.position = monsterSpawnPos[ranPos].position;
+                //switch(ranPos)
+                //{
+                //    case 0:
+                //     SpriteRenderer sp = obj.GetComponent<SpriteRenderer>();
+                //        sp.sortingOrder = 8;
+                //        break;
+                //    case 1:
+                //        SpriteRenderer sp1 = obj.GetComponent<SpriteRenderer>();
+                //        sp1.sortingOrder = 9;
+                //        break;
+                //    case 2:
+                //        SpriteRenderer sp2 = obj.GetComponent<SpriteRenderer>();
+                //        sp2.sortingOrder = 10;
+                //        break;
+                //}
+                monsterSpawnTimer = 3.5f;
 
 
             }
