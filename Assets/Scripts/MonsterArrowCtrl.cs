@@ -2,34 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArrowCtrl : MonoBehaviour
+public class MonsterArrowCtrl : MonoBehaviour
 {
-    private Vector3 unitArrowScale = new Vector3(-5f, 5f, 5f);
+
     private UnitController unitCtrl;
     private MonsterController monsterCtrl;
     private float arrowSpeed = 35.0f;
 
-    //화살은 쏘는 유닛의 정보 맞는 몬스터정보둘다 받아와야함
     Vector3 shotDir;
-    float Distance;
-    Vector3 shotVec;
 
 
     void Init()
     {
-        transform.localScale = unitArrowScale;
-       
-        unitCtrl = GetComponentInParent<UnitController>();
-        monsterCtrl = unitCtrl.Monctrl;
-        
+        monsterCtrl = GetComponentInParent<MonsterController>();
+        unitCtrl = monsterCtrl.UnitCtrl;
 
     }
-
 
     // Start is called before the first frame update
     void Start()
     {
         Init();
+
+
     }
 
     // Update is called once per frame
@@ -44,7 +39,7 @@ public class ArrowCtrl : MonoBehaviour
 
 
 
-        shotDir = monsterCtrl.transform.position - unitCtrl.transform.position;
+        shotDir = unitCtrl.transform.position - monsterCtrl.transform.position;
         shotDir.Normalize();
 
         if (unitCtrl != null || monsterCtrl != null)
@@ -58,19 +53,18 @@ public class ArrowCtrl : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
-        if (coll.tag == "Monster")
+        if (coll.tag == "Unit")
         {
-            MonsterController monctrl = null;
-            coll.TryGetComponent<MonsterController>(out monctrl);
-            if (monctrl != null)
-                monctrl.OnDamage(unitCtrl.Att);
+            UnitController unitCtrl = null;
+            coll.TryGetComponent<UnitController>(out unitCtrl);
+            if (unitCtrl != null)
+                unitCtrl.OnDamage(monsterCtrl.Att);
 
-            
+
 
             Destroy(this.gameObject);
         }
         else
             return;
     }
-
 }

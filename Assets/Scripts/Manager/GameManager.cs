@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,11 +12,12 @@ public class GameManager : MonoBehaviour
 
     public Button uiUnitSword;
     public Button uiUnitBow;
-    public Button uiAttckBtn;
+    public Button uiAttackBtn;
     public Transform[] spawnPos;
     public Transform[] monsterSpawnPos;
     public GameObject[] monsters;
     public SpriteRenderer[] sprends;
+
 
 
     float monsterSpawnTimer = 1.5f;
@@ -27,8 +29,8 @@ public class GameManager : MonoBehaviour
             uiUnitSword.onClick.AddListener(UiUnitSword);
         if (uiUnitBow != null)
             uiUnitBow.onClick.AddListener(UiUnitBow);
-        if (uiAttckBtn != null)
-            uiAttckBtn.onClick.AddListener(UiAttack);
+        if (uiAttackBtn != null)
+            uiAttackBtn.onClick.AddListener(UiAttack);
 
         
     }
@@ -66,6 +68,8 @@ public class GameManager : MonoBehaviour
 
             }
         }
+
+        
     }
 
 
@@ -118,5 +122,9 @@ public class GameManager : MonoBehaviour
     void UiAttack()
     {
         Debug.Log("È° ¹ß½Î");
+        //player.AttackWait();
+        
     }
+
+
 }

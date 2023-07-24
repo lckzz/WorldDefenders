@@ -325,6 +325,7 @@ public class UnitController : Unit
             if(isTargeting)
             {
                 GameObject obj = Resources.Load<GameObject>("Prefab/Weapon/UnitArrow");
+
                 if (obj != null)
                 {
                     GameObject arrow = Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
+using static Define;
 
 enum MonsterClass
 {
@@ -40,12 +41,22 @@ public class MonsterController : Unit
 
     Collider2D monsterColl;     //죽었을 때 콜라이더 끄기위한 변수
 
+    //아처 전용
+    Transform arrowPos;
+
+    //아처 전용
+
+
 
 
     public bool IsDie { get { return isDie; } }
     public float Hp { get { return hp; } }
+    public int Att { get { return att; } }
 
     public bool IsTargering { get { return isTargeting; } }
+
+    public UnitController UnitCtrl { get { return unitctrl; } }
+
 
     void Init()
     {
@@ -58,7 +69,10 @@ public class MonsterController : Unit
         TryGetComponent<Rigidbody2D>(out rig);
         TryGetComponent<Animator>(out anim);
         TryGetComponent<Collider2D>(out monsterColl);
-
+        if (monsterClass == MonsterClass.Archer)
+            arrowPos = transform.Find("ArrowPos");
+        else
+            arrowPos = null;
     }
 
     // Start is called before the first frame update
@@ -252,6 +266,8 @@ public class MonsterController : Unit
                     isRun = false;
                     state = MonsterState.Run;
                     unitctrl = null;
+
+                    break;
                 }
 
                 if (!isAtt)
@@ -287,16 +303,47 @@ public class MonsterController : Unit
 
     public void OnAttack()
     {
-        if (unitctrl != null)
+
+        if (monsterClass == MonsterClass.Warrior)
         {
-            unitctrl.OnDamage(att);
-            if (unitctrl.IsDie)
+            if (unitctrl != null)
             {
-                //몬스터가 죽었다면
-                isTargeting = false;
+                unitctrl.OnDamage(att);
+                if (unitctrl.IsDie)
+                {
+                    //몬스터가 죽었다면
+                    isTargeting = false;
+                }
+
+            }
+        }
+
+        else if (monsterClass == MonsterClass.Archer)
+        {
+            if (unitctrl != null)
+            {
+                if (unitctrl.IsDie)
+                {
+                    //몬스터가 죽었다면
+                    isTargeting = false;
+                }
+
             }
 
+            if (isTargeting)
+            {
+                GameObject obj = Resources.Load<GameObject>("Prefab/Weapon/MonsterArrow");
+
+                if (obj != null)
+                {
+                    GameObject arrow = Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
+                }
+            }
+
+
+
         }
+
     }
 
 
