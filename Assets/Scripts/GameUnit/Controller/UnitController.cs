@@ -20,31 +20,39 @@ enum UnitState
     Die
 }
 
-public class UnitController : Unit,ISensor
+public class UnitController : Unit
 {
     [SerializeField]
     private Animator anim;
 
     [SerializeField]
     private UnitClass unitClass;
-
+    [SerializeField]
     private UnitState state = UnitState.Run;        //테스트용이라 런 
 
-    float warriorRay = 0.7f;
-    float archerRay = 3.0f;
-
-
     Rigidbody2D rig;
-    
-    RaycastHit2D hit;
-    AnimatorStateInfo animState;
     MonsterController[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
     MonsterController monCtrl;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
-    public MonsterController MonCtrl { get { return monCtrl; } set { monCtrl = value; } }
+    Collider2D unitColl2d;
+
+    public bool IsDie { get { return isDie; } }
+    public int Att { get { return att; } }
+    public bool IsTargering { get { return isTargeting; } }
+    public MonsterController Monctrl { get { return monCtrl; } }
+
+    public void IsTargetingSet(bool value) => isTargeting = value;
+    
+
+    //아처 전용
+    Transform arrowPos;
+
+    //아처 전용
+
+
 
     public float hpPercent()
     {
-        return hp / MaxHp;
+        return hp / maxHp;
     }
 
     // Start is called before the first frame update
@@ -56,19 +64,6 @@ public class UnitController : Unit,ISensor
     // Update is called once per frame
     void Update()
     {
-        //if(unitClass == UnitClass.Warrior)
-        //{
-        //    hit = Physics2D.Raycast(rig.position, Vector3.right, warriorRay, LayerMask.GetMask("Monster"));
-        //    Debug.DrawRay(rig.position, Vector3.right * warriorRay, Color.red);
-
-        //}
-        //else if(unitClass == UnitClass.Archer)
-        //{
-        //    hit = Physics2D.Raycast(rig.position, Vector3.right, archerRay, LayerMask.GetMask("Monster"));
-        //    Debug.DrawRay(rig.position, Vector3.right * archerRay, Color.red);
-
-        //}
-
         UnitMovement();
         EnemySensor();
        
@@ -82,17 +77,28 @@ public class UnitController : Unit,ISensor
         att = 15;
         moveSpeed = 2.5f;
         archerAttDis = 5.0f;
+        maxHp = hp;
 
-        rig = this.GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
+        //rig = this.GetComponent<Rigidbody2D>();
+        //anim = GetComponent<Animator>();
+        TryGetComponent<Rigidbody2D>(out rig);
+        TryGetComponent<Animator>(out anim);
+        TryGetComponent<Collider2D>(out unitColl2d);
+        if (unitClass == UnitClass.Archer)
+            arrowPos = transform.Find("ArrowPos");
+        else
+            arrowPos = null;
+        
+
     }
 
 
-    public void EnemySensor()      //적감지
+    public override void EnemySensor()      //적감지
     {
 
-        Debug.Log($"타겟팅{isTageting}");
-        if (!isTageting)      //콜라이더 정보가 없을때(추후에 현재 추적중인 몬스터가 없으면)
+        //Debug.Log(isTargeting);
+        //Debug.Log($"타겟팅{isTageting}");
+        if (!isTargeting)      //콜라이더 정보가 없을때(추후에 현재 추적중인 몬스터가 없으면)
         {
             coll2d = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Monster"));
             if (coll2d != null)
@@ -148,7 +154,7 @@ public class UnitController : Unit,ISensor
 
                 if (monCtrls.Length != 0)
                 {
-                    isTageting = true;
+                    isTargeting = true;
                     monCtrl = monCtrls[min];
                 }
 
@@ -183,12 +189,12 @@ public class UnitController : Unit,ISensor
                 transform.position += Vector3.right * moveSpeed * Time.deltaTime;
 
 
-                if (isTageting)
+                if (isTargeting)
                     state = UnitState.Trace;
                 break;
 
             case UnitState.Trace:
-                if (isTageting == false)
+                if (isTargeting == false)
                 {
                     state = UnitState.Run;
                     monCtrl = null;
@@ -223,14 +229,23 @@ public class UnitController : Unit,ISensor
                         }
                     }
                 }
+
+                else  //추격상태인데 몬스터정보가 없다면
+                {
+                    isTargeting = false;
+                    state = UnitState.Run;
+                    monCtrl = null;
+                }
                 break;
             case UnitState.Attack:
 
-                if (!isTageting || monCtrl == null)
+                if (!isTargeting || monCtrl == null)
                 {
                     isRun = false;
                     state = UnitState.Run;
                     monCtrl = null;
+
+                    break;
                 }
 
                 if (!isAtt)
@@ -250,10 +265,13 @@ public class UnitController : Unit,ISensor
             case UnitState.Die:
                 if(!isDie)
                 {
+                    isDie = true;
                     anim.SetTrigger("Die");
                    
                 }
-                isDie = true;
+                if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+                    OnDead();
+
                 break;
 
 
@@ -278,23 +296,54 @@ public class UnitController : Unit,ISensor
 
     public void OnAttack()    //애니메이션 이벤트 함수
     {
-        if (monCtrl != null)
+        if(unitClass == UnitClass.Warrior)
         {
-            monCtrl.OnDamage(att);
-            if(monCtrl.IsDie)
+            if (monCtrl != null)
             {
-                //몬스터가 죽었다면
-                isTageting = false;
+                monCtrl.OnDamage(att);
+                if (monCtrl.IsDie)
+                {
+                    //몬스터가 죽었다면
+                    isTargeting = false;
+                }
+
+            }
+        }
+
+        else if(unitClass == UnitClass.Archer)
+        {
+            if (monCtrl != null)
+            {
+                if (monCtrl.IsDie)
+                {
+                    //몬스터가 죽었다면
+                    isTargeting = false;
+                }
+
             }
 
+            if(isTargeting)
+            {
+                GameObject obj = Resources.Load<GameObject>("Prefab/Weapon/UnitArrow");
+                if (obj != null)
+                {
+                    GameObject arrow = Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
+                }
+            }
+
+
+        
         }
+
     }
 
 
     public void OnDead()
     {
-        if(state == UnitState.Die)
+        if (unitColl2d.enabled)
         {
+            unitColl2d.enabled = false;
+            GameObject.Destroy(gameObject, 5.0f);
 
         }
     }

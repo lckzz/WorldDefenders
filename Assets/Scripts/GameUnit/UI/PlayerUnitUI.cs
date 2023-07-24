@@ -14,7 +14,14 @@ public class PlayerUnitUI : UnitUI
     // Update is called once per frame
     void Update()
     {
-        UpdateHp(minHp);
+        UpdateHp(hpSpeed);
+        if(unitCtrl != null)
+        {
+            if(unitCtrl.IsDie)
+            {
+                UnitDeadSpAlpha<UnitController>(unitCtrl, spr);
+            }
+        }
     }
 
 
@@ -23,6 +30,8 @@ public class PlayerUnitUI : UnitUI
         if (hpbar != null)
         {
             float hp = unitCtrl.hpPercent();
+
+
             if (hpbar.fillAmount > hp)
                 hpbar.fillAmount -= Time.deltaTime * hpspeed;
 

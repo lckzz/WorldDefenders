@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
                 //        sp2.sortingOrder = 10;
                 //        break;
                 //}
-                monsterSpawnTimer = 3.5f;
+                monsterSpawnTimer = 7.5f;
 
 
             }

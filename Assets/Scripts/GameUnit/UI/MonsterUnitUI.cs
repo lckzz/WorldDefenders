@@ -18,9 +18,18 @@ public class MonsterUnitUI : UnitUI
     void Update()
     {
         UpdateHp(hpSpeed);
+        if(monCtrl != null)
+        {
+            if(monCtrl.IsDie)
+            {
+                UnitDeadSpAlpha<MonsterController>(monCtrl, spr);
+
+            }
+        }
+
     }
 
-
+    
 
     public override void UpdateHp(float _hpspeed)
     {

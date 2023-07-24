@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 712076963379246546}
   m_Layer: 7
   m_Name: BowSkele
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -332,10 +332,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 216e32474673641429a8bb7bacff306a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterClass: 1
-  anim: {fileID: 8186619759887714731}
   pos: {fileID: 7294034949516569532}
   boxSize: {x: 7.23, y: 3.6}
+  anim: {fileID: 8186619759887714731}
+  monsterClass: 1
 --- !u!61 &3072728912838146942
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -421,6 +421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpbar: {fileID: 9043763230695338000}
+  hpbarCover: {fileID: 7505410513396777700}
 --- !u!1 &7794302833408202330
 GameObject:
   m_ObjectHideFlags: 0
