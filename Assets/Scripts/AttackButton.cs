@@ -25,8 +25,6 @@ public class AttackButton : MonoBehaviour,IPointerDownHandler,IPointerUpHandler
     {
         float coolTime = player.PercentCoolTime();
 
-        Debug.Log(coolImg.fillAmount);
-
         if (coolImg.fillAmount > coolTime)
             coolImg.fillAmount -= Time.deltaTime * speed;
 

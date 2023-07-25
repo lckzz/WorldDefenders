@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -56,6 +57,9 @@ public class CameraController : MonoBehaviour
     {
         if(Input.GetMouseButton(0))
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
+
             x = Input.GetAxis("Mouse X");
             if(x > 0) //왼쪽으로 드래그하면 오른쪽으로
             {

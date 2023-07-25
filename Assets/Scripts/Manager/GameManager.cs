@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
 
 
-    float monsterSpawnTimer = 1.5f;
+    float monsterSpawnTimer = 2.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
                 //        sp2.sortingOrder = 10;
                 //        break;
                 //}
-                monsterSpawnTimer = 7.5f;
+                monsterSpawnTimer = 8.0f;
 
 
             }

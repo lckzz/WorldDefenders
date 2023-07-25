@@ -36,6 +36,9 @@ public class PlayerController : MonoBehaviour
     private bool ready2 = false;
 
 
+    private LineRenderer lr;
+    private bool lineSet = false;
+
 
     public int Att { get { return att; } }
     public float AttackTimer { get { return attackTimer; } }
@@ -50,10 +53,13 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         TryGetComponent<Animator>(out anim);
+        TryGetComponent<LineRenderer>(out lr);
         playerAimTr = this.transform.GetChild(0).transform;
         attackPosTr = this.transform.GetChild(1).transform;
 
         startPlayerAimTr = playerAimTr.position;
+        lr.startWidth = .1f;
+        lr.endWidth = .1f;
     }
 
     // Update is called once per frame
@@ -63,6 +69,8 @@ public class PlayerController : MonoBehaviour
         PlayerAimMove();
 
         AttackCoolTimer();
+
+        AimLine();
     }
 
 
@@ -78,10 +86,15 @@ public class PlayerController : MonoBehaviour
 
         ready1 = true;
         aimMove = true;
+        lineSet = true;
+        if (lineSet)
+            lr.enabled = true;
+
+
     }
 
 
-    public void ShotArrow()
+    public void ShotArrow()         //버튼에서 손을 땔때 공격(화살이 생성)
     {
         if (!attack || !ready1)
             return;
@@ -98,6 +111,9 @@ public class PlayerController : MonoBehaviour
         ArrowInstance();
 
         ready1 = false;
+        lineSet = false;
+        if (!lineSet)
+            lr.enabled = false;
 
     }
 
@@ -162,6 +178,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void AimLine()
+    {
+        if(lineSet)
+        {
+            lr.SetPosition(0, attackPosTr.position);
+            lr.SetPosition(1, playerAimTr.position);
+        }
+    }
 
     public void ArrowInfo(ref Vector3 Vecdir)
     {
