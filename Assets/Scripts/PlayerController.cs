@@ -67,9 +67,7 @@ public class PlayerController : MonoBehaviour
     {
         PlayerIdle();
         PlayerAimMove();
-
         AttackCoolTimer();
-
         AimLine();
     }
 
@@ -80,6 +78,9 @@ public class PlayerController : MonoBehaviour
     {
         if (!attack)
             return;
+
+
+        PlayerAimOnOff(true);
         anim.SetBool("Idle", false);
         anim.SetBool("Shot", false);
         anim.SetBool("Attack", true);
@@ -136,8 +137,10 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("Shot", false);
             anim.SetBool("Idle",true);
             attackCheck = false;
+            PlayerAimOnOff(false);
 
         }
+
     }
 
 
@@ -184,6 +187,22 @@ public class PlayerController : MonoBehaviour
         {
             lr.SetPosition(0, attackPosTr.position);
             lr.SetPosition(1, playerAimTr.position);
+        }
+    }
+
+
+    void PlayerAimOnOff(bool sw)
+    {
+        GameObject go = playerAimTr.gameObject;
+        if (sw) //스위치가 켜지면 플레이어 에임이 켜짐
+        {
+            if (!go.activeSelf)
+                go.SetActive(sw);
+        }
+        else
+        {
+            if (go.activeSelf)
+                go.SetActive(sw);
         }
     }
 
