@@ -34,6 +34,8 @@ public class UnitController : Unit
     MonsterController[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
     MonsterController monCtrl;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
     Collider2D unitColl2d;
+    MonsterPortal monsterPortal;
+
 
     public bool IsDie { get { return isDie; } }
     public int Att { get { return att; } }
@@ -41,7 +43,8 @@ public class UnitController : Unit
     public MonsterController Monctrl { get { return monCtrl; } }
 
     public void IsTargetingSet(bool value) => isTargeting = value;
-    
+    public MonsterPortal MonsterPortal { get { return monsterPortal; } }
+
 
     //아처 전용
     Transform arrowPos;
@@ -53,22 +56,6 @@ public class UnitController : Unit
     public float hpPercent()
     {
         return hp / maxHp;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        Init();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        UnitMovement();
-        EnemySensor();
-       
-
-        //앞으로 움직임 
     }
 
     void Init()
@@ -88,9 +75,31 @@ public class UnitController : Unit
             arrowPos = transform.Find("ArrowPos");
         else
             arrowPos = null;
-        
+
 
     }
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Init();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //UnitVictory();
+
+
+        UnitMovement();
+        EnemySensor();
+
+
+
+        //앞으로 움직임 
+    }
+
 
 
     public override void EnemySensor()      //적감지
@@ -98,9 +107,10 @@ public class UnitController : Unit
 
         //Debug.Log(isTargeting);
         //Debug.Log($"타겟팅{isTageting}");
-        if (!isTargeting)      //콜라이더 정보가 없을때(추후에 현재 추적중인 몬스터가 없으면)
+        if (!isTargeting || monCtrl == null)      //콜라이더 정보가 없을때(추후에 현재 추적중인 몬스터가 없으면)
         {
             coll2d = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Monster"));
+            towerColl = Physics2D.OverlapBox(pos.position, boxSize, 0, LayerMask.GetMask("MonsterPortal"));
             if (coll2d != null)
             {
                 monCtrls = new MonsterController[coll2d.Length];
@@ -113,7 +123,7 @@ public class UnitController : Unit
                
             }
 
-            if(monCtrls != null)
+            if(monCtrls.Length > 0)
             {
                 float disMin = 0;
                 int min = 0;
@@ -156,9 +166,23 @@ public class UnitController : Unit
                 {
                     isTargeting = true;
                     monCtrl = monCtrls[min];
+                    monsterPortal = null;
                 }
 
 
+            }
+
+            else
+            {
+                //범위안에 유닛이 존재하지 않고 타워가 존재하면
+                if (towerColl != null)
+                {
+
+                    //Debug.Log("헉 타워감지");
+                    isTargeting = true;     //타겟팅을 잡아주고
+                    towerColl.gameObject.TryGetComponent<MonsterPortal>(out monsterPortal);  //플레이어타워의 정보를 받아옴
+
+                }
             }
         }
 
@@ -194,59 +218,63 @@ public class UnitController : Unit
                 break;
 
             case UnitState.Trace:
-                if (isTargeting == false)
-                {
-                    state = UnitState.Run;
-                    monCtrl = null;
-                }
+                #region 유닛만 구현했을때
+                //if (isTargeting == false)
+                //{
+                //    state = UnitState.Run;
+                //    monCtrl = null;
+                //}
 
-                if(monCtrl != null)
-                {
-                    Vector3 vec = monCtrl.gameObject.transform.position - this.transform.position;
-                    float distance = vec.magnitude;
-                    Vector3 dir = vec.normalized;
-                    transform.position += dir * moveSpeed * Time.deltaTime;
-                    //Debug.Log(distance);
-                    if (unitClass == UnitClass.Archer)
-                    {
+                //if(monCtrl != null)
+                //{
+                //    Vector3 vec = monCtrl.gameObject.transform.position - this.transform.position;
+                //    float distance = vec.magnitude;
+                //    Vector3 dir = vec.normalized;
+                //    transform.position += dir * moveSpeed * Time.deltaTime;
+                //    //Debug.Log(distance);
+                //    if (unitClass == UnitClass.Archer)
+                //    {
 
-                        if (distance < archerAttDis)
-                        {
-                            isRun = false;
-                            anim.SetBool("Run", isRun);
-                            state = UnitState.Attack;
-                        }
-                    }
-                    else if (unitClass == UnitClass.Warrior)
-                    {
-                        //Debug.Log(hit.distance);
+                //        if (distance < archerAttDis)
+                //        {
+                //            isRun = false;
+                //            anim.SetBool("Run", isRun);
+                //            state = UnitState.Attack;
+                //        }
+                //    }
+                //    else if (unitClass == UnitClass.Warrior)
+                //    {
+                //        //Debug.Log(hit.distance);
 
-                        if (distance < 1.5f)
-                        {
-                            isRun = false;
-                            anim.SetBool("Run", isRun);
-                            state = UnitState.Attack;
-                        }
-                    }
-                }
+                //        if (distance < 1.5f)
+                //        {
+                //            isRun = false;
+                //            anim.SetBool("Run", isRun);
+                //            state = UnitState.Attack;
+                //        }
+                //    }
+                //}
 
-                else  //추격상태인데 몬스터정보가 없다면
-                {
-                    isTargeting = false;
-                    state = UnitState.Run;
-                    monCtrl = null;
-                }
+                //else  //추격상태인데 몬스터정보가 없다면
+                //{
+                //    isTargeting = false;
+                //    state = UnitState.Run;
+                //    monCtrl = null;
+                //}
+                #endregion
+                Trace(monCtrl, monsterPortal);
+
                 break;
             case UnitState.Attack:
 
-                if (!isTargeting || monCtrl == null)
-                {
-                    isRun = false;
-                    state = UnitState.Run;
-                    monCtrl = null;
+                //if (!isTargeting || monCtrl == null)
+                //{
+                //    isRun = false;
+                //    state = UnitState.Run;
+                //    monCtrl = null;
 
-                    break;
-                }
+                //    break;
+                //}
 
                 if (!isAtt)
                 {
@@ -283,11 +311,15 @@ public class UnitController : Unit
         if (monCtrl == null)
             return;
 
-        if(hp > 0)
+
+
+        if (hp > 0)
         {
             hp -= att;
-            if (hp < 0)
+            if (hp <= 0)
             {
+                Debug.Log(hp);
+
                 hp = 0;
                 state = UnitState.Die;
             }
@@ -305,8 +337,17 @@ public class UnitController : Unit
                 {
                     //몬스터가 죽었다면
                     isTargeting = false;
+                    isRun = false;
+                    state = UnitState.Run;
+                    monCtrl = null;
                 }
 
+            }
+
+            else if (monsterPortal != null)
+            {
+                Debug.Log("공격!");
+                monsterPortal.TowerDamage(att);
             }
         }
 
@@ -318,11 +359,15 @@ public class UnitController : Unit
                 {
                     //몬스터가 죽었다면
                     isTargeting = false;
+                    isRun = false;
+                    state = UnitState.Run;
+                    monCtrl = null;
                 }
 
             }
 
-            if(isTargeting)
+
+            if (isTargeting)
             {
                 GameObject obj = Resources.Load<GameObject>("Prefab/Weapon/UnitArrow");
 
@@ -338,6 +383,111 @@ public class UnitController : Unit
 
     }
 
+
+    void Trace<T, T1>(T mon, T1 tower) where T : MonsterController where T1 : MonsterPortal
+    {
+        if (mon != null)  //유닛이 있다면
+        {
+            if (!isTargeting)
+            {
+                state = UnitState.Run;
+                mon = null;
+            }
+
+            if (mon != null)
+            {
+                Vector3 vec = mon.gameObject.transform.position - this.transform.position;
+                float distance = vec.magnitude;
+                Vector3 dir = vec.normalized;
+                transform.position += dir * moveSpeed * Time.deltaTime;
+                if (unitClass == UnitClass.Archer)
+                {
+
+                    if (distance < archerAttDis)
+                    {
+                        isRun = false;
+                        anim.SetBool("Run", isRun);
+                        state = UnitState.Attack;
+                    }
+                }
+                else if (unitClass == UnitClass.Warrior)
+                {
+
+                    if (distance < 1.5f)
+                    {
+                        isRun = false;
+                        anim.SetBool("Run", isRun);
+                        state = UnitState.Attack;
+                    }
+                }
+            }
+            else  //추격상태인데 몬스터정보가 없다면
+            {
+                isTargeting = false;
+                state = UnitState.Run;
+                mon = null;
+            }
+        }
+
+        else if (tower != null)
+        {
+            if (!isTargeting)
+            {
+                state = UnitState.Run;
+                tower = null;
+            }
+
+            if (tower != null)
+            {
+                Vector3 vec = tower.gameObject.transform.position - this.transform.position;
+                float distance = vec.magnitude;
+                Vector3 dir = vec.normalized;
+                transform.position += dir * moveSpeed * Time.deltaTime;
+                if (unitClass == UnitClass.Archer)
+                {
+
+                    if (distance < archerAttDis)
+                    {
+                        isRun = false;
+                        anim.SetBool("Run", isRun);
+                        state = UnitState.Attack;
+                    }
+                }
+                else if (unitClass == UnitClass.Warrior)
+                {
+
+                    if (distance < 1.5f)
+                    {
+                        isRun = false;
+                        anim.SetBool("Run", isRun);
+                        state = UnitState.Attack;
+                    }
+                }
+            }
+            //else  //추격상태인데 몬스터정보가 없다면
+            //{
+            //    isTargeting = false;
+            //    state = MonsterState.Run;
+            //    controller = null;
+            //}
+            isTargeting = false;  //타워는 계속해서 타겟팅을 풀고 센서를 통해 유닛이 있는지 확인한다.
+
+
+        }
+
+
+    }
+
+
+    void UnitVictory()
+    {
+        if(GameManager.instance.state == GameState.GameVictory)
+        {
+            isAtt = false;
+            anim.SetBool("Attack", isAtt);
+            isTargeting = false;
+        }
+    }
 
     public void OnDead()
     {

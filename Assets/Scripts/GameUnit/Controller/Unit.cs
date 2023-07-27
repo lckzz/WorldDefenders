@@ -17,6 +17,7 @@ public class Unit : MonoBehaviour,ISensor
 
     protected float archerAttDis = .0f;
     protected Collider2D[] coll2d;
+    protected Collider2D towerColl;
     protected Collider2D unitColl;
 
     protected float unitDestroyTime = .0f;

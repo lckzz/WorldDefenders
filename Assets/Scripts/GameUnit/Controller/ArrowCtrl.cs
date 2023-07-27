@@ -7,6 +7,8 @@ public class ArrowCtrl : MonoBehaviour
     private Vector3 unitArrowScale = new Vector3(-5f, 5f, 5f);
     private UnitController unitCtrl;
     private MonsterController monsterCtrl;
+    private MonsterPortal monPortal;
+
     private float arrowSpeed = 35.0f;
 
     //화살은 쏘는 유닛의 정보 맞는 몬스터정보둘다 받아와야함
@@ -20,7 +22,10 @@ public class ArrowCtrl : MonoBehaviour
         transform.localScale = unitArrowScale;
        
         unitCtrl = GetComponentInParent<UnitController>();
-        monsterCtrl = unitCtrl.Monctrl;
+        if(unitCtrl.Monctrl != null)
+            monsterCtrl = unitCtrl.Monctrl;
+        if(unitCtrl.MonsterPortal != null)
+            monPortal = unitCtrl.MonsterPortal;
         
 
     }
@@ -35,7 +40,7 @@ public class ArrowCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (unitCtrl == null || monsterCtrl == null)
+        if (unitCtrl == null || (monsterCtrl == null && monPortal == null))
         {
             Destroy(this.gameObject);
             return;
@@ -43,18 +48,39 @@ public class ArrowCtrl : MonoBehaviour
         }
 
 
+        Shot(monsterCtrl, monPortal);
 
-        shotDir = monsterCtrl.transform.position - unitCtrl.transform.position;
-        shotDir.Normalize();
+    }
 
-        if (unitCtrl != null || monsterCtrl != null)
-            this.transform.position += shotDir * Time.deltaTime * arrowSpeed;
+    void Shot<T, T1>(T mon, T1 tower) where T : MonsterController where T1 : MonsterPortal
+    {
+        if (mon != null && tower == null)
+        {
+            Debug.Log("여기 유닛");
+            shotDir = mon.transform.position - unitCtrl.transform.position;
+            shotDir.Normalize();
+
+            if (mon != null || unitCtrl != null)
+                this.transform.position += shotDir * Time.deltaTime * arrowSpeed;
+
+
+        }
+        else if (mon == null && tower != null)
+        {
+            Debug.Log("여기 타워조준");
+
+            shotDir = tower.transform.position - unitCtrl.transform.position;
+            shotDir.Normalize();
+
+            if (tower != null || unitCtrl != null)
+                this.transform.position += shotDir * Time.deltaTime * arrowSpeed;
+        }
+
 
         float angle = Mathf.Atan2(shotDir.y, shotDir.x) * Mathf.Rad2Deg;
         angle += 180.0f;
         this.transform.eulerAngles = new Vector3(.0f, 0.0f, angle);
     }
-
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
@@ -69,6 +95,17 @@ public class ArrowCtrl : MonoBehaviour
 
             Destroy(this.gameObject);
         }
+        else if (coll.tag.Contains("Tower"))
+        {
+            MonsterPortal monPort = null;
+            coll.TryGetComponent<MonsterPortal>(out monPort);
+            if (monPort != null)
+                monPort.TowerDamage(unitCtrl.Att);
+
+            Destroy(this.gameObject);
+
+        }
+
         else
             return;
     }

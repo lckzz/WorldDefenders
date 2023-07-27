@@ -4,12 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+
+public enum GameState
+{
+    GamePlaying,
+    GameFail,
+    GameVictory
+}
+
 public class GameManager : MonoBehaviour
 {
     //테스트용으로 게임매니저에 UI연결해서 동작만 확인
     public static GameManager instance;
     //나중에 UI따로 관리해서 게임매니저에 연결
 
+    public GameState state = GameState.GamePlaying;
     public Button uiUnitSword;
     public Button uiUnitBow;
     public Button uiAttackBtn;
@@ -17,14 +26,25 @@ public class GameManager : MonoBehaviour
     public Transform[] monsterSpawnPos;
     public GameObject[] monsters;
     public SpriteRenderer[] sprends;
+    public float timerSec = 0;
 
-
-
-    float monsterSpawnTimer = 2.5f;
+    public GameObject ui_GameResult;
+    [SerializeField]
+    float monsterSpawnTimer = 10.5f;
 
     // Start is called before the first frame update
     void Start()
     {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+
+
         if (uiUnitSword != null)
             uiUnitSword.onClick.AddListener(UiUnitSword);
         if (uiUnitBow != null)
@@ -69,7 +89,21 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        
+        if(state == GameState.GamePlaying)
+        {
+            timerSec += Time.deltaTime;
+        }
+
+        if (state == GameState.GameFail || state == GameState.GameVictory)
+        {
+            if(!ui_GameResult.activeSelf)
+                ui_GameResult.SetActive(true);
+
+        }
+
+
+
+
     }
 
 
