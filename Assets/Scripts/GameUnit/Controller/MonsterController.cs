@@ -58,8 +58,10 @@ public class MonsterController : Unit
 
     void Init()
     {
+        if(att == 0)
+            att = 20;
+
         hp = 100;
-        att = 20;
         moveSpeed = 2.0f;
         archerAttDis = 5.0f;
         maxHp = hp;

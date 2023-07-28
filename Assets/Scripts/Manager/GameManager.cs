@@ -58,36 +58,40 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(monsterSpawnTimer > 0.0f)
+        if(state == GameState.GamePlaying)
         {
-            monsterSpawnTimer -= Time.deltaTime;
-            if(monsterSpawnTimer <= 0.0f)
+            if (monsterSpawnTimer > 0.0f)
             {
-                monsterSpawnTimer = 0.0f;
-                int ran = Random.Range(0, 2);
-                int ranPos = Random.Range(0, 3);
-                GameObject obj = Instantiate(monsters[ran], monsterSpawnPos[ranPos].position,Quaternion.identity);
-                //obj.transform.position = monsterSpawnPos[ranPos].position;
-                //switch(ranPos)
-                //{
-                //    case 0:
-                //     SpriteRenderer sp = obj.GetComponent<SpriteRenderer>();
-                //        sp.sortingOrder = 8;
-                //        break;
-                //    case 1:
-                //        SpriteRenderer sp1 = obj.GetComponent<SpriteRenderer>();
-                //        sp1.sortingOrder = 9;
-                //        break;
-                //    case 2:
-                //        SpriteRenderer sp2 = obj.GetComponent<SpriteRenderer>();
-                //        sp2.sortingOrder = 10;
-                //        break;
-                //}
-                monsterSpawnTimer = 8.0f;
+                monsterSpawnTimer -= Time.deltaTime;
+                if (monsterSpawnTimer <= 0.0f)
+                {
+                    monsterSpawnTimer = 0.0f;
+                    int ran = Random.Range(0, 2);
+                    int ranPos = Random.Range(0, 3);
+                    GameObject obj = Instantiate(monsters[ran], monsterSpawnPos[ranPos].position, Quaternion.identity);
+                    //obj.transform.position = monsterSpawnPos[ranPos].position;
+                    //switch(ranPos)
+                    //{
+                    //    case 0:
+                    //     SpriteRenderer sp = obj.GetComponent<SpriteRenderer>();
+                    //        sp.sortingOrder = 8;
+                    //        break;
+                    //    case 1:
+                    //        SpriteRenderer sp1 = obj.GetComponent<SpriteRenderer>();
+                    //        sp1.sortingOrder = 9;
+                    //        break;
+                    //    case 2:
+                    //        SpriteRenderer sp2 = obj.GetComponent<SpriteRenderer>();
+                    //        sp2.sortingOrder = 10;
+                    //        break;
+                    //}
+                    monsterSpawnTimer = 8.0f;
 
 
+                }
             }
         }
+
 
         if(state == GameState.GamePlaying)
         {

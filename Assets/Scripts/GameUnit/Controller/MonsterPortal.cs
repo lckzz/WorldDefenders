@@ -41,7 +41,7 @@ public class MonsterPortal : Tower
         if (m_hp > 0)
         {
             m_hp -= att;
-            if (m_hp < 0)
+            if (m_hp <= 0)
             {
                 m_hp = 0;
                 twState = TowerState.Destroy;
