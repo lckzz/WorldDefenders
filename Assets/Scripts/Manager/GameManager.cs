@@ -14,11 +14,20 @@ public enum GameState
 
 public class GameManager : MonoBehaviour
 {
+    //현재 인게임에 대한 정보를 관리하는 매니저이다.
+    //게임재화 이런것들?
+
     //테스트용으로 게임매니저에 UI연결해서 동작만 확인
-    public static GameManager instance;
+
     //나중에 UI따로 관리해서 게임매니저에 연결
 
-    public GameState state = GameState.GamePlaying;
+    public static List<UnitNode> unitList = new List<UnitNode>();
+    float speed = 1.0f;
+    float curCost = .0f;
+    float maxCost = 500.0f;
+    float costCoolTime = 1.0f;
+    [SerializeField]
+    public static GameState state = GameState.GamePlaying;
     public Button uiUnitSword;
     public Button uiUnitBow;
     public Button uiAttackBtn;
@@ -28,29 +37,28 @@ public class GameManager : MonoBehaviour
     public SpriteRenderer[] sprends;
     public float timerSec = 0;
 
+    bool gameSet = false;
+
     public GameObject ui_GameResult;
     [SerializeField]
-    float monsterSpawnTimer = 10.5f;
+    float monsterSpawnTimer = 1000.5f;
+
+    public GameState State { get { return state; } set { state = value; } }
+    public float CurCost { get { return curCost; } set { curCost = value; } }
+    public float MaxCost { get { return maxCost; } set { maxCost = value; } }
+    public bool GameSet { get { return gameSet; } set { gameSet = value; } }
 
     // Start is called before the first frame update
     void Start()
     {
-        if(instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
 
 
-        if (uiUnitSword != null)
-            uiUnitSword.onClick.AddListener(UiUnitSword);
-        if (uiUnitBow != null)
-            uiUnitBow.onClick.AddListener(UiUnitBow);
-        if (uiAttackBtn != null)
-            uiAttackBtn.onClick.AddListener(UiAttack);
+        //if (uiUnitSword != null)
+        //    uiUnitSword.onClick.AddListener(UiUnitSword);
+        //if (uiUnitBow != null)
+        //    uiUnitBow.onClick.AddListener(UiUnitBow);
+        //if (uiAttackBtn != null)
+        //    uiAttackBtn.onClick.AddListener(UiAttack);
 
         
     }
@@ -60,7 +68,7 @@ public class GameManager : MonoBehaviour
     {
         if(state == GameState.GamePlaying)
         {
-            if (monsterSpawnTimer > 0.0f)
+            if (monsterSpawnTimer > 0.0f)                       //몬스터 스폰은 따로 파서 해야함
             {
                 monsterSpawnTimer -= Time.deltaTime;
                 if (monsterSpawnTimer <= 0.0f)
@@ -91,9 +99,12 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        
 
 
-        if(state == GameState.GamePlaying)
+
+
+        if (state == GameState.GamePlaying)
         {
             timerSec += Time.deltaTime;
         }
@@ -111,57 +122,44 @@ public class GameManager : MonoBehaviour
     }
 
 
-    void UiUnitSword()  //누르면 검 유닛생간
+    public void CostCoolTimer(float coolTime, float cost)
     {
-        Debug.Log("검 소환");
-        GameObject obj = Resources.Load<GameObject>("Prefab/Unit/KnifeUnit");
-        GameObject ob = Instantiate(obj);
-        SpriteRenderer sp = obj.GetComponent<SpriteRenderer>();
+        if (curCost >= maxCost)
+            return;
 
-        int ran = Random.Range(0, 3);
-        ob.transform.position = spawnPos[ran].position;
-        switch (ran)
+
+        if (costCoolTime > .0f)
         {
-            case 0:
-                sp.sortingOrder = 8;
-                break;
-            case 1:
-                sp.sortingOrder = 9;
-                break;
-            case 2:
-                sp.sortingOrder = 10;
-                break;
+            costCoolTime -= Time.deltaTime;
+            if (costCoolTime <= .0f)
+            {
+                costCoolTime = coolTime;
+                curCost += cost;
+                if (curCost >= maxCost)
+                {
+                    curCost = maxCost;
+                    costCoolTime = .0f;
+                }
+                Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCost( curCost, maxCost);
+
+            }
         }
     }
 
-    void UiUnitBow()  //누르면 활 유닛 생산
+    public bool CostCheck(float curCost, float unitCost)
     {
-        Debug.Log("궁 소환");
-        GameObject obj = Resources.Load<GameObject>("Prefab/Unit/BowUnit");
-        GameObject ob = Instantiate(obj);
-        SpriteRenderer sp = obj.GetComponent<SpriteRenderer>();
+        if (curCost - unitCost < .0f) //0보다 작다면
+            return false;
 
-        int ran = Random.Range(0, 3);
-        ob.transform.position = spawnPos[ran].position;
-        switch (ran)
-        {
-            case 0:
-                sp.sortingOrder = 8;
-                break;
-            case 1:
-                sp.sortingOrder = 9;
-                break;
-            case 2:
-                sp.sortingOrder = 10;
-                break;
-        }
+        return true;
+
     }
 
-    void UiAttack()
+    public float CostUse(float curCost,float unitCost)
     {
-        Debug.Log("활 발싸");
-        //player.AttackWait();
-        
+        curCost -= unitCost;
+
+        return curCost;
     }
 
 

@@ -52,9 +52,9 @@ public class ArrowCtrl : MonoBehaviour
 
     }
 
-    void Shot<T, T1>(T mon, T1 tower) where T : MonsterController where T1 : MonsterPortal
+    void Shot<T, T1>(T mon, T1 tower) where T : Unit where T1 : Tower
     {
-        if (mon != null && tower == null)
+        if (mon != null)
         {
             Debug.Log("여기 유닛");
             shotDir = mon.transform.position - unitCtrl.transform.position;
@@ -65,7 +65,7 @@ public class ArrowCtrl : MonoBehaviour
 
 
         }
-        else if (mon == null && tower != null)
+        else if (tower != null)
         {
             Debug.Log("여기 타워조준");
 

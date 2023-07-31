@@ -47,12 +47,12 @@ public class UI_GameResult : MonoBehaviour
 
     private void OnEnable()
     {
-        if(GameManager.instance.state == GameState.GameVictory)
+        if(Managers.Game.State == GameState.GameVictory)
         {
             failOrVictoryImg.sprite = ImageSetting("Images/Image_Victory");
         }
 
-        if(GameManager.instance.state == GameState.GameFail)
+        if(Managers.Game.State == GameState.GameFail)
         {
             failOrVictoryImg.sprite = ImageSetting("Images/Image_Fail");
 
@@ -65,8 +65,8 @@ public class UI_GameResult : MonoBehaviour
 
     void TimerSetting()
     {
-        min = (int)GameManager.instance.timerSec / 60;
-        sec = (int)GameManager.instance.timerSec % 60;
+        min = (int)Managers.Game.timerSec / 60;
+        sec = (int)Managers.Game.timerSec % 60;
         timecheck = true;
     }
 
@@ -115,7 +115,7 @@ public class UI_GameResult : MonoBehaviour
 
             int curTimer = (curmin * 60) + cursec;
 
-            if (curTimer == GameManager.instance.timerSec)
+            if (curTimer == Managers.Game.timerSec)
                 timer = false;
 
 

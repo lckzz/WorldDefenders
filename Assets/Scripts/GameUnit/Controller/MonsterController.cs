@@ -85,7 +85,7 @@ public class MonsterController : Unit
     // Update is called once per frame
     void Update()
     {
-        if(GameManager.instance.state == GameState.GamePlaying)
+        if(Managers.Game.State == GameState.GamePlaying)
         {
             EnemySensor();
             MonsterMovement();
@@ -112,7 +112,7 @@ public class MonsterController : Unit
             if(hp <= 0)
             {
                 hp = 0;
-                state = MonsterState.Die;
+                OnDead();
 
             }
         }
@@ -123,6 +123,7 @@ public class MonsterController : Unit
     {
         if(monsterColl.enabled)
         {
+            state = MonsterState.Die;
             monsterColl.enabled = false;
             GameObject.Destroy(gameObject, 5.0f);
 
@@ -324,8 +325,8 @@ public class MonsterController : Unit
                     isDie = true;
                     anim.SetTrigger("Die");
                 }
-                if(anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
-                    OnDead();
+                //if(anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
+                //    OnDead();
 
 
                 break;
@@ -489,17 +490,20 @@ public class MonsterController : Unit
 
     void MonsterVictory()
     {
-        if(GameManager.instance.state == GameState.GameFail)
+        //Managers.Game.state = GameState.GameFail;
+
+
+        if(Managers.Game.State == GameState.GameFail)
         {
-            isRun = true;
+            isRun = false;
             anim.SetBool("Run", isRun);
             isAtt = false;
             anim.SetBool("Attack", isAtt);
             isTargeting = false;
 
-            state = MonsterState.Run;
+            state = MonsterState.Idle;
 
-            transform.position += Vector3.left * moveSpeed * Time.deltaTime;
+            transform.position = transform.position;
 
         }
     }

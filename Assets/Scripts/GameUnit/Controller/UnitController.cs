@@ -97,7 +97,7 @@ public class UnitController : Unit
         EnemySensor();
         UnitMovement();
         AttackDelay();
-
+        UnitVictory();
 
         //앞으로 움직임 
     }
@@ -130,39 +130,44 @@ public class UnitController : Unit
                 float disMin = 0;
                 int min = 0;
 
-                for (int i = 0; i < monCtrls.Length; i++)
+
+                if(monCtrls.Length > 1)
                 {
-                    if (i == 0 && monCtrls.Length > 1)
+                    for (int i = 0; i < monCtrls.Length; i++)
                     {
-                        float distA = (monCtrls[i].transform.position - this.transform.position).magnitude;
-                        float distB = (monCtrls[i + 1].transform.position - this.transform.position).magnitude;
+                        if (i == 0 && monCtrls.Length > 1)
+                        {
+                            float distA = (monCtrls[i].transform.position - this.transform.position).magnitude;
+                            float distB = (monCtrls[i + 1].transform.position - this.transform.position).magnitude;
 
-                        if (distA > distB)
-                        {
-                            disMin = distB;
-                            min = i + 1;
+                            if (distA > distB)
+                            {
+                                disMin = distB;
+                                min = i + 1;
+                            }
+                            else
+                            {
+                                disMin = distA;
+                                min = i;
+                            }
                         }
-                        else
+
+                        else if (i < monCtrls.Length - 1)
                         {
-                            disMin = distA;
-                            min = i;
+                            float distB = (monCtrls[i + 1].transform.position - this.transform.position).magnitude;
+
+                            if (disMin > distB)
+                            {
+                                disMin = distB;
+                                min = i + 1;
+                            }
+
+
                         }
+
                     }
-
-                    else if(i < monCtrls.Length - 1)
-                    {
-                        float distB = (monCtrls[i + 1].transform.position - this.transform.position).magnitude;
-
-                        if (disMin > distB)
-                        {
-                            disMin = distB;
-                            min = i + 1;
-                        }
-                      
-
-                    }
-
                 }
+                
 
                 if (monCtrls.Length != 0)
                 {
@@ -293,19 +298,26 @@ public class UnitController : Unit
                         anim.SetBool("Attack", isAtt);
 
                         attackCoolTime = .5f;
+
+                        //공격이 끝나면 모든 타겟팅을 다시 잡는다.
+                        isTargeting = false;
+                        isUnitTarget = false;
+                        isTowerTarger = false;
+
+                        state = UnitState.Run;
+                        isRun = false;
+
+                        isAtt = false;
+                        anim.SetBool("Attack", isAtt);
+                        isRun = true;
+                        anim.SetBool("Run", isRun);
                     }
 
                     
                 }
 
 
-                //공격이 끝나면 모든 타겟팅을 다시 잡는다.
-                isTargeting = false;
-                isUnitTarget = false;
-                isTowerTarger = false;
 
-                state = UnitState.Run;
-                isRun = false;
 
                 break;
 
@@ -316,8 +328,6 @@ public class UnitController : Unit
                     anim.SetTrigger("Die");
                    
                 }
-                if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
-                    OnDead();
 
                 break;
 
@@ -340,7 +350,7 @@ public class UnitController : Unit
                 Debug.Log(hp);
 
                 hp = 0;
-                state = UnitState.Die;
+                OnDead();
             }
         }
     }
@@ -352,18 +362,10 @@ public class UnitController : Unit
             if (monCtrl != null)
             {
                 monCtrl.OnDamage(att);      //데미지만 준다.
-                //if (monCtrl.IsDie)
-                //{
-                //    //몬스터가 죽었다면
-                //    isTargeting = false;
-                //    isRun = false;
-                //    state = UnitState.Run;
-                //    monCtrl = null;
-                //}
 
             }
 
-            else if (monsterPortal != null)
+            if (monsterPortal != null)
             {
                 Debug.Log("공격!");
                 monsterPortal.TowerDamage(att);
@@ -372,19 +374,6 @@ public class UnitController : Unit
 
         else if(unitClass == UnitClass.Archer)
         {
-            //if (monCtrl != null)
-            //{
-            //    //if (monCtrl.IsDie)
-            //    //{
-            //    //    //몬스터가 죽었다면
-            //    //    isTargeting = false;
-            //    //    isRun = false;
-            //    //    state = UnitState.Run;
-            //    //    monCtrl = null;
-            //    //}
-
-            //}
-
 
             if (isTargeting)
             {
@@ -453,43 +442,6 @@ public class UnitController : Unit
 
         }
 
-
-
-
-
-        //if (tower != null)
-        //{
-        //    Vector3 vec = tower.gameObject.transform.position - this.transform.position;
-        //    float distance = vec.magnitude;
-        //    Vector3 dir = vec.normalized;
-        //    transform.position += dir * moveSpeed * Time.deltaTime;
-        //    if (unitClass == UnitClass.Archer)
-        //    {
-
-        //        if (distance < archerAttDis)
-        //        {
-        //            isRun = false;
-        //            anim.SetBool("Run", isRun);
-        //            state = UnitState.Attack;
-        //        }
-        //    }
-        //    else if (unitClass == UnitClass.Warrior)
-        //    {
-
-        //        if (distance < 1.5f)
-        //        {
-        //            isRun = false;
-        //            anim.SetBool("Run", isRun);
-        //            state = UnitState.Attack;
-        //        }
-        //    }
-        //}
-        //else  //추격상태인데 몬스터정보가 없다면
-        //{
-        //    isTargeting = false;
-        //    state = MonsterState.Run;
-        //    controller = null;
-        //}
         isTargeting = false;  //타워는 계속해서 타겟팅을 풀고 센서를 통해 유닛이 있는지 확인한다.
 
 
@@ -501,8 +453,10 @@ public class UnitController : Unit
 
     void UnitVictory()
     {
-        if(GameManager.instance.state == GameState.GameVictory)
+        if(Managers.Game.State == GameState.GameVictory)
         {
+            isRun = false;
+            anim.SetBool("Run", isRun);
             isAtt = false;
             anim.SetBool("Attack", isAtt);
             isTargeting = false;
@@ -513,6 +467,7 @@ public class UnitController : Unit
     {
         if (unitColl2d.enabled)
         {
+            state = UnitState.Die;
             unitColl2d.enabled = false;
             GameObject.Destroy(gameObject, 5.0f);
 

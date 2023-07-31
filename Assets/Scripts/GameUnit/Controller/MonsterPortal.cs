@@ -18,6 +18,7 @@ public class MonsterPortal : Tower
     {
         base.Init(m_hp, m_level);       //나중에 JSon으로 받은 타워의 데이터에서 hp와 level을 넣어줌
         this.TryGetComponent(out anim);
+        anim = this.GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
@@ -55,7 +56,7 @@ public class MonsterPortal : Tower
         if (twState == TowerState.Destroy)
         {
             anim.SetTrigger("Destroy");
-            GameManager.instance.state = GameState.GameVictory;
+            Managers.Game.State = GameState.GameVictory;
         }
     }
 }

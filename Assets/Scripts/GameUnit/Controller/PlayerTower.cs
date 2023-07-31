@@ -20,7 +20,10 @@ public class PlayerTower : Tower
     // Update is called once per frame
     void Update()
     {
-        
+        //if(Managers.Game.State != GameState.GameFail)
+        //    Managers.Game.State = GameState.GameFail;
+
+
     }
 
 
@@ -37,9 +40,10 @@ public class PlayerTower : Tower
 
             if (m_hp <= 0)
             {
-                m_hp = 0;
                 twState = TowerState.Destroy;
                 TowerDestroy();
+                m_hp = 0;
+
             }
         }
     }
@@ -48,7 +52,7 @@ public class PlayerTower : Tower
     {
         if(twState == TowerState.Destroy)
         {
-            GameManager.instance.state = GameState.GameFail;
+            GameManager.state = GameState.GameFail;
         }
     }
 
