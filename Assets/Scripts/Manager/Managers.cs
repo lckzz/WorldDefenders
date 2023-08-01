@@ -10,7 +10,6 @@ public class Managers : MonoBehaviour
 
     UIManager _ui = new UIManager();
     GameManager _game = new GameManager();
-
     public static UIManager UI { get { return Instance?._ui; } }
     public static GameManager Game { get { return Instance?._game; } }
 
@@ -36,6 +35,12 @@ public class Managers : MonoBehaviour
 
             return s_instance;
         }
+
+    }
+
+    private void Start()
+    {
+        Debug.Log(_game);
 
     }
 

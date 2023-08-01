@@ -15,7 +15,7 @@ public enum GameState
 public class GameManager : MonoBehaviour
 {
     //현재 인게임에 대한 정보를 관리하는 매니저이다.
-    //게임재화 이런것들?
+    //게임재화 코스트 관리 몬스터 스폰
 
     //테스트용으로 게임매니저에 UI연결해서 동작만 확인
 
