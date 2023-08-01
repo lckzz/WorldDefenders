@@ -154,15 +154,9 @@ public class UI_GamePlay : UI_Base
 
     }
 
-    public void UpdateCost(float curCost, float maxCost)
+    public void UpdateCost(float curCost)
     {
-        if (unitCost.fillAmount >= .0f && unitCost.fillAmount < 1.0f)
-            unitCost.fillAmount = curCost / maxCost;
-
-        if (unitCost.fillAmount >= 1.0f)
-            unitCost.fillAmount = 1.0f;
-
-        unitCostTxt.text = curCost + " / " + maxCost;
+        unitCostTxt.text = curCost.ToString();
 
     }
 
@@ -182,7 +176,7 @@ public class UI_GamePlay : UI_Base
             if(Managers.Game.CostCheck(Managers.Game.CurCost, unitNode.UnitCost))
             {
                 Managers.Game.CurCost = Managers.Game.CostUse(Managers.Game.CurCost,unitNode.UnitCost);
-                UpdateCost(Managers.Game.CurCost, Managers.Game.MaxCost);
+                UpdateCost(Managers.Game.CurCost);
                 gameQueue.Enqueue(unitObj);
                 unitNode.CoolCheck = true;          //큐에 넣어주면서 쿨타임 온
             }

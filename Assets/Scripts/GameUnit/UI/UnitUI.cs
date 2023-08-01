@@ -10,7 +10,7 @@ public class UnitUI : MonoBehaviour
     [SerializeField]
     protected Image hpbarCover;
     protected float minHp = .0f;
-    protected float hpSpeed = .7f;
+    [SerializeField] protected float hpSpeed = 1.7f;
     protected SpriteRenderer spr;
     protected Color color = new Color(0, 0, 0);
 
@@ -25,12 +25,10 @@ public class UnitUI : MonoBehaviour
             return null;
     }
 
-    public virtual void UpdateHp(float hpspeed)
-    {
+    public virtual void UpdateHp(float hpspeed) { }
 
-    }
 
-    public virtual void UnitDeadSpAlpha<T>(T unit, SpriteRenderer sp) where T : Component
+    public virtual void UnitDeadSpAlpha<T>(T unit, SpriteRenderer sp) where T : Unit
     {
         if(sp == null)
             unit.TryGetComponent<SpriteRenderer>(out sp);

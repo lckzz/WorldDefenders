@@ -65,7 +65,7 @@ public class UI_GameResult : MonoBehaviour
 
     void TimerSetting()
     {
-        Debug.Log(Managers.Game);
+       
         min = (int)Managers.Game.timerSec / 60;
         sec = (int)Managers.Game.timerSec % 60;
         timecheck = true;

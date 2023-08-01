@@ -124,9 +124,6 @@ public class GameManager : MonoBehaviour
 
     public void CostCoolTimer(float coolTime, float cost)
     {
-        if (curCost >= maxCost)
-            return;
-
 
         if (costCoolTime > .0f)
         {
@@ -135,12 +132,7 @@ public class GameManager : MonoBehaviour
             {
                 costCoolTime = coolTime;
                 curCost += cost;
-                if (curCost >= maxCost)
-                {
-                    curCost = maxCost;
-                    costCoolTime = .0f;
-                }
-                Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCost( curCost, maxCost);
+                Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCost(curCost);
 
             }
         }
