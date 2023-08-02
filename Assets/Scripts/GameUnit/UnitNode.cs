@@ -20,6 +20,7 @@ public class UnitNode : MonoBehaviour
     private float unitCost = 0f;
 
     bool coolCheck = false;     //ÄðÅ¸ÀÓ Ã¼Å©
+    Color grayColor = new Color32(99, 99, 99, 255);
     
     public float UnitCost { get { return unitCost; } }
     public bool CoolCheck { get { return coolCheck; } set { coolCheck = value; } }
@@ -51,7 +52,7 @@ public class UnitNode : MonoBehaviour
             }
         }
 
-
+        Managers.UI.GetSceneUI<UI_GamePlay>().UpdateUnitCostEnable(unitImg,grayColor,unitCost);
 
     }
 

@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class GameScene : MonoBehaviour
 {
+    //현재 게임에서 보여주는 플레이
     //float speed = 1.0f;
     //float curCost = .0f;
     //float maxCost = 500.0f;
     //float costCoolTime = 1.0f;
     [SerializeField] Transform[] spawnPos;
+    [SerializeField] float costCoolTime = 4.5f;
     GameObject obj;
     UnitNode unitnode;
     float speed = 1.0f;
@@ -27,7 +29,7 @@ public class GameScene : MonoBehaviour
     {
 
         Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCoolTime(speed);
-        Managers.Game.CostCoolTimer(2.5f,30.0f);
+        Managers.Game.CostCoolTimer(costCoolTime, 30.0f);
 
         if(UI_GamePlay.gameQueue.Count > 0)
         {

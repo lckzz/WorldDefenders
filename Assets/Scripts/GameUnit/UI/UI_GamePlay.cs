@@ -154,6 +154,17 @@ public class UI_GamePlay : UI_Base
 
     }
 
+    public void UpdateUnitCostEnable(Image img,Color grayColor, float unitCost)
+    {
+
+        if (Managers.Game.CurCost < unitCost)
+        {
+            img.color = grayColor;      //매개변수에서 받은 컬러값
+        }
+        else
+            img.color = new Color(1,1,1);
+    }
+
     public void UpdateCost(float curCost)
     {
         unitCostTxt.text = curCost.ToString();

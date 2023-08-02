@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
 
     private bool attack = true;
     private Vector3 startPlayerAimTr;
-
+    private float aimMaxDistance = 15.0f;       //플레이어 조준의 최대사거리
 
     private Vector3 vecDir;
     private float dist;
@@ -151,7 +151,13 @@ public class PlayerController : MonoBehaviour
 
 
         if (aimMove)
-            playerAimTr.transform.position += Vector3.right * Time.deltaTime * speed;
+        {
+            float distance = (playerAimTr.position - attackPosTr.position).magnitude;
+            if (distance < 15.0f)
+                playerAimTr.position += Vector3.right * Time.deltaTime * speed;
+            else
+                playerAimTr.position = playerAimTr.position;
+        }
     }
 
 
