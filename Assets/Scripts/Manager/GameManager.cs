@@ -71,6 +71,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+
         if(state == GameState.GamePlaying)
         {
             if (monsterSpawnTimer > 0.0f)                       //몬스터 스폰은 따로 파서 해야함
