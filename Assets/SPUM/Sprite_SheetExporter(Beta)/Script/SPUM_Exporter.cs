@@ -46,6 +46,9 @@ public class SPUM_Exporter : MonoBehaviour
             case UnitType.SwordMan:
             _animNameNow.Add( _animNameList[4]);
             _animNameNow.Add( _animNameList[7]);
+            _animNameNow.Add( _animNameList[10]);
+            _animNameNow.Add( _animNameList[11]);
+
             break;
 
             case UnitType.BowMan:

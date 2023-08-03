@@ -22,6 +22,8 @@ public class GameScene : MonoBehaviour
 
         Debug.Log(Managers.UI.GetSceneUI<UI_GamePlay>());
 
+        Dictionary<int,TowerStat> dict = Managers.Data.towerDict;
+
     }
 
     // Update is called once per frame
@@ -31,7 +33,7 @@ public class GameScene : MonoBehaviour
         Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCoolTime(speed);
         Managers.Game.CostCoolTimer(costCoolTime, 30.0f);
 
-        if(UI_GamePlay.gameQueue.Count > 0)
+        if (UI_GamePlay.gameQueue.Count > 0)
         {
             Managers.UI.GetSceneUI<UI_GamePlay>().Summon(obj, spawnPos);
             //go.TryGetComponent(out unitnode);
