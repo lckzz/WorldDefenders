@@ -7,7 +7,8 @@ using System;
 enum UnitClass
 {
     Warrior,
-    Archer
+    Archer,
+    Spear
 }
 
 

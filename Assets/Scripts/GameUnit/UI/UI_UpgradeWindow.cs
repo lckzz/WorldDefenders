@@ -17,6 +17,8 @@ public class UI_UpgradeWindow : MonoBehaviour
 
     TowerStat tower = new TowerStat();
 
+    private UnitClass unitClass;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +34,24 @@ public class UI_UpgradeWindow : MonoBehaviour
         {
             unitUpgradeBtn[ii].onClick.AddListener(() =>
             {
+                switch (unitClass)
+                {
+                    case UnitClass.Warrior:
+                    {
+                        break;
+                    }
+                    case UnitClass.Archer:
+                    {
+                        break;
+                    }
+                    case UnitClass.Spear:
+                    {
+                        break;
+                    }
+
+
+                }
+
                 unitUpgradePopUp.SetActive(true);
             }
             );
