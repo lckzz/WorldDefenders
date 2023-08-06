@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_UpgradeWindow : MonoBehaviour
+public class UI_UpgradeWindow : UI_Base
 {
     public TextMeshProUGUI playerLvTxt;
     public TextMeshProUGUI playerHpTxt;
@@ -29,41 +30,33 @@ public class UI_UpgradeWindow : MonoBehaviour
 
         if (upgradeBtn != null)
             upgradeBtn.onClick.AddListener(UpgradeBtnOpen);
-        
-        for(int ii = 0; ii < unitUpgradeBtn.Length; ii++)
-        {
-            unitUpgradeBtn[ii].onClick.AddListener(() =>
-            {
-                switch (unitClass)
-                {
-                    case UnitClass.Warrior:
-                    {
-                        break;
-                    }
-                    case UnitClass.Archer:
-                    {
-                        break;
-                    }
-                    case UnitClass.Spear:
-                    {
-                        break;
-                    }
 
-
-                }
-
-                unitUpgradePopUp.SetActive(true);
-            }
-            );
-        }
+        UnitButtonEvent(unitUpgradeBtn[(int)UnitClass.Warrior].gameObject,(int)UnitClass.Warrior, OpenUpgradeUnitPopUp, UIEvnet.PointerDown);
+        UnitButtonEvent(unitUpgradeBtn[(int)UnitClass.Archer].gameObject, (int)UnitClass.Archer, OpenUpgradeUnitPopUp, UIEvnet.PointerDown);
+        UnitButtonEvent(unitUpgradeBtn[(int)UnitClass.Spear].gameObject, (int)UnitClass.Spear, OpenUpgradeUnitPopUp, UIEvnet.PointerDown);
     }
 
     // Update is called once per frame
     void Update()
     {
-        RefreshTextUI();
+        RefreshTextUI();        //매 프레임마다 갱신하지말고 콜백함수를 통해서 값이 변경되면 콜백함수를 통해서 갱신되게
+
+    }
 
 
+
+
+    void UnitButtonEvent(GameObject obj, int idx ,Action<int> action = null, UIEvnet type = UIEvnet.PointerDown)
+    {
+        UI_EventHandler evt;
+        obj.TryGetComponent(out evt);
+
+        if(type == UIEvnet.PointerDown)
+        {
+            evt.OnPointerDownUnitUpgradeHandler -= (unUsedIdx) => action(idx);
+            evt.OnPointerDownUnitUpgradeHandler += (unUsedIdx) => action(idx);
+
+        }
     }
 
 
@@ -82,5 +75,31 @@ public class UI_UpgradeWindow : MonoBehaviour
             if (playerUpgradePopUp.activeSelf == false)
                 playerUpgradePopUp.SetActive(true);
         }
+    }
+
+
+    void OpenUpgradeUnitPopUp(int unitIdx)
+    {
+        switch (unitIdx)
+        {
+            case (int)UnitClass.Warrior:
+                {
+                    Debug.Log("워리어 업그판넬 온!");
+                    break;
+                }
+            case (int)UnitClass.Archer:
+                {
+                    Debug.Log("아처 업글판넬 온!");
+                    break;
+                }
+            case (int)UnitClass.Spear:
+                {
+                    Debug.Log("창병 업글판넬 온!!");
+                    break;
+                }
+        }
+
+
+
     }
 }

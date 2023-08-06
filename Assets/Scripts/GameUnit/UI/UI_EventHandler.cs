@@ -9,6 +9,7 @@ public class UI_EventHandler : MonoBehaviour,IPointerDownHandler,IPointerUpHandl
     public Action OnPointerDownHandler = null;
     public Action OnPointerUpHandler = null;
     public Action<string,int> OnPointerDownUnitHandler = null;
+    public Action<int> OnPointerDownUnitUpgradeHandler = null;
     string path = null;
     int idx = -1;
 
@@ -17,6 +18,7 @@ public class UI_EventHandler : MonoBehaviour,IPointerDownHandler,IPointerUpHandl
     {
         OnPointerDownHandler?.Invoke();
         OnPointerDownUnitHandler?.Invoke(path,idx);
+        OnPointerDownUnitUpgradeHandler?.Invoke(idx);
     }
 
     public void OnPointerUp(PointerEventData eventData)
