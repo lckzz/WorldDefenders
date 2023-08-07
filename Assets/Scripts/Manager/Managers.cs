@@ -47,4 +47,12 @@ public class Managers : MonoBehaviour
 
     }
 
+    static void Clear()
+    {
+        UI.Clear();
+    }
+
+
+
+
 }

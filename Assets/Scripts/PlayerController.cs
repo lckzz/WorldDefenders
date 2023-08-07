@@ -166,7 +166,7 @@ public class PlayerController : MonoBehaviour
         attack = false;
         attackTimer = 1.5f;
 
-        GameObject go = Resources.Load<GameObject>("Prefab/Weapon/PlayerArrow");
+        GameObject go = Resources.Load<GameObject>("Prefabs/Weapon/PlayerArrow");
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         angle += 180.0f;
         go.transform.eulerAngles = new Vector3(.0f, 0.0f, angle);

@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_PlayerUpgradePopUp : MonoBehaviour
+public class UI_PlayerUpgradePopUp : UI_Base
 {
     public TextMeshProUGUI curLvTxt;
     public TextMeshProUGUI curHpTxt;
@@ -13,6 +13,7 @@ public class UI_PlayerUpgradePopUp : MonoBehaviour
     public TextMeshProUGUI nextLvTxt;
     public TextMeshProUGUI nextHpTxt;
     public TextMeshProUGUI nextAttTxt;
+    public TextMeshProUGUI goldTxt;
 
     public Button upgradeBtn;
     public Button closeBtn;
@@ -22,7 +23,7 @@ public class UI_PlayerUpgradePopUp : MonoBehaviour
 
 
 
-    void Init()
+    void PlayerInit()
     {
         if (GlobalData.g_PlayerLevel > 10)
             return;
@@ -31,7 +32,6 @@ public class UI_PlayerUpgradePopUp : MonoBehaviour
         curLvTxt.text = tower.level.ToString();
         curHpTxt.text = tower.hp.ToString();
         curAttTxt.text = tower.att.ToString();
-        Debug.Log(GlobalData.g_PlayerLevel);
 
 
         if (GlobalData.g_PlayerLevel < 10)
@@ -43,6 +43,7 @@ public class UI_PlayerUpgradePopUp : MonoBehaviour
             nextLvTxt.text = tower.level.ToString();
             nextHpTxt.text = tower.hp .ToString();
             nextAttTxt.text = tower.att.ToString();
+            goldTxt.text = tower.price.ToString();
         }
         else
         {
@@ -57,15 +58,14 @@ public class UI_PlayerUpgradePopUp : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Init();
+        PlayerInit();
         if (upgradeBtn != null)
             upgradeBtn.onClick.AddListener(UpgradeBtn);
 
         if (closeBtn != null)
             closeBtn.onClick.AddListener(() =>
             {
-                if (this.gameObject.activeSelf)
-                    gameObject.SetActive(false);
+                Managers.UI.ClosePopUp(this);
             });
     }
 
@@ -99,6 +99,7 @@ public class UI_PlayerUpgradePopUp : MonoBehaviour
             nextLvTxt.text = tower.level.ToString();
             nextHpTxt.text = tower.hp .ToString();
             nextAttTxt.text = tower.att .ToString();
+            goldTxt.text = tower.price.ToString();
         }
         else
         {

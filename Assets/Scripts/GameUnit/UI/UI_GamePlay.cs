@@ -72,12 +72,12 @@ public class UI_GamePlay : UI_Base
         {
             if(i == 0)
             {
-                string path = "Prefab/Unit/KnifeUnit";
+                string path = "Prefabs/Unit/KnifeUnit";
                 ButtonEvent1(uiUnit[i].gameObject, path, i,UnitSummon, UIEvnet.PointerDown);
             }
             if (i == 1)
             {
-                string path = "Prefab/Unit/BowUnit";
+                string path = "Prefabs/Unit/BowUnit";
                 ButtonEvent1(uiUnit[i].gameObject, path, i,UnitSummon, UIEvnet.PointerDown);
             }
         }

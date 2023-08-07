@@ -377,7 +377,7 @@ public class MonsterController : Unit
 
             if (isTargeting)
             {
-                GameObject obj = Resources.Load<GameObject>("Prefab/Weapon/MonsterArrow");
+                GameObject obj = Resources.Load<GameObject>("Prefabs/Weapon/MonsterArrow");
 
                 if (obj != null)
                 {

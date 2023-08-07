@@ -8,7 +8,8 @@ enum UnitClass
 {
     Warrior,
     Archer,
-    Spear
+    Spear,
+    Count
 }
 
 
@@ -378,7 +379,7 @@ public class UnitController : Unit
 
             if (isTargeting)
             {
-                GameObject obj = Resources.Load<GameObject>("Prefab/Weapon/UnitArrow");
+                GameObject obj = Resources.Load<GameObject>("Prefabs/Weapon/UnitArrow");
 
                 if (obj != null)
                 {
