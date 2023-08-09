@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 
-enum UnitClass
+public enum UnitClass
 {
     Warrior,
     Archer,
@@ -13,7 +13,7 @@ enum UnitClass
 }
 
 
-enum UnitState
+public enum UnitState
 {
     Idle,
     Run,

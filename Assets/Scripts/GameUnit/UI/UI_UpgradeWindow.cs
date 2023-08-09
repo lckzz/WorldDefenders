@@ -39,6 +39,9 @@ public class UI_UpgradeWindow : UI_Base
 
     private UnitClass unitClass;
 
+
+
+
     // Start is called before the first frame update
     void Start()
     {
