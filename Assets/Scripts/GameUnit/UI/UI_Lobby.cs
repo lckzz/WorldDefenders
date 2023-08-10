@@ -7,11 +7,16 @@ using UnityEngine.UI;
 public class UI_Lobby : UI_Base
 {
     public Button upgradeBtn;
-    public GameObject upgradeObj;
+    public Button unitSettingBtn;
+    public LobbyScene lobbyScene;
     // Start is called before the first frame update
     void Start()
     {
+        GameObject.Find("LobbyScene").TryGetComponent(out lobbyScene);
+        LobbySceneRefresh();
         ButtonEvent(upgradeBtn.gameObject, UpgradeOn, UIEvnet.PointerDown);
+        ButtonEvent(unitSettingBtn.gameObject, UnitSettingOn, UIEvnet.PointerDown);
+
     }
 
     // Update is called once per frame
@@ -47,5 +52,19 @@ public class UI_Lobby : UI_Base
         Managers.UI.ShowPopUp<UI_UpgradeWindow>();
     }
 
- 
+    void UnitSettingOn()
+    {
+        Managers.UI.ClosePopUp(this);
+        Managers.UI.ShowPopUp<UI_UnitSettingWindow>();
+    }
+
+    void LobbySceneRefresh()
+    {
+        if (lobbyScene != null)
+        {
+            lobbyScene.RefreshUnit();
+
+        }
+    }
+
 }
