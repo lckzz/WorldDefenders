@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UnitSlotUI : UI_BaseSettingUnit
 {
@@ -10,6 +11,8 @@ public class UnitSlotUI : UI_BaseSettingUnit
     Vector2 spearSizeDelta = new Vector2(150.0f, 135.0f);
     Vector3 spearTr = new Vector3(-16.0f, 58.0f, 0.0f);
 
+    [SerializeField] private GameObject slotTxtObj;
+    [SerializeField] private GameObject selectImgObj;
 
     public UnitClass E_UnitClass { get { return e_UnitClass; } set { e_UnitClass = value; } }
     private int slotidx = 0;
@@ -33,6 +36,10 @@ public class UnitSlotUI : UI_BaseSettingUnit
     {
         //처음에 생성되면 해당갱신해주기
         unitImg.TryGetComponent(out rt);
+        if (selectImgObj != null)
+            selectImgObj.SetActive(false);
+
+
         RefreshUnitImg();
     }
 
@@ -85,5 +92,19 @@ public class UnitSlotUI : UI_BaseSettingUnit
                 break;
 
         }
+    }
+
+
+    public void StartSelectUnitSlot()           //슬롯 선택이 켜지면 텍스트는 없애고 슬롯 선택 화살표는 생기게
+    {
+        if (selectImgObj != null)
+            selectImgObj.SetActive(true);
+        if (slotTxtObj != null)
+            slotTxtObj.SetActive(false);
+    }
+
+    public void MousePointerOnClickImgOnOff(bool check)        //마우스 포인터가 슬롯을 가리키면 클릭이미지가 켜짐 안가리키면 꺼짐
+    {
+        clickImgObj.SetActive(check);
     }
 }

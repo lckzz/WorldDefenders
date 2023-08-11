@@ -35,6 +35,12 @@ public abstract class UI_BaseSettingUnit : MonoBehaviour
     public void ClickImageOnOff(bool check)
     {
         if (clickImgObj != null)
-            clickImgObj.SetActive(check);
+        {
+            if (!clickImgObj.activeSelf && check)
+                clickImgObj.SetActive(check);
+            else
+                clickImgObj.SetActive(check);
+
+        }
     }
 }

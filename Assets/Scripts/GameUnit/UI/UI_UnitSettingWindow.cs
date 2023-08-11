@@ -17,13 +17,15 @@ public class UI_UnitSettingWindow : UI_Base
     private UnitNodeUI unitNodeUI;
     private UnitSlotUI unitSlotUI;
     private UnitSlotUI unitSlotUICancel;
+    private UnitSlotUI mousePointerUnitSlotUI;
+    private UnitSlotUI tempMousePointerUnitSlotUI;
 
 
     private UnitNodeUI curUnitNodeUI;
     private UnitSlotUI curUnitSlotUI;  //클릭했을 때 슬롯의 정보
     private bool nodeUiClick = false; //유닛을 클릭했을 때 현재 클릭한 정보를 가지고있다면 true고 true일 때 마우스 클릭을 하면 다시 false
     private bool slotUiClick = false;
-
+   
 
 
     //터치 
@@ -55,6 +57,7 @@ public class UI_UnitSettingWindow : UI_Base
         ped.position = Input.mousePosition;
         OnMousePointerDown();
         OnMousePointerDownCancel();
+        OnMousePointer();
     }
 
 
@@ -259,6 +262,36 @@ public class UI_UnitSettingWindow : UI_Base
         }
     }
 
+    void OnMousePointer()       //마우스로 슬롯을 가리키면 해당 선택슬롯이미지가 활성화
+    {
+        if (slotUiClick)
+            return;
+
+
+        if(mousePointerUnitSlotUI == null)
+            mousePointerUnitSlotUI = UiRaycastGetFirstComponent<UnitSlotUI>(gr);
+
+
+        if(mousePointerUnitSlotUI != null)
+        {
+            if(!nodeUiClick)
+            {
+                if (mousePointerUnitSlotUI.E_UnitClass != UnitClass.Count)
+                    mousePointerUnitSlotUI.ClickImageOnOff(true);
+            }
+            else
+                mousePointerUnitSlotUI.ClickImageOnOff(true);
+        }
+
+        //Debug.Log(mousePointerUnitSlotUI);
+        mousePointerUnitSlotUI = OtherUIRayCast<UnitSlotUI>(mousePointerUnitSlotUI, ref tempMousePointerUnitSlotUI);
+        if (mousePointerUnitSlotUI == null)
+        {
+            if(tempMousePointerUnitSlotUI != null)
+                tempMousePointerUnitSlotUI.ClickImageOnOff(false);
+        }
+    }
+
     private void LoopEqualUnitSearch(int idx)
     {
         //리스트전체를 돌아서 현재 같은 유닛클래스가 있는지 판별
@@ -323,6 +356,32 @@ public class UI_UnitSettingWindow : UI_Base
 
     }
 
+    T  OtherUIRayCast<T>(T ui, ref T tempUi) where T : Component
+    {
+        rrList.Clear();
+        gr.Raycast(ped, rrList);
+
+        if (rrList.Count <= 0)
+            return ui;
+
+        if (ui !=  null)     //원하는 ui가 있는 상태에서
+        {
+
+            if (!ui.name.Equals(rrList[0].gameObject.name))
+            {
+                //리스트에 아무것도 없거나 원하는 ui랑 지금 보이는 ui랑 이름이 같지않다면
+                tempUi = ui;
+                ui = null;          //널 처리
+                return ui;
+               
+            }
+        }
+
+
+        return ui;
+        
+    }
+
 
 
     T UiRaycastGetFirstComponent<T>(GraphicRaycaster gr) where T : Component
@@ -331,12 +390,10 @@ public class UI_UnitSettingWindow : UI_Base
 
         gr.Raycast(ped, rrList);
 
-        
         if (rrList.Count == 0)
             return null;
         
-        //for(int ii = 0; ii < rrList.Count; ii++)
-        //    Debug.Log(rrList[ii].gameObject);
+
 
         return rrList[0].gameObject.GetComponent<T>();
     }
