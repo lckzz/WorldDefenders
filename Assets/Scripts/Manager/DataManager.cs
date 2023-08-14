@@ -21,6 +21,7 @@ public class DataManager
     public Dictionary<int, UnitStat> warriorDict { get; private set; } = new Dictionary<int, UnitStat>();
     public Dictionary<int, UnitStat> archerDict { get; private set; } = new Dictionary<int, UnitStat>();
     public Dictionary<int, UnitStat> spearDict { get; private set; } = new Dictionary<int, UnitStat>();
+    public Dictionary<int, MonsterStat> normalSkeleton { get; private set; } = new Dictionary<int, MonsterStat>();
 
     public void Init()
     {
@@ -28,6 +29,8 @@ public class DataManager
         warriorDict = LoadJson<WarriorData, int, UnitStat>("UnitData").MakeDict();
         archerDict = LoadJson<ArcherData, int, UnitStat>("UnitData").MakeDict();
         spearDict = LoadJson<SpearData, int, UnitStat>("UnitData").MakeDict();
+        normalSkeleton = LoadJson<NormalSkeletonData, int, MonsterStat>("MonsterData").MakeDict();
+
 
     }
     Loader LoadJson<Loader,Key,Value>(string path) where Loader : ILoader<Key,Value>

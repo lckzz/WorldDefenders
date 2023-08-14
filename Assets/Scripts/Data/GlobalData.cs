@@ -12,6 +12,8 @@ public class GlobalData
     public static int g_UnitSpearLv = 5;
 
     public static List<UnitClass> g_SlotUnitClass = new List<UnitClass>();
+    public static List<Define.MonsterType> g_MonsterTypeList = new List<Define.MonsterType>();
+    public static Define.SubStage curStage = Define.SubStage.One;
     public static bool firstInit = false;
 
     public const int g_unitSlotMax = 5;
@@ -34,5 +36,13 @@ public class GlobalData
         {
             g_SlotUnitClass.Add(unitSlotUIList[ii].E_UnitClass);
         }
+    }
+
+    public static void SetMonsterList(List<Define.MonsterType> monTypeList)
+    {
+        //스테이지선택창에서 시작을 하면 넘겨받아서 인게임에 적용
+        g_MonsterTypeList.Clear();
+        for (int ii = 0; ii < monTypeList.Count; ii++)
+            g_MonsterTypeList.Add(monTypeList[ii]);
     }
 }

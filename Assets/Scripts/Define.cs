@@ -10,6 +10,28 @@ public class Define
         PlayerArrow
     }
 
+    public enum MonsterType
+    {
+        NormalSkeleton,
+        BowSkeleton,
+        Count
+    }
+
+    public enum MainStage
+    {
+        One
+    }
+
+
+    public enum SubStage
+    {
+        One,
+        Two,
+        Three,
+        Boss
+
+    }
+
 
 
 }

@@ -91,3 +91,30 @@ public class SpearData : ILoader<int, UnitStat>
 }
 
 #endregion
+
+
+#region ∏ÛΩ∫≈Õ
+[Serializable]
+public class MonsterStat
+{
+    public int level;
+    public int hp;
+    public int att;
+}
+
+[Serializable]
+public class NormalSkeletonData :ILoader<int,MonsterStat>
+{
+    public MonsterStat normalSkeleton = new MonsterStat();
+    public Dictionary<int, MonsterStat> MakeDict()
+    {
+        Dictionary<int, MonsterStat> dict = new Dictionary<int, MonsterStat>();
+        dict.Add(normalSkeleton.level, normalSkeleton);
+
+        return dict;
+    }
+     
+}
+
+
+#endregion

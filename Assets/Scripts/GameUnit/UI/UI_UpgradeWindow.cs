@@ -87,8 +87,8 @@ public class UI_UpgradeWindow : UI_Base
 
         if(type == UIEvnet.PointerDown)
         {
-            evt.OnPointerDownUnitUpgradeHandler -= (unUsedIdx) => action(idx);
-            evt.OnPointerDownUnitUpgradeHandler += (unUsedIdx) => action(idx);
+            evt.OnPointerDownIntHandler -= (unUsedIdx) => action(idx);
+            evt.OnPointerDownIntHandler += (unUsedIdx) => action(idx);
 
         }
     }
