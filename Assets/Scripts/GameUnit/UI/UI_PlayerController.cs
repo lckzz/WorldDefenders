@@ -11,15 +11,26 @@ public class UI_PlayerController : MonoBehaviour
     [SerializeField] bool isGo = false;     //도착했는지 판단하는 변수
     [SerializeField] float speed = 5.0f;
 
-    bool isDistance = false;
+    bool[] isDistance = new bool[3];
+    bool[] isLeftDistance = new bool[3];
+
 
     Vector3 dir = Vector3.zero;
     Vector3 norDir = Vector3.zero;
+    private Vector3 rightMoveScale = new Vector3(-1, 1, 1);
+    private Vector3 leftMoveScale = new Vector3(1, 1, 1);
+
+    public bool IsGo { get { return isGo; } }
     // Start is called before the first frame update
     void Start()
     {
         this.TryGetComponent(out anim);
         curStage = GlobalData.curStage;
+        for(int i = 0; i < isDistance.Length; i++)
+        {
+            isDistance[i] = false;
+            isLeftDistance[i] = false;
+        }
     }
 
     // Update is called once per frame
@@ -39,223 +50,117 @@ public class UI_PlayerController : MonoBehaviour
 
         if(isGo)
         {
-            if ((int)curStage < (int)targetStage) //오른쪽으로 이동
+            if (this.gameObject.transform.position.x < rtTrs[(int)targetStage].transform.position.x - 5.0f) //오른쪽으로 이동
             {
-                if ((int)curStage + 1 == (int)targetStage)
+                anim.SetBool("Run", true);
+                if(this.gameObject.transform.localScale != rightMoveScale)
+                    this.gameObject.transform.localScale = rightMoveScale;
+
+                if (gameObject.transform.position.x <= rtTrs[(int)Define.SubStage.Two].transform.position.x - 5.0f)
                 {
-                    //다음 스테이지가 목표스테이지라면
-                    this.gameObject.transform.position = Vector3.Lerp(this.gameObject.transform.position, rtTrs[(int)targetStage].position, Time.deltaTime * speed);
-                    if (this.gameObject.transform.position.x >= rtTrs[(int)targetStage].position.x - 0.5f)
+                    if (!isDistance[(int)Define.SubStage.Two - 1])
                     {
-                        isGo = false;
-                        curStage = targetStage;
+                        isDistance[(int)Define.SubStage.Two - 1] = true;
+                        dir = rtTrs[(int)Define.SubStage.Two].position - this.gameObject.transform.position;
+                        norDir = dir.normalized;
                     }
+
+                    this.gameObject.transform.position += dir * Time.deltaTime * speed;
+
 
                 }
-
-                if ((int)curStage + 2 == (int)targetStage)        //다음스테이지가 목표스테이지가 아니면
+                else if (gameObject.transform.position.x <= rtTrs[(int)Define.SubStage.Three].transform.position.x - 5.0f)
                 {
-                    if (this.gameObject.transform.position.x <= rtTrs[(int)curStage + 1].position.x - 5.0f)
+
+                    
+
+                    if (!isDistance[(int)Define.SubStage.Three - 1])
                     {
-                        if (!isDistance)
-                        {
-                            isDistance = true;
-                            dir = rtTrs[(int)curStage + 1].position - this.gameObject.transform.position;
-                            norDir = dir.normalized;
-                        }
-
-                        this.gameObject.transform.position += dir * Time.deltaTime * speed;
-
+                        isDistance[(int)Define.SubStage.Three - 1] = true;
+                        dir = rtTrs[(int)Define.SubStage.Three].position - this.gameObject.transform.position;
+                        norDir = dir.normalized;
                     }
-                    else
-                    {
-                        if (this.gameObject.transform.position.x <= rtTrs[(int)curStage + 2].position.x - 5.0f)
-                        {
-                            if (isDistance)
-                            {
-                                isDistance = false;
-                                dir = rtTrs[(int)curStage + 2].position - this.gameObject.transform.position;
-                                norDir = dir.normalized;
-                            }
 
-                            this.gameObject.transform.position += dir * Time.deltaTime * speed;
-
-                        }
-
-                        else
-                        {
-                            curStage = targetStage;
-                            isGo = false;
-
-                        }
-
-                    }
+                    this.gameObject.transform.position += dir * Time.deltaTime * speed;
 
                 }
-
-                if ((int)curStage + 3 == (int)targetStage)        //목표스테이지가 3단계 건너있을때
+                else if (gameObject.transform.position.x <= rtTrs[(int)Define.SubStage.Boss].transform.position.x - 5.0f)
                 {
-                    if (this.gameObject.transform.position.x <= rtTrs[(int)curStage + 1].position.x - 5.0f)
+                    if (!isDistance[(int)Define.SubStage.Boss - 1])
                     {
-                        if (!isDistance)
-                        {
-                            isDistance = true;
-                            dir = rtTrs[(int)curStage + 1].position - this.gameObject.transform.position;
-                            norDir = dir.normalized;
-                        }
-
-                        this.gameObject.transform.position += dir * Time.deltaTime * speed;
-
+                        isDistance[(int)Define.SubStage.Boss - 1] = true;
+                        dir = rtTrs[(int)Define.SubStage.Boss].position - this.gameObject.transform.position;
+                        norDir = dir.normalized;
                     }
-                    else if (this.gameObject.transform.position.x <= rtTrs[(int)curStage + 2].position.x - 5.0f)
-                    {
-                        if (this.gameObject.transform.position.x <= rtTrs[(int)curStage + 2].position.x - 5.0f)
-                        {
-                            if (isDistance)
-                            {
-                                isDistance = false;
-                                dir = rtTrs[(int)curStage + 2].position - this.gameObject.transform.position;
-                                norDir = dir.normalized;
-                            }
 
-                            this.gameObject.transform.position += dir * Time.deltaTime * speed;
-
-                        }
-                    }
-                    else
-                    {
-                        if (this.gameObject.transform.position.x <= rtTrs[(int)curStage + 3].position.x - 5.0f)
-                        {
-                            if (!isDistance)
-                            {
-                                isDistance = true;
-                                dir = rtTrs[(int)GlobalData.curStage + 3].position - this.gameObject.transform.position;
-                                norDir = dir.normalized;
-                            }
-
-                            this.gameObject.transform.position += dir * Time.deltaTime * speed;
-
-                        }
-                        else
-                        {
-                            curStage = targetStage;
-                            isGo = false;
-
-                        }
-
-                    }
+                    this.gameObject.transform.position += dir * Time.deltaTime * speed;
 
                 }
+      
+
+      
 
 
 
             }
-            else   //왼쪽으로 이동!
+            else if(rtTrs[(int)targetStage].transform.position.x + 5.0f < this.gameObject.transform.position.x)  //왼쪽으로 이동!
             {
-                if ((int)curStage - 1 == (int)targetStage)
+                anim.SetBool("Run", true);
+                if (this.gameObject.transform.localScale != leftMoveScale)
+                    this.gameObject.transform.localScale = leftMoveScale;
+
+                if (gameObject.transform.position.x > rtTrs[(int)Define.SubStage.Three].transform.position.x + 5.0f)
                 {
-                    //다음 스테이지가 목표스테이지라면
-                    this.gameObject.transform.position = Vector3.Lerp(this.gameObject.transform.position, rtTrs[(int)targetStage].position, Time.deltaTime * speed);
-                    if (this.gameObject.transform.position.x >= rtTrs[(int)targetStage].position.x - 0.5f)
+
+                    if (!isLeftDistance[(int)Define.SubStage.Three])
                     {
-                        isGo = false;
-                        curStage = targetStage;
+                        isLeftDistance[(int)Define.SubStage.Three] = true;
+                        dir = rtTrs[(int)Define.SubStage.Three].position - this.gameObject.transform.position;
+                        norDir = dir.normalized;
                     }
+
+                    this.gameObject.transform.position += dir * Time.deltaTime * speed;
 
                 }
-
-                if ((int)curStage - 2 == (int)targetStage)        //다음스테이지가 목표스테이지가 아니면
+                else if (gameObject.transform.position.x > rtTrs[(int)Define.SubStage.Two].transform.position.x + 5.0f)
                 {
-                    if (this.gameObject.transform.position.x + 5.0f >= rtTrs[(int)curStage - 1].position.x)
+
+                    if (!isLeftDistance[(int)Define.SubStage.Two])
                     {
-                        if (!isDistance)
-                        {
-                            isDistance = true;
-                            dir = rtTrs[(int)curStage - 1].position - this.gameObject.transform.position;
-                            norDir = dir.normalized;
-                        }
-
-                        this.gameObject.transform.position += dir * Time.deltaTime * speed;
-
+                        isLeftDistance[(int)Define.SubStage.Two] = true;
+                        dir = rtTrs[(int)Define.SubStage.Two].position - this.gameObject.transform.position;
+                        norDir = dir.normalized;
                     }
-                    else
-                    {
-                        if (this.gameObject.transform.position.x + 5.0f >= rtTrs[(int)curStage + 2].position.x)
-                        {
-                            if (isDistance)
-                            {
-                                isDistance = false;
-                                dir = rtTrs[(int)curStage - 2].position - this.gameObject.transform.position;
-                                norDir = dir.normalized;
-                            }
 
-                            this.gameObject.transform.position += dir * Time.deltaTime * speed;
-
-                        }
-
-                        else
-                        {
-                            curStage = targetStage;
-                            isGo = false;
-
-                        }
-
-                    }
+                    this.gameObject.transform.position += dir * Time.deltaTime * speed;
 
                 }
-
-                if ((int)curStage + 3 == (int)targetStage)        //목표스테이지가 3단계 건너있을때
+                else if (gameObject.transform.position.x > rtTrs[(int)Define.SubStage.One].transform.position.x + 5.0f)
                 {
-                    if (this.gameObject.transform.position.x <= rtTrs[(int)curStage + 1].position.x - 5.0f)
+
+                    if (!isLeftDistance[(int)Define.SubStage.One])
                     {
-                        if (!isDistance)
-                        {
-                            isDistance = true;
-                            dir = rtTrs[(int)curStage + 1].position - this.gameObject.transform.position;
-                            norDir = dir.normalized;
-                        }
-
-                        this.gameObject.transform.position += dir * Time.deltaTime * speed;
-
-                    }
-                    else if (this.gameObject.transform.position.x <= rtTrs[(int)curStage + 2].position.x - 5.0f)
-                    {
-                        if (this.gameObject.transform.position.x <= rtTrs[(int)curStage + 2].position.x - 5.0f)
-                        {
-                            if (isDistance)
-                            {
-                                isDistance = false;
-                                dir = rtTrs[(int)curStage + 2].position - this.gameObject.transform.position;
-                                norDir = dir.normalized;
-                            }
-
-                            this.gameObject.transform.position += dir * Time.deltaTime * speed;
-
-                        }
-                    }
-                    else
-                    {
-                        if (this.gameObject.transform.position.x <= rtTrs[(int)curStage + 3].position.x - 5.0f)
-                        {
-                            if (!isDistance)
-                            {
-                                isDistance = true;
-                                dir = rtTrs[(int)GlobalData.curStage + 3].position - this.gameObject.transform.position;
-                                norDir = dir.normalized;
-                            }
-
-                            this.gameObject.transform.position += dir * Time.deltaTime * speed;
-
-                        }
-                        else
-                        {
-                            curStage = targetStage;
-                            isGo = false;
-
-                        }
-
+                        isLeftDistance[(int)Define.SubStage.One] = true;
+                        dir = rtTrs[(int)Define.SubStage.One].position - this.gameObject.transform.position;
+                        norDir = dir.normalized;
                     }
 
+                    this.gameObject.transform.position += dir * Time.deltaTime * speed;
+
+                }
+            }
+
+            else
+            {
+                if (isGo == true)
+                {
+                    isGo = false;
+                    anim.SetBool("Run", false);
+                    for(int ii = 0; ii < isDistance.Length; ii++)
+                    {
+                        isDistance[ii] = false;
+                        isLeftDistance[ii] = false;
+                    }
                 }
 
             }
@@ -267,8 +172,17 @@ public class UI_PlayerController : MonoBehaviour
     }
 
 
+
+
+
+
     public void SetTarget(Define.SubStage targetStage,bool isGo)
     {
+
+        if (this.isGo)
+            return;
+
+
         this.targetStage = targetStage;
         this.isGo = isGo;
     }
