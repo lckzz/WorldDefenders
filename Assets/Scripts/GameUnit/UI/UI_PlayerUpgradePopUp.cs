@@ -77,6 +77,8 @@ public class UI_PlayerUpgradePopUp : UI_Base
 
     void UpgradeBtn()
     {
+        Managers.Sound.Play("Effect/UI_Click");
+
         if (GlobalData.g_PlayerLevel < 10)
             GlobalData.g_PlayerLevel++;
 

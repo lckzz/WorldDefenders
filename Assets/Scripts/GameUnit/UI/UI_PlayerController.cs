@@ -31,12 +31,20 @@ public class UI_PlayerController : MonoBehaviour
             isDistance[i] = false;
             isLeftDistance[i] = false;
         }
+
+        Init();
     }
 
     // Update is called once per frame
     private void Update()
     {
         PlayerMove();
+    }
+
+
+    void Init()
+    {
+        this.transform.position = rtTrs[(int)GlobalData.curStage].transform.position;
     }
 
 
@@ -156,6 +164,7 @@ public class UI_PlayerController : MonoBehaviour
                 {
                     isGo = false;
                     anim.SetBool("Run", false);
+                    GlobalData.curStage = targetStage;
                     for(int ii = 0; ii < isDistance.Length; ii++)
                     {
                         isDistance[ii] = false;

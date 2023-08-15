@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UI_StageSelectPopUp : UI_Base
@@ -10,29 +11,50 @@ public class UI_StageSelectPopUp : UI_Base
 
     [SerializeField] private Image[] onestageSels = null;
     [SerializeField] private TextMeshProUGUI curSelectText;
+    [SerializeField] private Button backBtn;
+    [SerializeField] private Button startBtn;
+    [SerializeField] private Image fadeImg;
+
+    private bool fadeCheck = false;
+
+
     [SerializeField] private GameObject player;
 
-
-
-
+    Color btnImgAlphaOn = new Color32(255, 255, 255, 255);
+    Color btnImgAlphaOff = new Color32(255, 255, 255, 105);
 
     private UI_PlayerController ui_PlayerCtrl;
+
+
+    public bool FadeCheck { get { return fadeCheck; }}
     // Start is called before the first frame update
     void Start()
     {
-        for(int ii = 0; ii < onestageSels.Length; ii++)
+
+        if (backBtn != null)
+            backBtn.onClick.AddListener(ClosePopUp);
+        if (startBtn != null)
+            startBtn.onClick.AddListener(StartInGame);
+
+        for (int ii = 0; ii < onestageSels.Length; ii++)
         {
             Debug.Log("테스트");
             OnClickStage(onestageSels[ii].gameObject, ii, GetStageInfo, UIEvnet.PointerDown);
         }
 
         player.TryGetComponent(out ui_PlayerCtrl);
+        StartBtnInActive();
+        curSelectText.text = "Select Stage!";
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(fadeCheck)
+        {
+            FadeIn();
+        }
     }
 
 
@@ -61,6 +83,8 @@ public class UI_StageSelectPopUp : UI_Base
     }
 
 
+
+
     void GetStageInfo(int ii)
     {
         //해당 스테이지를 누르면 지금 스테이지가 어떤 스테이지인지 확인하고 해당스테이지 몬스터의 정보를 받아온다
@@ -69,6 +93,7 @@ public class UI_StageSelectPopUp : UI_Base
         if (ui_PlayerCtrl.IsGo == false)
             SelectStageTextRefresh(Define.MainStage.One, stagenode.Stage);
         ui_PlayerCtrl.SetTarget(stagenode.Stage,true);
+        StartBtnActive();
 
     }
 
@@ -99,5 +124,77 @@ public class UI_StageSelectPopUp : UI_Base
             }
 
         }
+    }
+
+
+    void ClosePopUp()
+    {
+        Managers.Sound.Play("Effect/UI_Click");
+
+        Managers.UI.ClosePopUp(this);
+        Managers.UI.ShowPopUp<UI_Lobby>();
+    }
+
+
+    void StartBtnActive()
+    {
+
+        //버튼활성화
+        startBtn.enabled = true;
+        if(startBtn.TryGetComponent(out Image img))
+        {
+            img.color = btnImgAlphaOn;
+        }
+
+    }
+
+    void StartBtnInActive()
+    {
+
+        //버튼활성화
+        startBtn.enabled = false;
+        if (startBtn.TryGetComponent(out Image img))
+        {
+            img.color = btnImgAlphaOff;
+        }
+
+    }
+
+
+    void FadeIn()
+    {
+        if(fadeImg != null)
+        {
+            if (!fadeImg.gameObject.activeSelf)
+            {
+                fadeImg.gameObject.SetActive(true);
+
+            }
+
+            if (fadeImg.gameObject.activeSelf && fadeImg.color.a <= 1)
+            {
+                Color col = fadeImg.color;
+                if (col.a < 255)
+                    col.a += (Time.deltaTime * 1.0f);
+
+                fadeImg.color = col;
+
+
+                if (fadeImg.color.a >= 0.99f)
+                {
+                    Managers.Scene.LoadScene(Define.Scene.BattleStage_Field);
+
+
+                }
+            }
+        }
+    }
+
+    void StartInGame()
+    {
+        Managers.Sound.Play("Effect/UI_Click");
+
+        fadeCheck = true;
+        //Managers.Scene.LoadScene(Define.Scene.BattleStage_Field);
     }
 }

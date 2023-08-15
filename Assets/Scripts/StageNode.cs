@@ -29,6 +29,25 @@ public class StageNode : MonoBehaviour
                     stageMonsterList.Add((Define.MonsterType)ii);
                 }
                 break;
+            case Define.SubStage.Two:
+                for (int ii = 0; ii < (int)Define.MonsterType.BowSkeleton + 1; ii++)
+                {
+                    stageMonsterList.Add((Define.MonsterType)ii);
+                }
+                break;
+            case Define.SubStage.Three:
+                for (int ii = 0; ii < (int)Define.MonsterType.BowSkeleton + 1; ii++)
+                {
+                    stageMonsterList.Add((Define.MonsterType)ii);
+                }
+                break;
+            case Define.SubStage.Boss:
+                for (int ii = 0; ii < (int)Define.MonsterType.BowSkeleton + 1; ii++)
+                {
+                    stageMonsterList.Add((Define.MonsterType)ii);
+                }
+                break;
+
         }
 
     }

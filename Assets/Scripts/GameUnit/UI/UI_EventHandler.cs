@@ -16,7 +16,7 @@ public class UI_EventHandler : MonoBehaviour,IPointerDownHandler,IPointerUpHandl
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("Å¬¸¯");
+        Managers.Sound.Play("Effect/UI_Click");
         OnPointerDownHandler?.Invoke();
         OnPointerDownUnitHandler?.Invoke(path,idx);
         OnPointerDownIntHandler?.Invoke(idx);

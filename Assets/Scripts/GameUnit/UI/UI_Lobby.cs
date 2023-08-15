@@ -8,6 +8,7 @@ public class UI_Lobby : UI_Base
 {
     public Button upgradeBtn;
     public Button unitSettingBtn;
+    public Button stageSelectBtn;
     public LobbyScene lobbyScene;
     // Start is called before the first frame update
     void Start()
@@ -16,6 +17,7 @@ public class UI_Lobby : UI_Base
         LobbySceneRefresh();
         ButtonEvent(upgradeBtn.gameObject, UpgradeOn, UIEvnet.PointerDown);
         ButtonEvent(unitSettingBtn.gameObject, UnitSettingOn, UIEvnet.PointerDown);
+        ButtonEvent(stageSelectBtn.gameObject, StageSelectOn, UIEvnet.PointerDown);
 
     }
 
@@ -56,6 +58,12 @@ public class UI_Lobby : UI_Base
     {
         Managers.UI.ClosePopUp(this);
         Managers.UI.ShowPopUp<UI_UnitSettingWindow>();
+    }
+
+    void StageSelectOn()
+    {
+        Managers.UI.ClosePopUp(this);
+        Managers.UI.ShowPopUp<UI_StageSelectPopUp>();
     }
 
     void LobbySceneRefresh()

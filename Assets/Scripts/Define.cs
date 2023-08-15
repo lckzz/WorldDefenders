@@ -10,6 +10,21 @@ public class Define
         PlayerArrow
     }
 
+    public enum Sound
+    {
+        BGM,
+        Effect,
+        MaxCount
+    }
+
+    public enum Scene
+    {
+        Unknown,
+        Login,
+        Lobby,
+        BattleStage_Field
+    }
+
     public enum MonsterType
     {
         NormalSkeleton,

@@ -54,6 +54,8 @@ public class UI_UpgradeWindow : UI_Base
         if (backLobbyBtn != null)
             backLobbyBtn.onClick.AddListener(() =>
             {
+                Managers.Sound.Play("Effect/UI_Click");
+
                 Managers.UI.ClosePopUp(this);
                 Managers.UI.ShowPopUp<UI_Lobby>();
 
@@ -179,6 +181,8 @@ public class UI_UpgradeWindow : UI_Base
 
     void PlayerUpgradeOpen()
     {
+        Managers.Sound.Play("Effect/UI_Click");
+
         Managers.UI.ShowPopUp<UI_PlayerUpgradePopUp>();
     }
 }

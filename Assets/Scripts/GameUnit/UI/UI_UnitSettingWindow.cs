@@ -44,6 +44,8 @@ public class UI_UnitSettingWindow : UI_Base
         if (backLobbyBtn != null)
             backLobbyBtn.onClick.AddListener(() =>
             {
+                Managers.Sound.Play("Effect/UI_Click");
+
                 Managers.UI.ClosePopUp(this);
                 Managers.UI.ShowPopUp<UI_Lobby>();
                 GlobalData.SetUnitClass(unitSlotUiList);
@@ -135,11 +137,14 @@ public class UI_UnitSettingWindow : UI_Base
     {
         if(Input.GetMouseButtonDown(0))
         {
+
             unitSlotUI = UiRaycastGetFirstComponent<UnitSlotUI>(gr);
             unitNodeUI = UiRaycastGetFirstComponent<UnitNodeUI>(gr);
 
             if(unitSlotUI != null)
             {
+                Managers.Sound.Play("Effect/UI_Click");
+
                 if (unitMaskObj.activeSelf)  //마스크 오브젝트가 켜져있다면 리턴
                     unitMaskObj.SetActive(false);
 
@@ -184,6 +189,7 @@ public class UI_UnitSettingWindow : UI_Base
 
             else if(unitNodeUI != null)
             {
+                Managers.Sound.Play("Effect/UI_Click");
 
                 //유닛노드를 클릭했을 때
                 if (unitMaskObj.activeSelf || slotUiClick)  //마스크 오브젝트가 켜져있거나 슬롯클릭이 켜져있다면 리턴
@@ -227,6 +233,7 @@ public class UI_UnitSettingWindow : UI_Base
     {
         if (Input.GetMouseButtonDown(1))
         {
+
             if (unitNodeUI == null && unitSlotUI == null)
                 return;
 

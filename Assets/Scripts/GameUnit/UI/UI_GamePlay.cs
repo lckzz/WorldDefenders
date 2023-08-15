@@ -35,10 +35,14 @@ public class UI_GamePlay : UI_Base
     PlayerController player;
     [SerializeField]
     Image coolImg;
+    [SerializeField] Image fadeImg;
+
+    bool fadeCheck = true;
 
 
     UnitNode unitNode;
     GameObject unitObj;
+    GameObject unitSpawnBtnPrefab;
 
     public static Queue<GameObject> gameQueue = new Queue<GameObject>();
     //UI_EventHandler evt;
@@ -51,6 +55,15 @@ public class UI_GamePlay : UI_Base
             return false;
 
 
+        for(int ii = 0; ii < GlobalData.g_SlotUnitClass.Count; ii++)
+        {
+            if (GlobalData.g_SlotUnitClass[ii] != UnitClass.Count)
+            {
+                GameObject nodeObj = Managers.Resource.Instantiate("Unit/UnitSpawnBtn", contents.transform);
+                nodeObj.TryGetComponent(out UnitNode unitNode);
+                unitNode.UnitInit(GlobalData.g_SlotUnitClass[ii]);
+            }    
+        }
 
        
         uiUnit = new Button[contents.transform.childCount];
@@ -70,15 +83,24 @@ public class UI_GamePlay : UI_Base
 
         for (int i = 0; i < uiUnit.Length; i++)
         {
-            if(i == 0)
+            uiUnit[i].TryGetComponent<UnitNode>(out UnitNode node);
+
+            Debug.Log(node.Unit);
+
+            switch (node.Unit)
             {
-                string path = "Prefabs/Unit/KnifeUnit";
-                ButtonEvent1(uiUnit[i].gameObject, path, i,UnitSummon, UIEvnet.PointerDown);
-            }
-            if (i == 1)
-            {
-                string path = "Prefabs/Unit/BowUnit";
-                ButtonEvent1(uiUnit[i].gameObject, path, i,UnitSummon, UIEvnet.PointerDown);
+                case UnitClass.Warrior:
+                    UnitButtonSetting(i, "Prefabs/Unit/KnifeUnit");
+                    break;
+
+                case UnitClass.Archer:
+                    UnitButtonSetting(i, "Prefabs/Unit/BowUnit");
+                    break;
+
+                case UnitClass.Spear:
+                    Debug.Log("스피어맞음?");
+                    UnitButtonSetting(i, "Prefabs/Unit/SpearUnit");
+                    break;
             }
         }
 
@@ -87,6 +109,11 @@ public class UI_GamePlay : UI_Base
         return true;
     }
 
+
+    private void Update()
+    {
+        FadeOut();
+    }
 
 
     void ButtonEvent(GameObject obj,Action action = null, UIEvnet type = UIEvnet.PointerDown)
@@ -125,6 +152,39 @@ public class UI_GamePlay : UI_Base
 
         }
 
+    }
+
+
+    void UnitButtonSetting(int i , string path)
+    {
+        ButtonEvent1(uiUnit[i].gameObject, path, i, UnitSummon, UIEvnet.PointerDown);
+    }
+
+
+    void FadeOut()
+    {
+        if (fadeCheck)
+        {
+            if (!fadeImg.gameObject.activeSelf)
+                fadeImg.gameObject.SetActive(true);
+
+            if (fadeImg.gameObject.activeSelf && fadeImg.color.a > 0)
+            {
+                Color col = fadeImg.color;
+                if (col.a > 0)
+                    col.a -= (Time.deltaTime * 1.0f);
+
+                fadeImg.color = col;
+
+                if (fadeImg.color.a <= 0.01f)
+                {
+                    fadeImg.gameObject.SetActive(false);
+                    fadeCheck = false;
+
+                }
+
+            }
+        }
     }
 
     public void UpdateCoolTime(float speed)

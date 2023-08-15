@@ -82,6 +82,7 @@ public class UIManager
         UI_Base popUp = _uiStack.Pop();
         Managers.Resource.Destory(popUp.gameObject);
         popUp = null;
+        _ui = null;
     }
 
     public T FindPopup<T>() where T : UI_Base

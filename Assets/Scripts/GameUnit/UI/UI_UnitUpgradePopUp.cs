@@ -56,6 +56,9 @@ public class UI_UnitUpgradePopUp : UI_Base
         if (closeBtn != null)
             closeBtn.onClick.AddListener(() =>
             {
+                
+                Managers.Sound.Play("Effect/UI_Click");
+
                 Managers.UI.ClosePopUp(this);
                 Managers.UI.PeekPopupUI<UI_UpgradeWindow>().RefreshUnitImgAnim(GlobalData.g_UnitWarriorLv, GlobalData.g_UnitArcherLv, GlobalData.g_UnitSpearLv);
             });
@@ -154,6 +157,8 @@ public class UI_UnitUpgradePopUp : UI_Base
 
     void UpgradeUnit()
     {
+        Managers.Sound.Play("Effect/UI_Click");
+
         switch (unitidx)     // .버튼을 통해서 선택된 유닛
         {
             case (int)UnitClass.Warrior:
