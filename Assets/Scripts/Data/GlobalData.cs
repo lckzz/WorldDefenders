@@ -9,7 +9,7 @@ public class GlobalData
 
     public static int g_UnitWarriorLv = 1;
     public static int g_UnitArcherLv = 1;
-    public static int g_UnitSpearLv = 5;
+    public static int g_UnitSpearLv = 1;
 
     public static List<UnitClass> g_SlotUnitClass = new List<UnitClass>();
     public static List<Define.MonsterType> g_MonsterTypeList = new List<Define.MonsterType>();
