@@ -11,7 +11,7 @@ enum MonsterClass
     Archer
 }
 
-enum MonsterState
+public enum MonsterState
 {
     Idle,
     Run,
@@ -54,6 +54,9 @@ public class MonsterController : Unit
 
     public UnitController UnitCtrl { get { return unitctrl; } }
     public PlayerTower PlayerTowerCtrl { get { return playerTowerCtrl; } }
+    public MonsterState MonState { get { return state; } }
+
+
 
 
     void Init()
