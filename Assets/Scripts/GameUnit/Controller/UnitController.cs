@@ -19,6 +19,7 @@ public enum UnitState
     Run,
     Trace,
     Attack,
+    KnockBack,
     Die
 }
 
@@ -32,12 +33,13 @@ public class UnitController : Unit
     [SerializeField]
     private UnitState state = UnitState.Run;        //테스트용이라 런 
 
-    Rigidbody2D rig;
+
     MonsterController[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
     [SerializeField] MonsterController monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
     Collider2D unitColl2d;
     [SerializeField] MonsterPortal monsterPortal;
 
+    Rigidbody2D rigbody;
 
     public bool IsDie { get { return isDie; } }
     public int Att { get { return att; } }
@@ -46,6 +48,8 @@ public class UnitController : Unit
 
     public void IsTargetingSet(bool value) => isTargeting = value;
     public MonsterPortal MonsterPortal { get { return monsterPortal; } }
+
+    public UnitState UniState { get { return state; } }
 
 
     //아처 전용
@@ -73,9 +77,10 @@ public class UnitController : Unit
 
         //rig = this.GetComponent<Rigidbody2D>();
         //anim = GetComponent<Animator>();
-        TryGetComponent<Rigidbody2D>(out rig);
         TryGetComponent<Animator>(out anim);
         TryGetComponent<Collider2D>(out unitColl2d);
+        TryGetComponent<Rigidbody2D>(out rigbody);
+
         if (unitClass == UnitClass.Archer)
             arrowPos = transform.Find("ArrowPos");
         else
@@ -100,6 +105,13 @@ public class UnitController : Unit
         UnitStateCheck();
         AttackDelay();
         UnitVictory();
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            state = UnitState.KnockBack;
+
+        }
+
 
         //앞으로 움직임 
     }
@@ -232,6 +244,11 @@ public class UnitController : Unit
                     UnitAttack();
                     break;
                 }
+            case UnitState.KnockBack:
+                {
+                    ApplyKnockBack(new Vector2(-1.0f,1.0f),5.5f);
+                    break;
+                }
             case UnitState.Die:
                 {
 
@@ -292,6 +309,22 @@ public class UnitController : Unit
                     }
                     break;
                 }
+            case UnitState.KnockBack:
+                {
+                    if (!isRun)
+                    {
+                        isRun = true;
+                        anim.SetBool("Run", isRun);
+
+                    }
+                    if (isAtt)
+                    {
+                        isAtt = false;
+                        anim.SetBool("Attack", isAtt);
+
+                    }
+                    break;
+                }
             case UnitState.Die:
                 {
                     if (!isDie)
@@ -312,11 +345,12 @@ public class UnitController : Unit
             SetUnitState(UnitState.Trace);
 
 
+
         if (IsTargetOn())
             return;
 
 
-        transform.position += Vector3.right * moveSpeed * Time.deltaTime;
+        rigbody.transform.position += Vector3.right * moveSpeed * Time.deltaTime;
 
 
 
@@ -369,146 +403,7 @@ public class UnitController : Unit
     }
 
 
-    void UnitMovement()
-    {
-
-
-
-
-        switch (state)
-        {
-            case UnitState.Run:
-                //if (isTargeting)
-                //{
-                //    state = UnitState.Trace;
-                //    break;
-                //}
-
-                //if (isAtt)
-                //{
-                //    isAtt = false;
-                //    anim.SetBool("Attack", isAtt);
-                //}
-
-                if (!isRun)
-                {
-                    isRun = true;
-                    anim.SetBool("Run", isRun);
-
-                }
-
-                transform.position += Vector3.right * moveSpeed * Time.deltaTime;
-
-
-
-
-                break;
-
-            case UnitState.Trace:
-                #region 유닛만 구현했을때
-                //if (isTargeting == false)
-                //{
-                //    state = UnitState.Run;
-                //    monCtrl = null;
-                //}
-
-                //if(monCtrl != null)
-                //{
-                //    Vector3 vec = monCtrl.gameObject.transform.position - this.transform.position;
-                //    float distance = vec.magnitude;
-                //    Vector3 dir = vec.normalized;
-                //    transform.position += dir * moveSpeed * Time.deltaTime;
-                //    //Debug.Log(distance);
-                //    if (unitClass == UnitClass.Archer)
-                //    {
-
-                //        if (distance < archerAttDis)
-                //        {
-                //            isRun = false;
-                //            anim.SetBool("Run", isRun);
-                //            state = UnitState.Attack;
-                //        }
-                //    }
-                //    else if (unitClass == UnitClass.Warrior)
-                //    {
-                //        //Debug.Log(hit.distance);
-
-                //        if (distance < 1.5f)
-                //        {
-                //            isRun = false;
-                //            anim.SetBool("Run", isRun);
-                //            state = UnitState.Attack;
-                //        }
-                //    }
-                //}
-
-                //else  //추격상태인데 몬스터정보가 없다면
-                //{
-                //    isTargeting = false;
-                //    state = UnitState.Run;
-                //    monCtrl = null;
-                //}
-                #endregion
-                if (isUnitTarget)        //유닛이 타겟팅이되면
-                    Trace(monTarget);
-                else if (isTowerTarger)
-                    Trace(monsterPortal);
-
-                break;
-            case UnitState.Attack:
-                if (attackCoolTime > .0f)
-                    return;
-
-                if (!isAtt)
-                {
-                    isAtt = true;
-                    anim.SetBool("Attack", isAtt);
-
-                }
-                if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
-                {
-                    if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
-                    {
-                        isAtt = false;
-                        anim.SetBool("Attack", isAtt);
-
-                        attackCoolTime = .5f;
-
-                        //공격이 끝나면 모든 타겟팅을 다시 잡는다.
-                        isTargeting = false;
-                        isUnitTarget = false;
-                        isTowerTarger = false;
-
-                        state = UnitState.Run;
-                        isRun = false;
-
-                        isAtt = false;
-                        anim.SetBool("Attack", isAtt);
-                        isRun = true;
-                        anim.SetBool("Run", isRun);
-                    }
-
-                    
-                }
-
-
-
-
-                break;
-
-            case UnitState.Die:
-                if(!isDie)
-                {
-                    isDie = true;
-                    anim.SetTrigger("Die");
-                   
-                }
-
-                break;
-
-
-        }// 박스안에 들어온 몬스터의 정보를 받아온다.
-    }
+   
 
     public void OnDamage(int att)
     {
@@ -520,6 +415,8 @@ public class UnitController : Unit
         if (hp > 0)
         {
             hp -= att;
+            SetUnitState(UnitState.KnockBack);
+
             if (hp <= 0)
             {
                 Debug.Log(hp);
@@ -566,6 +463,35 @@ public class UnitController : Unit
 
     }
 
+    void ApplyKnockBack(Vector2 dir , float force)
+    {
+        dir.y = 0;
+
+        rigbody.gravityScale = 0.0f;
+        rigbody.velocity = Vector2.zero;
+        rigbody.AddForce(dir * force, ForceMode2D.Impulse);
+
+        StartCoroutine(RestoreGravityAfterKnockback());
+    }
+
+
+    float knockbackDuration = 0.5f;
+    IEnumerator RestoreGravityAfterKnockback()
+    {
+       
+        yield return new WaitForSeconds(knockbackDuration); // 넉백 지속 시간
+
+
+        while (rigbody.velocity.magnitude > 0.1f)
+        {
+            rigbody.velocity *= 0.96f;
+            yield return null;
+        }
+        //rigbody.velocity *= 0.5f;
+
+
+        state = UnitState.Run;
+    }
 
     void Trace<T>(T obj) where T : UnityEngine.Component 
     {
@@ -583,7 +509,7 @@ public class UnitController : Unit
             }
             else
             {
-                transform.position += dir * moveSpeed * Time.deltaTime;
+                rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
                 SetUnitState(UnitState.Trace);
             }
 
@@ -597,7 +523,7 @@ public class UnitController : Unit
             }
             else
             {
-                transform.position += dir * moveSpeed * Time.deltaTime;
+                rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
                 SetUnitState(UnitState.Trace);
 
             }
