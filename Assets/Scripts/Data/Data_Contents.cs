@@ -41,6 +41,7 @@ public class UnitStat
     public int level;
     public int hp;
     public int att;
+    public int knockBackForce;
     public int cost;
     public int price;
 }
@@ -97,23 +98,40 @@ public class SpearData : ILoader<int, UnitStat>
 [Serializable]
 public class MonsterStat
 {
+    public string id;
     public int level;
     public int hp;
     public int att;
+    public int knockBackForce;
 }
 
-[Serializable]
-public class NormalSkeletonData :ILoader<int,MonsterStat>
+
+public class NormalSkeletonData :ILoader<string, MonsterStat>
 {
-    public MonsterStat normalSkeleton = new MonsterStat();
-    public Dictionary<int, MonsterStat> MakeDict()
+    public List<MonsterStat> normalSkeleton = new List<MonsterStat>();
+    public Dictionary<string, MonsterStat> MakeDict()
     {
-        Dictionary<int, MonsterStat> dict = new Dictionary<int, MonsterStat>();
-        dict.Add(normalSkeleton.level, normalSkeleton);
+        Dictionary<string, MonsterStat> dict = new Dictionary<string, MonsterStat>();
+        foreach (MonsterStat stat in normalSkeleton)
+            dict.Add(stat.id, stat);
 
         return dict;
     }
      
+}
+
+public class BowSkeletonData : ILoader<string, MonsterStat>
+{
+    public List<MonsterStat> bowSkeleton = new List<MonsterStat>();
+    public Dictionary<string, MonsterStat> MakeDict()
+    {
+        Dictionary<string, MonsterStat> dict = new Dictionary<string, MonsterStat>();
+        foreach (MonsterStat stat in bowSkeleton)
+            dict.Add(stat.id, stat);
+
+        return dict;
+    }
+
 }
 
 

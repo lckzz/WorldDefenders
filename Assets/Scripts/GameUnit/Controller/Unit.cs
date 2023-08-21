@@ -5,10 +5,13 @@ using UnityEngine;
 public class Unit : MonoBehaviour,ISensor
 {
     // Start is called before the first frame update
-    protected float hp = 0;
+    [SerializeField]  protected float hp = 0;
     protected float maxHp = 0;
     [SerializeField]
     protected int att = 0;
+    protected int knockbackForce = 0;
+    protected int damageKnockBack = 0;
+
 
     protected float moveSpeed = .0f;
     protected bool isRun = false;
@@ -21,16 +24,26 @@ public class Unit : MonoBehaviour,ISensor
     protected bool isTowerTarger = false;       //타워가 타겟이다.
 
     [SerializeField]
-    protected float attackCoolTime = 01.5f;
+    protected float attackCoolTime = 1.5f;
     protected bool attackTime = true;      //공격쿨이 다돈 상태
 
+    [SerializeField]
     protected float archerAttDis = .0f;
     protected Collider2D[] coll2d;
-    protected Collider2D towerColl;
+    protected Collider2D tower;
     protected Collider2D unitColl;
 
     protected float unitDestroyTime = .0f;
 
+
+    //타워 관련 변수
+    protected Vector2 towerVec;
+    protected Vector2 towerDir;
+    protected float towerDist;
+    protected bool towerTrace = false;
+    protected bool towerAttack = false;       //타워에 가까워지면 
+
+    //타워 관련 변수
 
     [SerializeField]
     protected Transform pos;

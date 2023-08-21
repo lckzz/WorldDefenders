@@ -25,6 +25,7 @@ public class PortalUI : UnitUI
     {
         if (hpbar != null)
         {
+            
             float hp = monPortal.hpPercent();
 
 

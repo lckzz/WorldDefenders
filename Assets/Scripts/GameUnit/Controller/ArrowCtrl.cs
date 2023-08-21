@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ArrowCtrl : MonoBehaviour
 {
     private Vector3 unitArrowScale = new Vector3(-5f, 5f, 5f);
     private UnitController unitCtrl;
     private MonsterController monsterCtrl;
-    private MonsterPortal monPortal;
+    [SerializeField] private MonsterPortal monPortal;
 
     private float arrowSpeed = 35.0f;
 
@@ -56,7 +57,6 @@ public class ArrowCtrl : MonoBehaviour
     {
         if (mon != null)
         {
-            Debug.Log("여기 유닛");
             shotDir = mon.transform.position - unitCtrl.transform.position;
             shotDir.Normalize();
 
@@ -67,7 +67,6 @@ public class ArrowCtrl : MonoBehaviour
         }
         else if (tower != null)
         {
-            Debug.Log("여기 타워조준");
 
             shotDir = tower.transform.position - unitCtrl.transform.position;
             shotDir.Normalize();
@@ -86,6 +85,8 @@ public class ArrowCtrl : MonoBehaviour
     {
         if (coll.tag == "Monster")
         {
+            Managers.Sound.Play("Sounds/Effect/Arrowhit");
+
             MonsterController monctrl = null;
             coll.TryGetComponent<MonsterController>(out monctrl);
             if (monctrl != null)
@@ -97,6 +98,7 @@ public class ArrowCtrl : MonoBehaviour
         }
         else if (coll.tag.Contains("Tower"))
         {
+            Managers.Sound.Play("Sounds/Effect/Arrowhit");
             MonsterPortal monPort = null;
             coll.TryGetComponent<MonsterPortal>(out monPort);
             if (monPort != null)
@@ -108,6 +110,13 @@ public class ArrowCtrl : MonoBehaviour
 
         else
             return;
+    }
+
+
+    public void SetType(MonsterController monCtrl , MonsterPortal monPort)
+    {
+        monsterCtrl = monCtrl;
+        monPortal = monPort;
     }
 
 }

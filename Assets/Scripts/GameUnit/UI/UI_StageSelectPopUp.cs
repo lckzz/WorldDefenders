@@ -38,13 +38,12 @@ public class UI_StageSelectPopUp : UI_Base
 
         for (int ii = 0; ii < onestageSels.Length; ii++)
         {
-            Debug.Log("Å×½ºÆ®");
             OnClickStage(onestageSels[ii].gameObject, ii, GetStageInfo, UIEvnet.PointerDown);
         }
-
         player.TryGetComponent(out ui_PlayerCtrl);
         StartBtnInActive();
-        curSelectText.text = "Select Stage!";
+
+        GetStageInfo((int)GlobalData.curStage);
 
     }
 

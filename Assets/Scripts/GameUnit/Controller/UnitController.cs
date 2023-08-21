@@ -42,8 +42,10 @@ public class UnitController : Unit
     Rigidbody2D rigbody;
 
     public bool IsDie { get { return isDie; } }
+    
     public int Att { get { return att; } }
-    public bool IsTargering { get { return isTargeting; } }
+    public int KnockBackForce { get { return knockbackForce; } }
+
     public MonsterController Monctrl { get { return monTarget; } }
 
     public void IsTargetingSet(bool value) => isTargeting = value;
@@ -57,7 +59,7 @@ public class UnitController : Unit
 
     //아처 전용
 
-
+    UnitStat unitStat;
 
     public float hpPercent()
     {
@@ -66,17 +68,29 @@ public class UnitController : Unit
 
     void Init()
     {
-        hp = 100;
-        att = 15;
+        unitStat  = new UnitStat();
+
+        if (unitClass == UnitClass.Warrior)
+            unitStat = Managers.Data.warriorDict[GlobalData.g_UnitWarriorLv];
+        else if (unitClass == UnitClass.Archer)
+            unitStat = Managers.Data.archerDict[GlobalData.g_UnitArcherLv];
+        else if (unitClass == UnitClass.Spear)
+            unitStat = Managers.Data.spearDict[GlobalData.g_UnitSpearLv];
+        
+
+
+        hp = unitStat.hp;
+        att = unitStat.att;
+        knockbackForce = unitStat.knockBackForce;
         moveSpeed = 2.5f;
         archerAttDis = 5.0f;
         maxHp = hp;
-        isTargeting = false;
-        isUnitTarget = false;
-        isTowerTarger = false;
+
 
         //rig = this.GetComponent<Rigidbody2D>();
         //anim = GetComponent<Animator>();
+        monsterPortal = GameObject.FindObjectOfType<MonsterPortal>();
+
         TryGetComponent<Animator>(out anim);
         TryGetComponent<Collider2D>(out unitColl2d);
         TryGetComponent<Rigidbody2D>(out rigbody);
@@ -101,9 +115,10 @@ public class UnitController : Unit
     void Update()
     {
         //UnitVictory();
+        TowerSensor();
         EnemySensor();
         UnitStateCheck();
-        AttackDelay();
+        
         UnitVictory();
 
         if (Input.GetKeyDown(KeyCode.Q))
@@ -126,7 +141,6 @@ public class UnitController : Unit
         #region 타겟구현
 
         coll2d = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Monster"));
-        towerColl = Physics2D.OverlapBox(pos.position, boxSize, 0, LayerMask.GetMask("MonsterPortal"));
         if (coll2d != null)
         {
 
@@ -201,22 +215,82 @@ public class UnitController : Unit
 
         }
 
-        else
-        {
-            //범위안에 유닛이 존재하지 않고 타워가 존재하면
-            if (towerColl != null)
-            {
 
-                //Debug.Log("헉 타워감지");
-                towerColl.gameObject.TryGetComponent<MonsterPortal>(out monsterPortal);  //플레이어타워의 정보를 받아옴
-
-            }
-        }
         
 
 
 #endregion
 
+    }
+
+    void TowerSensor()
+    {
+        //타워를 최우선적으로 타격하고 거리를 계속해서 계산해서 일정거리안에 들어오면 타워 공격
+        if (monsterPortal == null)
+            return;
+
+        towerVec = monsterPortal.gameObject.transform.position - this.transform.position;
+        towerDist = towerVec.sqrMagnitude;
+        towerDir = towerVec.normalized;
+
+        if (towerDist < 15.0f * 15.0f)
+        {
+            if (!towerTrace)
+            {
+                towerTrace = true;
+                SetUnitState(UnitState.Trace);
+        
+
+            }
+
+            if(unitClass == UnitClass.Warrior)
+            {
+
+                TowerAttackRange(1.5f);
+            }
+
+            else if(unitClass == UnitClass.Archer)
+            {
+                TowerAttackRange(6.5f);
+            }
+
+            else if (unitClass == UnitClass.Spear)
+            {
+                TowerAttackRange(2.0f);
+            }
+
+        }
+        else
+        {
+            if (towerTrace)
+            {
+        
+                towerTrace = false;
+
+            }
+        }
+    }
+
+
+    void TowerAttackRange(float distance)
+    {
+
+        if (towerDist < distance * distance)
+        {
+            if (!towerAttack)
+            {
+                towerAttack = true;
+                SetUnitState(UnitState.Attack);
+            }
+        }
+        else
+        {
+            
+            if (towerAttack)
+            {
+                towerAttack = false;
+            }
+        }
     }
 
 
@@ -226,7 +300,7 @@ public class UnitController : Unit
         {
             case UnitState.Idle:
                 {
-
+                    UnitIdle();
                     break;
                 }
             case UnitState.Run:
@@ -246,12 +320,12 @@ public class UnitController : Unit
                 }
             case UnitState.KnockBack:
                 {
-                    ApplyKnockBack(new Vector2(-1.0f,1.0f),5.5f);
+                    ApplyKnockBack(new Vector2(-1.0f,1.0f),damageKnockBack);
                     break;
                 }
             case UnitState.Die:
                 {
-
+                    UnitDie();
                     break;
                 }
 
@@ -268,11 +342,15 @@ public class UnitController : Unit
         {
             case UnitState.Idle:
                 {
-                    if (!isIdle)
+                    if (isAtt)
                     {
-
-                        isIdle = true;
-                        anim.SetBool("Idle", isIdle);
+                        isAtt = false;
+                        anim.SetBool("Attack", isAtt);
+                    }
+                    if(isRun)
+                    {
+                        isRun = false;
+                        anim.SetBool("Run", isRun);
                     }
                     break;
                 }
@@ -339,12 +417,21 @@ public class UnitController : Unit
     }
 
 
+    void UnitIdle()
+    {
+        AttackDelay();
+
+    }
+
+
     void UnitMove()
     {
-        if (monTarget != null || towerColl != null)
+        if (monTarget != null)
             SetUnitState(UnitState.Trace);
 
-
+        if (monTarget == null)
+            if (towerTrace)
+                towerTrace = false;
 
         if (IsTargetOn())
             return;
@@ -369,20 +456,25 @@ public class UnitController : Unit
         if (monTarget != null)
             Trace(monTarget);
 
-        else if(towerColl != null)
-            Trace(towerColl);
+        else if(monTarget == null)
+            Trace(monsterPortal);
     }
 
     bool IsTargetOn()
     {
-        if (monTarget == null)
+        if (monTarget == null && towerTrace == false)
             return false;
 
-        if (monTarget.MonState == MonsterState.Die)
-            return false;
 
-        if(!monTarget.gameObject.activeInHierarchy)
-            return false;
+        if(monTarget != null)
+        {
+            if (monTarget.MonState == MonsterState.Die)
+                return false;
+
+            if (!monTarget.gameObject.activeInHierarchy)
+                return false;
+        }
+
 
 
         return true;
@@ -395,70 +487,154 @@ public class UnitController : Unit
         {
             if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
             {
-                SetUnitState(UnitState.Run);
+                attackCoolTime = 1.0f;
+                SetUnitState(UnitState.Idle);
+                if (towerAttack)
+                    towerAttack = false;
             }
 
 
         }
     }
 
+    void UnitDie()
+    {
+        if (unitColl2d.enabled)
+        {
+            state = UnitState.Die;
+            unitColl2d.enabled = false;
+            GameObject.Destroy(gameObject, 5.0f);
 
+        }
+    }
    
 
-    public void OnDamage(int att)
+    public void OnDamage(int att,int knockBack = 0)
     {
-        if (monTarget == null)
-            return;
-
-
 
         if (hp > 0)
         {
             hp -= att;
             SetUnitState(UnitState.KnockBack);
+            damageKnockBack = knockBack;
 
             if (hp <= 0)
             {
-                Debug.Log(hp);
-
                 hp = 0;
-                OnDead();
+                SetUnitState(UnitState.Die);
             }
         }
     }
+
+
+    float randomX = 0;
+    float randomY = 0;
+
+    Vector2 RandomPosSetting(Vector3 pos )
+    {
+        randomX = UnityEngine.Random.Range(-0.5f, 0.5f);
+        randomY = UnityEngine.Random.Range(-0.5f, 0.5f);
+        Vector2 randomPos = pos;
+        randomPos.x += randomX;
+        randomPos.y += randomY;
+
+        return randomPos;
+    }
+
 
     public void OnAttack()    //애니메이션 이벤트 함수
     {
         if(unitClass == UnitClass.Warrior)
         {
-            if (monTarget != null)
+            if(!towerAttack)
             {
-                monTarget.OnDamage(att);      //데미지만 준다.
+                if (monTarget != null)
+                {
+                    monTarget.OnDamage(att, unitStat.knockBackForce);      //데미지만 준다.
+                    Managers.Sound.Play("Sounds/Effect/WarriorAttack");
+                    GameObject eff = Managers.Resource.Load<GameObject>("Prefabs/Effect/HitEff");
+                    Vector2 randomPos = RandomPosSetting(monTarget.transform.position);
+                    if (eff != null)
+                        Instantiate(eff, randomPos, Quaternion.identity);
 
+                }
             }
-
-            if (monsterPortal != null)
+            else
             {
-                Debug.Log("공격!");
                 monsterPortal.TowerDamage(att);
+                Managers.Sound.Play("Sounds/Effect/WarriorAttack");
+                GameObject eff = Managers.Resource.Load<GameObject>("Prefabs/Effect/HitEff");
+                Vector2 randomPos = RandomPosSetting(monsterPortal.transform.position);
+                if (eff != null)
+                    Instantiate(eff, randomPos, Quaternion.identity);
             }
+
         }
 
         else if(unitClass == UnitClass.Archer)
         {
 
-            if (isTargeting)
+            if(!towerAttack)
+            {
+                if(monTarget != null)
+                {
+                    GameObject obj = Resources.Load<GameObject>("Prefabs/Weapon/UnitArrow");
+
+                    if (obj != null)
+                    {
+                        Managers.Sound.Play("Sounds/Effect/Bow");
+                        GameObject arrow = Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
+                        arrow.TryGetComponent(out ArrowCtrl arrowCtrl);
+                        arrowCtrl.SetType(monTarget, null);
+                    }
+                }
+            }
+            else
             {
                 GameObject obj = Resources.Load<GameObject>("Prefabs/Weapon/UnitArrow");
 
                 if (obj != null)
                 {
+                    Managers.Sound.Play("Sounds/Effect/Bow");
                     GameObject arrow = Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
+                    arrow.TryGetComponent(out ArrowCtrl arrowCtrl);
+                    arrowCtrl.SetType(null, monsterPortal);
                 }
             }
 
+            
+
 
         
+        }
+
+        if (unitClass == UnitClass.Spear)
+        {
+            if (!towerAttack)
+            {
+                if (monTarget != null)
+                {
+                    monTarget.OnDamage(att, unitStat.knockBackForce);      //데미지만 준다.
+                    Managers.Sound.Play("Sounds/Effect/WarriorAttack");
+                    GameObject eff = Managers.Resource.Load<GameObject>("Prefabs/Effect/HitEff");
+                    Vector2 randomPos = RandomPosSetting(monTarget.transform.position);
+
+                    if (eff != null)
+                        Instantiate(eff, randomPos, Quaternion.identity);
+
+                }
+            }
+            else
+            {
+                monsterPortal.TowerDamage(att);
+                Managers.Sound.Play("Sounds/Effect/WarriorAttack");
+                GameObject eff = Managers.Resource.Load<GameObject>("Prefabs/Effect/HitEff");
+                Vector2 randomPos = RandomPosSetting(monsterPortal.transform.position);
+
+                if (eff != null)
+                    Instantiate(eff, monsterPortal.transform.position, Quaternion.identity);
+            }
+
         }
 
     }
@@ -530,10 +706,26 @@ public class UnitController : Unit
 
         }
 
-        
+        else if (unitClass == UnitClass.Spear)
+        {
+
+            if (distance < 2.0f)
+            {
+                SetUnitState(UnitState.Attack);
+            }
+            else
+            {
+                rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
+                SetUnitState(UnitState.Trace);
+
+            }
+
+        }
 
 
-        
+
+
+
 
 
     }
@@ -551,16 +743,7 @@ public class UnitController : Unit
         }
     }
 
-    public void OnDead()
-    {
-        if (unitColl2d.enabled)
-        {
-            state = UnitState.Die;
-            unitColl2d.enabled = false;
-            GameObject.Destroy(gameObject, 5.0f);
 
-        }
-    }
 
     public override void AttackDelay()
     {
@@ -568,7 +751,9 @@ public class UnitController : Unit
         {
             attackCoolTime -= Time.deltaTime;
             if (attackCoolTime <= .0f)
-                attackCoolTime = .0f;
+            {
+                SetUnitState(UnitState.Run);
+            }
 
         }
     }

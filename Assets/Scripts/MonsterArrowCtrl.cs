@@ -49,7 +49,7 @@ public class MonsterArrowCtrl : MonoBehaviour
 
     void Shot<T,T1>(T unit ,T1 tower) where T : UnitController where T1 : PlayerTower
     {
-        if (unit != null && tower == null)
+        if (unit != null)
         {
             //Debug.Log("여기 유닛");
             shotDir = unit.transform.position - monsterCtrl.transform.position;
@@ -60,7 +60,7 @@ public class MonsterArrowCtrl : MonoBehaviour
 
 
         }
-        else if (unit == null && tower != null)
+        else if (tower != null)
         {
             //Debug.Log("여기 타워조준");
 
@@ -82,6 +82,8 @@ public class MonsterArrowCtrl : MonoBehaviour
     {
         if (coll.tag == "Unit")
         {
+            Managers.Sound.Play("Sounds/Effect/Arrowhit");
+
             UnitController unitCtrl = null;
             coll.TryGetComponent<UnitController>(out unitCtrl);
             if (unitCtrl != null)
@@ -93,6 +95,8 @@ public class MonsterArrowCtrl : MonoBehaviour
         }
         else if(coll.tag.Contains("Tower"))
         {
+            Managers.Sound.Play("Sounds/Effect/Arrowhit");
+
             PlayerTower playTower = null;
             coll.TryGetComponent<PlayerTower>(out playTower);
             if (playTower != null)
@@ -104,5 +108,11 @@ public class MonsterArrowCtrl : MonoBehaviour
 
         else
             return;
+    }
+
+    public void SetType(UnitController unitCtrl, PlayerTower tower)
+    {
+        this.unitCtrl = unitCtrl;
+        playerTower = tower;
     }
 }

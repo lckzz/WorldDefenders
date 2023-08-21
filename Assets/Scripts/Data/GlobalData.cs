@@ -11,6 +11,14 @@ public class GlobalData
     public static int g_UnitArcherLv = 1;
     public static int g_UnitSpearLv = 1;
 
+    //-------------몬스터 아이디-----------
+    public static string g_NormalSkeletonID = "0001";
+    public static string g_BowSkeletonID = "0002";
+
+    //-------------몬스터 아이디-----------
+
+
+
     public static List<UnitClass> g_SlotUnitClass = new List<UnitClass>();
     public static List<Define.MonsterType> g_MonsterTypeList = new List<Define.MonsterType>();
     public static Define.SubStage curStage = Define.SubStage.One;
