@@ -639,6 +639,21 @@ public class UnitController : Unit
 
     }
 
+
+    bool CriticalAttack(UnitStat uniStat)
+    {
+        //유닛공격력을 받아서 크리티컬확률을 받아서 확률에 맞으면 크리공격
+        //아니면 일반 공격
+        int rand = UnityEngine.Random.Range(0, 101);
+        if (rand <= unitStat.criticalRate)
+            return true;
+
+        return false;
+
+
+    }
+
+
     void ApplyKnockBack(Vector2 dir , float force)
     {
         dir.y = 0;
@@ -739,7 +754,7 @@ public class UnitController : Unit
             anim.SetBool("Run", isRun);
             isAtt = false;
             anim.SetBool("Attack", isAtt);
-            isTargeting = false;
+           
         }
     }
 

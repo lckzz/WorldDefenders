@@ -33,7 +33,9 @@ public class MonsterController : Unit
 
 
     UnitController[] unitCtrls;
+    [SerializeField]
     UnitController unitTarget;
+    [SerializeField]
     PlayerTower playerTowerCtrl;
 
     Rigidbody2D rigbody;
@@ -129,7 +131,7 @@ public class MonsterController : Unit
         return hp / maxHp;
     }
 
-    public void OnDamage(int att,int knockBack = 0)
+    public void OnDamage(int att, int knockBack = 0)
     {
 
         if(hp > 0)
@@ -265,8 +267,7 @@ public class MonsterController : Unit
 
             if (monsterClass == MonsterClass.Warrior)
             {
-
-                TowerAttackRange(1.5f);
+                TowerAttackRange(1.75f);
             }
 
             else if (monsterClass == MonsterClass.Archer)
@@ -286,9 +287,9 @@ public class MonsterController : Unit
 
     void TowerAttackRange(float distance)
     {
-
         if (towerDist < distance * distance)
-        {
+        { 
+
             if (!towerAttack)
             {
                 towerAttack = true;
@@ -351,11 +352,12 @@ public class MonsterController : Unit
     void SetMonsterState(MonsterState state)
     {
         this.state = state;
-
+        Debug.Log(this.state);
         switch (this.state)
         {
             case MonsterState.Idle:
                 {
+                   
                     if (isAtt)
                     {
                         isAtt = false;
@@ -506,11 +508,11 @@ public class MonsterController : Unit
 
             if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
             {
+                Debug.Log("°ø°Ý²ôÀ¿");
+                SetMonsterState(MonsterState.Idle);
 
                 attackCoolTime = 1.0f;
-                SetMonsterState(MonsterState.Idle);
-                if (towerAttack)
-                    towerAttack = false;
+
             }
 
 
@@ -637,7 +639,6 @@ public class MonsterController : Unit
 
             if (distance < archerAttDis)
             {
-                Debug.Log("asdsadsadsadasdwqeqe");
                 SetMonsterState(MonsterState.Attack);
             }
             else
@@ -695,13 +696,17 @@ public class MonsterController : Unit
 
     public override void AttackDelay()
     {
-        Debug.Log("Å×À¸šÀ");
         if (attackCoolTime > 0.0f)
         {
             attackCoolTime -= Time.deltaTime;
             if (attackCoolTime <= .0f)
             {
-                SetMonsterState(MonsterState.Run);
+                if (towerDist < 1.75f * 1.75f)
+                    SetMonsterState(MonsterState.Attack);
+                else
+                    SetMonsterState(MonsterState.Run);
+                if (towerAttack)
+                    towerAttack = false;
             }
 
         }

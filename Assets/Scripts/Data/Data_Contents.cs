@@ -42,6 +42,7 @@ public class UnitStat
     public int hp;
     public int att;
     public int knockBackForce;
+    public int criticalRate;
     public int cost;
     public int price;
 }
@@ -103,6 +104,8 @@ public class MonsterStat
     public int hp;
     public int att;
     public int knockBackForce;
+    public int criticalRate;
+
 }
 
 

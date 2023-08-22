@@ -19,9 +19,6 @@ public class Unit : MonoBehaviour,ISensor
     protected bool isDie = false;
     protected bool isIdle = false;
 
-    protected bool isTargeting = false;         //전체적인 타겟팅이 잡힘
-    protected bool isUnitTarget = false;        //유닛,몬스터가 타겟이다.
-    protected bool isTowerTarger = false;       //타워가 타겟이다.
 
     [SerializeField]
     protected float attackCoolTime = 1.5f;
