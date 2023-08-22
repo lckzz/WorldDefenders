@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Unity.Burst.CompilerServices;
+using UnityEditor;
 using UnityEngine;
 using static Define;
 
@@ -81,8 +82,8 @@ public class MonsterController : Unit
         att = monStat.att;
         hp = monStat.hp;
         knockbackForce = monStat.knockBackForce;
+        attackRange = monStat.attackRange;
         moveSpeed = 2.0f;
-        archerAttDis = 5.0f;
         maxHp = hp;
 
         playerTowerCtrl = GameObject.FindObjectOfType<PlayerTower>();
@@ -352,7 +353,6 @@ public class MonsterController : Unit
     void SetMonsterState(MonsterState state)
     {
         this.state = state;
-        Debug.Log(this.state);
         switch (this.state)
         {
             case MonsterState.Idle:
@@ -524,9 +524,9 @@ public class MonsterController : Unit
     {
         if (monsterColl.enabled)
         {
-            state = MonsterState.Die;
+            SetMonsterState(MonsterState.Die);
             monsterColl.enabled = false;
-            GameObject.Destroy(gameObject, 5.0f);
+            GameObject.Destroy(gameObject, 3.0f);
 
         }
     }
@@ -542,23 +542,12 @@ public class MonsterController : Unit
             {
 
                 if (unitTarget != null)
-                {
-                    unitTarget.OnDamage(att, knockbackForce);
-                    Managers.Sound.Play("Sounds/Effect/WarriorAttack");
-                    GameObject eff = Managers.Resource.Load<GameObject>("Prefabs/Effect/HitEff");
-                    if (eff != null)
-                        Instantiate(eff, unitTarget.transform.position, Quaternion.identity);
-
-                }
+                    CriticalAttack(unitTarget);
+                
             }
             else
-            {
-                playerTowerCtrl.TowerDamage(att);
-                Managers.Sound.Play("Sounds/Effect/WarriorAttack");
-                GameObject eff = Managers.Resource.Load<GameObject>("Prefabs/Effect/HitEff");
-                if (eff != null)
-                    Instantiate(eff, playerTowerCtrl.transform.position, Quaternion.identity);
-            }
+                CriticalAttack(playerTowerCtrl);
+            
 
         }
 
@@ -593,6 +582,68 @@ public class MonsterController : Unit
             }
 
         }
+    }
+
+    bool CriticalCheck()
+    {
+        //유닛공격력을 받아서 크리티컬확률을 받아서 확률에 맞으면 크리공격
+        //아니면 일반 공격
+        int rand = UnityEngine.Random.Range(0, 101);
+        if (rand <= monStat.criticalRate)
+            return true;
+
+        return false;
+
+
+    }
+
+
+    void CriticalAttack(UnitController uniCtrl)
+    {
+        if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
+        {
+            Debug.Log("크리티컬!!!!");
+            int attack = att * 2;
+            uniCtrl.OnDamage(attack, monStat.knockBackForce);      //크리티컬이면 데미지2배에 넉백까지
+            UnitEffectAndSound(unitTarget.transform.position, "CriticalSound", "HitEff");
+
+        }
+        else  //노크리티컬이면 일반공격
+        {
+            Debug.Log("일반공격...");
+
+            uniCtrl.OnDamage(att);        //넉백은 없이
+            UnitEffectAndSound(unitTarget.transform.position, "WarriorAttack", "HitEff");
+
+        }
+    }
+
+    void CriticalAttack(PlayerTower tower)
+    {
+        if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
+        {
+            int attack = att * 2;
+            tower.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
+            UnitEffectAndSound(tower.transform.position, "CriticalSound", "HitEff");
+
+        }
+        else  //노크리티컬이면 일반공격
+        {
+            tower.TowerDamage(att);        //넉백은 없이
+            UnitEffectAndSound(tower.transform.position, "WarriorAttack", "HitEff");
+
+        }
+    }
+
+
+    void UnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
+    {
+        Managers.Sound.Play($"Sounds/Effect/{soundPath}");
+        GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
+        Vector2 randomPos = RandomPosSetting(pos);
+
+        if (eff != null)
+            Instantiate(eff, randomPos, Quaternion.identity);
     }
 
 
@@ -637,7 +688,7 @@ public class MonsterController : Unit
         if (monsterClass == MonsterClass.Archer)
         {
 
-            if (distance < archerAttDis)
+            if (distance < attackRange)
             {
                 SetMonsterState(MonsterState.Attack);
             }
@@ -651,7 +702,7 @@ public class MonsterController : Unit
         else if (monsterClass == MonsterClass.Warrior)
         {
 
-            if (distance < 1.5f)
+            if (distance < attackRange)
             {
                 SetMonsterState(MonsterState.Attack);
             }
@@ -673,6 +724,17 @@ public class MonsterController : Unit
     }
 
 
+    Vector2 RandomPosSetting(Vector3 pos)
+    {
+        randomX = UnityEngine.Random.Range(-0.5f, 0.5f);
+        randomY = UnityEngine.Random.Range(-0.5f, 0.5f);
+        Vector2 randomPos = pos;
+        randomPos.x += randomX;
+        randomPos.y += randomY;
+
+        return randomPos;
+    }
+
     void MonsterVictory()
     {
         //Managers.Game.state = GameState.GameFail;
@@ -684,7 +746,6 @@ public class MonsterController : Unit
             anim.SetBool("Run", isRun);
             isAtt = false;
             anim.SetBool("Attack", isAtt);
-            isTargeting = false;
 
             state = MonsterState.Idle;
 
@@ -696,6 +757,10 @@ public class MonsterController : Unit
 
     public override void AttackDelay()
     {
+        if (state == MonsterState.Die)
+            return;
+
+
         if (attackCoolTime > 0.0f)
         {
             attackCoolTime -= Time.deltaTime;

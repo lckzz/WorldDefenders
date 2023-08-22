@@ -11,7 +11,10 @@ public class Unit : MonoBehaviour,ISensor
     protected int att = 0;
     protected int knockbackForce = 0;
     protected int damageKnockBack = 0;
+    protected float attackRange = .0f;
 
+    protected float randomX = 0;
+    protected float randomY = 0;
 
     protected float moveSpeed = .0f;
     protected bool isRun = false;
@@ -25,13 +28,12 @@ public class Unit : MonoBehaviour,ISensor
     protected bool attackTime = true;      //공격쿨이 다돈 상태
 
     [SerializeField]
-    protected float archerAttDis = .0f;
     protected Collider2D[] coll2d;
     protected Collider2D tower;
     protected Collider2D unitColl;
 
     protected float unitDestroyTime = .0f;
-
+    protected float distance;
 
     //타워 관련 변수
     protected Vector2 towerVec;

@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject ui_GameResult;
     [SerializeField]
-    float monsterSpawnTimer = 1000.5f;
+    float monsterSpawnTimer = 5.5f;
 
     public GameState State { get { return state; } set { state = value; } }
     public float CurCost { get { return curCost; } set { curCost = value; } }
@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour
                     //        sp2.sortingOrder = 10;
                     //        break;
                     //}
-                    monsterSpawnTimer = 8.0f;
+                    monsterSpawnTimer = 5.0f;
 
 
                 }

@@ -48,7 +48,6 @@ public class UnitController : Unit
 
     public MonsterController Monctrl { get { return monTarget; } }
 
-    public void IsTargetingSet(bool value) => isTargeting = value;
     public MonsterPortal MonsterPortal { get { return monsterPortal; } }
 
     public UnitState UniState { get { return state; } }
@@ -82,8 +81,9 @@ public class UnitController : Unit
         hp = unitStat.hp;
         att = unitStat.att;
         knockbackForce = unitStat.knockBackForce;
+        attackRange = unitStat.attackRange;
+
         moveSpeed = 2.5f;
-        archerAttDis = 5.0f;
         maxHp = hp;
 
 
@@ -487,10 +487,11 @@ public class UnitController : Unit
         {
             if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
             {
-                attackCoolTime = 1.0f;
                 SetUnitState(UnitState.Idle);
-                if (towerAttack)
-                    towerAttack = false;
+
+                attackCoolTime = 1.0f;
+
+
             }
 
 
@@ -501,7 +502,7 @@ public class UnitController : Unit
     {
         if (unitColl2d.enabled)
         {
-            state = UnitState.Die;
+            SetUnitState(UnitState.Die);
             unitColl2d.enabled = false;
             GameObject.Destroy(gameObject, 5.0f);
 
@@ -515,8 +516,12 @@ public class UnitController : Unit
         if (hp > 0)
         {
             hp -= att;
-            SetUnitState(UnitState.KnockBack);
-            damageKnockBack = knockBack;
+            if(knockBack > 0)
+            {
+                SetUnitState(UnitState.KnockBack);
+                damageKnockBack = knockBack;
+            }
+
 
             if (hp <= 0)
             {
@@ -527,19 +532,9 @@ public class UnitController : Unit
     }
 
 
-    float randomX = 0;
-    float randomY = 0;
 
-    Vector2 RandomPosSetting(Vector3 pos )
-    {
-        randomX = UnityEngine.Random.Range(-0.5f, 0.5f);
-        randomY = UnityEngine.Random.Range(-0.5f, 0.5f);
-        Vector2 randomPos = pos;
-        randomPos.x += randomX;
-        randomPos.y += randomY;
 
-        return randomPos;
-    }
+
 
 
     public void OnAttack()    //애니메이션 이벤트 함수
@@ -549,25 +544,12 @@ public class UnitController : Unit
             if(!towerAttack)
             {
                 if (monTarget != null)
-                {
-                    monTarget.OnDamage(att, unitStat.knockBackForce);      //데미지만 준다.
-                    Managers.Sound.Play("Sounds/Effect/WarriorAttack");
-                    GameObject eff = Managers.Resource.Load<GameObject>("Prefabs/Effect/HitEff");
-                    Vector2 randomPos = RandomPosSetting(monTarget.transform.position);
-                    if (eff != null)
-                        Instantiate(eff, randomPos, Quaternion.identity);
-
-                }
+                    CriticalAttack(monTarget);
+                
             }
             else
-            {
-                monsterPortal.TowerDamage(att);
-                Managers.Sound.Play("Sounds/Effect/WarriorAttack");
-                GameObject eff = Managers.Resource.Load<GameObject>("Prefabs/Effect/HitEff");
-                Vector2 randomPos = RandomPosSetting(monsterPortal.transform.position);
-                if (eff != null)
-                    Instantiate(eff, randomPos, Quaternion.identity);
-            }
+                CriticalAttack(monsterPortal);
+            
 
         }
 
@@ -614,25 +596,14 @@ public class UnitController : Unit
             {
                 if (monTarget != null)
                 {
-                    monTarget.OnDamage(att, unitStat.knockBackForce);      //데미지만 준다.
-                    Managers.Sound.Play("Sounds/Effect/WarriorAttack");
-                    GameObject eff = Managers.Resource.Load<GameObject>("Prefabs/Effect/HitEff");
-                    Vector2 randomPos = RandomPosSetting(monTarget.transform.position);
-
-                    if (eff != null)
-                        Instantiate(eff, randomPos, Quaternion.identity);
-
+                    CriticalAttack(monTarget);
+                    UnitEffectAndSound(monTarget.transform.position, "WarriorAttack", "HitEff");
                 }
             }
             else
             {
-                monsterPortal.TowerDamage(att);
-                Managers.Sound.Play("Sounds/Effect/WarriorAttack");
-                GameObject eff = Managers.Resource.Load<GameObject>("Prefabs/Effect/HitEff");
-                Vector2 randomPos = RandomPosSetting(monsterPortal.transform.position);
-
-                if (eff != null)
-                    Instantiate(eff, monsterPortal.transform.position, Quaternion.identity);
+                CriticalAttack(monsterPortal);
+                UnitEffectAndSound(monsterPortal.transform.position, "WarriorAttack", "HitEff");
             }
 
         }
@@ -640,7 +611,7 @@ public class UnitController : Unit
     }
 
 
-    bool CriticalAttack(UnitStat uniStat)
+    bool CriticalCheck()
     {
         //유닛공격력을 받아서 크리티컬확률을 받아서 확률에 맞으면 크리공격
         //아니면 일반 공격
@@ -654,6 +625,56 @@ public class UnitController : Unit
     }
 
 
+    void CriticalAttack(MonsterController monCtrl)
+    {
+        if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
+        {
+            Debug.Log("크리티컬!!!!");
+            int attack = att * 2;
+            monCtrl.OnDamage(attack, unitStat.knockBackForce);      //크리티컬이면 데미지2배에 넉백까지
+            UnitEffectAndSound(monTarget.transform.position, "CriticalSound", "HitEff");
+
+        }
+        else  //노크리티컬이면 일반공격
+        {
+            Debug.Log("일반공격...");
+
+            monCtrl.OnDamage(att);        //넉백은 없이
+            UnitEffectAndSound(monTarget.transform.position, "WarriorAttack", "HitEff");
+
+        }
+    }
+
+    void CriticalAttack(MonsterPortal monPortal)
+    {
+        if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
+        {
+            int attack = att * 2;
+            monPortal.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
+            UnitEffectAndSound(monPortal.transform.position, "CriticalSound", "HitEff");
+
+        }
+        else  //노크리티컬이면 일반공격
+        {
+            monPortal.TowerDamage(att);        //넉백은 없이
+            UnitEffectAndSound(monPortal.transform.position, "WarriorAttack", "HitEff");
+
+        }
+    }
+
+
+    void UnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
+    {
+        Managers.Sound.Play($"Sounds/Effect/{soundPath}");
+        GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
+        Vector2 randomPos = RandomPosSetting(pos);
+
+        if (eff != null)
+            Instantiate(eff, randomPos, Quaternion.identity);
+    }
+
+
+    #region 넉백
     void ApplyKnockBack(Vector2 dir , float force)
     {
         dir.y = 0;
@@ -684,16 +705,18 @@ public class UnitController : Unit
         state = UnitState.Run;
     }
 
+    #endregion
+
     void Trace<T>(T obj) where T : UnityEngine.Component 
     {
 
         Vector3 vec = obj.gameObject.transform.position - this.transform.position;
-        float distance = vec.magnitude;
+        distance = vec.magnitude;
         Vector3 dir = vec.normalized;
         if (unitClass == UnitClass.Archer)
         {
 
-            if (distance < archerAttDis)
+            if (distance < attackRange)
             {
 
                 SetUnitState(UnitState.Attack);
@@ -708,7 +731,7 @@ public class UnitController : Unit
         else if (unitClass == UnitClass.Warrior)
         {
 
-            if (distance < 1.5f)
+            if (distance < attackRange)
             {
                 SetUnitState(UnitState.Attack);
             }
@@ -724,7 +747,7 @@ public class UnitController : Unit
         else if (unitClass == UnitClass.Spear)
         {
 
-            if (distance < 2.0f)
+            if (distance < attackRange)
             {
                 SetUnitState(UnitState.Attack);
             }
@@ -745,6 +768,16 @@ public class UnitController : Unit
 
     }
 
+    Vector2 RandomPosSetting(Vector3 pos)
+    {
+        randomX = UnityEngine.Random.Range(-0.5f, 0.5f);
+        randomY = UnityEngine.Random.Range(-0.5f, 0.5f);
+        Vector2 randomPos = pos;
+        randomPos.x += randomX;
+        randomPos.y += randomY;
+
+        return randomPos;
+    }
 
     void UnitVictory()
     {
@@ -762,12 +795,33 @@ public class UnitController : Unit
 
     public override void AttackDelay()
     {
-        if(attackCoolTime > 0.0f)
+        if (state == UnitState.Die)
+            return;
+
+        if (attackCoolTime > 0.0f)
         {
             attackCoolTime -= Time.deltaTime;
             if (attackCoolTime <= .0f)
             {
-                SetUnitState(UnitState.Run);
+
+                //if(monTarget != null)
+                //{
+                //    distance = (monTarget.transform.position - this.transform.position).sqrMagnitude;
+                //    if (distance < attackRange * attackRange)
+                //        SetUnitState(UnitState.Attack);
+                //    else
+                //        SetUnitState(UnitState.Run);
+                //}
+                //else
+                //    SetUnitState(UnitState.Run);
+
+                if (towerDist < 1.75f * 1.75f)
+                    SetUnitState(UnitState.Attack);
+                else
+                    SetUnitState(UnitState.Run);
+                if (towerAttack)
+                    towerAttack = false;
+
             }
 
         }
