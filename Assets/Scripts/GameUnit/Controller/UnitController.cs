@@ -629,7 +629,6 @@ public class UnitController : Unit
     {
         if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
         {
-            Debug.Log("크리티컬!!!!");
             int attack = att * 2;
             monCtrl.OnDamage(attack, unitStat.knockBackForce);      //크리티컬이면 데미지2배에 넉백까지
             UnitEffectAndSound(monTarget.transform.position, "CriticalSound", "HitEff");
@@ -637,8 +636,7 @@ public class UnitController : Unit
         }
         else  //노크리티컬이면 일반공격
         {
-            Debug.Log("일반공격...");
-
+            
             monCtrl.OnDamage(att);        //넉백은 없이
             UnitEffectAndSound(monTarget.transform.position, "WarriorAttack", "HitEff");
 

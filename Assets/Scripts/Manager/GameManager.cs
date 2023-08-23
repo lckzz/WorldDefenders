@@ -41,7 +41,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject ui_GameResult;
     [SerializeField]
-    float monsterSpawnTimer = 5.5f;
+    float monsterSpawn = 5.5f;
+    [SerializeField] float spawnTimer = 8.5f;
 
     public GameState State { get { return state; } set { state = value; } }
     public float CurCost { get { return curCost; } set { curCost = value; } }
@@ -75,12 +76,12 @@ public class GameManager : MonoBehaviour
 
         if(state == GameState.GamePlaying)
         {
-            if (monsterSpawnTimer > 0.0f)                       //몬스터 스폰은 따로 파서 해야함
+            if (monsterSpawn > 0.0f)                       //몬스터 스폰은 따로 파서 해야함
             {
-                monsterSpawnTimer -= Time.deltaTime;
-                if (monsterSpawnTimer <= 0.0f)
+                monsterSpawn -= Time.deltaTime;
+                if (monsterSpawn <= 0.0f)
                 {
-                    monsterSpawnTimer = 0.0f;
+                    monsterSpawn = 0.0f;
                     int ran = Random.Range(0, 2);
                     int ranPos = Random.Range(0, 3);
                     GameObject obj = Instantiate(monsters[ran], monsterSpawnPos[ranPos].position, Quaternion.identity);
@@ -100,7 +101,7 @@ public class GameManager : MonoBehaviour
                     //        sp2.sortingOrder = 10;
                     //        break;
                     //}
-                    monsterSpawnTimer = 5.0f;
+                    monsterSpawn = spawnTimer;
 
 
                 }

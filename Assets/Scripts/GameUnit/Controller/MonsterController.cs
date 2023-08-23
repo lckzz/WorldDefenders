@@ -51,7 +51,7 @@ public class MonsterController : Unit
     MonsterStat monStat;
 
 
-
+    bool knockbackStart = false;
 
 
 
@@ -605,7 +605,7 @@ public class MonsterController : Unit
             Debug.Log("크리티컬!!!!");
             int attack = att * 2;
             uniCtrl.OnDamage(attack, monStat.knockBackForce);      //크리티컬이면 데미지2배에 넉백까지
-            UnitEffectAndSound(unitTarget.transform.position, "CriticalSound", "HitEff");
+            MeleeUnitEffectAndSound(unitTarget.transform.position, "CriticalSound", "HitEff");
 
         }
         else  //노크리티컬이면 일반공격
@@ -613,7 +613,7 @@ public class MonsterController : Unit
             Debug.Log("일반공격...");
 
             uniCtrl.OnDamage(att);        //넉백은 없이
-            UnitEffectAndSound(unitTarget.transform.position, "WarriorAttack", "HitEff");
+            MeleeUnitEffectAndSound(unitTarget.transform.position, "WarriorAttack", "HitEff");
 
         }
     }
@@ -624,19 +624,19 @@ public class MonsterController : Unit
         {
             int attack = att * 2;
             tower.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
-            UnitEffectAndSound(tower.transform.position, "CriticalSound", "HitEff");
+            MeleeUnitEffectAndSound(tower.transform.position, "CriticalSound", "HitEff");
 
         }
         else  //노크리티컬이면 일반공격
         {
             tower.TowerDamage(att);        //넉백은 없이
-            UnitEffectAndSound(tower.transform.position, "WarriorAttack", "HitEff");
+            MeleeUnitEffectAndSound(tower.transform.position, "WarriorAttack", "HitEff");
 
         }
     }
 
 
-    void UnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
+    void MeleeUnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
     {
         Managers.Sound.Play($"Sounds/Effect/{soundPath}");
         GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
@@ -647,34 +647,59 @@ public class MonsterController : Unit
     }
 
 
+
+    bool knockBackStop = false;
     void ApplyKnockBack(Vector2 dir, float force)
     {
-        dir.y = 0;
+        if (!knockbackStart)
+        {
+            dir.y = 0;
+            knockbackStart = true;
+            StartCoroutine(RestoreGravityAfterKnockback(force));
 
-        rigbody.gravityScale = 0.0f;
-        rigbody.velocity = Vector2.zero;
-        rigbody.AddForce(dir * force, ForceMode2D.Impulse);
-        
-
-        StartCoroutine(RestoreGravityAfterKnockback());
+        }
     }
 
 
-    float knockbackDuration = 0.5f;
-    IEnumerator RestoreGravityAfterKnockback()
+    float knockbackDuration = 0.25f;
+
+    IEnumerator RestoreGravityAfterKnockback(float force)
     {
-        yield return new WaitForSeconds(knockbackDuration); // 넉백 지속 시간
+        WaitForSeconds wfs = new WaitForSeconds(knockbackDuration);
+        float knockBackSpeed = 0.0f;
+        float knockBackAccleration = 25.0f;            //힘
 
+        float knockbackTime = 0.0f;
+        float maxKnockBackTime = 0.3f;
 
-        while (rigbody.velocity.magnitude > 0.1f)
+        while (knockbackTime < maxKnockBackTime)  //속도 증가
         {
-            rigbody.velocity *= 0.96f;
+            knockBackSpeed += knockBackAccleration * Time.deltaTime;
+            rigbody.velocity = new Vector2(1, 0) * knockBackSpeed;
+            knockbackTime += Time.deltaTime;
+            yield return null;
+        }
+
+        //knockBackAccleration = 10.0f;
+        knockBackStop = true;
+        
+        while(knockBackSpeed > 0.0f)   //속도 감소
+        {
+            knockBackSpeed -= (knockBackAccleration * 0.5f) * Time.deltaTime;
+
+            Vector2 velo = new Vector2(knockBackSpeed, rigbody.velocity.y);
+            rigbody.velocity = velo;
             yield return null;
         }
         //rigbody.velocity *= 0.5f;
 
+        yield return wfs; // 넉백 지속 시간
 
         SetMonsterState(MonsterState.Run);
+        knockbackStart = false;
+        knockBackStop = false;
+
+
     }
 
 
