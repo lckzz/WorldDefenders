@@ -93,6 +93,20 @@ public class SpearData : ILoader<int, UnitStat>
     }
 }
 
+
+public class MagicianData : ILoader<int, UnitStat>
+{
+    public List<UnitStat> magician = new List<UnitStat>();
+
+    public Dictionary<int, UnitStat> MakeDict()
+    {
+        Dictionary<int, UnitStat> dict = new Dictionary<int, UnitStat>();
+        foreach (UnitStat stat in magician)
+            dict.Add(stat.level, stat);
+
+        return dict;
+    }
+}
 #endregion
 
 
@@ -139,5 +153,32 @@ public class BowSkeletonData : ILoader<string, MonsterStat>
 
 }
 
+public class SpearSkeletonData : ILoader<string, MonsterStat>
+{
+    public List<MonsterStat> spearSkeleton = new List<MonsterStat>();
+    public Dictionary<string, MonsterStat> MakeDict()
+    {
+        Dictionary<string, MonsterStat> dict = new Dictionary<string, MonsterStat>();
+        foreach (MonsterStat stat in spearSkeleton)
+            dict.Add(stat.id, stat);
+
+        return dict;
+    }
+
+}
+
+public class EliteWarriorData : ILoader<string, MonsterStat>
+{
+    public List<MonsterStat> eliteWarrior = new List<MonsterStat>();
+    public Dictionary<string, MonsterStat> MakeDict()
+    {
+        Dictionary<string, MonsterStat> dict = new Dictionary<string, MonsterStat>();
+        foreach (MonsterStat stat in eliteWarrior)
+            dict.Add(stat.id, stat);
+
+        return dict;
+    }
+
+}
 
 #endregion

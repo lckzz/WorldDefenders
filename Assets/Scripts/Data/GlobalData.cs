@@ -10,10 +10,13 @@ public class GlobalData
     public static int g_UnitWarriorLv = 1;
     public static int g_UnitArcherLv = 1;
     public static int g_UnitSpearLv = 1;
+    public static int g_UnitMagicianLv = 1;
 
     //-------------몬스터 아이디-----------
     public static string g_NormalSkeletonID = "0001";
     public static string g_BowSkeletonID = "0002";
+    public static string g_SpearSkeletonID = "0003";
+    public static string g_EliteWarriorID = "0004";
 
     //-------------몬스터 아이디-----------
 

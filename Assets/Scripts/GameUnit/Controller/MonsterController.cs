@@ -9,7 +9,8 @@ using static Define;
 enum MonsterClass
 {
     Warrior,
-    Archer
+    Archer,
+    EliteWarrior,
 }
 
 public enum MonsterState
@@ -24,8 +25,7 @@ public enum MonsterState
 
 public class MonsterController : Unit
 {
-    [SerializeField]
-    private Animator anim;
+
     [SerializeField]
     private MonsterClass monsterClass;
     [SerializeField]
@@ -33,15 +33,13 @@ public class MonsterController : Unit
 
 
 
-    UnitController[] unitCtrls;
+    Unit[] unitCtrls;
     [SerializeField]
-    UnitController unitTarget;
+    Unit unitTarget;
     [SerializeField]
     PlayerTower playerTowerCtrl;
 
-    Rigidbody2D rigbody;
 
-    Collider2D monsterColl;     //죽었을 때 콜라이더 끄기위한 변수
 
     //아처 전용
     Transform arrowPos;
@@ -51,10 +49,6 @@ public class MonsterController : Unit
     MonsterStat monStat;
 
 
-    bool knockbackStart = false;
-
-
-
     public bool IsDie { get { return isDie; } }
     public float Hp { get { return hp; } }
     public int Att { get { return att; } }
@@ -62,15 +56,17 @@ public class MonsterController : Unit
 
 
 
-    public UnitController UnitCtrl { get { return unitTarget; } }
+    public Unit UnitCtrl { get { return unitTarget; } }
     public PlayerTower PlayerTowerCtrl { get { return playerTowerCtrl; } }
     public MonsterState MonState { get { return state; } }
 
 
 
 
-    void Init()
+    public override void Init()
     {
+        base.Init();
+
         monStat = new MonsterStat();
 
         if (monsterClass == MonsterClass.Warrior)
@@ -78,19 +74,16 @@ public class MonsterController : Unit
         else if (monsterClass == MonsterClass.Archer)
             monStat = Managers.Data.bowSkeleton[GlobalData.g_BowSkeletonID];
 
-
         att = monStat.att;
         hp = monStat.hp;
+        maxHp = hp;
         knockbackForce = monStat.knockBackForce;
         attackRange = monStat.attackRange;
         moveSpeed = 2.0f;
-        maxHp = hp;
 
         playerTowerCtrl = GameObject.FindObjectOfType<PlayerTower>();
 
-        TryGetComponent<Animator>(out anim);
-        TryGetComponent<Collider2D>(out monsterColl);
-        TryGetComponent<Rigidbody2D>(out rigbody);
+        TryGetComponent<Collider2D>(out myColl);
 
         if (monsterClass == MonsterClass.Archer)
             arrowPos = transform.Find("ArrowPos");
@@ -132,28 +125,7 @@ public class MonsterController : Unit
         return hp / maxHp;
     }
 
-    public void OnDamage(int att, int knockBack = 0)
-    {
 
-        if(hp > 0)
-        {
-            hp -= att;
-
-            if(knockBack > 0)
-            {
-                SetMonsterState(MonsterState.KnockBack);
-                damageKnockBack = knockBack;
-            }
-
-
-            if (hp <= 0)
-            {
-                hp = 0;
-                SetMonsterState(MonsterState.Die);
-
-            }
-        }
-    }
 
 
 
@@ -165,13 +137,13 @@ public class MonsterController : Unit
         //Debug.Log($"타겟팅{isTageting}");
         #region 타겟구현
 
-        coll2d = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Unit"));
+        enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Unit") | LayerMask.GetMask("SpecialUnit"));
 
         
-        if (coll2d != null)
+        if (enemyColls2D != null)
         {
 
-            if (coll2d.Length <= 0)
+            if (enemyColls2D.Length <= 0)
             {
                 //박스안 콜라이더가 아무것도 없으면
                 if (unitTarget != null)  //이전에 몬스터 타겟팅이 잡혓더라면
@@ -181,10 +153,25 @@ public class MonsterController : Unit
                 }
             }
 
-            unitCtrls = new UnitController[coll2d.Length];
+            unitCtrls = new Unit[enemyColls2D.Length];
             //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
-            for (int ii = 0; ii < coll2d.Length; ii++)
-                coll2d[ii].TryGetComponent<UnitController>(out unitCtrls[ii]);
+            for (int ii = 0; ii < enemyColls2D.Length; ii++)
+            {
+                if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("Unit"))
+                {
+                    UnitController unitctrl;
+                    enemyColls2D[ii].TryGetComponent<UnitController>(out unitctrl);
+                    unitCtrls[ii] = unitctrl;
+
+                }
+                else if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("SpecialUnit"))
+                {
+                    SpecialUnitController specialUnit;
+                    enemyColls2D[ii].TryGetComponent<SpecialUnitController>(out specialUnit);
+                    unitCtrls[ii] = specialUnit;
+
+                }
+            }
 
 
         }
@@ -352,6 +339,9 @@ public class MonsterController : Unit
 
     void SetMonsterState(MonsterState state)
     {
+        if (isDie)
+            return;
+
         this.state = state;
         switch (this.state)
         {
@@ -488,11 +478,33 @@ public class MonsterController : Unit
 
         if(unitTarget != null)
         {
-            if (unitTarget.UniState == UnitState.Die)
-                return false;
+            if (unitTarget.gameObject.layer == LayerMask.NameToLayer("Unit"))
+            {
+                if(unitTarget is UnitController unitCtrl)
+                {
+                    if (unitCtrl.UniState == UnitState.Die)
+                        return false;
 
-            if (!unitTarget.gameObject.activeInHierarchy)
-                return false;
+                    if (!unitTarget.gameObject.activeInHierarchy)
+                        return false;
+                }
+
+            }
+            else if (unitTarget.gameObject.layer == LayerMask.NameToLayer("SpecialUnit"))
+            {
+                if (unitTarget is SpecialUnitController specialUnit)
+                {
+                    if (specialUnit.UniState == Define.SpecialUnitState.Die)
+                        return false;
+
+                    if (!unitTarget.gameObject.activeInHierarchy)
+                        return false;
+                }
+
+            }
+
+
+
         }
 
 
@@ -522,17 +534,40 @@ public class MonsterController : Unit
 
     void MonsterDie()
     {
-        if (monsterColl.enabled)
+        if (myColl.enabled)
         {
             SetMonsterState(MonsterState.Die);
-            monsterColl.enabled = false;
+            myColl.enabled = false;
             GameObject.Destroy(gameObject, 3.0f);
 
         }
     }
 
+    public override void OnDamage(int att, int knockBack = 0)
+    {
 
-    public void OnAttack()
+        if (hp > 0)
+        {
+            hp -= att;
+
+            if (knockBack > 0)
+            {
+                SetMonsterState(MonsterState.KnockBack);
+                damageKnockBack = knockBack;
+            }
+
+
+            if (hp <= 0)
+            {
+                hp = 0;
+                SetMonsterState(MonsterState.Die);
+
+            }
+        }
+    }
+
+
+    public override void OnAttack()
     {
 
         if (monsterClass == MonsterClass.Warrior)
@@ -564,7 +599,24 @@ public class MonsterController : Unit
                         Managers.Sound.Play("Sounds/Effect/Bow");
                         GameObject arrow = Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
                         arrow.TryGetComponent(out MonsterArrowCtrl arrowCtrl);
-                        arrowCtrl.SetType(unitTarget, null);
+                        if (unitTarget.gameObject.layer == LayerMask.NameToLayer("Unit"))
+                        {
+                            if (unitTarget is UnitController unitCtrl)
+                            {
+                                arrowCtrl.SetType(unitCtrl, null);
+
+                            }
+
+                        }
+                        else if (unitTarget.gameObject.layer == LayerMask.NameToLayer("SpecialUnit"))
+                        {
+                            if (unitTarget is SpecialUnitController specialUnit)
+                            {
+                                arrowCtrl.SetType(specialUnit, null);
+
+                            }
+
+                        }
                     }
                 }
             }
@@ -584,7 +636,7 @@ public class MonsterController : Unit
         }
     }
 
-    bool CriticalCheck()
+    public override bool CriticalCheck()
     {
         //유닛공격력을 받아서 크리티컬확률을 받아서 확률에 맞으면 크리공격
         //아니면 일반 공격
@@ -598,7 +650,7 @@ public class MonsterController : Unit
     }
 
 
-    void CriticalAttack(UnitController uniCtrl)
+    public override void CriticalAttack(Unit uniCtrl)
     {
         if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
         {
@@ -618,7 +670,7 @@ public class MonsterController : Unit
         }
     }
 
-    void CriticalAttack(PlayerTower tower)
+    public override void CriticalAttack(Tower tower)
     {
         if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
         {
@@ -647,8 +699,6 @@ public class MonsterController : Unit
     }
 
 
-
-    bool knockBackStop = false;
     void ApplyKnockBack(Vector2 dir, float force)
     {
         if (!knockbackStart)
@@ -661,7 +711,6 @@ public class MonsterController : Unit
     }
 
 
-    float knockbackDuration = 0.25f;
 
     IEnumerator RestoreGravityAfterKnockback(float force)
     {
@@ -681,7 +730,6 @@ public class MonsterController : Unit
         }
 
         //knockBackAccleration = 10.0f;
-        knockBackStop = true;
         
         while(knockBackSpeed > 0.0f)   //속도 감소
         {
@@ -697,7 +745,7 @@ public class MonsterController : Unit
 
         SetMonsterState(MonsterState.Run);
         knockbackStart = false;
-        knockBackStop = false;
+
 
 
     }
@@ -791,10 +839,26 @@ public class MonsterController : Unit
             attackCoolTime -= Time.deltaTime;
             if (attackCoolTime <= .0f)
             {
-                if (towerDist < 1.75f * 1.75f)
-                    SetMonsterState(MonsterState.Attack);
+                if (unitTarget != null)
+                {
+                    Vector3 vec = unitTarget.gameObject.transform.position - this.transform.position;
+                    traceDistance = vec.sqrMagnitude;
+
+                    if (traceDistance < attackRange * attackRange)
+                        SetMonsterState(MonsterState.Attack);
+                    else
+                        SetMonsterState(MonsterState.Run);
+                }
                 else
-                    SetMonsterState(MonsterState.Run);
+                {
+                    if (towerDist < attackRange * attackRange)
+                        SetMonsterState(MonsterState.Attack);
+                    else
+                        SetMonsterState(MonsterState.Run);
+                }
+
+
+
                 if (towerAttack)
                     towerAttack = false;
             }

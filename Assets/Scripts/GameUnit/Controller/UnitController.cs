@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using static UnityEngine.GraphicsBuffer;
 
 
 public enum UnitClass
@@ -9,6 +10,7 @@ public enum UnitClass
     Warrior,
     Archer,
     Spear,
+    Magician,
     Count
 }
 
@@ -25,8 +27,7 @@ public enum UnitState
 
 public class UnitController : Unit
 {
-    [SerializeField]
-    private Animator anim;
+
 
     [SerializeField]
     private UnitClass unitClass;
@@ -34,19 +35,17 @@ public class UnitController : Unit
     private UnitState state = UnitState.Run;        //테스트용이라 런 
 
 
-    MonsterController[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
-    [SerializeField] MonsterController monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
-    Collider2D unitColl2d;
+    [SerializeField] Unit[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
+    [SerializeField] Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
     [SerializeField] MonsterPortal monsterPortal;
 
-    Rigidbody2D rigbody;
 
     public bool IsDie { get { return isDie; } }
     
     public int Att { get { return att; } }
     public int KnockBackForce { get { return knockbackForce; } }
 
-    public MonsterController Monctrl { get { return monTarget; } }
+    public Unit Monctrl { get { return monTarget; } }
 
     public MonsterPortal MonsterPortal { get { return monsterPortal; } }
 
@@ -65,8 +64,11 @@ public class UnitController : Unit
         return hp / maxHp;
     }
 
-    void Init()
+    public override void Init()
     {
+
+        base.Init();
+
         unitStat  = new UnitStat();
 
         if (unitClass == UnitClass.Warrior)
@@ -91,9 +93,6 @@ public class UnitController : Unit
         //anim = GetComponent<Animator>();
         monsterPortal = GameObject.FindObjectOfType<MonsterPortal>();
 
-        TryGetComponent<Animator>(out anim);
-        TryGetComponent<Collider2D>(out unitColl2d);
-        TryGetComponent<Rigidbody2D>(out rigbody);
 
         if (unitClass == UnitClass.Archer)
             arrowPos = transform.Find("ArrowPos");
@@ -121,14 +120,12 @@ public class UnitController : Unit
         
         UnitVictory();
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            state = UnitState.KnockBack;
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //{
+        //    state = UnitState.KnockBack;
 
-        }
+        //}
 
-
-        //앞으로 움직임 
     }
 
 
@@ -140,11 +137,10 @@ public class UnitController : Unit
         //Debug.Log($"타겟팅{isTageting}");
         #region 타겟구현
 
-        coll2d = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Monster"));
-        if (coll2d != null)
+        enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Monster") | LayerMask.GetMask("EliteMonster"));
+        if (enemyColls2D != null)
         {
-
-            if (coll2d.Length <= 0)
+            if (enemyColls2D.Length <= 0)
             {
                 //박스안 콜라이더가 아무것도 없으면
                 if (monTarget != null)  //이전에 몬스터 타겟팅이 잡혓더라면
@@ -154,10 +150,25 @@ public class UnitController : Unit
                 }
             }
 
-            monCtrls = new MonsterController[coll2d.Length];
+            monCtrls = new Unit[enemyColls2D.Length];
             //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
-            for(int ii = 0; ii < coll2d.Length;ii++)
-                coll2d[ii].TryGetComponent<MonsterController>(out monCtrls[ii]);
+            for(int ii = 0; ii < enemyColls2D.Length;ii++)
+            {
+                if(enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("Monster"))
+                {
+                    MonsterController monctrl;
+                    enemyColls2D[ii].TryGetComponent<MonsterController>(out monctrl);
+                    monCtrls[ii] = monctrl;
+
+                }
+                else if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("EliteMonster"))
+                {
+                    EliteMonsterController elite;
+                    enemyColls2D[ii].TryGetComponent<EliteMonsterController>(out elite);
+                    monCtrls[ii] = elite;
+
+                }
+            }
             
                
         }
@@ -336,6 +347,9 @@ public class UnitController : Unit
 
     void SetUnitState(UnitState state)
     {
+        if (isDie)
+            return;
+
         this.state = state;
 
         switch(this.state)
@@ -468,11 +482,24 @@ public class UnitController : Unit
 
         if(monTarget != null)
         {
-            if (monTarget.MonState == MonsterState.Die)
-                return false;
+            if(monTarget.gameObject.layer == LayerMask.NameToLayer("Monster") && monTarget is MonsterController monsterCtrl)
+            {
+                if (monsterCtrl.MonState == MonsterState.Die)
+                    return false;
 
-            if (!monTarget.gameObject.activeInHierarchy)
-                return false;
+                if (!monTarget.gameObject.activeInHierarchy)
+                    return false;
+            }
+
+            else if(monTarget.gameObject.layer == LayerMask.NameToLayer("EliteMonster") && monTarget is EliteMonsterController elite)
+            {
+                if (elite.MonState == Define.EliteMonsterState.Die)
+                    return false;
+
+                if (!monTarget.gameObject.activeInHierarchy)
+                    return false;
+            }
+
         }
 
 
@@ -500,17 +527,17 @@ public class UnitController : Unit
 
     void UnitDie()
     {
-        if (unitColl2d.enabled)
+        if (myColl.enabled)
         {
             SetUnitState(UnitState.Die);
-            unitColl2d.enabled = false;
+            myColl.enabled = false;
             GameObject.Destroy(gameObject, 5.0f);
 
         }
     }
    
 
-    public void OnDamage(int att,int knockBack = 0)
+    public override void OnDamage(int att,int knockBack = 0)
     {
 
         if (hp > 0)
@@ -537,7 +564,7 @@ public class UnitController : Unit
 
 
 
-    public void OnAttack()    //애니메이션 이벤트 함수
+    public override void OnAttack()    //애니메이션 이벤트 함수
     {
         if(unitClass == UnitClass.Warrior)
         {
@@ -567,7 +594,16 @@ public class UnitController : Unit
                         Managers.Sound.Play("Sounds/Effect/Bow");
                         GameObject arrow = Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
                         arrow.TryGetComponent(out ArrowCtrl arrowCtrl);
-                        arrowCtrl.SetType(monTarget, null);
+                        if(monTarget.gameObject.layer == LayerMask.NameToLayer("Monster") && monTarget is MonsterController monsterCtrl)
+                        {
+                            arrowCtrl.SetType(monsterCtrl, null);
+
+                        }
+                        else if(monTarget.gameObject.layer == LayerMask.NameToLayer("EliteMonster") && monTarget is EliteMonsterController elite)
+                        {
+                            arrowCtrl.SetType(elite, null);
+
+                        }
                     }
                 }
             }
@@ -611,7 +647,7 @@ public class UnitController : Unit
     }
 
 
-    bool CriticalCheck()
+    public override bool CriticalCheck()
     {
         //유닛공격력을 받아서 크리티컬확률을 받아서 확률에 맞으면 크리공격
         //아니면 일반 공격
@@ -625,7 +661,7 @@ public class UnitController : Unit
     }
 
 
-    void CriticalAttack(MonsterController monCtrl)
+    public override void CriticalAttack(Unit monCtrl)
     {
         if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
         {
@@ -643,7 +679,7 @@ public class UnitController : Unit
         }
     }
 
-    void CriticalAttack(MonsterPortal monPortal)
+    public override void CriticalAttack(Tower monPortal)
     {
         if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
         {
@@ -675,32 +711,52 @@ public class UnitController : Unit
     #region 넉백
     void ApplyKnockBack(Vector2 dir , float force)
     {
-        dir.y = 0;
+        if (!knockbackStart)
+        {
+            dir.y = 0;
+            knockbackStart = true;
+            StartCoroutine(RestoreGravityAfterKnockback(force));
 
-        rigbody.gravityScale = 0.0f;
-        rigbody.velocity = Vector2.zero;
-        rigbody.AddForce(dir * force, ForceMode2D.Impulse);
-
-        StartCoroutine(RestoreGravityAfterKnockback());
+        }
     }
 
 
-    float knockbackDuration = 0.5f;
-    IEnumerator RestoreGravityAfterKnockback()
+    IEnumerator RestoreGravityAfterKnockback(float force)
     {
-       
-        yield return new WaitForSeconds(knockbackDuration); // 넉백 지속 시간
+        WaitForSeconds wfs = new WaitForSeconds(knockbackDuration);
+        float knockBackSpeed = 0.0f;
+        float knockBackAccleration = 25.0f;            //힘
 
+        float knockbackTime = 0.0f;
+        float maxKnockBackTime = 0.3f;
 
-        while (rigbody.velocity.magnitude > 0.1f)
+        while (knockbackTime < maxKnockBackTime)  //속도 증가
         {
-            rigbody.velocity *= 0.96f;
+            knockBackSpeed += knockBackAccleration * Time.deltaTime;
+            rigbody.velocity = new Vector2(-1, 0) * knockBackSpeed;
+            knockbackTime += Time.deltaTime;
+            yield return null;
+        }
+
+        //knockBackAccleration = 10.0f;
+
+        while (knockBackSpeed > 0.0f)   //속도 감소
+        {
+            knockBackSpeed -= (knockBackAccleration * 0.5f) * Time.deltaTime;
+
+            Vector2 velo = new Vector2(-knockBackSpeed, rigbody.velocity.y);
+            rigbody.velocity = velo;
             yield return null;
         }
         //rigbody.velocity *= 0.5f;
 
+        yield return wfs; // 넉백 지속 시간
 
-        state = UnitState.Run;
+        SetUnitState(UnitState.Run);
+        knockbackStart = false;
+
+
+
     }
 
     #endregion
@@ -709,12 +765,12 @@ public class UnitController : Unit
     {
 
         Vector3 vec = obj.gameObject.transform.position - this.transform.position;
-        distance = vec.magnitude;
+        traceDistance = vec.magnitude;
         Vector3 dir = vec.normalized;
         if (unitClass == UnitClass.Archer)
         {
 
-            if (distance < attackRange)
+            if (traceDistance < attackRange)
             {
 
                 SetUnitState(UnitState.Attack);
@@ -729,7 +785,7 @@ public class UnitController : Unit
         else if (unitClass == UnitClass.Warrior)
         {
 
-            if (distance < attackRange)
+            if (traceDistance < attackRange)
             {
                 SetUnitState(UnitState.Attack);
             }
@@ -745,7 +801,7 @@ public class UnitController : Unit
         else if (unitClass == UnitClass.Spear)
         {
 
-            if (distance < attackRange)
+            if (traceDistance < attackRange)
             {
                 SetUnitState(UnitState.Attack);
             }
@@ -813,10 +869,23 @@ public class UnitController : Unit
                 //else
                 //    SetUnitState(UnitState.Run);
 
-                if (towerDist < 1.75f * 1.75f)
-                    SetUnitState(UnitState.Attack);
+                if (monTarget != null)
+                {
+                    Vector3 vec = monTarget.gameObject.transform.position - this.transform.position;
+                    traceDistance = vec.sqrMagnitude;
+                    if (traceDistance < attackRange * attackRange)
+                        SetUnitState(UnitState.Attack);
+                    else
+                        SetUnitState(UnitState.Run);
+                }
                 else
-                    SetUnitState(UnitState.Run);
+                {
+                    if (towerDist < attackRange * attackRange)
+                        SetUnitState(UnitState.Attack);
+                    else
+                        SetUnitState(UnitState.Run);
+                }
+
                 if (towerAttack)
                     towerAttack = false;
 

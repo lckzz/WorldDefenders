@@ -5,7 +5,7 @@ using UnityEngine;
 public class MonsterArrowCtrl : MonoBehaviour
 {
 
-    private UnitController unitCtrl;
+    private Unit unitCtrl;
     private MonsterController monsterCtrl;
     private PlayerTower playerTower;
     private float arrowSpeed = 35.0f;
@@ -47,7 +47,7 @@ public class MonsterArrowCtrl : MonoBehaviour
     }
 
 
-    void Shot<T,T1>(T unit ,T1 tower) where T : UnitController where T1 : PlayerTower
+    void Shot<T,T1>(T unit ,T1 tower) where T : Unit where T1 : PlayerTower
     {
         if (unit != null)
         {
@@ -110,7 +110,7 @@ public class MonsterArrowCtrl : MonoBehaviour
             return;
     }
 
-    public void SetType(UnitController unitCtrl, PlayerTower tower)
+    public void SetType(Unit unitCtrl, PlayerTower tower)
     {
         this.unitCtrl = unitCtrl;
         playerTower = tower;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Define
-{ 
+{
     public enum Arrows
     {
         UnitArrow,
@@ -25,12 +25,36 @@ public class Define
         BattleStage_Field
     }
 
+    public enum SpecialUnitState
+    {
+        Idle,
+        Run,
+        Trace,
+        Attack,
+        Skill,
+        KnockBack,
+        Die
+    }
+
+    public enum EliteMonsterState
+    {
+        Idle,
+        Run,
+        Trace,
+        Attack,
+        Skill,
+        KnockBack,
+        Die
+    }
+
     public enum MonsterType
     {
         NormalSkeleton,
         BowSkeleton,
         Count
     }
+
+
 
     public enum MainStage
     {

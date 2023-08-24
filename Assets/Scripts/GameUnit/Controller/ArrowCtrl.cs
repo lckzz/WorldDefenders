@@ -7,7 +7,7 @@ public class ArrowCtrl : MonoBehaviour
 {
     private Vector3 unitArrowScale = new Vector3(-5f, 5f, 5f);
     private UnitController unitCtrl;
-    private MonsterController monsterCtrl;
+    private Unit monsterCtrl;
     [SerializeField] private MonsterPortal monPortal;
 
     private float arrowSpeed = 35.0f;
@@ -113,7 +113,7 @@ public class ArrowCtrl : MonoBehaviour
     }
 
 
-    public void SetType(MonsterController monCtrl , MonsterPortal monPort)
+    public void SetType(Unit monCtrl , MonsterPortal monPort)
     {
         monsterCtrl = monCtrl;
         monPortal = monPort;
