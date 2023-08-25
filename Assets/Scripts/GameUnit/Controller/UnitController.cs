@@ -40,9 +40,7 @@ public class UnitController : Unit
     [SerializeField] MonsterPortal monsterPortal;
 
 
-    public bool IsDie { get { return isDie; } }
-    
-    public int Att { get { return att; } }
+
     public int KnockBackForce { get { return knockbackForce; } }
 
     public Unit Monctrl { get { return monTarget; } }
@@ -59,10 +57,7 @@ public class UnitController : Unit
 
     UnitStat unitStat;
 
-    public float hpPercent()
-    {
-        return hp / maxHp;
-    }
+
 
     public override void Init()
     {
@@ -571,8 +566,13 @@ public class UnitController : Unit
             if(!towerAttack)
             {
                 if (monTarget != null)
-                    CriticalAttack(monTarget);
-                
+                {
+                    float dist = (monTarget.transform.position - this.gameObject.transform.position).sqrMagnitude;
+                    if(dist < unitStat.attackRange * unitStat.attackRange)
+                        CriticalAttack(monTarget);
+
+                }
+
             }
             else
                 CriticalAttack(monsterPortal);

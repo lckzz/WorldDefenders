@@ -49,9 +49,8 @@ public class MonsterController : Unit
     MonsterStat monStat;
 
 
-    public bool IsDie { get { return isDie; } }
     public float Hp { get { return hp; } }
-    public int Att { get { return att; } }
+
     public int KnockBackForce { get { return knockbackForce; } }
 
 
@@ -120,10 +119,7 @@ public class MonsterController : Unit
 
 
 
-    public float hpPercent()
-    {
-        return hp / maxHp;
-    }
+
 
 
 
@@ -520,7 +516,6 @@ public class MonsterController : Unit
 
             if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
             {
-                Debug.Log("°ø°Ý²ôÀ¿");
                 SetMonsterState(MonsterState.Idle);
 
                 attackCoolTime = 1.0f;
@@ -577,7 +572,11 @@ public class MonsterController : Unit
             {
 
                 if (unitTarget != null)
-                    CriticalAttack(unitTarget);
+                {
+                    float dist = (unitTarget.transform.position - this.gameObject.transform.position).sqrMagnitude;
+                    if (dist < monStat.attackRange * monStat.attackRange)
+                        CriticalAttack(unitTarget);
+                }
                 
             }
             else

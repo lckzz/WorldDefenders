@@ -8,7 +8,7 @@ public class EliteMonsterController : Unit
     [SerializeField]
     private MonsterClass monsterClass;
     [SerializeField]
-    private Define.EliteMonsterState state = Define.EliteMonsterState.Run;
+    private EliteMonsterState state = EliteMonsterState.Run;
     private bool isSkil = false;
 
 
@@ -27,13 +27,12 @@ public class EliteMonsterController : Unit
 
 
 
-    public bool IsDie { get { return isDie; } }
     public float Hp { get { return hp; } }
-    public int Att { get { return att; } }
+
 
     public UnitController UnitCtrl { get { return unitTarget; } }
     public PlayerTower PlayerTowerCtrl { get { return playerTowerCtrl; } }
-    public Define.EliteMonsterState MonState { get { return state; } }
+    public EliteMonsterState MonState { get { return state; } }
 
     public override void Init()
     {
@@ -42,7 +41,7 @@ public class EliteMonsterController : Unit
         monStat = new MonsterStat();
 
         if (monsterClass == MonsterClass.EliteWarrior)
-            monStat = Managers.Data.normalSkeleton[GlobalData.g_NormalSkeletonID];
+            monStat = Managers.Data.eliteSkeleton[GlobalData.g_EliteWarriorID];
 
 
         att = monStat.att;
@@ -84,10 +83,7 @@ public class EliteMonsterController : Unit
     }
 
 
-    public float hpPercent()
-    {
-        return hp / maxHp;
-    }
+
 
 
     public override void EnemySensor()      //Àû°¨Áö
@@ -199,7 +195,7 @@ public class EliteMonsterController : Unit
 
             if (monsterClass == MonsterClass.EliteWarrior)
             {
-                TowerAttackRange(1.75f);
+                TowerAttackRange(monStat.attackRange);
             }
 
         }

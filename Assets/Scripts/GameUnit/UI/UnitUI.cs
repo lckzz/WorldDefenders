@@ -16,6 +16,8 @@ public class UnitUI : MonoBehaviour
 
     protected float destoryTimer = 1.5f;
     protected bool startImgFadeOut = false;
+    protected float hp;
+
 
     protected T ComponentInit<T>(out T compo) where T : Component
     {

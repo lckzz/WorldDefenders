@@ -24,18 +24,12 @@ public class SpecialUnitController : Unit
     Vector3 normalMagicPos = new Vector3(-0.9f, 0.16f, 0.0f);
     //마법사 전용
 
-    public bool IsDie { get { return isDie; } }
-    public int Att { get { return att; } }
     public MonsterController Monctrl { get { return monTarget; } }
 
     public MonsterPortal MonsterPortal { get { return monsterPortal; } }
 
     public SpecialUnitState UniState { get { return state; } }
 
-    public float hpPercent()
-    {
-        return hp / maxHp;
-    }
 
 
     public override void Init()

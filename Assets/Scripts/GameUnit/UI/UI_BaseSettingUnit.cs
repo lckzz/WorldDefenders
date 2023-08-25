@@ -13,22 +13,56 @@ public abstract class UI_BaseSettingUnit : MonoBehaviour
 
     protected abstract void Init();
 
-    protected void UnitUISpriteInit(int unitLv, string pathLv1, string pathLv2)
+    protected void UnitUISpriteInit(UnitClass uniClass, int unitLv, string pathLv1, string pathLv2)
     {
         if (unitImg != null)
             unitImg.gameObject.SetActive(true);
+        
+
         //유닛노드UI의 이미지 스프라이트를 바꿔준다.
-        if (unitLv < 5)
-        {
-            unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{pathLv1}");
-            Debug.Log(GlobalData.g_UnitArcherLv);
 
-        }
-        else
+         switch (uniClass)
         {
-            unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{pathLv2}");
+            case UnitClass.Warrior:
+                if (unitLv < 5)
+                {
+                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Warrior/Lv1/{pathLv1}");
+                }
+                else
+                {
+                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Warrior/Lv2/{pathLv2}");
+                }
+                break;
+            case UnitClass.Archer:
+                if (unitLv < 5)
+                {
+                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Archer/Lv1/{pathLv1}");
 
+
+                }
+                else
+                {
+                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Archer/Lv2/{pathLv2}");
+
+
+                }
+                break;
+            case UnitClass.Spear:
+                if (unitLv < 5)
+                {
+                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Spear/Lv1/{pathLv1}");
+
+
+                }
+                else
+                {
+                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Spear/Lv2/{pathLv2}");
+
+
+                }
+                break;
         }
+
     }
 
 

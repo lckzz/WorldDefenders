@@ -38,7 +38,7 @@ public class UI_StageSelectPopUp : UI_Base
 
         for (int ii = 0; ii < onestageSels.Length; ii++)
         {
-            OnClickStage(onestageSels[ii].gameObject, ii, GetStageInfo, UIEvnet.PointerDown);
+            OnClickStage(onestageSels[ii].gameObject, ii, GetStageInfo, UIEvent.PointerDown);
         }
         player.TryGetComponent(out ui_PlayerCtrl);
         StartBtnInActive();
@@ -57,7 +57,7 @@ public class UI_StageSelectPopUp : UI_Base
     }
 
 
-    void OnClickStage(GameObject stageObj, int idx, Action<int> action, UIEvnet type = UIEvnet.PointerDown)
+    void OnClickStage(GameObject stageObj, int idx, Action<int> action, UIEvent type = UIEvent.PointerDown)
     {
         UI_EventHandler evt = null;
         stageObj.TryGetComponent(out evt);
@@ -68,7 +68,7 @@ public class UI_StageSelectPopUp : UI_Base
         {
             switch(type)
             {
-                case UIEvnet.PointerDown:
+                case UIEvent.PointerDown:
                     {
                         evt.OnPointerDownIntHandler -= (unUsed) => action(idx);
                         evt.OnPointerDownIntHandler += (unUsed) => action(idx);

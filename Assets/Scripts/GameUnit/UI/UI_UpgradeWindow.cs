@@ -61,9 +61,9 @@ public class UI_UpgradeWindow : UI_Base
 
             });
         WindowInit();
-        UnitButtonEvent(unitUpgradeBtn[(int)UnitClass.Warrior].gameObject,(int)UnitClass.Warrior, OpenUpgradeUnitPopUp, UIEvnet.PointerDown);
-        UnitButtonEvent(unitUpgradeBtn[(int)UnitClass.Archer].gameObject, (int)UnitClass.Archer, OpenUpgradeUnitPopUp, UIEvnet.PointerDown);
-        UnitButtonEvent(unitUpgradeBtn[(int)UnitClass.Spear].gameObject, (int)UnitClass.Spear, OpenUpgradeUnitPopUp, UIEvnet.PointerDown);
+        UnitButtonEvent(unitUpgradeBtn[(int)UnitClass.Warrior].gameObject,(int)UnitClass.Warrior, OpenUpgradeUnitPopUp, UIEvent.PointerDown);
+        UnitButtonEvent(unitUpgradeBtn[(int)UnitClass.Archer].gameObject, (int)UnitClass.Archer, OpenUpgradeUnitPopUp, UIEvent.PointerDown);
+        UnitButtonEvent(unitUpgradeBtn[(int)UnitClass.Spear].gameObject, (int)UnitClass.Spear, OpenUpgradeUnitPopUp, UIEvent.PointerDown);
     }
 
     // Update is called once per frame
@@ -82,12 +82,12 @@ public class UI_UpgradeWindow : UI_Base
 
 
 
-    void UnitButtonEvent(GameObject obj, int idx ,Action<int> action = null, UIEvnet type = UIEvnet.PointerDown)
+    void UnitButtonEvent(GameObject obj, int idx ,Action<int> action = null, UIEvent type = UIEvent.PointerDown)
     {
         UI_EventHandler evt;
         obj.TryGetComponent(out evt);
 
-        if(type == UIEvnet.PointerDown)
+        if(type == UIEvent.PointerDown)
         {
             evt.OnPointerDownIntHandler -= (unUsedIdx) => action(idx);
             evt.OnPointerDownIntHandler += (unUsedIdx) => action(idx);

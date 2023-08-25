@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public enum UIEvnet
+public enum UIEvent
 {
     PointerDown,
     PointerUp
@@ -76,8 +76,8 @@ public class UI_GamePlay : UI_Base
         }
 
         GameObject.Find("Player").TryGetComponent<PlayerController>(out player);
-        ButtonEvent(uiAttackBtn.gameObject, player.AttackWait, UIEvnet.PointerDown);
-        ButtonEvent(uiAttackBtn.gameObject, player.ShotArrow, UIEvnet.PointerUp);
+        ButtonEvent(uiAttackBtn.gameObject, player.AttackWait, UIEvent.PointerDown);
+        ButtonEvent(uiAttackBtn.gameObject, player.ShotArrow, UIEvent.PointerUp);
 
 
 
@@ -85,7 +85,6 @@ public class UI_GamePlay : UI_Base
         {
             uiUnit[i].TryGetComponent<UnitNode>(out UnitNode node);
 
-            Debug.Log(node.Unit);
 
             switch (node.Unit)
             {
@@ -116,19 +115,19 @@ public class UI_GamePlay : UI_Base
     }
 
 
-    void ButtonEvent(GameObject obj,Action action = null, UIEvnet type = UIEvnet.PointerDown)
+    void ButtonEvent(GameObject obj,Action action = null, UIEvent type = UIEvent.PointerDown)
     {
         UI_EventHandler evt;
         obj.TryGetComponent(out evt);
 
         switch(type)
         {
-            case UIEvnet.PointerDown:
+            case UIEvent.PointerDown:
                 evt.OnPointerDownHandler -= action;
                 evt.OnPointerDownHandler += action;
                 break;
 
-             case UIEvnet.PointerUp:
+             case UIEvent.PointerUp:
                 evt.OnPointerUpHandler -= action;
                 evt.OnPointerUpHandler += action;
                 break;
@@ -136,7 +135,7 @@ public class UI_GamePlay : UI_Base
         
     }
 
-    void ButtonEvent1(GameObject obj, string path,int idx, Action<string,int> action = null, UIEvnet type = UIEvnet.PointerDown)
+    void ButtonEvent1(GameObject obj, string path,int idx, Action<string,int> action = null, UIEvent type = UIEvent.PointerDown)
     {
         UI_EventHandler evt;
         obj.TryGetComponent(out evt);
@@ -144,7 +143,7 @@ public class UI_GamePlay : UI_Base
 
         switch (type)
         {
-            case UIEvnet.PointerDown:
+            case UIEvent.PointerDown:
                 evt.OnPointerDownUnitHandler -= (unUsedPath,unUsedIdx) => action(path,idx);
                 evt.OnPointerDownUnitHandler += (unUsedPath,unUsedIdx) => action(path,idx);
                 
@@ -157,7 +156,7 @@ public class UI_GamePlay : UI_Base
 
     void UnitButtonSetting(int i , string path)
     {
-        ButtonEvent1(uiUnit[i].gameObject, path, i, UnitSummon, UIEvnet.PointerDown);
+        ButtonEvent1(uiUnit[i].gameObject, path, i, UnitSummon, UIEvent.PointerDown);
     }
 
 

@@ -15,9 +15,9 @@ public class UI_Lobby : UI_Base
     {
         GameObject.Find("LobbyScene").TryGetComponent(out lobbyScene);
         LobbySceneRefresh();
-        ButtonEvent(upgradeBtn.gameObject, UpgradeOn, UIEvnet.PointerDown);
-        ButtonEvent(unitSettingBtn.gameObject, UnitSettingOn, UIEvnet.PointerDown);
-        ButtonEvent(stageSelectBtn.gameObject, StageSelectOn, UIEvnet.PointerDown);
+        ButtonEvent(upgradeBtn.gameObject, UpgradeOn, UIEvent.PointerDown);
+        ButtonEvent(unitSettingBtn.gameObject, UnitSettingOn, UIEvent.PointerDown);
+        ButtonEvent(stageSelectBtn.gameObject, StageSelectOn, UIEvent.PointerDown);
 
     }
 
@@ -28,7 +28,7 @@ public class UI_Lobby : UI_Base
     }
 
 
-    void ButtonEvent(GameObject obj, Action action = null,UIEvnet type = UIEvnet.PointerDown)
+    void ButtonEvent(GameObject obj, Action action = null,UIEvent type = UIEvent.PointerDown)
     {
         UI_EventHandler evt = null;
         obj.TryGetComponent(out evt);
@@ -38,7 +38,7 @@ public class UI_Lobby : UI_Base
         {
             switch(type)
             {
-                case UIEvnet.PointerDown:
+                case UIEvent.PointerDown:
                     evt.OnPointerDownHandler -= action;
                     evt.OnPointerDownHandler += action;
 

@@ -58,6 +58,8 @@ public abstract class Unit : MonoBehaviour,ISensor
     protected bool knockbackStart = false;
     protected float knockbackDuration = 0.25f;
 
+    public bool IsDie { get { return isDie; } }
+    public int Att { get { return att; } }
 
     public virtual void Init()
     {
@@ -67,7 +69,10 @@ public abstract class Unit : MonoBehaviour,ISensor
 
     }
 
-
+    public float hpPercent()
+    {
+        return hp / maxHp;
+    }
 
     public virtual void UnitDead()
     {

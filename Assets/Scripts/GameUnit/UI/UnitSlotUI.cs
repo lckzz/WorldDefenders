@@ -65,14 +65,14 @@ public class UnitSlotUI : UI_BaseSettingUnit
                 //Debug.Log($"워리어 갱신! {e_UnitClass}");
                 rt.sizeDelta = defalutSizeDelta;
                 rt.transform.localPosition = defalutTr;
-                UnitUISpriteInit(GlobalData.g_UnitWarriorLv, "KnifeUnitLv1Img", "KnifeUnitLv2Img");
+                UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitWarriorLv, "KnifeUnitLv1Img", "KnifeUnitLv2Img");
                 break;
 
             case UnitClass.Archer:
                 //Debug.Log($"아처 갱신! {e_UnitClass}");
                 rt.sizeDelta = defalutSizeDelta;
                 rt.transform.localPosition = defalutTr;
-                UnitUISpriteInit(GlobalData.g_UnitArcherLv, "BowUnitLv1Img", "BowUnitLv2Img");
+                UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitArcherLv, "BowUnitLv1Img", "BowUnitLv2Img");
 
                 break;
 
@@ -81,7 +81,7 @@ public class UnitSlotUI : UI_BaseSettingUnit
 
                 rt.sizeDelta = spearSizeDelta;
                 rt.transform.localPosition = spearTr;
-                UnitUISpriteInit(GlobalData.g_UnitSpearLv, "SpearUnitLv1Img", "SpearUnitLv2Img");
+                UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitSpearLv, "SpearUnitLv1Img", "SpearUnitLv2Img");
 
                 break;
 

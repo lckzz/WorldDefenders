@@ -28,18 +28,18 @@ public class LobbyUnit : MonoBehaviour
         {
             case UnitClass.Warrior:
 
-                UnitSpriteRender(GlobalData.g_UnitWarriorLv, "KnifeUnitLv1Img", "KnifeUnitLv2Img");
+                UnitSpriteRender(e_UnitClass,GlobalData.g_UnitWarriorLv, "KnifeUnitLv1Img", "KnifeUnitLv2Img");
                 break;
 
             case UnitClass.Archer:
                 Debug.Log($"아처 갱신! {e_UnitClass}");
-                UnitSpriteRender(GlobalData.g_UnitArcherLv, "BowUnitLv1Img", "BowUnitLv2Img");
+                UnitSpriteRender(e_UnitClass, GlobalData.g_UnitArcherLv, "BowUnitLv1Img", "BowUnitLv2Img");
 
                 break;
 
             case UnitClass.Spear:
                 Debug.Log($"창병 갱신! {e_UnitClass}");
-                UnitSpriteRender(GlobalData.g_UnitSpearLv, "SpearUnitLv1Img", "SpearUnitLv2Img");
+                UnitSpriteRender(e_UnitClass, GlobalData.g_UnitSpearLv, "SpearUnitLv1Img", "SpearUnitLv2Img");
 
                 break;
 
@@ -52,20 +52,52 @@ public class LobbyUnit : MonoBehaviour
     }
 
 
-    void UnitSpriteRender(int unitLv, string pathLv1, string pathLv2)
+    void UnitSpriteRender(UnitClass uniClass,int unitLv, string pathLv1, string pathLv2)
     {
         gameObject.SetActive(true);
-        //유닛노드UI의 이미지 스프라이트를 바꿔준다.
-        if (unitLv < 5)
-        {
-            Debug.Log(Managers.Resource.Load<Sprite>($"Sprite/{pathLv1}"));
-            sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/{pathLv1}");
 
-        }
-        else
+        switch (uniClass)
         {
-            sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/{pathLv2}");
+            case UnitClass.Warrior:
+                if (unitLv < 5)
+                {
+                    sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Warrior/Lv1/{pathLv1}");
+                }
+                else
+                {
+                    sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Warrior/Lv2/{pathLv2}");
+                }
+                break;
+            case UnitClass.Archer:
+                if (unitLv < 5)
+                {
+                    sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Archer/Lv1/{pathLv1}");
 
+
+                }
+                else
+                {
+                    sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Archer/Lv2/{pathLv2}");
+
+
+                }
+                break;
+            case UnitClass.Spear:
+                if (unitLv < 5)
+                {
+                    sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Spear/Lv1/{pathLv1}");
+
+
+                }
+                else
+                {
+                    sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Spear/Lv2/{pathLv2}");
+
+
+                }
+                break;
         }
+
+
     }
 }
