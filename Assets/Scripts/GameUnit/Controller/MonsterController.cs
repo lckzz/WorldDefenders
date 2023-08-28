@@ -69,9 +69,9 @@ public class MonsterController : Unit
         monStat = new MonsterStat();
 
         if (monsterClass == MonsterClass.Warrior)
-            monStat = Managers.Data.normalSkeleton[GlobalData.g_NormalSkeletonID];
+            monStat = Managers.Data.monsterDict[GlobalData.g_NormalSkeletonID];
         else if (monsterClass == MonsterClass.Archer)
-            monStat = Managers.Data.bowSkeleton[GlobalData.g_BowSkeletonID];
+            monStat = Managers.Data.monsterDict[GlobalData.g_BowSkeletonID];
 
         att = monStat.att;
         hp = monStat.hp;

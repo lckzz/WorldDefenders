@@ -7,23 +7,21 @@ using static Define;
 public class SpecialUnitController : Unit
 {
     [SerializeField]
-    private UnitClass unitClass;
+    protected UnitClass unitClass;
     [SerializeField]
-    private Define.SpecialUnitState state = Define.SpecialUnitState.Run;
+    protected Define.SpecialUnitState state = Define.SpecialUnitState.Run;
 
-    private bool isSkil = false;
+    protected bool isSkil = false;
 
-    MonsterController[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
-    [SerializeField] MonsterController monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
-    [SerializeField] MonsterPortal monsterPortal;
+    protected MonsterController[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
+    [SerializeField] protected MonsterController monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
+    [SerializeField] protected MonsterPortal monsterPortal;
+    [SerializeField] protected List<Unit> skillMonList;
 
-    UnitStat unitStat;
+    protected UnitStat unitStat;
 
-    //마법사 전용
-    Transform magicPos;
-    Vector3 normalMagicPos = new Vector3(-0.9f, 0.16f, 0.0f);
-    //마법사 전용
 
+    public SkillBook Skills { get; protected set; }
     public MonsterController Monctrl { get { return monTarget; } }
 
     public MonsterPortal MonsterPortal { get { return monsterPortal; } }
@@ -36,31 +34,10 @@ public class SpecialUnitController : Unit
     {
         base.Init();
 
-        unitStat = new UnitStat();
-
-        if (unitClass == UnitClass.Magician)
-            unitStat = Managers.Data.magicDict[GlobalData.g_UnitMagicianLv];
-        
-
-
-
-        hp = unitStat.hp;
-        att = unitStat.att;
-        knockbackForce = unitStat.knockBackForce;
-        attackRange = unitStat.attackRange;
-
-        moveSpeed = 2.5f;
-        maxHp = hp;
-
-
         //rig = this.GetComponent<Rigidbody2D>();
         //anim = GetComponent<Animator>();
         monsterPortal = GameObject.FindObjectOfType<MonsterPortal>();
-
-        if (unitClass == UnitClass.Magician)
-            magicPos = transform.Find("MagicPos");
-        else
-            magicPos = null;
+        Skills = gameObject.GetComponent<SkillBook>();
 
 
         SetUnitState(SpecialUnitState.Run);
@@ -68,29 +45,30 @@ public class SpecialUnitController : Unit
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
-        Init();
-    }
+    //void Start()
+    //{
+    //    Init();
+    //}
 
-    // Update is called once per frame
-    void Update()
-    {
-        TowerSensor();
-        EnemySensor();
-        UnitStateCheck();
-    }
+    //// Update is called once per frame
+    //void Update()
+    //{
+
+    //}
 
     public override void EnemySensor()      //적감지
     {
         //Debug.Log(isTargeting);
         //Debug.Log($"타겟팅{isTageting}");
         #region 타겟구현
+        if (state == SpecialUnitState.Attack || state == SpecialUnitState.Skill)
+            return;
 
+
+        skillMonList.Clear();
         enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Monster"));
         if (enemyColls2D != null)
         {
-            Debug.Log(enemyColls2D.Length);
             if (enemyColls2D.Length <= 0)
             {
                 //박스안 콜라이더가 아무것도 없으면
@@ -105,7 +83,7 @@ public class SpecialUnitController : Unit
             //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
             for (int ii = 0; ii < enemyColls2D.Length; ii++)
                 enemyColls2D[ii].TryGetComponent<MonsterController>(out monCtrls[ii]);
-
+            
 
         }
 
@@ -120,6 +98,10 @@ public class SpecialUnitController : Unit
             {
                 for (int i = 0; i < monCtrls.Length; i++)
                 {
+                    if(i < 3)
+                        skillMonList.Add(monCtrls[i]);
+
+
                     if (i == 0 && monCtrls.Length > 1)
                     {
                         float distA = (monCtrls[i].transform.position - this.transform.position).sqrMagnitude;
@@ -129,11 +111,14 @@ public class SpecialUnitController : Unit
                         {
                             disMin = distB * distB;
                             min = i + 1;
+                            
                         }
                         else
                         {
                             disMin = distA * distA;
                             min = i;
+                            
+
                         }
                     }
 
@@ -145,6 +130,8 @@ public class SpecialUnitController : Unit
                         {
                             disMin = distB * distB;
                             min = i + 1;
+                            
+
                         }
 
 
@@ -157,6 +144,8 @@ public class SpecialUnitController : Unit
             if (monCtrls.Length != 0)
             {
                 monTarget = monCtrls[min];
+                skillMonList.Add(monTarget);
+
             }
 
 
@@ -171,7 +160,7 @@ public class SpecialUnitController : Unit
     }
 
 
-    void TowerSensor()
+    public void TowerSensor()
     {
         //타워를 최우선적으로 타격하고 거리를 계속해서 계산해서 일정거리안에 들어오면 타워 공격
         if (monsterPortal == null)
@@ -232,7 +221,7 @@ public class SpecialUnitController : Unit
         }
     }
 
-    void UnitStateCheck()
+    public void UnitStateCheck()
     {
         switch (state)
         {
@@ -258,7 +247,7 @@ public class SpecialUnitController : Unit
                 }
             case SpecialUnitState.Skill:
                 {
-                    
+                    UnitSkill();
                     break;
                 }
             case SpecialUnitState.KnockBack:
@@ -479,6 +468,17 @@ public class SpecialUnitController : Unit
         }
     }
 
+
+    void UnitSkill()
+    {
+        //여기서 각각의 유닛들의 스킬들을 구현하면 너무 낭비되는 메모리가 생김
+        //왜냐면 구현하기 위한 게임오브젝트들을 미리 선언하기 때문
+        //쿨타임이 돌면 스킬매니저에서 해당 유닛에 맞는 스킬을 가져온다.
+        //공격했을 때 공격박스에 있는 유닛들을 가져와야함
+        //타겟유닛리스트를 매개변수로 넣는다.
+        //Managers.Skill.ActiveSkillUse(skillMonList,);
+    }
+
     void UnitDie()
     {
         if (myColl.enabled)
@@ -520,34 +520,6 @@ public class SpecialUnitController : Unit
 
     public override void OnAttack()    //애니메이션 이벤트 함수
     {
-        if (unitClass == UnitClass.Magician)
-        {
-            GameObject obj = Resources.Load<GameObject>("Prefabs/Weapon/MagicShot");
-
-            if (monTarget != null)
-            {
-
-                if (obj != null)
-                {
-                    GameObject magicBall = Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
-                    magicBall.TryGetComponent(out MagicAttackCtrl magicCtrl);
-                    magicCtrl.SetType(monTarget, null);
-                }
-            }
-            else
-            {
-
-                if (obj != null)
-                {
-                    GameObject magicBall = Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
-                    magicBall.TryGetComponent(out MagicAttackCtrl magicCtrl);
-                    magicCtrl.SetType(null, monsterPortal);
-                }
-            }
-
-        }
-
-
 
     }
 

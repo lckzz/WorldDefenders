@@ -41,7 +41,7 @@ public class EliteMonsterController : Unit
         monStat = new MonsterStat();
 
         if (monsterClass == MonsterClass.EliteWarrior)
-            monStat = Managers.Data.eliteSkeleton[GlobalData.g_EliteWarriorID];
+            monStat = Managers.Data.monsterDict[GlobalData.g_EliteWarriorID];
 
 
         att = monStat.att;

@@ -54,6 +54,13 @@ public class Define
         Count
     }
 
+    public enum SkillType
+    {
+        Active,
+        Passive,
+        Buff,
+        Count
+    }
 
 
     public enum MainStage
