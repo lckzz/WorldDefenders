@@ -1,3 +1,4 @@
+using DG.Tweening;
 using DG.Tweening.Plugins.Core.PathCore;
 using System;
 using System.Collections;
@@ -5,6 +6,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.UI.CanvasScaler;
 using Random = UnityEngine.Random;
 
 public enum UIEvent
@@ -24,8 +26,8 @@ public class UI_GamePlay : UI_Base
     Button uiAttackBtn;
 
     [SerializeField]
-    GameObject contents;
-
+    GameObject contents; 
+    [SerializeField]
     Button[] uiUnit;            //설정한 유닛들의 버튼정보
 
     [SerializeField]
@@ -38,11 +40,20 @@ public class UI_GamePlay : UI_Base
     [SerializeField] Image fadeImg;
 
     bool fadeCheck = true;
+    float uiAttBtnBeforePosY = -450.0f;
+    float uiAttBtnAfterPosY = -280.0f;
 
+    float uiCostBeforePosY = -60.0f;
+    float uiCostAfterPosY = 70.0f;
 
     UnitNode unitNode;
     GameObject unitObj;
     GameObject unitSpawnBtnPrefab;
+
+    [SerializeField] private Vector3[] unitNodePos;
+    Vector3 unitNodeStartPos = new Vector3(105.0f, -260.0f, .0f);
+
+
 
     public static Queue<GameObject> gameQueue = new Queue<GameObject>();
     //UI_EventHandler evt;
@@ -54,14 +65,26 @@ public class UI_GamePlay : UI_Base
         if (base.Init() == false)
             return false;
 
+        unitNodePos = new Vector3[5];
 
-        for(int ii = 0; ii < GlobalData.g_SlotUnitClass.Count; ii++)
+        for(int i = 0; i < unitNodePos.Length; i++)
+        {
+            unitNodePos[i] = unitNodeStartPos;
+            unitNodeStartPos.x += 175.0f;
+        }
+
+
+
+
+        for (int ii = 0; ii < GlobalData.g_SlotUnitClass.Count; ii++)
         {
             if (GlobalData.g_SlotUnitClass[ii] != UnitClass.Count)
             {
                 GameObject nodeObj = Managers.Resource.Instantiate("Unit/UnitSpawnBtn", contents.transform);
                 nodeObj.TryGetComponent(out UnitNode unitNode);
                 unitNode.UnitInit(GlobalData.g_SlotUnitClass[ii]);
+                
+
             }    
         }
 
@@ -70,6 +93,7 @@ public class UI_GamePlay : UI_Base
 
         for(int ii = 0; ii < uiUnit.Length; ii++)
         {
+
             contents.transform.GetChild(ii).TryGetComponent(out uiUnit[ii]);
 
 
@@ -103,15 +127,60 @@ public class UI_GamePlay : UI_Base
             }
         }
 
+        StartUISet = StartCoroutine(StartUnitNodeUIMove());
 
 
         return true;
     }
 
+    Coroutine StartUISet = null;
 
     private void Update()
     {
+        if(!fadeCheck)
+        {
+           
+        }
+
         FadeOut();
+    }
+
+    float delaySeconds = 0.1f;
+    IEnumerator StartUnitNodeUIMove()
+    {
+        WaitForSeconds wfs = new WaitForSeconds(delaySeconds);
+
+
+        yield return wfs;
+
+
+        RectTransform rt;
+        uiAttackBtn.TryGetComponent(out rt);
+        if (rt != null)
+        {
+            UiMove(rt, uiAttBtnBeforePosY, uiAttBtnAfterPosY);
+            yield return wfs;
+
+        }
+
+        for (int ii = 0; ii < uiUnit.Length; ii++)
+        {
+            uiUnit[ii].TryGetComponent(out UnitNode node);
+            node.UnitPositionSet(unitNodePos[ii]);
+
+            node.NodeMove();
+            yield return wfs;
+
+        }
+
+        unitCost.TryGetComponent(out rt);
+        if(rt != null)
+        {
+            UiMove(rt, uiCostBeforePosY, uiCostAfterPosY);
+            yield return wfs;
+        }
+
+        yield break;
     }
 
 
@@ -262,5 +331,15 @@ public class UI_GamePlay : UI_Base
 
         int ran = UnityEngine.Random.Range(0, 3);
         instancObj.transform.position = tr[ran].position;
+    }
+
+    public void UiMove(RectTransform rt, float beforePosY , float afterPosY)
+    {
+        if (rt == null)
+            return;
+
+
+        if (rt.anchoredPosition.y == beforePosY)
+            rt.DOLocalMoveY(afterPosY, 0.5f).SetEase(Ease.OutBack);
     }
 }

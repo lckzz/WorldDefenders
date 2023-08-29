@@ -16,7 +16,7 @@ public class UI_Base : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         Init();
     }

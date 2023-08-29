@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -13,6 +14,7 @@ public class UnitNode : MonoBehaviour
     private Image unitCoolImg;
     [SerializeField]
     private TextMeshProUGUI unitCostTxt;
+    private RectTransform unitRt;
 
     [SerializeField]
     private float spawnCoolTime = 0.0f;
@@ -70,7 +72,8 @@ public class UnitNode : MonoBehaviour
     {
         //유닛별로 맞는 데이터 연결 (이미지랑 쿨타임등등)
         unitCost = 30.0f;
-
+        if(unitRt == null)
+            TryGetComponent(out unitRt);
     }
 
     public void UnitInit(UnitClass unitClass)      //생성하면서 유닛노드는 유닛에 맞게 갱신
@@ -100,5 +103,18 @@ public class UnitNode : MonoBehaviour
                 break;
         }
 
+    }
+
+    public void UnitPositionSet(Vector3 pos)
+    {
+        if(unitRt == null)
+            TryGetComponent(out unitRt);
+        unitRt.anchoredPosition = pos;
+    }
+
+    public void NodeMove()
+    {
+        if (unitRt.localPosition.y == -260.0f)
+            unitRt.DOLocalMoveY(-80.0f, 0.5f).SetEase(Ease.OutBack);
     }
 }
