@@ -78,6 +78,14 @@ public class Define
 
     }
 
+    public enum UnitUILv
+    {
+        One,
+        Two,
+        Three,
+        Count
+    }
+
 
 
 }

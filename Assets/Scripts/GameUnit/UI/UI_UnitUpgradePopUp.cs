@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,7 +28,10 @@ public class UI_UnitUpgradePopUp : UI_Base
     [SerializeField] private TextMeshProUGUI nextHpTxt;
     [SerializeField] private TextMeshProUGUI nextAttTxt;
     [SerializeField] private TextMeshProUGUI nextCostTxt;
-    [SerializeField] private Animator nextAnim;
+    [SerializeField] private GameObject[] nextWarriorObjs;
+    [SerializeField] private GameObject[] nextArcherObjs;
+    [SerializeField] private GameObject[] nextSpearObjs;
+
 
 
     [Header("--------------UnitImg---------------")]
@@ -38,10 +40,10 @@ public class UI_UnitUpgradePopUp : UI_Base
     [SerializeField] private Sprite[] archerSprites = new Sprite[unitUpgradeLevel];
     [SerializeField] private Sprite[] spearSprites = new Sprite[unitUpgradeLevel];
 
-    [Header("--------------AnimaoterController---------------")]
-    [SerializeField] private AnimatorController[] warriorAnims;
-    [SerializeField] private AnimatorController[] archerAnims;
-    [SerializeField] private AnimatorController[] spearAnims;
+    [Header("--------------UnitPrefab---------------")]
+    [SerializeField] private GameObject[] warriorPrefabs;
+    [SerializeField] private GameObject[] archerPrefabs;
+    [SerializeField] private GameObject[] spearPrefabs;
 
     private int unitidx = 0;                //받아올 유닛의 클래스의정보
     
@@ -85,16 +87,16 @@ public class UI_UnitUpgradePopUp : UI_Base
         {
             case (int)UnitClass.Warrior:
                 RefreshUnitStatUI(GlobalData.g_UnitWarriorLv,Managers.Data.warriorDict);
-                RefreshUnitImgAnim(GlobalData.g_UnitWarriorLv, warriorAnims);
+                RefreshUnitImgAnim(GlobalData.g_UnitWarriorLv, warriorPrefabs);
                 break;
             case (int)UnitClass.Archer:
                 
                 RefreshUnitStatUI(GlobalData.g_UnitArcherLv, Managers.Data.archerDict);
-                RefreshUnitImgAnim(GlobalData.g_UnitArcherLv,archerAnims);
+                RefreshUnitImgAnim(GlobalData.g_UnitArcherLv,archerPrefabs);
                 break;
             case (int)UnitClass.Spear:
                 RefreshUnitStatUI(GlobalData.g_UnitSpearLv, Managers.Data.spearDict);
-                RefreshUnitImgAnim(GlobalData.g_UnitSpearLv, spearAnims);
+                RefreshUnitImgAnim(GlobalData.g_UnitSpearLv, spearPrefabs);
 
                 break;
 
@@ -139,17 +141,116 @@ public class UI_UnitUpgradePopUp : UI_Base
 
     }
 
-    void RefreshUnitImgAnim(int unitLv,AnimatorController[] unitAni)
+    void RefreshUnitImgAnim(int unitLv,GameObject[] unitObjs)
     {
-        if (unitLv < 5)
-            curAnim.runtimeAnimatorController = unitAni[0];
-        else
-            curAnim.runtimeAnimatorController = unitAni[1];
+        if(unitObjs == warriorPrefabs)
+        {
+            if (unitLv < 5)
+            {
+                warriorPrefabs[(int)Define.UnitUILv.One].SetActive(true);
+                warriorPrefabs[(int)Define.UnitUILv.Two].SetActive(false);
+                warriorPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
 
-        if(unitLv + 1 < 5)
-            nextAnim.runtimeAnimatorController = unitAni[0];
-        else
-            nextAnim.runtimeAnimatorController = unitAni[1];
+            }
+
+            else
+            {
+                warriorPrefabs[(int)Define.UnitUILv.One].SetActive(false);
+                warriorPrefabs[(int)Define.UnitUILv.Two].SetActive(true);
+                warriorPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
+
+            if (unitLv + 1 < 5)
+            {
+                nextWarriorObjs[(int)Define.UnitUILv.One].SetActive(true);
+                nextWarriorObjs[(int)Define.UnitUILv.Two].SetActive(false);
+                nextWarriorObjs[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
+
+            else
+            {
+                nextWarriorObjs[(int)Define.UnitUILv.One].SetActive(false);
+                nextWarriorObjs[(int)Define.UnitUILv.Two].SetActive(true);
+                nextWarriorObjs[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
+        }
+
+        if (unitObjs == archerPrefabs)
+        {
+            if (unitLv < 5)
+            {
+                archerPrefabs[(int)Define.UnitUILv.One].SetActive(true);
+                archerPrefabs[(int)Define.UnitUILv.Two].SetActive(false);
+                archerPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
+
+            else
+            {
+                archerPrefabs[(int)Define.UnitUILv.One].SetActive(false);
+                archerPrefabs[(int)Define.UnitUILv.Two].SetActive(true);
+                archerPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
+
+            if (unitLv + 1 < 5)
+            {
+                nextArcherObjs[(int)Define.UnitUILv.One].SetActive(true);
+                nextArcherObjs[(int)Define.UnitUILv.Two].SetActive(false);
+                nextArcherObjs[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
+
+            else
+            {
+                nextArcherObjs[(int)Define.UnitUILv.One].SetActive(false);
+                nextArcherObjs[(int)Define.UnitUILv.Two].SetActive(true);
+                nextArcherObjs[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
+        }
+
+        if (unitObjs == spearPrefabs)
+        {
+            if (unitLv < 5)
+            {
+                spearPrefabs[(int)Define.UnitUILv.One].SetActive(true);
+                spearPrefabs[(int)Define.UnitUILv.Two].SetActive(false);
+                spearPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
+
+            else
+            {
+                spearPrefabs[(int)Define.UnitUILv.One].SetActive(false);
+                spearPrefabs[(int)Define.UnitUILv.Two].SetActive(true);
+                spearPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
+
+            if (unitLv + 1 < 5)
+            {
+                nextSpearObjs[(int)Define.UnitUILv.One].SetActive(true);
+                nextSpearObjs[(int)Define.UnitUILv.Two].SetActive(false);
+                nextSpearObjs[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
+
+            else
+            {
+                nextSpearObjs[(int)Define.UnitUILv.One].SetActive(false);
+                nextSpearObjs[(int)Define.UnitUILv.Two].SetActive(true);
+                nextSpearObjs[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
+        }
+
+
+
+
 
 
     }
@@ -165,19 +266,19 @@ public class UI_UnitUpgradePopUp : UI_Base
                 if(GlobalData.g_UnitWarriorLv < 10)
                     GlobalData.g_UnitWarriorLv++;
                 RefreshUnitStatUI(GlobalData.g_UnitWarriorLv, Managers.Data.warriorDict);
-                RefreshUnitImgAnim(GlobalData.g_UnitWarriorLv, warriorAnims);
+                RefreshUnitImgAnim(GlobalData.g_UnitWarriorLv, warriorPrefabs);
                 break;
             case (int)UnitClass.Archer:
                 if (GlobalData.g_UnitArcherLv < 10)
                     GlobalData.g_UnitArcherLv++;
                 RefreshUnitStatUI(GlobalData.g_UnitArcherLv, Managers.Data.archerDict);
-                RefreshUnitImgAnim(GlobalData.g_UnitArcherLv, archerAnims);
+                RefreshUnitImgAnim(GlobalData.g_UnitArcherLv, archerPrefabs);
                 break;
             case (int)UnitClass.Spear:
                 if (GlobalData.g_UnitSpearLv < 10)
                     GlobalData.g_UnitSpearLv++;
                 RefreshUnitStatUI(GlobalData.g_UnitSpearLv, Managers.Data.spearDict);
-                RefreshUnitImgAnim(GlobalData.g_UnitSpearLv, spearAnims);
+                RefreshUnitImgAnim(GlobalData.g_UnitSpearLv, spearPrefabs);
 
                 break;
 

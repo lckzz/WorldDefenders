@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Animations;
+//using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,11 +21,10 @@ public class UI_UpgradeWindow : UI_Base
     [SerializeField] private TextMeshProUGUI spearLvTxt;
 
 
-    [SerializeField] private Animator[] unitAnim;
 
-    [SerializeField] private AnimatorController[] warriorAnims;
-    [SerializeField] private AnimatorController[] archerAnims;
-    [SerializeField] private AnimatorController[] spearAnims;
+    [SerializeField] private GameObject[] warriorPrefabs;
+    [SerializeField] private GameObject[] archerPrefabs;
+    [SerializeField] private GameObject[] spearPrefabs;
 
 
 
@@ -143,32 +142,65 @@ public class UI_UpgradeWindow : UI_Base
 
     public void RefreshUnitImgAnim(int unitWarriorLv,int unitArcherLv, int unitSpearLv)
     {
-        for(int ii = 0; ii < unitAnim.Length; ii++)
+        for(int ii = 0; ii < (int)Define.UnitUILv.Count; ii++)
         {
-            if(ii == 0)
+            if (ii == 0)
             {
                 if (unitWarriorLv < 5)
-                    unitAnim[ii].runtimeAnimatorController = warriorAnims[0];
+                {
+                    warriorPrefabs[(int)Define.UnitUILv.One].SetActive(true);
+                    warriorPrefabs[(int)Define.UnitUILv.Two].SetActive(false);
+                    warriorPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
+
+                }
+                
                 else
-                    unitAnim[ii].runtimeAnimatorController = warriorAnims[1];
+                {
+                    warriorPrefabs[(int)Define.UnitUILv.One].SetActive(false);
+                    warriorPrefabs[(int)Define.UnitUILv.Two].SetActive(true);
+                    warriorPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
+
+                }
 
                 warriorLvTxt.text = $"Lv{unitWarriorLv}";
             }
-            else if( ii == 1)
+            else if (ii == 1)
             {
                 if (unitArcherLv < 5)
-                    unitAnim[ii].runtimeAnimatorController = archerAnims[0];
+                {
+                    archerPrefabs[(int)Define.UnitUILv.One].SetActive(true);
+                    archerPrefabs[(int)Define.UnitUILv.Two].SetActive(false);
+                    archerPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
+
+                }
+
                 else
-                    unitAnim[ii].runtimeAnimatorController = archerAnims[1];
+                {
+                    archerPrefabs[(int)Define.UnitUILv.One].SetActive(false);
+                    archerPrefabs[(int)Define.UnitUILv.Two].SetActive(true);
+                    archerPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
+
+                }
                 archerLvTxt.text = $"Lv{unitArcherLv}";
 
             }
             else
             {
                 if (unitSpearLv < 5)
-                    unitAnim[ii].runtimeAnimatorController = spearAnims[0];
+                {
+                    spearPrefabs[(int)Define.UnitUILv.One].SetActive(true);
+                    spearPrefabs[(int)Define.UnitUILv.Two].SetActive(false);
+                    spearPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
+
+                }
+
                 else
-                    unitAnim[ii].runtimeAnimatorController = spearAnims[1];
+                {
+                    spearPrefabs[(int)Define.UnitUILv.One].SetActive(false);
+                    spearPrefabs[(int)Define.UnitUILv.Two].SetActive(true);
+                    spearPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
+
+                }
                 spearLvTxt.text = $"Lv{unitSpearLv}";
 
             }
