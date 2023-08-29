@@ -653,7 +653,6 @@ public class MonsterController : Unit
     {
         if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
         {
-            Debug.Log("크리티컬!!!!");
             int attack = att * 2;
             uniCtrl.OnDamage(attack, monStat.knockBackForce);      //크리티컬이면 데미지2배에 넉백까지
             MeleeUnitEffectAndSound(unitTarget.transform.position, "CriticalSound", "HitEff");
@@ -661,7 +660,7 @@ public class MonsterController : Unit
         }
         else  //노크리티컬이면 일반공격
         {
-            Debug.Log("일반공격...");
+
 
             uniCtrl.OnDamage(att);        //넉백은 없이
             MeleeUnitEffectAndSound(unitTarget.transform.position, "WarriorAttack", "HitEff");
@@ -732,7 +731,7 @@ public class MonsterController : Unit
         
         while(knockBackSpeed > 0.0f)   //속도 감소
         {
-            knockBackSpeed -= (knockBackAccleration * 0.5f) * Time.deltaTime;
+            knockBackSpeed -= (knockBackAccleration * 0.25f) * Time.deltaTime;
 
             Vector2 velo = new Vector2(knockBackSpeed, rigbody.velocity.y);
             rigbody.velocity = velo;

@@ -216,6 +216,20 @@ public class MagicianSkillData : ILoader<int, SkillData>
     }
 }
 
+[Serializable]
+public class EliteWarriorSkillData : ILoader<int, SkillData>
+{
+    public List<SkillData> eliteWarriorSkill = new List<SkillData>();
+
+    public Dictionary<int, SkillData> MakeDict()
+    {
+        Dictionary<int, SkillData> dict = new Dictionary<int, SkillData>();
+        foreach (SkillData skill in eliteWarriorSkill)
+            dict.Add(skill.id, skill);
+
+        return dict;
+    }
+}
 
 
 

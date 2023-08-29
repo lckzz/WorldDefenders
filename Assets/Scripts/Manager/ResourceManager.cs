@@ -21,6 +21,18 @@ public class ResourceManager
         return Object.Instantiate(prefab, parent);
     }
 
+    public GameObject MagicEffectAndSound(Vector3 pos, string soundPath, string effPath)
+    {
+        //Managers.Sound.Play($"Sounds/Effect/{soundPath}");
+        GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
+
+
+        if (eff != null)
+            GameObject.Instantiate(eff, pos, Quaternion.identity);
+
+        return eff;
+    }
+
     public void Destory(GameObject go)
     {
         if (go == null)

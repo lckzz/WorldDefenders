@@ -6,7 +6,7 @@ public class MagicAttackCtrl : MonoBehaviour
 {
 
     private SpecialUnitController unitCtrl;
-    private MonsterController monsterCtrl;
+    private Unit monsterCtrl;
     [SerializeField] private MonsterPortal monPortal;
     [SerializeField] private float magicSpeed = 20.0f;
 
@@ -84,7 +84,7 @@ public class MagicAttackCtrl : MonoBehaviour
 
             MonsterController monctrl = null;
             coll.TryGetComponent<MonsterController>(out monctrl);
-            if (monctrl != null)
+            if (monctrl != null && monsterCtrl == monctrl)
                 monctrl.OnDamage(unitCtrl.Att);
 
             Vector3 pos = coll.transform.position;
@@ -114,6 +114,9 @@ public class MagicAttackCtrl : MonoBehaviour
             return;
     }
 
+
+
+    //리소스매니저에 있어야할듯?
     void MagicEffectAndSound(Vector3 pos, string soundPath, string effPath)
     {
         //Managers.Sound.Play($"Sounds/Effect/{soundPath}");
@@ -124,7 +127,7 @@ public class MagicAttackCtrl : MonoBehaviour
             Instantiate(eff, pos, Quaternion.identity);
     }
 
-    public void SetType(MonsterController monCtrl, MonsterPortal monPort)
+    public void SetType(Unit monCtrl, MonsterPortal monPort)
     {
         monsterCtrl = monCtrl;
         monPortal = monPort;

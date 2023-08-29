@@ -12,23 +12,25 @@ public class SpecialUnitController : Unit
     protected Define.SpecialUnitState state = Define.SpecialUnitState.Run;
 
     protected bool isSkil = false;
+    [SerializeField] protected bool skillOn = false;     //스킬 발동판단
 
-    protected MonsterController[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
-    [SerializeField] protected MonsterController monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
+    protected Unit[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
+    [SerializeField] protected Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
     [SerializeField] protected MonsterPortal monsterPortal;
-    [SerializeField] protected List<Unit> skillMonList;
+    protected List<Unit> skillMonList = new List<Unit>();
 
     protected UnitStat unitStat;
 
+    protected float coolTime = 20.0f;
 
     public SkillBook Skills { get; protected set; }
-    public MonsterController Monctrl { get { return monTarget; } }
+    public Unit Monctrl { get { return monTarget; } }
 
     public MonsterPortal MonsterPortal { get { return monsterPortal; } }
 
     public SpecialUnitState UniState { get { return state; } }
 
-
+    Coroutine startCoolTime;
 
     public override void Init()
     {
@@ -41,6 +43,8 @@ public class SpecialUnitController : Unit
 
 
         SetUnitState(SpecialUnitState.Run);
+
+        startCoolTime = StartCoroutine(UnitSKillCoolTime(coolTime));
 
     }
 
@@ -82,7 +86,22 @@ public class SpecialUnitController : Unit
             monCtrls = new MonsterController[enemyColls2D.Length];
             //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
             for (int ii = 0; ii < enemyColls2D.Length; ii++)
-                enemyColls2D[ii].TryGetComponent<MonsterController>(out monCtrls[ii]);
+            {
+                if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("Monster"))
+                {
+                    MonsterController monctrl;
+                    enemyColls2D[ii].TryGetComponent<MonsterController>(out monctrl);
+                    monCtrls[ii] = monctrl;
+
+                }
+                else if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("EliteMonster"))
+                {
+                    EliteMonsterController elite;
+                    enemyColls2D[ii].TryGetComponent<EliteMonsterController>(out elite);
+                    monCtrls[ii] = elite;
+
+                }
+            }
             
 
         }
@@ -96,8 +115,10 @@ public class SpecialUnitController : Unit
 
             if (monCtrls.Length > 1)
             {
+
                 for (int i = 0; i < monCtrls.Length; i++)
                 {
+                    
                     if(i < 3)
                         skillMonList.Add(monCtrls[i]);
 
@@ -140,11 +161,23 @@ public class SpecialUnitController : Unit
                 }
             }
 
+            if(monCtrls.Length == 1)
+            {
+                skillMonList.Add(monCtrls[0]);
+
+            }
+
+            for (int ii = 0; ii < skillMonList.Count; ii++)
+            {
+                if (skillMonList[ii].IsDie)
+                    skillMonList.RemoveAt(ii);
+            }
+
 
             if (monCtrls.Length != 0)
             {
                 monTarget = monCtrls[min];
-                skillMonList.Add(monTarget);
+                //skillMonList.Add(monTarget);
 
             }
 
@@ -247,7 +280,7 @@ public class SpecialUnitController : Unit
                 }
             case SpecialUnitState.Skill:
                 {
-                    UnitSkill();
+                    UnitSkill();   
                     break;
                 }
             case SpecialUnitState.KnockBack:
@@ -266,7 +299,7 @@ public class SpecialUnitController : Unit
 
     }
 
-    void SetUnitState(SpecialUnitState state)
+    protected void SetUnitState(SpecialUnitState state)
     {
         this.state = state;
 
@@ -287,7 +320,7 @@ public class SpecialUnitController : Unit
                     if (isSkil)
                     {
                         isSkil = false;
-                        anim.SetBool("SkillAttack", isAtt);
+                        anim.SetBool("SkillAttack", isSkil);
                     }
                     break;
                 }
@@ -308,7 +341,7 @@ public class SpecialUnitController : Unit
                     if (isSkil)
                     {
                         isSkil = false;
-                        anim.SetBool("SkillAttack", isAtt);
+                        anim.SetBool("SkillAttack", isSkil);
                     }
                     break;
                 }
@@ -330,12 +363,13 @@ public class SpecialUnitController : Unit
                     if (isSkil)
                     {
                         isSkil = false;
-                        anim.SetBool("SkillAttack", isAtt);
+                        anim.SetBool("SkillAttack", isSkil);
                     }
                     break;
                 }
             case SpecialUnitState.Skill:
                 {
+
                     if (isRun)
                     {
                         isRun = false;
@@ -349,8 +383,10 @@ public class SpecialUnitController : Unit
                     }
                     if (!isSkil)
                     {
+                        Debug.Log("들어ㅏ오나요?");
+
                         isSkil = true;
-                        anim.SetBool("SkillAttack", isAtt);
+                        anim.SetBool("SkillAttack", isSkil);
                     }
                     break;
                 }
@@ -371,7 +407,7 @@ public class SpecialUnitController : Unit
                     if (isSkil)
                     {
                         isSkil = false;
-                        anim.SetBool("SkillAttack", isAtt);
+                        anim.SetBool("SkillAttack", isSkil);
                     }
                     break;
                 }
@@ -439,11 +475,23 @@ public class SpecialUnitController : Unit
 
         if (monTarget != null)
         {
-            if (monTarget.MonState == MonsterState.Die)
-                return false;
+            if (monTarget.gameObject.layer == LayerMask.NameToLayer("Monster") && monTarget is MonsterController monsterCtrl)
+            {
+                if (monsterCtrl.MonState == MonsterState.Die)
+                    return false;
 
-            if (!monTarget.gameObject.activeInHierarchy)
-                return false;
+                if (!monTarget.gameObject.activeInHierarchy)
+                    return false;
+            }
+
+            else if (monTarget.gameObject.layer == LayerMask.NameToLayer("EliteMonster") && monTarget is EliteMonsterController elite)
+            {
+                if (elite.MonState == Define.EliteMonsterState.Die)
+                    return false;
+
+                if (!monTarget.gameObject.activeInHierarchy)
+                    return false;
+            }
         }
 
 
@@ -453,6 +501,10 @@ public class SpecialUnitController : Unit
 
     void UnitAttack()
     {
+        if (skillOn)      //스킬On이면
+            SetUnitState(SpecialUnitState.Skill);
+
+
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("NormalAttack"))
         {
             if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
@@ -469,7 +521,7 @@ public class SpecialUnitController : Unit
     }
 
 
-    void UnitSkill()
+    public virtual void UnitSkill()
     {
         //여기서 각각의 유닛들의 스킬들을 구현하면 너무 낭비되는 메모리가 생김
         //왜냐면 구현하기 위한 게임오브젝트들을 미리 선언하기 때문
@@ -477,6 +529,9 @@ public class SpecialUnitController : Unit
         //공격했을 때 공격박스에 있는 유닛들을 가져와야함
         //타겟유닛리스트를 매개변수로 넣는다.
         //Managers.Skill.ActiveSkillUse(skillMonList,);
+
+
+
     }
 
     void UnitDie()
@@ -735,6 +790,31 @@ public class SpecialUnitController : Unit
             }
 
         }
+    }
+
+    
+
+    IEnumerator UnitSKillCoolTime(float coolTime)
+    {
+        WaitForSeconds wfs = new WaitForSeconds(coolTime);
+
+        while(true)
+        {
+            if(!skillOn)     //스킬이 안돌았다면
+            {
+                yield return wfs; //쿨타임 대기
+
+                skillOn = true;      //스킬 사용가능!  스킬사용하면 다시 false로
+                Debug.Log("스킬온!@!@");
+
+            }
+
+
+            yield return null;
+
+        }
+
+
     }
 
 

@@ -85,6 +85,15 @@ public class UnitSlotUI : UI_BaseSettingUnit
 
                 break;
 
+            case UnitClass.Magician:
+                //Debug.Log($"창병 갱신! {e_UnitClass}");
+
+                rt.sizeDelta = defalutSizeDelta;
+                rt.transform.localPosition = defalutTr;
+                UnitUISpriteInit(e_UnitClass, "Magician_Idle");
+
+                break;
+
             default:
                 if (unitImg != null)
                     unitImg.gameObject.SetActive(false);

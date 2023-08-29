@@ -47,7 +47,7 @@ public class MeteorController : SkillBase
         base.UpdateController();
         
         //적이 사라지면 프리팹도 사라지게 해야댐
-        if (owener == null || enemy == null)
+        if (owener == null || enemy.IsDie == true)
             Destroy(this.gameObject);
 
         curPos = owener.transform.position;
@@ -71,6 +71,7 @@ public class MeteorController : SkillBase
             {
                 coll.TryGetComponent(out Unit mon);
                 mon.OnDamage(100);
+                Managers.Resource.MagicEffectAndSound(coll.transform.position, "", "MeteorEff");
                 Destroy(this.gameObject);
             }
 

@@ -87,6 +87,11 @@ public class UI_UnitSettingWindow : UI_Base
                     if (GlobalData.g_UnitSpearLv > 0)
                         UnitNodeUiInstantiate(UnitClass.Spear);
                 }
+                else if (ii == (int)UnitClass.Magician)
+                {
+                    if (GlobalData.g_UnitMagicianLv > 0)
+                        UnitNodeUiInstantiate(UnitClass.Magician);
+                }
             }
 
             //먼저 유닛들을 셋팅에 생성해주고 

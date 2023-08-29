@@ -10,16 +10,6 @@ public class LobbyUnit : MonoBehaviour
 
     public UnitClass E_UniClass { get { return e_UnitClass; } set { e_UnitClass = value; } }
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
 
     public void RefreshUnitSet()
@@ -28,7 +18,7 @@ public class LobbyUnit : MonoBehaviour
         {
             case UnitClass.Warrior:
 
-                UnitSpriteRender(e_UnitClass,GlobalData.g_UnitWarriorLv, "KnifeUnitLv1Img", "KnifeUnitLv2Img");
+                UnitSpriteRender(e_UnitClass, GlobalData.g_UnitWarriorLv, "KnifeUnitLv1Img", "KnifeUnitLv2Img");
                 break;
 
             case UnitClass.Archer:
@@ -43,6 +33,12 @@ public class LobbyUnit : MonoBehaviour
 
                 break;
 
+
+            case UnitClass.Magician:
+                Debug.Log($"마법사 갱신! {e_UnitClass}");
+                UnitSpriteRender(e_UnitClass, "Magician_Idle");
+
+                break;
             default:
                 Debug.Log("유닛노드에 유닛클래스가 설정이 안됫어요;");
                 gameObject.SetActive(false);
@@ -52,7 +48,7 @@ public class LobbyUnit : MonoBehaviour
     }
 
 
-    void UnitSpriteRender(UnitClass uniClass,int unitLv, string pathLv1, string pathLv2)
+    void UnitSpriteRender(UnitClass uniClass, int unitLv, string pathLv1, string pathLv2)
     {
         gameObject.SetActive(true);
 
@@ -97,7 +93,18 @@ public class LobbyUnit : MonoBehaviour
                 }
                 break;
         }
+    }
+    void UnitSpriteRender(UnitClass uniClass, string path)
+    {
+        gameObject.SetActive(true);
+
+        switch (uniClass)
+        {
+            case UnitClass.Magician:
+                sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Magician/{path}");
+                break;
 
 
+        }
     }
 }

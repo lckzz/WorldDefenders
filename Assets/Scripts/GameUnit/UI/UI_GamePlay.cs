@@ -124,6 +124,9 @@ public class UI_GamePlay : UI_Base
                     Debug.Log("스피어맞음?");
                     UnitButtonSetting(i, "Prefabs/Unit/SpearUnit");
                     break;
+                case UnitClass.Magician:
+                    UnitButtonSetting(i, "Prefabs/Unit/MagicianUnit");
+                    break;
             }
         }
 

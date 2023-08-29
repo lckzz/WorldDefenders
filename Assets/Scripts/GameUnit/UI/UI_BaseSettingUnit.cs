@@ -65,6 +65,24 @@ public abstract class UI_BaseSettingUnit : MonoBehaviour
 
     }
 
+    protected void UnitUISpriteInit(UnitClass uniClass, string path)
+    {
+        if (unitImg != null)
+            unitImg.gameObject.SetActive(true);
+
+
+        //유닛노드UI의 이미지 스프라이트를 바꿔준다.
+
+        switch (uniClass)
+        {
+            case UnitClass.Magician:
+                unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Magician/{path}");
+                break;
+                
+        }
+
+    }
+
 
     public void ClickImageOnOff(bool check)
     {

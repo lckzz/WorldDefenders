@@ -34,10 +34,13 @@ public class GameManager : MonoBehaviour
     public Transform[] spawnPos;
     public Transform[] monsterSpawnPos;
     public GameObject[] monsters;
+    public GameObject eliteWarrior;
     public SpriteRenderer[] sprends;
     public float timerSec = 0;
 
     bool gameSet = false;
+    bool bossOn = false;
+    bool eventOn = false;    //스폰가속이벤트
 
     public GameObject ui_GameResult;
     [SerializeField]
@@ -76,6 +79,39 @@ public class GameManager : MonoBehaviour
 
         if(state == GameState.GamePlaying)
         {
+            if (bossOn == false)
+            {
+                if (timerSec > 30.0f)
+                {
+                    bossOn = true;
+                    int ranPos = Random.Range(0, 3);
+                    GameObject obj = Instantiate(eliteWarrior, monsterSpawnPos[ranPos].position, Quaternion.identity);
+                }
+
+               
+            }
+
+            if(eventOn == false)
+            {
+                if(timerSec > 15.0f && timerSec <= 20.0f)
+                {
+                    eventOn = true;
+
+                    spawnTimer = 3.0f;
+                }
+            }
+
+
+            if(eventOn == true)
+            {
+                if(timerSec > 40.0f)
+                {
+                    eventOn = false;
+                    spawnTimer = 8.5f;
+                }
+            }
+
+
             if (monsterSpawn > 0.0f)                       //몬스터 스폰은 따로 파서 해야함
             {
                 monsterSpawn -= Time.deltaTime;

@@ -26,7 +26,7 @@ public class DataManager
    
 
     public Dictionary<int, SkillData> magicSkillDict { get; private set; } = new Dictionary<int, SkillData>();
-
+    public Dictionary<int, SkillData> eliteWarriorSkillDict { get; private set; } = new Dictionary<int, SkillData>();
 
     public void Init()
     {
@@ -40,7 +40,7 @@ public class DataManager
 
 
         magicSkillDict = LoadJson<MagicianSkillData, int, SkillData>("SkillData").MakeDict();
-
+        eliteWarriorSkillDict = LoadJson<EliteWarriorSkillData, int, SkillData>("SkillData").MakeDict();
     }
     Loader LoadJson<Loader,Key,Value>(string path) where Loader : ILoader<Key,Value>
     {

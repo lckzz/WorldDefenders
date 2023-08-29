@@ -22,10 +22,11 @@ public class UnitNode : MonoBehaviour
     [SerializeField] Sprite[] unitWarriorimgs;
     [SerializeField] Sprite[] unitArcherimgs;
     [SerializeField] Sprite[] unitSpearimgs;
+    [SerializeField] Sprite unitMagicianimg;
 
 
 
-
+    UnitStat unitStat;
     private float unitCost = 0f;
 
     bool coolCheck = false;     //쿨타임 체크
@@ -57,7 +58,7 @@ public class UnitNode : MonoBehaviour
                 if (spawnCoolTime <= .0f)
                 {
                     coolCheck = false;
-                    spawnCoolTime = 1.0f;
+                    spawnCoolTime = 3.0f;
                 }
             }
         }
@@ -71,7 +72,9 @@ public class UnitNode : MonoBehaviour
     void Init()
     {
         //유닛별로 맞는 데이터 연결 (이미지랑 쿨타임등등)
-        unitCost = 30.0f;
+        
+
+        //unitCost = 30.0f;
         if(unitRt == null)
             TryGetComponent(out unitRt);
     }
@@ -79,6 +82,8 @@ public class UnitNode : MonoBehaviour
     public void UnitInit(UnitClass unitClass)      //생성하면서 유닛노드는 유닛에 맞게 갱신
     {
         unit = unitClass;
+        unitStat = new UnitStat();
+
         switch (unit)
         {
             case UnitClass.Warrior:
@@ -86,6 +91,14 @@ public class UnitNode : MonoBehaviour
                     unitImg.sprite = unitWarriorimgs[0];
                 else
                     unitImg.sprite = unitWarriorimgs[1];
+
+                if (unitStat != null)
+                {
+                    unitStat = Managers.Data.warriorDict[GlobalData.g_UnitWarriorLv];
+                    unitCost = unitStat.cost;
+                }
+
+
                 break;
 
             case UnitClass.Archer:
@@ -93,6 +106,13 @@ public class UnitNode : MonoBehaviour
                     unitImg.sprite = unitArcherimgs[0];
                 else
                     unitImg.sprite = unitArcherimgs[1];
+
+                if (unitStat != null)
+                {
+                    unitStat = Managers.Data.archerDict[GlobalData.g_UnitArcherLv];
+                    unitCost = unitStat.cost;
+
+                }
                 break;
 
             case UnitClass.Spear:
@@ -100,8 +120,27 @@ public class UnitNode : MonoBehaviour
                     unitImg.sprite = unitSpearimgs[0];
                 else
                     unitImg.sprite = unitSpearimgs[1];
+
+                if (unitStat != null)
+                {
+                    unitStat = Managers.Data.spearDict[GlobalData.g_UnitSpearLv];
+                    unitCost = unitStat.cost;
+
+                }
+                break;
+            case UnitClass.Magician:
+                    unitImg.sprite = unitMagicianimg;
+                if (unitStat != null)
+                {
+                    unitStat = Managers.Data.magicDict[GlobalData.g_UnitMagicianLv];
+                    unitCost = unitStat.cost;
+
+                }
                 break;
         }
+
+
+        unitCostTxt.text = unitCost.ToString();
 
     }
 

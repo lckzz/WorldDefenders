@@ -10,58 +10,49 @@ public class EliteMonsterController : Unit
     [SerializeField]
     private EliteMonsterState state = EliteMonsterState.Run;
     private bool isSkil = false;
+    protected bool skillOn = false;     //스킬 발동판단
 
 
-    UnitController[] unitCtrls;
+    Unit[] unitCtrls;
     [SerializeField]
-    UnitController unitTarget;
+    Unit unitTarget;
     [SerializeField]
     PlayerTower playerTowerCtrl;
+    protected List<Unit> skillenemyList = new List<Unit>();
 
-    //엘리트워리어 검기
-    Transform swordPos;
 
-    //엘리트워리어 검기
 
-    MonsterStat monStat;
+    protected MonsterStat monStat;
 
+    protected float coolTime = 20.0f;
 
 
     public float Hp { get { return hp; } }
 
+    public SkillBook Skills { get; protected set; }
 
-    public UnitController UnitCtrl { get { return unitTarget; } }
+    public Unit UnitCtrl { get { return unitTarget; } }
     public PlayerTower PlayerTowerCtrl { get { return playerTowerCtrl; } }
     public EliteMonsterState MonState { get { return state; } }
+
+    Coroutine startCoolTime;
+
 
     public override void Init()
     {
         base.Init();
 
-        monStat = new MonsterStat();
 
-        if (monsterClass == MonsterClass.EliteWarrior)
-            monStat = Managers.Data.monsterDict[GlobalData.g_EliteWarriorID];
-
-
-        att = monStat.att;
-        hp = monStat.hp;
-        maxHp = hp;
-        knockbackForce = monStat.knockBackForce;
-        attackRange = monStat.attackRange;
-        moveSpeed = 2.0f;
 
         playerTowerCtrl = GameObject.FindObjectOfType<PlayerTower>();
+        Skills = gameObject.GetComponent<SkillBook>();
 
         TryGetComponent<Collider2D>(out myColl);
 
-        if (monsterClass == MonsterClass.EliteWarrior)
-            swordPos = transform.Find("SwordPos");
-        else
-            swordPos = null;
 
 
         SetMonsterState(EliteMonsterState.Run);
+        startCoolTime = StartCoroutine(UnitSKillCoolTime(coolTime));
 
     }
 
@@ -75,10 +66,7 @@ public class EliteMonsterController : Unit
     // Update is called once per frame
     void Update()
     {
-        EnemySensor();
-        TowerSensor();
-        MonsterStateCheck();
-        MonsterVictory();
+
 
     }
 
@@ -111,7 +99,22 @@ public class EliteMonsterController : Unit
             unitCtrls = new UnitController[enemyColls2D.Length];
             //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
             for (int ii = 0; ii < enemyColls2D.Length; ii++)
-                enemyColls2D[ii].TryGetComponent<UnitController>(out unitCtrls[ii]);
+            {
+                if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("Unit"))
+                {
+                    UnitController unitctrl;
+                    enemyColls2D[ii].TryGetComponent<UnitController>(out unitctrl);
+                    unitCtrls[ii] = unitctrl;
+
+                }
+                else if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("SpecialUnit"))
+                {
+                    SpecialUnitController specialUnit;
+                    enemyColls2D[ii].TryGetComponent<SpecialUnitController>(out specialUnit);
+                    unitCtrls[ii] = specialUnit;
+
+                }
+            }
 
 
         }
@@ -176,7 +179,7 @@ public class EliteMonsterController : Unit
 
     }
 
-    void TowerSensor()
+    protected void TowerSensor()
     {
         //타워를 최우선적으로 타격하고 거리를 계속해서 계산해서 일정거리안에 들어오면 타워 공격
 
@@ -231,7 +234,7 @@ public class EliteMonsterController : Unit
     }
 
 
-    void MonsterStateCheck()
+    protected void MonsterStateCheck()
     {
         switch (state)
         {
@@ -257,6 +260,11 @@ public class EliteMonsterController : Unit
                     UnitAttack();
                     break;
                 }
+            case EliteMonsterState.Skill:
+                {
+                    MonsterSkill();
+                    break;
+                }
             case EliteMonsterState.KnockBack:
                 {
                     ApplyKnockBack(new Vector2(1.0f, 1.0f), damageKnockBack);
@@ -273,7 +281,7 @@ public class EliteMonsterController : Unit
     }
 
 
-    void SetMonsterState(EliteMonsterState state)
+    protected void SetMonsterState(EliteMonsterState state)
     {
         if (isDie)
             return;
@@ -296,7 +304,7 @@ public class EliteMonsterController : Unit
                     if (isSkil)
                     {
                         isSkil = false;
-                        anim.SetBool("SkillAttack", isAtt);
+                        anim.SetBool("SkillAttack", isSkil);
                     }
                     break;
                 }
@@ -317,7 +325,7 @@ public class EliteMonsterController : Unit
                     if (isSkil)
                     {
                         isSkil = false;
-                        anim.SetBool("SkillAttack", isAtt);
+                        anim.SetBool("SkillAttack", isSkil);
                     }
                     break;
                 }
@@ -339,7 +347,7 @@ public class EliteMonsterController : Unit
                     if (isSkil)
                     {
                         isSkil = false;
-                        anim.SetBool("SkillAttack", isAtt);
+                        anim.SetBool("SkillAttack", isSkil);
                     }
                     break;
                 }
@@ -359,7 +367,7 @@ public class EliteMonsterController : Unit
                     if (!isSkil)
                     {
                         isSkil = true;
-                        anim.SetBool("SkillAttack", isAtt);
+                        anim.SetBool("SkillAttack", isSkil);
                     }
                     break;
                 }
@@ -380,7 +388,7 @@ public class EliteMonsterController : Unit
                     if (isSkil)
                     {
                         isSkil = false;
-                        anim.SetBool("SkillAttack", isAtt);
+                        anim.SetBool("SkillAttack", isSkil);
                     }
                     break;
                 }
@@ -453,11 +461,30 @@ public class EliteMonsterController : Unit
 
         if (unitTarget != null)
         {
-            if (unitTarget.UniState == UnitState.Die)
-                return false;
+            if (unitTarget.gameObject.layer == LayerMask.NameToLayer("Unit"))
+            {
+                if (unitTarget is UnitController unitCtrl)
+                {
+                    if (unitCtrl.UniState == UnitState.Die)
+                        return false;
 
-            if (!unitTarget.gameObject.activeInHierarchy)
-                return false;
+                    if (!unitTarget.gameObject.activeInHierarchy)
+                        return false;
+                }
+
+            }
+            else if (unitTarget.gameObject.layer == LayerMask.NameToLayer("SpecialUnit"))
+            {
+                if (unitTarget is SpecialUnitController specialUnit)
+                {
+                    if (specialUnit.UniState == Define.SpecialUnitState.Die)
+                        return false;
+
+                    if (!unitTarget.gameObject.activeInHierarchy)
+                        return false;
+                }
+
+            }
         }
 
 
@@ -468,6 +495,9 @@ public class EliteMonsterController : Unit
 
     void UnitAttack()
     {
+        if (skillOn)      //스킬On이면
+            SetMonsterState(EliteMonsterState.Skill);
+
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("NormalAttack"))
         {
 
@@ -483,6 +513,11 @@ public class EliteMonsterController : Unit
         }
     }
 
+
+    public virtual void MonsterSkill()
+    {
+
+    }
 
     void MonsterDie()
     {
@@ -700,7 +735,7 @@ public class EliteMonsterController : Unit
         return randomPos;
     }
 
-    void MonsterVictory()
+    protected void MonsterVictory()
     {
         //Managers.Game.state = GameState.GameFail;
 
@@ -761,6 +796,30 @@ public class EliteMonsterController : Unit
 
         }
     }
+
+    IEnumerator UnitSKillCoolTime(float coolTime)
+    {
+        WaitForSeconds wfs = new WaitForSeconds(coolTime);
+
+        while (true)
+        {
+            if (!skillOn)     //스킬이 안돌았다면
+            {
+                yield return wfs; //쿨타임 대기
+
+                skillOn = true;      //스킬 사용가능!  스킬사용하면 다시 false로
+                Debug.Log("스킬온!@!@");
+
+            }
+
+
+            yield return null;
+
+        }
+
+
+    }
+
 
     private void OnDrawGizmos()
     {

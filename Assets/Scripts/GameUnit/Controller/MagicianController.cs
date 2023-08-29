@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Define;
 
 public class MagicianController : SpecialUnitController
 {
@@ -23,15 +24,7 @@ public class MagicianController : SpecialUnitController
         EnemySensor();
         UnitStateCheck();
 
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            if(Skills.activeSkillList.Count > 0)
-            {
-                Skills.activeSkillList[0].UseSkill(this, skillMonList);
-
-            }
-        }
-
+        
     }
 
     public override void Init()
@@ -48,6 +41,7 @@ public class MagicianController : SpecialUnitController
         att = unitStat.att;
         knockbackForce = unitStat.knockBackForce;
         attackRange = unitStat.attackRange;
+        coolTime = 20.0f;
 
         moveSpeed = 2.5f;
         maxHp = hp;
@@ -70,7 +64,16 @@ public class MagicianController : SpecialUnitController
             {
                 GameObject magicBall = Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
                 magicBall.TryGetComponent(out MagicAttackCtrl magicCtrl);
-                magicCtrl.SetType(monTarget, null);
+                if (monTarget.gameObject.layer == LayerMask.NameToLayer("Monster") && monTarget is MonsterController monsterCtrl)
+                {
+                    magicCtrl.SetType(monsterCtrl, null);
+
+                }
+                else if (monTarget.gameObject.layer == LayerMask.NameToLayer("EliteMonster") && monTarget is EliteMonsterController elite)
+                {
+                    magicCtrl.SetType(elite, null);
+
+                }
             }
         }
         else
@@ -81,6 +84,41 @@ public class MagicianController : SpecialUnitController
                 GameObject magicBall = Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
                 magicBall.TryGetComponent(out MagicAttackCtrl magicCtrl);
                 magicCtrl.SetType(null, monsterPortal);
+            }
+        }
+    }
+
+
+    public override void UnitSkill()
+    {
+
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("SkillAttack"))
+        {
+            if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
+            {
+
+                SetUnitState(SpecialUnitState.Idle);
+
+                skillOn = false;
+                attackCoolTime = 1.0f;
+
+
+            }
+
+
+        }
+    }
+
+
+    public void OnSkill()
+    {
+        if (skillOn)  //스킬온이면
+        {
+            if (Skills.activeSkillList.Count > 0)
+            {
+                Debug.Log("발싸");
+                Skills.activeSkillList[0].UseSkill(this, skillMonList);     //스킬 사용
+
             }
         }
     }

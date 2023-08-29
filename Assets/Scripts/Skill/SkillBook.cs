@@ -20,7 +20,13 @@ public class SkillBook : MonoBehaviour
 
             return mk as T;
         }
+        else if (type == typeof(SwordDanceSkill))
+        {
+            skillPrefab.TryGetComponent(out SwordDanceSkill sk);
+            activeSkillList.Add(sk);
 
+            return sk as T;
+        }
 
         return null;
     }

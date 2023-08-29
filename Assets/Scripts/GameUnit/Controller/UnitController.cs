@@ -149,7 +149,7 @@ public class UnitController : Unit
             //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
             for(int ii = 0; ii < enemyColls2D.Length;ii++)
             {
-                if(enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("Monster"))
+                if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("Monster"))
                 {
                     MonsterController monctrl;
                     enemyColls2D[ii].TryGetComponent<MonsterController>(out monctrl);

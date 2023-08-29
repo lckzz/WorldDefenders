@@ -42,6 +42,12 @@ public class UnitNodeUI : UI_BaseSettingUnit
 
                 break;
 
+            case UnitClass.Magician:
+                Debug.Log($"마법사 갱신! {e_UnitClass}");
+                UnitUISpriteInit(e_UnitClass, "Magician_Idle");
+
+                break;
+
             default:
                 Debug.Log("유닛노드에 유닛클래스가 설정이 안됫어요;");
                 break;
