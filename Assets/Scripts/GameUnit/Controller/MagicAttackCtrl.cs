@@ -81,37 +81,45 @@ public class MagicAttackCtrl : MonoBehaviour
         if (coll.tag == "Monster")
         {
 
-            if (coll.gameObject == monsterCtrl.gameObject)
+            if(monsterCtrl != null)
             {
-                Unit monctrl = null;
-                coll.TryGetComponent(out monctrl);
-                if (monctrl != null && monsterCtrl == monctrl)
-                    monctrl.OnDamage(unitCtrl.Att);
+                if (coll.gameObject == monsterCtrl.gameObject)
+                {
+                    Unit monctrl = null;
+                    coll.TryGetComponent(out monctrl);
+                    if (monctrl != null && monsterCtrl == monctrl)
+                        monctrl.OnDamage(unitCtrl.Att);
 
-                Vector3 pos = coll.transform.position;
-                pos.x -= 0.5f;
-                MagicEffectAndSound(pos, "", "MagicHit");
+                    Vector3 pos = coll.transform.position;
+                    pos.x -= 0.5f;
+                    MagicEffectAndSound(pos, "", "MagicHit");
+                }
             }
+
 
 
             Destroy(this.gameObject);
         }
         else if (coll.tag.Contains("Tower"))
         {
-
-            if(coll.gameObject == monPortal.gameObject)
+            if(monPortal != null)
             {
-                Tower monPort = null;
-                coll.TryGetComponent<Tower>(out monPort);
-                if (monPort != null)
-                    monPort.TowerDamage(unitCtrl.Att);
+                if (coll.gameObject == monPortal.gameObject)
+                {
+                    Tower monPort = null;
+                    coll.TryGetComponent<Tower>(out monPort);
+                    if (monPort != null)
+                        monPort.TowerDamage(unitCtrl.Att);
 
-                Vector3 pos = coll.transform.position;
-                pos.x -= 0.5f;
-                MagicEffectAndSound(pos, "", "MagicHit");
+                    Vector3 pos = coll.transform.position;
+                    pos.x -= 0.5f;
+                    MagicEffectAndSound(pos, "", "MagicHit");
 
 
+                }
             }
+
+ 
 
             Destroy(this.gameObject);
 

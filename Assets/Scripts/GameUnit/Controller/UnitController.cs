@@ -39,7 +39,7 @@ public class UnitController : Unit
     [SerializeField] Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
     [SerializeField] MonsterPortal monsterPortal;
 
-
+    
 
     public int KnockBackForce { get { return knockbackForce; } }
 
@@ -63,16 +63,28 @@ public class UnitController : Unit
     {
 
         base.Init();
+        spawnPosX = -9.2f;
 
-        unitStat  = new UnitStat();
+        unitStat = new UnitStat();
 
         if (unitClass == UnitClass.Warrior)
+        {
             unitStat = Managers.Data.warriorDict[GlobalData.g_UnitWarriorLv];
+            towerAttackRange = 2.0f;
+        }
         else if (unitClass == UnitClass.Archer)
+        {
             unitStat = Managers.Data.archerDict[GlobalData.g_UnitArcherLv];
+            towerAttackRange = 6.0f;
+
+        }
         else if (unitClass == UnitClass.Spear)
+        {
             unitStat = Managers.Data.spearDict[GlobalData.g_UnitSpearLv];
-        
+            towerAttackRange = 2.0f;
+
+        }
+
 
 
         hp = unitStat.hp;
@@ -231,7 +243,7 @@ public class UnitController : Unit
 
     void TowerSensor()
     {
-        //타워를 최우선적으로 타격하고 거리를 계속해서 계산해서 일정거리안에 들어오면 타워 공격
+        //타워의 정보를 가지고 있고 타워와의 거리를 계속해서 체크
         if (monsterPortal == null)
             return;
 
@@ -239,9 +251,9 @@ public class UnitController : Unit
         towerDist = towerVec.sqrMagnitude;
         towerDir = towerVec.normalized;
 
-        if (towerDist < 15.0f * 15.0f)
+        if (towerDist < 15.0f * 15.0f)      //타워와의 추적거리에 들어오면 아무도 없으면 타워추적
         {
-            if (!towerTrace)
+            if (!towerTrace)  //없으면 바로 타워추적함
             {
                 towerTrace = true;
                 SetUnitState(UnitState.Trace);
@@ -249,21 +261,7 @@ public class UnitController : Unit
 
             }
 
-            if(unitClass == UnitClass.Warrior)
-            {
-
-                TowerAttackRange(1.5f);
-            }
-
-            else if(unitClass == UnitClass.Archer)
-            {
-                TowerAttackRange(6.5f);
-            }
-
-            else if (unitClass == UnitClass.Spear)
-            {
-                TowerAttackRange(2.0f);
-            }
+            TowerAttackRange(towerAttackRange);
 
         }
         else
@@ -462,6 +460,12 @@ public class UnitController : Unit
             return;
         }
 
+        if (towerDist < towerAttackRange * towerAttackRange)
+        {
+            SetUnitState(UnitState.Attack);
+            return;
+        }
+
         if (monTarget != null)
             Trace(monTarget);
 
@@ -563,17 +567,21 @@ public class UnitController : Unit
     {
         if(unitClass == UnitClass.Warrior)
         {
-            if(!towerAttack)
+
+            if (monTarget != null)
             {
-                if (monTarget != null)
+                float dist = (monTarget.transform.position - this.gameObject.transform.position).sqrMagnitude;
+                if (dist < unitStat.attackRange * unitStat.attackRange)
+                    CriticalAttack(monTarget);
+                else
                 {
-                    float dist = (monTarget.transform.position - this.gameObject.transform.position).sqrMagnitude;
-                    if(dist < unitStat.attackRange * unitStat.attackRange)
-                        CriticalAttack(monTarget);
+                    if(towerDist < unitStat.attackRange * unitStat.attackRange)
+                        CriticalAttack(monsterPortal);
 
                 }
-
             }
+
+            
             else
                 CriticalAttack(monsterPortal);
             
@@ -711,6 +719,13 @@ public class UnitController : Unit
     #region 넉백
     void ApplyKnockBack(Vector2 dir , float force)
     {
+        if(transform.position.x < spawnPosX)        //스폰지점보다 밑에 있으면
+        {
+            SetUnitState(UnitState.Idle); //넉백당하지않음
+            return;
+        }
+
+
         if (!knockbackStart)
         {
             dir.y = 0;
@@ -718,6 +733,8 @@ public class UnitController : Unit
             StartCoroutine(RestoreGravityAfterKnockback(force));
 
         }
+
+        
     }
 
 

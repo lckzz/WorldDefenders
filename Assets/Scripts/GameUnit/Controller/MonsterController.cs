@@ -67,11 +67,20 @@ public class MonsterController : Unit
         base.Init();
 
         monStat = new MonsterStat();
+        spawnPosX = 20.0f;
 
         if (monsterClass == MonsterClass.Warrior)
+        {
             monStat = Managers.Data.monsterDict[GlobalData.g_NormalSkeletonID];
+            towerAttackRange = 2.0f;
+
+        }
         else if (monsterClass == MonsterClass.Archer)
+        {
             monStat = Managers.Data.monsterDict[GlobalData.g_BowSkeletonID];
+            towerAttackRange = 6.0f;
+
+        }
 
         att = monStat.att;
         hp = monStat.hp;
@@ -249,15 +258,10 @@ public class MonsterController : Unit
 
             }
 
-            if (monsterClass == MonsterClass.Warrior)
-            {
-                TowerAttackRange(1.75f);
-            }
+            TowerAttackRange(towerAttackRange);
 
-            else if (monsterClass == MonsterClass.Archer)
-            {
-                TowerAttackRange(6.5f);
-            }
+
+
         }
         else
         {
@@ -568,17 +572,21 @@ public class MonsterController : Unit
         if (monsterClass == MonsterClass.Warrior)
         {
 
-            if (!towerAttack)
-            {
 
-                if (unitTarget != null)
+            if (unitTarget != null)
+            {
+                float dist = (unitTarget.transform.position - this.gameObject.transform.position).sqrMagnitude;
+                if (dist < monStat.attackRange * monStat.attackRange)
+                    CriticalAttack(unitTarget);
+                else
                 {
-                    float dist = (unitTarget.transform.position - this.gameObject.transform.position).sqrMagnitude;
-                    if (dist < monStat.attackRange * monStat.attackRange)
-                        CriticalAttack(unitTarget);
+                    if(towerDist < monStat.attackRange * monStat.attackRange)
+                        CriticalAttack(playerTowerCtrl);
+
                 }
-                
             }
+                
+            
             else
                 CriticalAttack(playerTowerCtrl);
             
@@ -699,6 +707,13 @@ public class MonsterController : Unit
 
     void ApplyKnockBack(Vector2 dir, float force)
     {
+        if(transform.position.x >= spawnPosX)
+        {
+            SetMonsterState(MonsterState.Idle);
+            return;
+
+        }
+
         if (!knockbackStart)
         {
             dir.y = 0;

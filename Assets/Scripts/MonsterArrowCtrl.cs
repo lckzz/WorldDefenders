@@ -83,31 +83,38 @@ public class MonsterArrowCtrl : MonoBehaviour
         if (coll.tag == "Unit")
         {
 
-            if (coll.gameObject == unitCtrl.gameObject)
+            if(unitCtrl != null)
             {
-                Managers.Sound.Play("Sounds/Effect/Arrowhit");
+                if (coll.gameObject == unitCtrl.gameObject)
+                {
+                    Managers.Sound.Play("Sounds/Effect/Arrowhit");
 
-                Unit uniCtrl = null;
-                coll.TryGetComponent<Unit>(out uniCtrl);
-                if (uniCtrl != null)
-                    uniCtrl.OnDamage(monsterCtrl.Att);
+                    Unit uniCtrl = null;
+                    coll.TryGetComponent<Unit>(out uniCtrl);
+                    if (uniCtrl != null)
+                        uniCtrl.OnDamage(monsterCtrl.Att);
 
+                }
             }
+
 
             Destroy(this.gameObject);
         }
         else if(coll.tag.Contains("Tower"))
         {
-
-            if (coll.gameObject == playerTower.gameObject)
+            if(playerTower != null)
             {
-                Managers.Sound.Play("Sounds/Effect/Arrowhit");
+                if (coll.gameObject == playerTower.gameObject)
+                {
+                    Managers.Sound.Play("Sounds/Effect/Arrowhit");
 
-                PlayerTower playTower = null;
-                coll.TryGetComponent<PlayerTower>(out playTower);
-                if (playTower != null)
-                    playTower.TowerDamage(monsterCtrl.Att);
+                    PlayerTower playTower = null;
+                    coll.TryGetComponent<PlayerTower>(out playTower);
+                    if (playTower != null)
+                        playTower.TowerDamage(monsterCtrl.Att);
+                }
             }
+
             Destroy(this.gameObject);
 
         }

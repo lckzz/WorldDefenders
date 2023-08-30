@@ -12,6 +12,8 @@ public abstract class Unit : MonoBehaviour,ISensor
     protected int knockbackForce = 0;
     protected int damageKnockBack = 0;
     protected float attackRange = .0f;
+    protected float spawnPosX = 0;       //소환지점x축 이하로는 넉백당하지않음
+
 
     protected float randomX = 0;
     protected float randomY = 0;
@@ -45,6 +47,7 @@ public abstract class Unit : MonoBehaviour,ISensor
     protected float towerDist;
     protected bool towerTrace = false;
     protected bool towerAttack = false;       //타워에 가까워지면 
+    protected float towerAttackRange = 0.0f;
 
     //타워 관련 변수
 

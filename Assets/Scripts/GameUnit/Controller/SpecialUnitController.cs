@@ -35,6 +35,7 @@ public class SpecialUnitController : Unit
     public override void Init()
     {
         base.Init();
+        spawnPosX = -9.2f;
 
         //rig = this.GetComponent<Rigidbody2D>();
         //anim = GetComponent<Animator>();
@@ -501,8 +502,16 @@ public class SpecialUnitController : Unit
 
     void UnitAttack()
     {
-        if (skillOn)      //스킬On이면
-            SetUnitState(SpecialUnitState.Skill);
+
+        if(monCtrls.Length > 0)
+        {
+            if (skillOn)      //스킬On이면
+            {
+                SetUnitState(SpecialUnitState.Skill);
+                return;
+            }
+        }
+
 
 
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("NormalAttack"))
@@ -643,6 +652,13 @@ public class SpecialUnitController : Unit
     #region 넉백
     void ApplyKnockBack(Vector2 dir, float force)
     {
+        if(transform.position.x < spawnPosX)
+        {
+            SetUnitState(SpecialUnitState.Idle);
+            return;
+
+        }
+
         if (!knockbackStart)
         {
             dir.y = 0;

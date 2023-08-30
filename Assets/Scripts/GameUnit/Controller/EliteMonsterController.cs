@@ -42,7 +42,7 @@ public class EliteMonsterController : Unit
     {
         base.Init();
 
-
+        spawnPosX = 20.0f;
 
         playerTowerCtrl = GameObject.FindObjectOfType<PlayerTower>();
         Skills = gameObject.GetComponent<SkillBook>();
@@ -496,8 +496,16 @@ public class EliteMonsterController : Unit
 
     void UnitAttack()
     {
-        if (skillOn)      //스킬On이면
-            SetMonsterState(EliteMonsterState.Skill);
+
+        if (unitCtrls.Length > 0)
+        {
+            if (skillOn)      //스킬On이면
+            {
+                SetMonsterState(EliteMonsterState.Skill);
+                return;
+            }
+        }
+
 
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("NormalAttack"))
         {
@@ -561,13 +569,21 @@ public class EliteMonsterController : Unit
         if (monsterClass == MonsterClass.EliteWarrior)
         {
 
-            if (!towerAttack)
-            {
 
-                if (unitTarget != null)
+            if (unitTarget != null)
+            {
+                float dist = (unitTarget.transform.position - this.gameObject.transform.position).sqrMagnitude;
+                if (dist < monStat.attackRange * monStat.attackRange)
                     CriticalAttack(unitTarget);
+                else
+                {
+                    if (towerDist < monStat.attackRange * monStat.attackRange)
+                        CriticalAttack(playerTowerCtrl);
+                }
 
             }
+
+
             else
                 CriticalAttack(playerTowerCtrl);
 
@@ -643,6 +659,13 @@ public class EliteMonsterController : Unit
 
     void ApplyKnockBack(Vector2 dir, float force)
     {
+        if (transform.position.x >= spawnPosX)
+        {
+            SetMonsterState(EliteMonsterState.Idle);
+            return;
+
+        }
+
         if (!knockbackStart)
         {
             dir.y = 0;

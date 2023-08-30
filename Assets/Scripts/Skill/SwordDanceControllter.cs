@@ -10,6 +10,7 @@ public class SwordDanceControllter : SkillBase
     Vector3 curPos;
     float _speed = 20.0f;
     float _lifeTime = 1.5f;
+    int hitCount = 0;
 
     public SwordDanceControllter() : base(Define.SkillType.Count)
     {
@@ -61,21 +62,16 @@ public class SwordDanceControllter : SkillBase
     {
         if (coll.tag.Contains("Unit"))
         {
-            if(enemy.Count > 0)
+
+            if(hitCount < 3)
             {
-
-                for(int ii = 0; ii < enemy.Count; ii++)
-                {
-                    if (coll.gameObject == enemy[ii].gameObject)
-                    {
-                        coll.TryGetComponent(out Unit unit);
-                        unit.OnDamage(owener.Att);
-                        Managers.Resource.MagicEffectAndSound(coll.transform.position, "", "HitEff");
-                        Destroy(this.gameObject);
-                    }
-                }
-
+                coll.TryGetComponent(out Unit unit);
+                unit.OnDamage(owener.Att);
+                Managers.Resource.MagicEffectAndSound(coll.transform.position, "", "HitEff");
+                hitCount++;
             }
+
+
 
 
 
