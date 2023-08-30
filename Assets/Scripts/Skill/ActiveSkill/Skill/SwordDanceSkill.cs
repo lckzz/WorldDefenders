@@ -16,6 +16,10 @@ public class SwordDanceSkill : ActiveSkill
 
     }
 
+    public override void UseSkill(Unit unit, Tower tower)
+    {
+        //throw new System.NotImplementedException();
+    }
 
     void Generate(int id, Unit owner, List<Unit> enemy,Vector3 spawnPos)
     {

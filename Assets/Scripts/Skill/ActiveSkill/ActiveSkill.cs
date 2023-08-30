@@ -22,7 +22,7 @@ public abstract class ActiveSkill : SkillBase
 
 
     public abstract void UseSkill(Unit unit, List<Unit> enemys);     //액티브 스킬 사용
-
+    public abstract void UseSkill(Unit unit, Tower tower);
   
 
 }

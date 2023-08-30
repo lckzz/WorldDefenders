@@ -18,6 +18,7 @@ public class UnitNode : MonoBehaviour
 
     [SerializeField]
     private float spawnCoolTime = 0.0f;
+    private float maxSpawnCoolTime;
 
     [SerializeField] Sprite[] unitWarriorimgs;
     [SerializeField] Sprite[] unitArcherimgs;
@@ -50,7 +51,7 @@ public class UnitNode : MonoBehaviour
 
         if (coolCheck)
         {
-            Managers.UI.GetSceneUI<UI_GamePlay>().UpdateUnitCoolTime(unitCoolImg, 1.0f, spawnCoolTime, 1.0f);
+            Managers.UI.GetSceneUI<UI_GamePlay>().UpdateUnitCoolTime(unitCoolImg, 1.0f, spawnCoolTime, maxSpawnCoolTime);
 
             if (spawnCoolTime > 0.0f)
             {
@@ -72,8 +73,8 @@ public class UnitNode : MonoBehaviour
     void Init()
     {
         //유닛별로 맞는 데이터 연결 (이미지랑 쿨타임등등)
-        
 
+        maxSpawnCoolTime = spawnCoolTime;
         //unitCost = 30.0f;
         if(unitRt == null)
             TryGetComponent(out unitRt);

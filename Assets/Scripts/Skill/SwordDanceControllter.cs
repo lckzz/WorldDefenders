@@ -64,13 +64,12 @@ public class SwordDanceControllter : SkillBase
             if(enemy.Count > 0)
             {
 
-
                 for(int ii = 0; ii < enemy.Count; ii++)
                 {
                     if (coll.gameObject == enemy[ii].gameObject)
                     {
                         coll.TryGetComponent(out Unit unit);
-                        unit.OnDamage(100);
+                        unit.OnDamage(owener.Att);
                         Managers.Resource.MagicEffectAndSound(coll.transform.position, "", "HitEff");
                         Destroy(this.gameObject);
                     }

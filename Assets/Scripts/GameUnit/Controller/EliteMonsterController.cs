@@ -10,7 +10,7 @@ public class EliteMonsterController : Unit
     [SerializeField]
     private EliteMonsterState state = EliteMonsterState.Run;
     private bool isSkil = false;
-    protected bool skillOn = false;     //스킬 발동판단
+    [SerializeField] protected bool skillOn = false;     //스킬 발동판단
 
 
     Unit[] unitCtrls;
@@ -64,11 +64,11 @@ public class EliteMonsterController : Unit
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    //void Update()
+    //{
 
 
-    }
+    //}
 
 
 
@@ -80,7 +80,7 @@ public class EliteMonsterController : Unit
         //Debug.Log($"타겟팅{isTageting}");
         #region 타겟구현
 
-        enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Unit"));
+        enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Unit") | LayerMask.GetMask("SpecialUnit"));
 
 
         if (enemyColls2D != null)
@@ -96,7 +96,8 @@ public class EliteMonsterController : Unit
                 }
             }
 
-            unitCtrls = new UnitController[enemyColls2D.Length];
+            unitCtrls = new Unit[enemyColls2D.Length];
+
             //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
             for (int ii = 0; ii < enemyColls2D.Length; ii++)
             {

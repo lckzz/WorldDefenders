@@ -70,7 +70,7 @@ public class SpecialUnitController : Unit
 
 
         skillMonList.Clear();
-        enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Monster"));
+        enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Monster") | LayerMask.GetMask("EliteMonster"));
         if (enemyColls2D != null)
         {
             if (enemyColls2D.Length <= 0)
@@ -83,7 +83,8 @@ public class SpecialUnitController : Unit
                 }
             }
 
-            monCtrls = new MonsterController[enemyColls2D.Length];
+            monCtrls = new Unit[enemyColls2D.Length];
+
             //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
             for (int ii = 0; ii < enemyColls2D.Length; ii++)
             {
@@ -383,7 +384,6 @@ public class SpecialUnitController : Unit
                     }
                     if (!isSkil)
                     {
-                        Debug.Log("들어ㅏ오나요?");
 
                         isSkil = true;
                         anim.SetBool("SkillAttack", isSkil);

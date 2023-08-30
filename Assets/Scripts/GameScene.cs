@@ -44,7 +44,7 @@ public class GameScene : BaseScene
     {
 
         Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCoolTime(speed);
-        Managers.Game.CostCoolTimer(costCoolTime, 15.0f);
+        Managers.Game.CostCoolTimer(costCoolTime, 30.0f);
 
         if (UI_GamePlay.gameQueue.Count > 0)
         {

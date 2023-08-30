@@ -27,7 +27,7 @@ RectTransform:
   m_GameObject: {fileID: 3415483884301388779}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1490005506516084101}
@@ -330,6 +330,7 @@ GameObject:
   - component: {fileID: 3118260612736600424}
   - component: {fileID: 4601778702907555721}
   - component: {fileID: 3492269439141238074}
+  - component: {fileID: 1894352703164713550}
   m_Layer: 10
   m_Name: MagicianUnit
   m_TagString: Unit
@@ -539,3 +540,18 @@ MonoBehaviour:
   activeSkillList: []
   passiveSkillList: []
   skillPrefab: {fileID: 8209293535408608887, guid: 82cf591266ad23e469334a3f3172c3c1, type: 3}
+--- !u!114 &1894352703164713550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8575604519962543501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddb99f95fd8b236409c5b619941329ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpbar: {fileID: 7576435667652976735}
+  hpbarCover: {fileID: 1618011811456380158}
+  hpSpeed: 1.7

@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PlayerUnitUI : UnitUI
 {
-    private UnitController unitCtrl;
+    private Unit unitCtrl;
     // Start is called before the first frame update
     void Start()
     {
-        ComponentInit<UnitController>(out unitCtrl);
+        ComponentInit<Unit>(out unitCtrl);
     }
 
     // Update is called once per frame
@@ -19,7 +19,7 @@ public class PlayerUnitUI : UnitUI
         {
             if(unitCtrl.IsDie)
             {
-                UnitDeadSpAlpha<UnitController>(unitCtrl, spr);
+                UnitDeadSpAlpha<Unit>(unitCtrl, spr);
             }
         }
     }

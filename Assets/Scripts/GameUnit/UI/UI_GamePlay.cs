@@ -140,11 +140,6 @@ public class UI_GamePlay : UI_Base
 
     private void Update()
     {
-        if(!fadeCheck)
-        {
-           
-        }
-
         FadeOut();
     }
 
@@ -274,7 +269,6 @@ public class UI_GamePlay : UI_Base
     {
         float cool = coolTime / maxCoolTime;
 
-        Debug.Log(cool);
 
         if (coolImg?.fillAmount > cool)
             coolImg.fillAmount -= Time.deltaTime * speed;
