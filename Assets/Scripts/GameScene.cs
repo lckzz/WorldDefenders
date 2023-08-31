@@ -24,7 +24,7 @@ public class GameScene : BaseScene
         Init();
 
 
-        Managers.UI.CloseAllPopUpUI(this);
+        Managers.UI.CloseAllPopUpUI();
         Managers.UI.ShowSceneUI<UI_GamePlay>();
 
         Debug.Log(Managers.UI.GetSceneUI<UI_GamePlay>());
@@ -46,7 +46,7 @@ public class GameScene : BaseScene
     {
 
         Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCoolTime(speed);
-        Managers.Game.CostCoolTimer(costCoolTime, 30.0f);
+        GameManager.instance.CostCoolTimer(costCoolTime, 30.0f);
 
         if (UI_GamePlay.gameQueue.Count > 0)
         {

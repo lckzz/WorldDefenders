@@ -59,7 +59,7 @@ public class MonsterPortal : Tower
         if (twState == TowerState.Destroy)
         {
             anim.SetTrigger("Destroy");
-            Managers.Game.State = GameState.GameVictory;
+            GameManager.instance.State = GameState.GameVictory;
         }
     }
 }

@@ -114,7 +114,7 @@ public class MonsterController : Unit
     void Update()
     {
 
-        if (Managers.Game.State == GameState.GamePlaying)
+        if (GameManager.instance.State == GameState.GamePlaying)
         {
             EnemySensor();
             TowerSensor();
@@ -828,7 +828,7 @@ public class MonsterController : Unit
         //Managers.Game.state = GameState.GameFail;
 
 
-        if(Managers.Game.State == GameState.GameFail)
+        if(GameManager.instance.State == GameState.GameFail)
         {
             isRun = false;
             anim.SetBool("Run", isRun);

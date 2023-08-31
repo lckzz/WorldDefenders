@@ -289,7 +289,7 @@ public class UI_GamePlay : UI_Base
     public void UpdateUnitCostEnable(Image img,Color grayColor, float unitCost)
     {
 
-        if (Managers.Game.CurCost < unitCost)
+        if (GameManager.instance.CurCost < unitCost)
         {
             img.color = grayColor;      //매개변수에서 받은 컬러값
         }
@@ -316,10 +316,10 @@ public class UI_GamePlay : UI_Base
 
         if (unitNode?.CoolCheck == false) //쿨타임이 돌고 있지않을 때
         {
-            if(Managers.Game.CostCheck(Managers.Game.CurCost, unitNode.UnitCost))
+            if(GameManager.instance.CostCheck(GameManager.instance.CurCost, unitNode.UnitCost))
             {
-                Managers.Game.CurCost = Managers.Game.CostUse(Managers.Game.CurCost,unitNode.UnitCost);
-                UpdateCost(Managers.Game.CurCost);
+                GameManager.instance.CurCost = GameManager.instance.CostUse(GameManager.instance.CurCost,unitNode.UnitCost);
+                UpdateCost(GameManager.instance.CurCost);
                 gameQueue.Enqueue(unitObj);
                 unitNode.CoolCheck = true;          //큐에 넣어주면서 쿨타임 온
             }

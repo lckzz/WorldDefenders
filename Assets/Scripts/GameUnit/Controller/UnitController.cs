@@ -861,7 +861,7 @@ public class UnitController : Unit
 
     void UnitVictory()
     {
-        if(Managers.Game.State == GameState.GameVictory)
+        if(GameManager.instance.State == GameState.GameVictory)
         {
             isRun = false;
             anim.SetBool("Run", isRun);

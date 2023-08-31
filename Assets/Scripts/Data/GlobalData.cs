@@ -25,19 +25,31 @@ public class GlobalData
     public static List<UnitClass> g_SlotUnitClass = new List<UnitClass>();
     public static List<Define.MonsterType> g_MonsterTypeList = new List<Define.MonsterType>();
     public static Define.SubStage curStage = Define.SubStage.One;
-    public static bool firstInit = false;
+    public static bool firstInit = false;  //진짜 처음 접속했거나 불러온 데이터가 없다면
 
     public const int g_unitSlotMax = 5;
 
+
+
     public static void InitUnitClass()
     {
-        for(int ii = 0; ii < g_unitSlotMax; ii++)
+        if(!firstInit)
         {
-            if (ii == 0)
-                g_SlotUnitClass.Add(UnitClass.Warrior);
-            else
-                g_SlotUnitClass.Add(UnitClass.Count);
+            for (int ii = 0; ii < g_unitSlotMax; ii++)
+            {
+                if (ii == 0)
+                    g_SlotUnitClass.Add(UnitClass.Warrior);
+                else
+                    g_SlotUnitClass.Add(UnitClass.Count);
+            }
+
+            firstInit = true;  //진짜 1회한정 슬롯초기화해줌
         }
+        else
+        {
+            //나중에는 저장된 슬롯의 유닛상태를 가져와서 g_SlotUnitClass에서 다시 넣어줘야함
+        }
+
     }
 
     public static void SetUnitClass(List<UnitSlotUI> unitSlotUIList)

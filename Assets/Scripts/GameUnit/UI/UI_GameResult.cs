@@ -65,12 +65,12 @@ public class UI_GameResult : UI_Base
 
     private void OnEnable()
     {
-        if(Managers.Game.State == GameState.GameVictory)
+        if(GameManager.instance.State == GameState.GameVictory)
         {
             failOrVictoryImg.sprite = ImageSetting("Images/Image_Victory");
         }
 
-        if(Managers.Game.State == GameState.GameFail)
+        if(GameManager.instance.State == GameState.GameFail)
         {
             failOrVictoryImg.sprite = ImageSetting("Images/Image_Fail");
 
@@ -84,8 +84,8 @@ public class UI_GameResult : UI_Base
     void TimerSetting()
     {
        
-        min = (int)Managers.Game.timerSec / 60;
-        sec = (int)Managers.Game.timerSec % 60;
+        min = (int)GameManager.instance.timerSec / 60;
+        sec = (int)GameManager.instance.timerSec % 60;
         timecheck = true;
     }
 
@@ -134,7 +134,7 @@ public class UI_GameResult : UI_Base
 
             int curTimer = (curmin * 60) + cursec;
 
-            if (curTimer == Managers.Game.timerSec)
+            if (curTimer == GameManager.instance.timerSec)
                 timer = false;
 
 
