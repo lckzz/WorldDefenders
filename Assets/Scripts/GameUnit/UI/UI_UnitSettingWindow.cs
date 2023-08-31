@@ -34,12 +34,18 @@ public class UI_UnitSettingWindow : UI_Base
     private List<RaycastResult> rrList;
     //ÅÍÄ¡
 
+    [SerializeField] private Image fadeImg;
+
+
+    bool backFadeCheck = false;
+
 
     // Start is called before the first frame update
     void Start()
     {
         UiInit();
         UI_UnitSetInit();
+
 
         if (backLobbyBtn != null)
             backLobbyBtn.onClick.AddListener(() =>
@@ -51,11 +57,16 @@ public class UI_UnitSettingWindow : UI_Base
                 GlobalData.SetUnitClass(unitSlotUiList);
             });
 
+        startFadeOut = true;
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        Util.FadeOut(ref startFadeOut, fadeImg);
+        BackFadeIn(fadeImg, this, backFadeCheck);
+
         ped.position = Input.mousePosition;
         OnMousePointerDown();
         OnMousePointerDownCancel();
@@ -408,5 +419,40 @@ public class UI_UnitSettingWindow : UI_Base
 
 
         return rrList[0].gameObject.GetComponent<T>();
+    }
+
+
+    public void BackFadeIn(Image fadeImg, UI_Base closePopup, bool fadeCheck)
+    {
+        if (fadeCheck)
+        {
+            if (fadeImg != null)
+            {
+                if (!fadeImg.gameObject.activeSelf)
+                {
+                    fadeImg.gameObject.SetActive(true);
+
+                }
+
+                if (fadeImg.gameObject.activeSelf && fadeImg.color.a <= 1)
+                {
+                    Color col = fadeImg.color;
+                    if (col.a < 255)
+                        col.a += (Time.deltaTime * 2.0f);
+
+                    fadeImg.color = col;
+
+
+                    if (fadeImg.color.a >= 0.99f)
+                    {
+                        Managers.UI.ClosePopUp(closePopup);
+                        Managers.UI.ShowPopUp<UI_Lobby>();
+
+
+                    }
+                }
+            }
+        }
+
     }
 }

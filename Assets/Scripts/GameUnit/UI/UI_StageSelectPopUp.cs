@@ -24,6 +24,7 @@ public class UI_StageSelectPopUp : UI_Base
     Color btnImgAlphaOff = new Color32(255, 255, 255, 105);
 
     private UI_PlayerController ui_PlayerCtrl;
+    bool backFadeCheck = false;
 
 
     public bool FadeCheck { get { return fadeCheck; }}
@@ -44,16 +45,19 @@ public class UI_StageSelectPopUp : UI_Base
         StartBtnInActive();
 
         GetStageInfo((int)GlobalData.curStage);
+        startFadeOut = true;
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(fadeCheck)
-        {
+        if(fadeCheck)   //다음씬을 넘어갈떄
             FadeIn();
-        }
+        
+        //뒤로가거나 들어올때
+        Util.FadeOut(ref startFadeOut, fadeImg);
+        BackFadeIn(fadeImg, this, backFadeCheck);
     }
 
 
@@ -202,5 +206,40 @@ public class UI_StageSelectPopUp : UI_Base
 
         fadeCheck = true;
         //Managers.Scene.LoadScene(Define.Scene.BattleStage_Field);
+    }
+
+
+    public void BackFadeIn(Image fadeImg, UI_Base closePopup, bool fadeCheck)
+    {
+        if (fadeCheck)
+        {
+            if (fadeImg != null)
+            {
+                if (!fadeImg.gameObject.activeSelf)
+                {
+                    fadeImg.gameObject.SetActive(true);
+
+                }
+
+                if (fadeImg.gameObject.activeSelf && fadeImg.color.a <= 1)
+                {
+                    Color col = fadeImg.color;
+                    if (col.a < 255)
+                        col.a += (Time.deltaTime * 2.0f);
+
+                    fadeImg.color = col;
+
+
+                    if (fadeImg.color.a >= 0.99f)
+                    {
+                        Managers.UI.ClosePopUp(closePopup);
+                        Managers.UI.ShowPopUp<UI_Lobby>();
+
+
+                    }
+                }
+            }
+        }
+
     }
 }

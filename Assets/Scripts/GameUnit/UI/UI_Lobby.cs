@@ -6,10 +6,19 @@ using UnityEngine.UI;
 
 public class UI_Lobby : UI_Base
 {
+
     public Button upgradeBtn;
     public Button unitSettingBtn;
     public Button stageSelectBtn;
     public LobbyScene lobbyScene;
+    public Image fadeImg;
+
+
+    bool upgradeBtnFadeCheck = false;
+    bool unitBtnFadeCheck = false;
+    bool stageBtnFadeCheck = false;
+    bool lobbyPanelCheck = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,13 +27,19 @@ public class UI_Lobby : UI_Base
         ButtonEvent(upgradeBtn.gameObject, UpgradeOn, UIEvent.PointerDown);
         ButtonEvent(unitSettingBtn.gameObject, UnitSettingOn, UIEvent.PointerDown);
         ButtonEvent(stageSelectBtn.gameObject, StageSelectOn, UIEvent.PointerDown);
+        startFadeOut = true;
+
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        Util.FadeOut(ref startFadeOut, fadeImg);
+        //UpgradeFadeIn(fadeImg, this, upgradeBtnFadeCheck);
+        //UnitFadeIn(fadeImg, this, unitBtnFadeCheck);
+        //StageFadeIn(fadeImg, this, stageBtnFadeCheck);
+
     }
 
 
@@ -52,19 +67,26 @@ public class UI_Lobby : UI_Base
     {
         Managers.UI.ClosePopUp(this);
         Managers.UI.ShowPopUp<UI_UpgradeWindow>();
+
     }
 
     void UnitSettingOn()
     {
         Managers.UI.ClosePopUp(this);
         Managers.UI.ShowPopUp<UI_UnitSettingWindow>();
+
     }
 
     void StageSelectOn()
     {
         Managers.UI.ClosePopUp(this);
         Managers.UI.ShowPopUp<UI_StageSelectPopUp>();
+
     }
+
+
+
+
 
     void LobbySceneRefresh()
     {
@@ -74,5 +96,7 @@ public class UI_Lobby : UI_Base
 
         }
     }
+
+
 
 }

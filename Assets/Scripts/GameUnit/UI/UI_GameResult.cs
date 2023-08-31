@@ -175,6 +175,7 @@ public class UI_GameResult : UI_Base
                     if (fadeImg.color.a >= 0.99f)
                     {
                         Managers.UI.ClosePopUp(this);
+                        GameManager.instance.SceneEndOn();
                         Managers.Scene.LoadScene(Define.Scene.BattleStage_Field);
 
 
@@ -213,6 +214,7 @@ public class UI_GameResult : UI_Base
                     {
 
                         Managers.UI.ClosePopUp(this);
+                        GameManager.instance.SceneEndOn();
                         Managers.Scene.LoadScene(Define.Scene.Lobby);
 
 

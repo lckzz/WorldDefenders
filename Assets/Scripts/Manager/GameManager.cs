@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] monsters;
     public GameObject eliteWarrior;
     public SpriteRenderer[] sprends;
+    public GameObject sceneEndPanel;
     public float timerSec = 0;
 
     bool gameSet = false;
@@ -147,6 +148,7 @@ public class GameManager : MonoBehaviour
             {
                 gameEnd = true;
                 Managers.UI.ShowPopUp<UI_GameResult>();
+                Managers.UI.OnOffSceneUI<UI_GamePlay>(false);
 
             }
 
@@ -173,6 +175,12 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    public void SceneEndOn()
+    {
+        sceneEndPanel.SetActive(true);
+    }
+
 
     public bool CostCheck(float curCost, float unitCost)
     {

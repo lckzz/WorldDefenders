@@ -26,6 +26,8 @@ public class UI_UpgradeWindow : UI_Base
     [SerializeField] private GameObject[] archerPrefabs;
     [SerializeField] private GameObject[] spearPrefabs;
 
+    [SerializeField] private Image fadeImg;
+
 
 
 
@@ -38,6 +40,9 @@ public class UI_UpgradeWindow : UI_Base
 
     private UnitClass unitClass;
 
+    bool backFadeCheck = false;
+
+    public bool StartFadeCheck { get { return startFadeOut; } }
 
 
 
@@ -46,6 +51,8 @@ public class UI_UpgradeWindow : UI_Base
     {
         if (GlobalData.g_PlayerLevel == 0)
             GlobalData.g_PlayerLevel = 1;
+
+
 
         if (upgradeBtn != null)
             upgradeBtn.onClick.AddListener(PlayerUpgradeOpen);
@@ -59,6 +66,9 @@ public class UI_UpgradeWindow : UI_Base
                 Managers.UI.ShowPopUp<UI_Lobby>();
 
             });
+
+        startFadeOut = true;
+
         WindowInit();
         UnitButtonEvent(unitUpgradeBtn[(int)UnitClass.Warrior].gameObject,(int)UnitClass.Warrior, OpenUpgradeUnitPopUp, UIEvent.PointerDown);
         UnitButtonEvent(unitUpgradeBtn[(int)UnitClass.Archer].gameObject, (int)UnitClass.Archer, OpenUpgradeUnitPopUp, UIEvent.PointerDown);
@@ -68,6 +78,8 @@ public class UI_UpgradeWindow : UI_Base
     // Update is called once per frame
     void Update()
     {
+        Util.FadeOut(ref startFadeOut, fadeImg);
+        //BackFadeIn(fadeImg, this, backFadeCheck);
         RefreshTextUI();        //매 프레임마다 갱신하지말고 콜백함수를 통해서 값이 변경되면 콜백함수를 통해서 갱신되게
         
     }
@@ -216,5 +228,39 @@ public class UI_UpgradeWindow : UI_Base
         Managers.Sound.Play("Effect/UI_Click");
 
         Managers.UI.ShowPopUp<UI_PlayerUpgradePopUp>();
+    }
+
+    public void BackFadeIn(Image fadeImg, UI_Base closePopup, bool fadeCheck)
+    {
+        if (fadeCheck)
+        {
+            if (fadeImg != null)
+            {
+                if (!fadeImg.gameObject.activeSelf)
+                {
+                    fadeImg.gameObject.SetActive(true);
+
+                }
+
+                if (fadeImg.gameObject.activeSelf && fadeImg.color.a <= 1)
+                {
+                    Color col = fadeImg.color;
+                    if (col.a < 255)
+                        col.a += (Time.deltaTime * 2.0f);
+
+                    fadeImg.color = col;
+
+
+                    if (fadeImg.color.a >= 0.99f)
+                    {
+                        Managers.UI.ClosePopUp(closePopup);
+                        Managers.UI.ShowPopUp<UI_Lobby>();
+
+
+                    }
+                }
+            }
+        }
+
     }
 }

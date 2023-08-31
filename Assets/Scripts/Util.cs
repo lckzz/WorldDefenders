@@ -22,10 +22,13 @@ public static class Util
             return null;
     }
 
-    public static bool FadeOut(bool fade, Image fadeImg)
+    public static void FadeOut(ref bool fade, Image fadeImg, Image startFadeImg = null)
     {
         if (fade)
         {
+            if (startFadeImg != null)
+                startFadeImg.gameObject.SetActive(false);
+
             if (!fadeImg.gameObject.activeSelf)
                 fadeImg.gameObject.SetActive(true);
 
@@ -33,7 +36,7 @@ public static class Util
             {
                 Color col = fadeImg.color;
                 if (col.a > 0)
-                    col.a -= (Time.deltaTime * 1.0f);
+                    col.a -= (Time.deltaTime * 2.0f);
 
                 fadeImg.color = col;
 
@@ -41,7 +44,7 @@ public static class Util
                 {
                     fadeImg.gameObject.SetActive(false);
                     fade = false;
-
+                   
                  
                 }
 
@@ -49,7 +52,6 @@ public static class Util
 
         }
 
-        return fade;
 
     }
 
@@ -81,6 +83,8 @@ public static class Util
             }
         }
     }
+
+
 
 
 }
