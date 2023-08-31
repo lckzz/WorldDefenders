@@ -80,6 +80,8 @@ public class MonsterArrowCtrl : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
+
+
         if (coll.tag == "Unit")
         {
 
@@ -100,9 +102,10 @@ public class MonsterArrowCtrl : MonoBehaviour
 
             Destroy(this.gameObject);
         }
-        else if(coll.tag.Contains("Tower"))
+        else if(coll.tag.Contains("Tower") && coll.name.Contains("Tower"))
         {
-            if(playerTower != null)
+
+            if (playerTower != null)
             {
                 if (coll.gameObject == playerTower.gameObject)
                 {

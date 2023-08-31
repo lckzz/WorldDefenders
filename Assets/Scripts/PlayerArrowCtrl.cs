@@ -43,10 +43,13 @@ public class PlayerArrowCtrl : MonoBehaviour
 
         if (coll.tag.Contains("Monster"))
         {
+
             MonsterController monctrl = null;
             coll.TryGetComponent<MonsterController>(out monctrl);
             if (monctrl != null)
                 monctrl.OnDamage(player.Att);
+
+            Managers.Resource.ResourceEffectAndSound(monctrl.transform.position, "ArrowHit", "HitEff");
 
         }
 

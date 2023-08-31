@@ -570,12 +570,12 @@ public class UnitController : Unit
 
             if (monTarget != null)
             {
-                float dist = (monTarget.transform.position - this.gameObject.transform.position).sqrMagnitude;
-                if (dist < unitStat.attackRange * unitStat.attackRange)
+                float dist = (monTarget.transform.position - this.gameObject.transform.position).magnitude;
+                if (dist < unitStat.attackRange + 0.5f)
                     CriticalAttack(monTarget);
                 else
                 {
-                    if(towerDist < unitStat.attackRange * unitStat.attackRange)
+                    if (towerDist < unitStat.attackRange * unitStat.attackRange) 
                         CriticalAttack(monsterPortal);
 
                 }
@@ -636,19 +636,26 @@ public class UnitController : Unit
 
         if (unitClass == UnitClass.Spear)
         {
-            if (!towerAttack)
+
+            if (monTarget != null)
             {
-                if (monTarget != null)
-                {
+                float dist = (monTarget.transform.position - this.gameObject.transform.position).magnitude;
+                Debug.Log(dist);
+                Debug.Log(unitStat.attackRange);
+
+                if (dist < unitStat.attackRange + 0.5f)
                     CriticalAttack(monTarget);
-                    UnitEffectAndSound(monTarget.transform.position, "WarriorAttack", "HitEff");
+                else
+                {
+                    if (towerDist < unitStat.attackRange * unitStat.attackRange)
+                        CriticalAttack(monsterPortal);
+
                 }
             }
+
+
             else
-            {
                 CriticalAttack(monsterPortal);
-                UnitEffectAndSound(monsterPortal.transform.position, "WarriorAttack", "HitEff");
-            }
 
         }
 
@@ -722,6 +729,8 @@ public class UnitController : Unit
         if(transform.position.x < spawnPosX)        //스폰지점보다 밑에 있으면
         {
             SetUnitState(UnitState.Idle); //넉백당하지않음
+            attackCoolTime = 1.0f;
+
             return;
         }
 

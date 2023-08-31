@@ -78,6 +78,13 @@ public class Define
 
     }
 
+    public enum StageState
+    {
+        Lock,
+        Open,
+        Count
+    }
+
     public enum UnitUILv
     {
         One,

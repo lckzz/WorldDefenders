@@ -71,7 +71,7 @@ public class MeteorController : SkillBase
             {
                 coll.TryGetComponent(out Unit mon);
                 mon.OnDamage(100);
-                Managers.Resource.MagicEffectAndSound(coll.transform.position, "", "MeteorEff");
+                Managers.Resource.ResourceEffect(coll.transform.position, "MeteorEff");
                 Destroy(this.gameObject);
             }
 

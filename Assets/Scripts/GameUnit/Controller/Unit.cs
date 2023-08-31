@@ -41,6 +41,8 @@ public abstract class Unit : MonoBehaviour,ISensor
     protected float unitDestroyTime = .0f;
     protected float traceDistance;
 
+
+
     //타워 관련 변수
     protected Vector2 towerVec;
     protected Vector2 towerDir;
@@ -69,7 +71,6 @@ public abstract class Unit : MonoBehaviour,ISensor
         TryGetComponent<Animator>(out anim);
         TryGetComponent<Rigidbody2D>(out rigbody);
         TryGetComponent<Collider2D>(out myColl);
-
     }
 
     public float hpPercent()
@@ -89,6 +90,8 @@ public abstract class Unit : MonoBehaviour,ISensor
             }
         }
     }
+
+
 
     public abstract void EnemySensor(); //적감지 센서
 

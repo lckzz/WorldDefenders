@@ -100,10 +100,11 @@ public class MagicAttackCtrl : MonoBehaviour
 
             Destroy(this.gameObject);
         }
-        else if (coll.tag.Contains("Tower"))
+        else if (coll.tag.Contains("Tower") && coll.name.Contains("Portal"))
         {
             if(monPortal != null)
             {
+                Debug.Log(LayerMask.GetMask("MonsterPortal"));
                 if (coll.gameObject == monPortal.gameObject)
                 {
                     Tower monPort = null;

@@ -67,8 +67,12 @@ public class SwordDanceControllter : SkillBase
             {
                 coll.TryGetComponent(out Unit unit);
                 unit.OnDamage(owener.Att);
-                Managers.Resource.MagicEffectAndSound(coll.transform.position, "", "HitEff");
+                Managers.Resource.ResourceEffect(coll.transform.position, "HitEff");
                 hitCount++;
+            }
+            else if(hitCount > 3)
+            {
+                GameObject.Destroy(this.gameObject, 0.5f);
             }
 
 

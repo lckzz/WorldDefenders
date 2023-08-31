@@ -100,6 +100,8 @@ public class PlayerController : MonoBehaviour
         if (!attack || !ready1)
             return;
 
+
+        Managers.Resource.ResourceSound("Bow");
         aimMove = false;
         anim.SetBool("Attack", false);
         anim.SetBool("Idle", false);

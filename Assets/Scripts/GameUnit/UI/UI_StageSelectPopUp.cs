@@ -88,11 +88,18 @@ public class UI_StageSelectPopUp : UI_Base
     {
         //해당 스테이지를 누르면 지금 스테이지가 어떤 스테이지인지 확인하고 해당스테이지 몬스터의 정보를 받아온다
         onestageSels[ii].TryGetComponent(out StageNode stagenode);
-        GlobalData.SetMonsterList(stagenode.StageMonsterList);  //정적변수에 몬스터의 정보들을 받아둔다.
-        if (ui_PlayerCtrl.IsGo == false)
-            SelectStageTextRefresh(Define.MainStage.One, stagenode.Stage);
-        ui_PlayerCtrl.SetTarget(stagenode.Stage,true);
-        StartBtnActive();
+        if(stagenode.StState == Define.StageState.Open)
+        {
+            GlobalData.SetMonsterList(stagenode.StageMonsterList);  //정적변수에 몬스터의 정보들을 받아둔다.
+            if (ui_PlayerCtrl.IsGo == false)
+                SelectStageTextRefresh(Define.MainStage.One, stagenode.Stage);
+            ui_PlayerCtrl.SetTarget(stagenode.Stage, true);
+            StartBtnActive();
+        }
+
+
+
+
 
     }
 

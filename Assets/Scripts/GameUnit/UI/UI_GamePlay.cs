@@ -19,10 +19,6 @@ public class UI_GamePlay : UI_Base
 {
     //인게임의 UI들의 기능들
     [SerializeField]
-    Button uiUnitSword;         //나중에 유저가 선택한 유닛들의 갯수를 받아서 버튼배열로 처리해야함
-    [SerializeField]
-    Button uiUnitBow;
-    [SerializeField]
     Button uiAttackBtn;
 
     [SerializeField]
@@ -64,6 +60,7 @@ public class UI_GamePlay : UI_Base
     {
         if (base.Init() == false)
             return false;
+
 
         unitNodePos = new Vector3[5];
 
@@ -113,16 +110,26 @@ public class UI_GamePlay : UI_Base
             switch (node.Unit)
             {
                 case UnitClass.Warrior:
-                    UnitButtonSetting(i, "Prefabs/Unit/KnifeUnit");
+                    if(GlobalData.g_UnitWarriorLv < 5)
+                        UnitButtonSetting(i, "Prefabs/Unit/Warrior/WarriorUnitLv1");
+                    else if(GlobalData.g_UnitWarriorLv >= 5)
+                        UnitButtonSetting(i, "Prefabs/Unit/Warrior/WarriorUnitLv2");
                     break;
 
                 case UnitClass.Archer:
-                    UnitButtonSetting(i, "Prefabs/Unit/BowUnit");
+                    if(GlobalData.g_UnitArcherLv < 5)
+                        UnitButtonSetting(i, "Prefabs/Unit/Archer/ArcherUnitLv1");
+                    else
+                        UnitButtonSetting(i, "Prefabs/Unit/Archer/ArcherUnitLv2");
+
                     break;
 
                 case UnitClass.Spear:
-                    Debug.Log("스피어맞음?");
-                    UnitButtonSetting(i, "Prefabs/Unit/SpearUnit");
+                    if(GlobalData.g_UnitSpearLv < 5)
+                        UnitButtonSetting(i, "Prefabs/Unit/Spear/SpearUnitLv1");
+                    else
+                        UnitButtonSetting(i, "Prefabs/Unit/Spear/SpearUnitLv2");
+
                     break;
                 case UnitClass.Magician:
                     UnitButtonSetting(i, "Prefabs/Unit/MagicianUnit");

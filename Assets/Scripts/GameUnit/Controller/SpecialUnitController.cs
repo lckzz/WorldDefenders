@@ -655,6 +655,8 @@ public class SpecialUnitController : Unit
         if(transform.position.x < spawnPosX)
         {
             SetUnitState(SpecialUnitState.Idle);
+            attackCoolTime = 1.0f;
+
             return;
 
         }

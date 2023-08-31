@@ -41,6 +41,12 @@ public class UIManager
         return ui;
     }
 
+    public void OnOffSceneUI<T>(bool onoff) where T : UI_Base
+    { 
+
+        _ui.gameObject.SetActive(onoff);
+    }
+
 
     public T ShowPopUp<T>(string name = null) where T : UI_Base
     {

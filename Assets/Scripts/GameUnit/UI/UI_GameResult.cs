@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static System.Collections.Specialized.BitVector32;
 
-public class UI_GameResult : MonoBehaviour
+public class UI_GameResult : UI_Base
 {
 
     [SerializeField]
@@ -16,7 +16,10 @@ public class UI_GameResult : MonoBehaviour
     private Button exitBtn;
     [SerializeField]
     private TextMeshProUGUI timer;
-
+    [SerializeField]
+    private Image fadeImg;
+    bool exitFade = false;
+    bool retryFade = false;
 
     bool timecheck = false;
     int min = 0;
@@ -30,7 +33,19 @@ public class UI_GameResult : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+        if (retryBtn != null)
+            retryBtn.onClick.AddListener(()=>
+            {
+                retryFade = true;
+            });
+
+        if (exitBtn != null)
+            exitBtn.onClick.AddListener(()=>
+            {
+                exitFade = true;
+
+            });
+
     }
 
     // Update is called once per frame
@@ -41,6 +56,9 @@ public class UI_GameResult : MonoBehaviour
             timecheck = false;
             StartCoroutine(Timer());
         }
+
+        RetryFadeIn();
+        ExitFadeIn();
 
 
     }
@@ -131,7 +149,79 @@ public class UI_GameResult : MonoBehaviour
     }
 
 
+    void RetryFadeIn()
+    {
+        if(retryFade)
+        {
+            Managers.UI.OnOffSceneUI<UI_GamePlay>(false);
 
+            if (fadeImg != null)
+            {
+                if (!fadeImg.gameObject.activeSelf)
+                {
+                    fadeImg.gameObject.SetActive(true);
+
+                }
+
+                if (fadeImg.gameObject.activeSelf && fadeImg.color.a <= 1)
+                {
+                    Color col = fadeImg.color;
+                    if (col.a < 255)
+                        col.a += (Time.deltaTime * 1.0f);
+
+                    fadeImg.color = col;
+
+
+                    if (fadeImg.color.a >= 0.99f)
+                    {
+                        Managers.UI.ClosePopUp(this);
+                        Managers.Scene.LoadScene(Define.Scene.BattleStage_Field);
+
+
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    void ExitFadeIn()
+    {
+        if(exitFade)
+        {
+            Managers.UI.OnOffSceneUI<UI_GamePlay>(false);
+
+            if (fadeImg != null)
+            {
+                if (!fadeImg.gameObject.activeSelf)
+                {
+                    fadeImg.gameObject.SetActive(true);
+
+                }
+
+                if (fadeImg.gameObject.activeSelf && fadeImg.color.a <= 1)
+                {
+                    Color col = fadeImg.color;
+                    if (col.a < 255)
+                        col.a += (Time.deltaTime * 1.0f);
+
+                    fadeImg.color = col;
+
+
+                    if (fadeImg.color.a >= 0.99f)
+                    {
+
+                        Managers.UI.ClosePopUp(this);
+                        Managers.Scene.LoadScene(Define.Scene.Lobby);
+
+
+                    }
+                }
+            }
+        }
+
+    }
 
 
 }

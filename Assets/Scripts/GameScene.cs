@@ -23,6 +23,8 @@ public class GameScene : BaseScene
 
         Init();
 
+
+        Managers.UI.CloseAllPopUpUI(this);
         Managers.UI.ShowSceneUI<UI_GamePlay>();
 
         Debug.Log(Managers.UI.GetSceneUI<UI_GamePlay>());

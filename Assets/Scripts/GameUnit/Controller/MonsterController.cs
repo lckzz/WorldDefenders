@@ -67,7 +67,7 @@ public class MonsterController : Unit
         base.Init();
 
         monStat = new MonsterStat();
-        spawnPosX = 20.0f;
+        spawnPosX = 18.0f;
 
         if (monsterClass == MonsterClass.Warrior)
         {
@@ -710,6 +710,8 @@ public class MonsterController : Unit
         if(transform.position.x >= spawnPosX)
         {
             SetMonsterState(MonsterState.Idle);
+            attackCoolTime = 1.0f;
+
             return;
 
         }

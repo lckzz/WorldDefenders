@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     float maxCost = 500.0f;
     float costCoolTime = 1.0f;
     [SerializeField]
-    public static GameState state = GameState.GamePlaying;
+    public GameState state = GameState.GamePlaying;
     public Button uiUnitSword;
     public Button uiUnitBow;
     public Button uiAttackBtn;
@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     bool gameSet = false;
     bool bossOn = false;
     bool eventOn = false;    //스폰가속이벤트
+    bool gameEnd = false;
 
     public GameObject ui_GameResult;
     [SerializeField]
@@ -62,6 +63,8 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
         }
 
+
+        Debug.Log(GlobalData.g_SlotUnitClass.Count);
         //if (uiUnitSword != null)
         //    uiUnitSword.onClick.AddListener(UiUnitSword);
         //if (uiUnitBow != null)
@@ -75,7 +78,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        Debug.Log(curCost);
 
         if(state == GameState.GamePlaying)
         {
@@ -104,7 +107,7 @@ public class GameManager : MonoBehaviour
 
             if(eventOn == true)
             {
-                if(timerSec > 40.0f)
+                if(timerSec > 50.0f)
                 {
                     eventOn = false;
                     spawnTimer = 8.5f;
@@ -121,22 +124,7 @@ public class GameManager : MonoBehaviour
                     int ran = Random.Range(0, 2);
                     int ranPos = Random.Range(0, 3);
                     GameObject obj = Instantiate(monsters[ran], monsterSpawnPos[ranPos].position, Quaternion.identity);
-                    //obj.transform.position = monsterSpawnPos[ranPos].position;
-                    //switch(ranPos)
-                    //{
-                    //    case 0:
-                    //     SpriteRenderer sp = obj.GetComponent<SpriteRenderer>();
-                    //        sp.sortingOrder = 8;
-                    //        break;
-                    //    case 1:
-                    //        SpriteRenderer sp1 = obj.GetComponent<SpriteRenderer>();
-                    //        sp1.sortingOrder = 9;
-                    //        break;
-                    //    case 2:
-                    //        SpriteRenderer sp2 = obj.GetComponent<SpriteRenderer>();
-                    //        sp2.sortingOrder = 10;
-                    //        break;
-                    //}
+                    obj.transform.position = monsterSpawnPos[ranPos].position;
                     monsterSpawn = spawnTimer;
 
 
@@ -155,8 +143,12 @@ public class GameManager : MonoBehaviour
 
         if (state == GameState.GameFail || state == GameState.GameVictory)
         {
-            if(!ui_GameResult.activeSelf)
-                ui_GameResult.SetActive(true);
+            if(gameEnd == false)
+            {
+                gameEnd = true;
+                Managers.UI.ShowPopUp<UI_GameResult>();
+
+            }
 
         }
 

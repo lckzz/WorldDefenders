@@ -662,6 +662,8 @@ public class EliteMonsterController : Unit
         if (transform.position.x >= spawnPosX)
         {
             SetMonsterState(EliteMonsterState.Idle);
+            attackCoolTime = 1.0f;
+
             return;
 
         }

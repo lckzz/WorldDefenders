@@ -109,7 +109,7 @@ public class UI_UnitUpgradePopUp : UI_Base
     {
         UnitStat unit = new UnitStat();
 
-        unit = Managers.Data.archerDict[unitLv];
+        unit = unitDict[unitLv];
 
 
         curLvTxt.text = $"Level {unit.level}";
