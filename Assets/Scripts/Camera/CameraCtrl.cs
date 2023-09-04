@@ -26,7 +26,12 @@ public class CameraCtrl : MonoBehaviour
     float a_LmtBdBottom = 0;
     //카메라 제한
 
+    float moveSpeed = 20.0f;
+    float x = 0.0f;
+    float width;
+    float height;
 
+    GroundCheck groundCheck;
 
     //카메라 흔들기
     [HideInInspector] public float ShakeAmount;
@@ -38,7 +43,7 @@ public class CameraCtrl : MonoBehaviour
     {
         moveObj = GameObject.Find("CameraMoveObj");
         GameObject Groundobj = GameObject.Find("GroundObj");
-
+        Groundobj.TryGetComponent<GroundCheck>(out groundCheck);
         Vector3 a_GrdHalfSize = Vector3.zero;
         a_GrdHalfSize.x = Groundobj.transform.localScale.x / 2.0f;
         a_GrdHalfSize.y = Groundobj.transform.localScale.y / 2.0f;
@@ -51,6 +56,10 @@ public class CameraCtrl : MonoBehaviour
         m_GroundMax.y = Groundobj.transform.position.y + a_GrdHalfSize.y;
 
         initPosition = this.transform.position;
+        height = Camera.main.orthographicSize;                  //Size는 높이의 절반값
+        //width = height * Screen.width / Screen.height;
+        width = height * Camera.main.aspect;
+
 
     }
 
@@ -64,7 +73,46 @@ public class CameraCtrl : MonoBehaviour
         m_CamWMax = Camera.main.ViewportToWorldPoint(Vector3.zero);
 
 
+        if (Managers.UI.GetSceneUI<UI_GamePlay>().RightBtnCheck)
+        {
+            Debug.Log("asdqwewq");
+            transform.position += Vector3.right * moveSpeed * Time.deltaTime;
 
+        }
+
+        else if (Managers.UI.GetSceneUI<UI_GamePlay>().LeftBtnCheck)
+            transform.position += Vector3.left * moveSpeed * Time.deltaTime;
+
+        #region 카메라 움직임 제한범위
+        if (groundCheck.GroundMin.x + width + 0.3f > this.transform.position.x)     //플레이어가 배경의 왼쪽으로 벗어나려고하면
+        {
+            Vector3 pos = this.transform.position;
+            pos.x = groundCheck.GroundMin.x + width + 0.3f;
+            this.transform.position = pos;
+        }
+
+        if (groundCheck.GroundMin.y + 0.7f > this.transform.position.y)        //플레이어의 y축좌표가 좌측하단의 y축보다 작아지려하면
+        {
+            Vector3 pos = this.transform.position;
+            pos.y = groundCheck.GroundMin.y + 0.7f;
+            this.transform.position = pos;
+        }
+
+        if (groundCheck.GroundMin2.y < this.transform.position.y)           //플레이어의 y축좌표가 좌측상단의 y축보다 커지려하면
+        {
+            Vector3 pos = this.transform.position;
+            pos.y = groundCheck.GroundMin2.y;
+            this.transform.position = pos;
+        }
+
+        if (groundCheck.GroundMax.x - width < this.transform.position.x)     //플레이어가 오른쪽으로 벗어나려고 하면
+        {
+            Vector3 pos = this.transform.position;
+            pos.x = groundCheck.GroundMax.x - width;
+            this.transform.position = pos;
+        }
+
+        #endregion
         //Vector3 playerPos = animal.transform.position;
         //transform.position = new Vector3(playerPos.x, playerPos.y + 2.0f, transform.position.z);
     }
@@ -76,10 +124,10 @@ public class CameraCtrl : MonoBehaviour
             return;
 
         newPostion = transform.position;
-        newPostion.x = Mathf.SmoothDamp(transform.position.x, moveObj.transform.position.x,
-            ref xVelocity, smoothTime);
-        newPostion.y = Mathf.SmoothDamp(transform.position.y, moveObj.transform.position.y,
-            ref yVelocity, smoothTime);
+        //newPostion.x = Mathf.SmoothDamp(transform.position.x, moveObj.transform.position.x,
+        //    ref xVelocity, smoothTime);
+        //newPostion.y = Mathf.SmoothDamp(transform.position.y, moveObj.transform.position.y,
+        //    ref yVelocity, smoothTime);
 
         //카메라 화면 좌측하단 코너의 월드 좌표
         m_CamWMin = Camera.main.ViewportToWorldPoint(Vector3.zero);

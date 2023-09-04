@@ -34,13 +34,26 @@ public class UI_GamePlay : UI_Base
     [SerializeField]
     Image coolImg;
     [SerializeField] Image fadeImg;
+    [SerializeField] Button leftCameraMoveBtn;
+    [SerializeField] Button rightCameraMoveBtn;
+
 
     bool fadeCheck = true;
     float uiAttBtnBeforePosY = -450.0f;
     float uiAttBtnAfterPosY = -280.0f;
 
-    float uiCostBeforePosY = -60.0f;
+    float uiCostBeforePosY = -130.0f;
     float uiCostAfterPosY = 70.0f;
+
+    float uiMoveBtnBeforePosY = -430.0f;
+    float uiMoveBtnAfterPosY = -180.0f;
+
+    bool leftBtnCheck = false;      //왼쪽 움직임 버튼을 눌럿는지 판단하는 변수
+    bool rightBtnCheck = false;     //오른쪽 움직임 버튼을 눌럿는지 판단하는 변수
+
+    public bool LeftBtnCheck { get { return leftBtnCheck; }}
+    public bool RightBtnCheck { get { return rightBtnCheck; } }
+
 
     UnitNode unitNode;
     GameObject unitObj;
@@ -99,6 +112,13 @@ public class UI_GamePlay : UI_Base
         GameObject.Find("Player").TryGetComponent<PlayerController>(out player);
         ButtonEvent(uiAttackBtn.gameObject, player.AttackWait, UIEvent.PointerDown);
         ButtonEvent(uiAttackBtn.gameObject, player.ShotArrow, UIEvent.PointerUp);
+
+        ButtonEvent(leftCameraMoveBtn.gameObject, LeftBtnOn, UIEvent.PointerDown);
+        ButtonEvent(leftCameraMoveBtn.gameObject, LeftBtnOff, UIEvent.PointerUp);
+
+        ButtonEvent(rightCameraMoveBtn.gameObject, RightBtnOn, UIEvent.PointerDown);
+        ButtonEvent(rightCameraMoveBtn.gameObject, RightBtnOff, UIEvent.PointerUp);
+
 
 
 
@@ -180,10 +200,19 @@ public class UI_GamePlay : UI_Base
 
         unitCost.TryGetComponent(out rt);
         if(rt != null)
-        {
             UiMove(rt, uiCostBeforePosY, uiCostAfterPosY);
+        
+
+        rightCameraMoveBtn.TryGetComponent(out rt);
+        if (rt != null)
+            UiMove(rt, uiMoveBtnBeforePosY, uiMoveBtnAfterPosY);
+        
+
+        leftCameraMoveBtn.TryGetComponent(out rt);
+        if (rt != null)
+            UiMove(rt, uiMoveBtnBeforePosY, uiMoveBtnAfterPosY);
             yield return wfs;
-        }
+        
 
         yield break;
     }
@@ -259,6 +288,25 @@ public class UI_GamePlay : UI_Base
             }
         }
     }
+
+    void LeftBtnOn()
+    {
+        leftBtnCheck = true;
+    }
+    void LeftBtnOff()
+    {
+        leftBtnCheck = false;
+    }
+
+    void RightBtnOn()
+    {
+        rightBtnCheck = true;
+    }
+    void RightBtnOff()
+    {
+        rightBtnCheck = false;
+    }
+
 
     public void UpdateCoolTime(float speed)
     {

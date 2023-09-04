@@ -9,6 +9,8 @@ public class UI_Lobby : UI_Base
 
     public Button upgradeBtn;
     public Button unitSettingBtn;
+    public Button skillBtn;
+
     public Button stageSelectBtn;
     public LobbyScene lobbyScene;
     public Image fadeImg;
@@ -26,6 +28,8 @@ public class UI_Lobby : UI_Base
         LobbySceneRefresh();
         ButtonEvent(upgradeBtn.gameObject, UpgradeOn, UIEvent.PointerDown);
         ButtonEvent(unitSettingBtn.gameObject, UnitSettingOn, UIEvent.PointerDown);
+        ButtonEvent(skillBtn.gameObject, PlayerSkillOn, UIEvent.PointerDown);
+
         ButtonEvent(stageSelectBtn.gameObject, StageSelectOn, UIEvent.PointerDown);
         startFadeOut = true;
 
@@ -75,6 +79,12 @@ public class UI_Lobby : UI_Base
         Managers.UI.ClosePopUp(this);
         Managers.UI.ShowPopUp<UI_UnitSettingWindow>();
 
+    }
+
+    void PlayerSkillOn()
+    {
+        Managers.UI.ClosePopUp(this);
+        Managers.UI.ShowPopUp<UI_PlayerSkillWindow>();
     }
 
     void StageSelectOn()

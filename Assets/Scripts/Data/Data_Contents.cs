@@ -184,7 +184,7 @@ public class MonsterData :ILoader<int, MonsterStat>
 #endregion
 
 
-#region 스킬
+#region 유닛스킬
 
 [Serializable]
 public class SkillData
@@ -234,4 +234,64 @@ public class EliteWarriorSkillData : ILoader<int, SkillData>
 
 
 
+#endregion
+
+
+#region 플레이어 스킬
+[Serializable]
+public class PlayerSkillData
+{
+    public int id;
+    public int level;
+    public string name;
+    public string skillImg;
+    public string desc;
+    public int skillValue;  
+    public int skillCoolTime;
+    public string skillPrefab;
+}
+[Serializable]
+public class HealSkillData : ILoader<int, PlayerSkillData>
+{
+    public List<PlayerSkillData> healSkill = new List<PlayerSkillData>();
+
+    public Dictionary<int, PlayerSkillData> MakeDict()
+    {
+        Dictionary<int, PlayerSkillData> dict = new Dictionary<int, PlayerSkillData>();
+        foreach (PlayerSkillData skill in healSkill)
+            dict.Add(skill.level, skill);
+
+        return dict;
+    }
+}
+
+[Serializable]
+public class FireArrowSkillData : ILoader<int, PlayerSkillData>
+{
+    public List<PlayerSkillData> fireArrowSkill = new List<PlayerSkillData>();
+
+    public Dictionary<int, PlayerSkillData> MakeDict()
+    {
+        Dictionary<int, PlayerSkillData> dict = new Dictionary<int, PlayerSkillData>();
+        foreach (PlayerSkillData skill in fireArrowSkill)
+            dict.Add(skill.level, skill);
+
+        return dict;
+    }
+}
+
+[Serializable]
+public class WeaknessSkillData : ILoader<int, PlayerSkillData>
+{
+    public List<PlayerSkillData> weaknessSkill = new List<PlayerSkillData>();
+
+    public Dictionary<int, PlayerSkillData> MakeDict()
+    {
+        Dictionary<int, PlayerSkillData> dict = new Dictionary<int, PlayerSkillData>();
+        foreach (PlayerSkillData skill in weaknessSkill)
+            dict.Add(skill.level, skill);
+
+        return dict;
+    }
+}
 #endregion

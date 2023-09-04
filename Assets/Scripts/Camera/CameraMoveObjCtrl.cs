@@ -49,14 +49,11 @@ public class CameraMoveObjCtrl : MonoBehaviour
         }
 
 
-        x = Input.GetAxis("Horizontal");
-        if (x > 0)
-            moveObj.transform.position += Vector3.right * moveSpeed * Time.deltaTime;
+        
 
-        else if (x < 0)
-            moveObj.transform.position += Vector3.left * moveSpeed * Time.deltaTime;
-        else
-            x = 0;
+
+
+
 
         if (groundCheck.GroundMin.x + 3.5f > this.transform.position.x)     //플레이어가 배경의 왼쪽으로 벗어나려고하면
         {

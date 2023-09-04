@@ -7,10 +7,20 @@ public class GlobalData
     public static int g_Gold = 0;
     public static int g_PlayerLevel = 1;
 
+    //-----------유닛 레벨-----------------
     public static int g_UnitWarriorLv = 1;
     public static int g_UnitArcherLv = 1;
     public static int g_UnitSpearLv = 1;
     public static int g_UnitMagicianLv = 1;
+    //-----------유닛 레벨-----------------
+
+    //----------플레이어의 스킬 레벨-------------
+    public static int g_SkillHealLv = 1;
+    public static int g_SkillFireArrowLv = 0;
+    public static int g_SkillWeaknessLv = 0;
+
+    //----------플레이어의 스킬 레벨-------------
+
 
     //-------------몬스터 아이디-----------
     public static int g_NormalSkeletonID = 0001;

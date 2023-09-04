@@ -93,6 +93,14 @@ public class Define
         Count
     }
 
+    public enum PlayerSkill
+    {
+        Heal,
+        FireArrow,
+        Weakness,
+        Count
+    }
+
 
 
 }
