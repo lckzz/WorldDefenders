@@ -99,7 +99,7 @@ public class ArrowCtrl : MonoBehaviour
 
             Destroy(this.gameObject);
         }
-        else if (coll.tag.Contains("Tower") && coll.gameObject.layer == LayerMask.GetMask("MonsterPortal"))
+        else if (coll.tag.Contains("Tower") && coll.name.Contains("MonsterPortal"))
         {
             if (coll.gameObject == monPortal.gameObject)
             {

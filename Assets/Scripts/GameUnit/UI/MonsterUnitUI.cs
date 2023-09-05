@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class MonsterUnitUI : UnitUI
 {
     private Unit uniCtrl = null;
-    [SerializeField] private MonsterController monCtrl;
-    private EliteMonsterController eliteMonCtrl;
+    //[SerializeField] private MonsterController monCtrl;
+    //[SerializeField] private EliteMonsterController eliteMonCtrl;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,32 +17,32 @@ public class MonsterUnitUI : UnitUI
         }
 
 
-        if(uniCtrl as MonsterController)
-        {
-            monCtrl = (MonsterController)uniCtrl;
-            ComponentInit<MonsterController>(out monCtrl);
+        //if(uniCtrl as MonsterController)
+        //{
+        //    monCtrl = (MonsterController)uniCtrl;
+        //    ComponentInit<MonsterController>(out monCtrl);
 
-        }
-        else if (uniCtrl as EliteMonsterController)
-        {
-            eliteMonCtrl = (EliteMonsterController)uniCtrl;
-            ComponentInit<EliteMonsterController>(out eliteMonCtrl);
+        //}
+        //else if (uniCtrl as EliteMonsterController)
+        //{
+        //    eliteMonCtrl = (EliteMonsterController)uniCtrl;
+        //    ComponentInit<EliteMonsterController>(out eliteMonCtrl);
 
-        }
+        //}
     }
 
     // Update is called once per frame
     void Update()
     {
         UpdateHp(hpSpeed);
-        if(monCtrl != null)
+        if(uniCtrl != null)
         {
-            if(monCtrl.IsDie)
+            if(uniCtrl.IsDie)
             {
-                if(monCtrl != null)
-                    UnitDeadSpAlpha<MonsterController>(monCtrl, spr);
-                else
-                    UnitDeadSpAlpha<EliteMonsterController>(eliteMonCtrl, spr);
+
+                if(uniCtrl != null)
+                    UnitDeadSpAlpha<Unit>(uniCtrl, spr);
+
 
 
             }
@@ -57,10 +57,8 @@ public class MonsterUnitUI : UnitUI
         if(hpbar != null)
         {
 
-            if(monCtrl != null)
-                hp = monCtrl.hpPercent();
-            else
-                hp = eliteMonCtrl.hpPercent();
+            if(uniCtrl != null)
+                hp = uniCtrl.hpPercent();
 
 
             

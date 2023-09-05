@@ -75,9 +75,7 @@ public class CameraCtrl : MonoBehaviour
 
         if (Managers.UI.GetSceneUI<UI_GamePlay>().RightBtnCheck)
         {
-            Debug.Log("asdqwewq");
             transform.position += Vector3.right * moveSpeed * Time.deltaTime;
-
         }
 
         else if (Managers.UI.GetSceneUI<UI_GamePlay>().LeftBtnCheck)

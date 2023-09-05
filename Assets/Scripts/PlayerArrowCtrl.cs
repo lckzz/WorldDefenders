@@ -44,8 +44,8 @@ public class PlayerArrowCtrl : MonoBehaviour
         if (coll.tag.Contains("Monster"))
         {
 
-            MonsterController monctrl = null;
-            coll.TryGetComponent<MonsterController>(out monctrl);
+            Unit monctrl = null;
+            coll.TryGetComponent<Unit>(out monctrl);
             if (monctrl != null)
                 monctrl.OnDamage(player.Att);
 
@@ -57,8 +57,9 @@ public class PlayerArrowCtrl : MonoBehaviour
         {
             if(!arrowHit)
             {
-                arrowHit = true;
                 anim.SetTrigger("Hit");
+
+                arrowHit = true;
                 col.enabled = false;
 
 

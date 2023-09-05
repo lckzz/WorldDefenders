@@ -59,18 +59,45 @@ public class LobbyScene : BaseScene
     public void RefreshUnit()
     {
 
-        Debug.Log(lobbyUnits.Length);
+
 
         for (int ii = 0; ii < lobbyUnits.Length; ii++)
         {
-            Debug.Log(GlobalData.g_SlotUnitClass[ii]);
 
             //GlobalData.g_SlotUnitClass
             lobbyUnits[ii].E_UniClass = GlobalData.g_SlotUnitClass[ii];
             lobbyUnits[ii].RefreshUnitSet();
             if (lobbyUnits[ii].E_UniClass == UnitClass.Magician)
                 lobbyUnits[ii].transform.localScale = new Vector3(-1.3f, 1.3f, 1.3f);
+            else
+            {
+                switch(ii)
+                {
+                    case 0:
+                        LobbyUnitScaleSet(ii, new Vector3(-2.0f, 2.0f, 2.0f));
+                        break;
+                    case 1:
+                        LobbyUnitScaleSet(ii, new Vector3(-1.8f, 1.8f, 1.8f));
+                        break;
+                    case 2:
+                        LobbyUnitScaleSet(ii, new Vector3(-1.7f, 1.7f, 1.7f));
+                        break;
+                    case 3:
+                        LobbyUnitScaleSet(ii, new Vector3(-1.8f, 1.8f, 1.8f));
+                        break;
+                    case 4:
+                        LobbyUnitScaleSet(ii, new Vector3(-2.0f, 2.0f, 2.0f));
+                        break;
+                }
+            }
+
         }
+    }
+
+
+    void LobbyUnitScaleSet(int idx, Vector3 scaleVec)
+    {
+        lobbyUnits[idx].transform.localScale = scaleVec;
     }
 
     public override void Clear()
