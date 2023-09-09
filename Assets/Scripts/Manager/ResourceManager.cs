@@ -9,12 +9,25 @@ public class ResourceManager
         return Resources.Load<T>(path);
     }
 
+
+
     public GameObject Instantiate(string path, Transform parent = null)
     {
         GameObject prefab = Load<GameObject>($"Prefabs/{path}");
         if(prefab == null)
         {
             Debug.Log($"Failed to load prefab : {path}");
+            return null;
+        }
+
+        return Object.Instantiate(prefab, parent);
+    }
+
+    public GameObject Instantiate(GameObject prefab, Transform parent = null)
+    {
+        if (prefab == null)
+        {
+            Debug.Log($"Failed to load prefab null");
             return null;
         }
 

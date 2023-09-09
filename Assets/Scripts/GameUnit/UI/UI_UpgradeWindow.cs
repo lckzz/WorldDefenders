@@ -13,22 +13,12 @@ public class UI_UpgradeWindow : UI_Base
     [SerializeField] private TextMeshProUGUI playerHpTxt;
     [SerializeField] private TextMeshProUGUI playerAttTxt;
     [SerializeField] private Button upgradeBtn;
-
-    [Header("-------UnitsUI-----------")]
-    public Button[] unitUpgradeBtn;
-    [SerializeField] private TextMeshProUGUI warriorLvTxt;
-    [SerializeField] private TextMeshProUGUI archerLvTxt;
-    [SerializeField] private TextMeshProUGUI spearLvTxt;
-
-
-
-    [SerializeField] private GameObject[] warriorPrefabs;
-    [SerializeField] private GameObject[] archerPrefabs;
-    [SerializeField] private GameObject[] spearPrefabs;
+    [SerializeField] private GameObject upgradeContent;
 
     [SerializeField] private Image fadeImg;
 
-
+    [SerializeField] private GameObject[] unitUpgradePrefabs = new GameObject[(int)UnitClass.Count];
+    [SerializeField] private GameObject[] unitUpgradeObjs = new GameObject[(int)UnitClass.Count];
 
 
     [Space(25)]
@@ -44,7 +34,7 @@ public class UI_UpgradeWindow : UI_Base
 
     public bool StartFadeCheck { get { return startFadeOut; } }
 
-
+    UpgradeUnitNode unitUpgradeNode;
 
     // Start is called before the first frame update
     void Start()
@@ -69,10 +59,12 @@ public class UI_UpgradeWindow : UI_Base
 
         startFadeOut = true;
 
-        WindowInit();
-        UnitButtonEvent(unitUpgradeBtn[(int)UnitClass.Warrior].gameObject,(int)UnitClass.Warrior, OpenUpgradeUnitPopUp, UIEvent.PointerDown);
-        UnitButtonEvent(unitUpgradeBtn[(int)UnitClass.Archer].gameObject, (int)UnitClass.Archer, OpenUpgradeUnitPopUp, UIEvent.PointerDown);
-        UnitButtonEvent(unitUpgradeBtn[(int)UnitClass.Spear].gameObject, (int)UnitClass.Spear, OpenUpgradeUnitPopUp, UIEvent.PointerDown);
+        UnitInit();
+
+
+
+        //WindowInit();
+        
     }
 
     // Update is called once per frame
@@ -86,25 +78,43 @@ public class UI_UpgradeWindow : UI_Base
 
 
 
-    void WindowInit()
+    void UnitInit()
     {
-        RefreshUnitImgAnim(GlobalData.g_UnitWarriorLv, GlobalData.g_UnitArcherLv, GlobalData.g_UnitSpearLv);
-    }
-
-
-
-    void UnitButtonEvent(GameObject obj, int idx ,Action<int> action = null, UIEvent type = UIEvent.PointerDown)
-    {
-        UI_EventHandler evt;
-        obj.TryGetComponent(out evt);
-
-        if(type == UIEvent.PointerDown)
+        for (int ii = 0; ii < (int)UnitClass.Count; ii++)
         {
-            evt.OnPointerDownIntHandler -= (unUsedIdx) => action(idx);
-            evt.OnPointerDownIntHandler += (unUsedIdx) => action(idx);
+            switch (ii)
+            {
+                case (int)UnitClass.Warrior:
+                    unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/WarriorUpgrade");
+                    break;
+                case (int)UnitClass.Archer:
+                    unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/ArcherUpgrade");
+                    break;
+                case (int)UnitClass.Spear:
+                    unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/SpearManUpgrade");
+                    break;
+                case (int)UnitClass.Magician:
 
+                    break;
+            }
+        }
+
+
+        if (upgradeContent != null)
+        {
+            for (int i = 0; i < (int)UnitClass.Count; i++)
+            {
+                if (unitUpgradePrefabs[i] != null)
+                {
+                    unitUpgradeObjs[i] = Managers.Resource.Instantiate(unitUpgradePrefabs[i], upgradeContent.transform);
+                }
+            }
         }
     }
+
+
+
+
 
 
     void RefreshTextUI()
@@ -118,109 +128,10 @@ public class UI_UpgradeWindow : UI_Base
 
 
 
-    void OpenUpgradeUnitPopUp(int unitIdx)
-    {
-        switch (unitIdx)
-        {
-            case (int)UnitClass.Warrior:
-                {
-                    
-                    Managers.UI.ShowPopUp<UI_UnitUpgradePopUp>().GetUnitIndex(unitIdx);
-                    Debug.Log($"워리어 업그판넬 온!{unitIdx}");
-                    break;
-                }
-            case (int)UnitClass.Archer:
-                {
-                    Managers.UI.ShowPopUp<UI_UnitUpgradePopUp>().GetUnitIndex(unitIdx);
-
-                    Debug.Log($"아처 업그판넬 온!{unitIdx}");
-
-                    break;
-                }
-            case (int)UnitClass.Spear:
-                {
-                    Managers.UI.ShowPopUp<UI_UnitUpgradePopUp>().GetUnitIndex(unitIdx);
-
-                    Debug.Log($"창병 업그판넬 온!{unitIdx}");
-
-                    break;
-                }
-        }
 
 
 
-    }
-
-
-    public void RefreshUnitImgAnim(int unitWarriorLv,int unitArcherLv, int unitSpearLv)
-    {
-        for(int ii = 0; ii < (int)Define.UnitUILv.Count; ii++)
-        {
-            if (ii == 0)
-            {
-                if (unitWarriorLv < 5)
-                {
-                    warriorPrefabs[(int)Define.UnitUILv.One].SetActive(true);
-                    warriorPrefabs[(int)Define.UnitUILv.Two].SetActive(false);
-                    warriorPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
-
-                }
-                
-                else
-                {
-                    warriorPrefabs[(int)Define.UnitUILv.One].SetActive(false);
-                    warriorPrefabs[(int)Define.UnitUILv.Two].SetActive(true);
-                    warriorPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
-
-                }
-
-                warriorLvTxt.text = $"Lv{unitWarriorLv}";
-            }
-            else if (ii == 1)
-            {
-                if (unitArcherLv < 5)
-                {
-                    archerPrefabs[(int)Define.UnitUILv.One].SetActive(true);
-                    archerPrefabs[(int)Define.UnitUILv.Two].SetActive(false);
-                    archerPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
-
-                }
-
-                else
-                {
-                    archerPrefabs[(int)Define.UnitUILv.One].SetActive(false);
-                    archerPrefabs[(int)Define.UnitUILv.Two].SetActive(true);
-                    archerPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
-
-                }
-                archerLvTxt.text = $"Lv{unitArcherLv}";
-
-            }
-            else
-            {
-                if (unitSpearLv < 5)
-                {
-                    spearPrefabs[(int)Define.UnitUILv.One].SetActive(true);
-                    spearPrefabs[(int)Define.UnitUILv.Two].SetActive(false);
-                    spearPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
-
-                }
-
-                else
-                {
-                    spearPrefabs[(int)Define.UnitUILv.One].SetActive(false);
-                    spearPrefabs[(int)Define.UnitUILv.Two].SetActive(true);
-                    spearPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
-
-                }
-                spearLvTxt.text = $"Lv{unitSpearLv}";
-
-            }
-
-
-        }
-
-    }
+  
 
 
     void PlayerUpgradeOpen()
@@ -229,6 +140,36 @@ public class UI_UpgradeWindow : UI_Base
 
         Managers.UI.ShowPopUp<UI_PlayerUpgradePopUp>();
     }
+
+
+    public void UpgradeUnitRefresh(int idx)
+    {
+        
+
+        if (unitUpgradeObjs[idx] != null)
+        {
+
+            unitUpgradeObjs[idx].TryGetComponent(out unitUpgradeNode);
+
+            switch (idx)
+            {
+                case (int)UnitClass.Warrior:
+                    unitUpgradeNode.RefreshUnitImg(GlobalData.g_UnitWarriorLv);
+                    break;
+                case (int)UnitClass.Archer:
+                    unitUpgradeNode.RefreshUnitImg(GlobalData.g_UnitArcherLv);
+                    break;
+                case (int)UnitClass.Spear:
+                    unitUpgradeNode.RefreshUnitImg(GlobalData.g_UnitSpearLv);
+                    break;
+                case (int)UnitClass.Magician:
+                    unitUpgradeNode.RefreshUnitImg(GlobalData.g_UnitMagicianLv);
+                    break;
+            }
+        }
+        
+    }
+
 
     public void BackFadeIn(Image fadeImg, UI_Base closePopup, bool fadeCheck)
     {

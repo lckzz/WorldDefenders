@@ -62,7 +62,7 @@ public class UI_UnitUpgradePopUp : UI_Base
                 Managers.Sound.Play("Effect/UI_Click");
 
                 Managers.UI.ClosePopUp(this);
-                Managers.UI.PeekPopupUI<UI_UpgradeWindow>().RefreshUnitImgAnim(GlobalData.g_UnitWarriorLv, GlobalData.g_UnitArcherLv, GlobalData.g_UnitSpearLv);
+                Managers.UI.PeekPopupUI<UI_UpgradeWindow>().UpgradeUnitRefresh(unitidx);
             });
 
         if (upgradeBtn != null)
