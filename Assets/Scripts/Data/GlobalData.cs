@@ -31,7 +31,7 @@ public class GlobalData
     //-------------몬스터 아이디-----------
 
 
-
+    public static Define.PlayerSkill g_CurPlayerEquipSkill = Define.PlayerSkill.Count;      //현재 장착한 스킬
     public static List<UnitClass> g_SlotUnitClass = new List<UnitClass>();
     public static List<Define.MonsterType> g_MonsterTypeList = new List<Define.MonsterType>();
     public static Define.SubStage curStage = Define.SubStage.One;

@@ -94,6 +94,7 @@ public class UI_UpgradeWindow : UI_Base
                     unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/SpearManUpgrade");
                     break;
                 case (int)UnitClass.Magician:
+                    unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/MagicianUpgrade");
 
                     break;
             }

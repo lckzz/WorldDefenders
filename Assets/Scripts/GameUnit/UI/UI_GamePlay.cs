@@ -38,6 +38,21 @@ public class UI_GamePlay : UI_Base
     [SerializeField] Button rightCameraMoveBtn;
 
 
+    //----------Game SkillSet---------------------
+    [Header("-------------Skill---------------")]
+    [SerializeField] Button skillBtn;
+    [SerializeField] Image skillImg;
+    [SerializeField] Image skillCoolImg;
+    [SerializeField] Sprite[] skillsprites;
+    PlayerSkillData skillData;
+    bool skillOnOff = false;
+    float skillCoolTime = .0f;
+    float skillCool = .0f;
+    //----------Game SkillSet---------------------
+
+
+
+
     bool fadeCheck = true;
     float uiAttBtnBeforePosY = -450.0f;
     float uiAttBtnAfterPosY = -280.0f;
@@ -45,8 +60,7 @@ public class UI_GamePlay : UI_Base
     float uiCostBeforePosY = -130.0f;
     float uiCostAfterPosY = 70.0f;
 
-    float uiMoveBtnBeforePosY = -430.0f;
-    float uiMoveBtnAfterPosY = -180.0f;
+
 
     bool leftBtnCheck = false;      //왼쪽 움직임 버튼을 눌럿는지 판단하는 변수
     bool rightBtnCheck = false;     //오른쪽 움직임 버튼을 눌럿는지 판단하는 변수
@@ -119,7 +133,17 @@ public class UI_GamePlay : UI_Base
         ButtonEvent(rightCameraMoveBtn.gameObject, RightBtnOn, UIEvent.PointerDown);
         ButtonEvent(rightCameraMoveBtn.gameObject, RightBtnOff, UIEvent.PointerUp);
 
+        ButtonEvent(skillBtn.gameObject, UpdateSkillCoolTimeSet, UIEvent.PointerDown);
 
+
+        if (GlobalData.g_CurPlayerEquipSkill == Define.PlayerSkill.Count)   //스킬이 장착되어있지않다면 스킬을 꺼주고
+            skillBtn.gameObject.SetActive(false);
+        
+        else
+        {
+            skillBtn.gameObject.SetActive(true);    //스킬 장착이 되었다면 스킬을 켜준다.
+            SkillInit();   //스킬 초기화
+        }
 
 
         for (int i = 0; i < uiUnit.Length; i++)
@@ -167,6 +191,7 @@ public class UI_GamePlay : UI_Base
 
     private void Update()
     {
+        UpdateSkill();
         FadeOut();
     }
 
@@ -201,20 +226,52 @@ public class UI_GamePlay : UI_Base
         unitCost.TryGetComponent(out rt);
         if(rt != null)
             UiMove(rt, uiCostBeforePosY, uiCostAfterPosY);
-        
-
-        rightCameraMoveBtn.TryGetComponent(out rt);
-        if (rt != null)
-            UiMove(rt, uiMoveBtnBeforePosY, uiMoveBtnAfterPosY);
-        
-
-        leftCameraMoveBtn.TryGetComponent(out rt);
-        if (rt != null)
-            UiMove(rt, uiMoveBtnBeforePosY, uiMoveBtnAfterPosY);
+       
             yield return wfs;
         
 
         yield break;
+    }
+
+
+    void SkillInit()
+    {
+        skillsprites = new Sprite[(int)Define.PlayerSkill.Count];
+        for(int ii = 0; ii < skillsprites.Length; ii++)
+        {
+            switch (ii)
+            {
+                case (int)Define.PlayerSkill.Heal:
+                    skillsprites[ii] = Managers.Resource.Load<Sprite>("Sprite/Skill/Heal");
+                    break;
+                case (int)Define.PlayerSkill.FireArrow:
+                    skillsprites[ii] = Managers.Resource.Load<Sprite>("Sprite/Skill/FireArrow");
+                    break;
+                case (int)Define.PlayerSkill.Weakness:
+                    skillsprites[ii] = Managers.Resource.Load<Sprite>("Sprite/Skill/Weakness");
+                    break;
+            }
+        }
+        skillImg.sprite = skillsprites[(int)GlobalData.g_CurPlayerEquipSkill];
+
+        skillData = new PlayerSkillData();
+
+        switch(GlobalData.g_CurPlayerEquipSkill)
+        {
+            case Define.PlayerSkill.Heal:
+                skillData = Managers.Data.healSkillDict[(int)GlobalData.g_SkillHealLv];
+                break;
+
+            case Define.PlayerSkill.FireArrow:
+                skillData = Managers.Data.fireArrowSkillDict[(int)GlobalData.g_SkillFireArrowLv];
+                break;
+
+            case Define.PlayerSkill.Weakness:
+                skillData = Managers.Data.weaknessSkillDict[(int)GlobalData.g_SkillWeaknessLv];
+                break;
+
+
+        }
     }
 
 
@@ -305,6 +362,44 @@ public class UI_GamePlay : UI_Base
     void RightBtnOff()
     {
         rightBtnCheck = false;
+    }
+
+
+    void UpdateSkillCoolTimeSet()
+    {
+        if (skillOnOff)
+            return;
+        //스킬을 누르면 장착된 스킬이 나가게 할것 (스킬북을 통해서)
+        //스킬을 누르면 해당 스킬의 쿨타임을 받고
+        skillCoolTime = skillData.skillCoolTime;
+        skillOnOff = true; //스킬이 나가서 쿨타임 시작
+        skillCoolImg.gameObject.SetActive(skillOnOff);
+
+    }
+
+
+    void UpdateSkill()
+    {
+        if(skillOnOff)
+        {
+
+            skillCool = skillCoolTime / skillData.skillCoolTime;
+
+            skillCoolTime -= Time.deltaTime;
+
+            if (skillCoolImg?.fillAmount > skillCool)
+                skillCoolImg.fillAmount -= Time.deltaTime * 1.0f;
+
+            if (skillCool >= .99f)
+                skillCoolImg.fillAmount = 1;
+
+            if(skillCoolTime <= .0f)
+            {
+                skillCoolTime = .0f;
+                skillOnOff = false;
+                skillCoolImg.gameObject.SetActive(skillOnOff);
+            }
+        }
     }
 
 

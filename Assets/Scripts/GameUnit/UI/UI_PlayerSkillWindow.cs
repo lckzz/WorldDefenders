@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -8,6 +9,18 @@ public class UI_PlayerSkillWindow : UI_Base
 {
     [SerializeField] private GameObject skillNodePrefab;
     [SerializeField] private Button backLobbyBtn;            //유닛클릭시 마스크오브젝트
+    [SerializeField] private Button skillEquipBtn;
+    [SerializeField] private Image skillEquipImg;
+    [SerializeField] private TextMeshProUGUI skillTxt;
+    byte skillDisEnableColorAlpha = 160;
+    byte skillEnabelColorAlpha = 255;
+
+    Color skillEquipEnableColor;
+    Color skillEquipDisEnableColor;
+    Color skillEquipTxtEnableColor;
+    Color skillEquipTxtDisEnableColor;
+
+
 
     private GameObject skillNodeParentObj;
     private GameObject skillInfoObj;
@@ -42,6 +55,13 @@ public class UI_PlayerSkillWindow : UI_Base
         ped = new PointerEventData(EventSystem.current);
         rrList = new List<RaycastResult>(10);
 
+        skillEquipEnableColor = new Color32(255, 255, 255, skillEnabelColorAlpha);
+        skillEquipDisEnableColor = new Color32(255, 255, 255, skillDisEnableColorAlpha);
+        skillEquipTxtEnableColor = new Color32(50, 50, 50, skillEnabelColorAlpha);
+        skillEquipTxtDisEnableColor = new Color32(50, 50, 50, skillDisEnableColorAlpha);
+
+
+
         skillNodeParentObj = GameObject.Find("SkillWindow");
         GameObject bgObj = GameObject.Find("SkillWindowBg");
         if (bgObj != null)
@@ -56,8 +76,14 @@ public class UI_PlayerSkillWindow : UI_Base
             obj.TryGetComponent<SkillNode>(out node);
             node.PlayerSkillType = (Define.PlayerSkill)ii;
             node.SkillNodeSetting((Define.PlayerSkill)ii);
+            if (ii == (int)Define.PlayerSkill.Heal)
+                clickNode = node;
+
         }
 
+        skillInfoObj.SetActive(true);
+        skillInfo.SkillInfoInit(clickNode.SkillData.name, (clickNode.SkillData.level).ToString(), clickNode.SkillData.desc, clickNode.SkillData.skillImg);
+        clickNode.ClickNodeSelectImgOnOff(true);
         if (backLobbyBtn != null)
             backLobbyBtn.onClick.AddListener(() =>
             {
@@ -68,7 +94,13 @@ public class UI_PlayerSkillWindow : UI_Base
                 //GlobalData.SetUnitClass(unitSlotUiList);  //스킬셋팅
             });
 
+        if (skillEquipBtn != null)
+            skillEquipBtn.onClick.AddListener(EquipSkill);
+
+
         startFadeOut = true;
+
+
 
     }
 
@@ -103,15 +135,48 @@ public class UI_PlayerSkillWindow : UI_Base
                 clickNode = curClickNode;
                 skillInfoObj.SetActive(true);
                 skillInfo.SkillInfoInit(clickNode.SkillData.name, (clickNode.SkillData.level).ToString(), clickNode.SkillData.desc, clickNode.SkillData.skillImg);
+            }
 
+
+            EquipButtonStateSet();
+
+        }
+    }
+
+    void EquipButtonStateSet()
+    {
+        if (clickNode != null)
+        {
+            if (clickNode.SkillData.level <= 0)
+            {
+                skillEquipImg.color = skillEquipDisEnableColor;
+                skillTxt.color = skillEquipTxtDisEnableColor;
             }
             else
             {
-                if(clickNode != null)
-                    clickNode.ClickNodeSelectImgOnOff(false);
+                skillEquipImg.color = skillEquipEnableColor;
+                skillTxt.color = skillEquipTxtEnableColor;
+
             }
 
-       
+        }
+        else
+        {
+            skillEquipImg.color = skillEquipDisEnableColor;
+            skillTxt.color = skillEquipTxtDisEnableColor;
+        }
+
+    }
+
+
+    void EquipSkill()
+    {
+        if(clickNode != null)
+        {
+            if (clickNode.SkillData.level <= 0)
+                return;
+
+            GlobalData.g_CurPlayerEquipSkill = clickNode.PlayerSkillType;
         }
     }
 
@@ -121,7 +186,6 @@ public class UI_PlayerSkillWindow : UI_Base
         rrList.Clear();
 
         gr.Raycast(ped, rrList);
-        Debug.Log(rrList.Count);
         if (rrList.Count == 0)
             return null;
 
@@ -129,6 +193,7 @@ public class UI_PlayerSkillWindow : UI_Base
 
         return rrList[0].gameObject.GetComponent<T>();
     }
+
 
 
     public void BackFadeIn(Image fadeImg, UI_Base closePopup, bool fadeCheck)

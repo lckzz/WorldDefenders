@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,10 @@ public class UI_Lobby : UI_Base
     public Button stageSelectBtn;
     public LobbyScene lobbyScene;
     public Image fadeImg;
+    [SerializeField] Image skillImg;
+    [SerializeField] TextMeshProUGUI skilltxt;
+    [SerializeField] Sprite[] skilliconSptrites;
+
 
 
     bool upgradeBtnFadeCheck = false;
@@ -31,6 +36,7 @@ public class UI_Lobby : UI_Base
         ButtonEvent(skillBtn.gameObject, PlayerSkillOn, UIEvent.PointerDown);
 
         ButtonEvent(stageSelectBtn.gameObject, StageSelectOn, UIEvent.PointerDown);
+        RefreshSKillicon(GlobalData.g_CurPlayerEquipSkill);
         startFadeOut = true;
 
 
@@ -94,10 +100,6 @@ public class UI_Lobby : UI_Base
 
     }
 
-
-
-
-
     void LobbySceneRefresh()
     {
         if (lobbyScene != null)
@@ -107,6 +109,22 @@ public class UI_Lobby : UI_Base
         }
     }
 
+    public void RefreshSKillicon(Define.PlayerSkill playersk)
+    {
+        if (playersk == Define.PlayerSkill.Count)
+        {
+            skillImg.gameObject.SetActive(false);
+            skilltxt.gameObject.SetActive(true);
+            return;
 
+        }
+
+        if(!skillImg.gameObject.activeSelf)
+            skillImg.gameObject.SetActive(true);
+
+        skilltxt.gameObject.SetActive(false);
+        skillImg.sprite = skilliconSptrites[(int)playersk];
+
+    }
 
 }

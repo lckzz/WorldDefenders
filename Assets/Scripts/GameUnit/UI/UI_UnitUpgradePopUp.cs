@@ -20,7 +20,7 @@ public class UI_UnitUpgradePopUp : UI_Base
     [SerializeField] private TextMeshProUGUI curHpTxt;
     [SerializeField] private TextMeshProUGUI curAttTxt;
     [SerializeField] private TextMeshProUGUI curCostTxt;
-    [SerializeField] private Animator curAnim;
+
 
 
     [Header("--------------NextUnit---------------")]
@@ -31,19 +31,19 @@ public class UI_UnitUpgradePopUp : UI_Base
     [SerializeField] private GameObject[] nextWarriorObjs;
     [SerializeField] private GameObject[] nextArcherObjs;
     [SerializeField] private GameObject[] nextSpearObjs;
+    [SerializeField] private GameObject nextMagicianObj;
 
 
 
-    [Header("--------------UnitImg---------------")]
-    private const int unitUpgradeLevel = 3;       //업글단계는 3단계까지 존재
-    [SerializeField] private Sprite[] warriorSprites = new Sprite[unitUpgradeLevel];
-    [SerializeField] private Sprite[] archerSprites = new Sprite[unitUpgradeLevel];
-    [SerializeField] private Sprite[] spearSprites = new Sprite[unitUpgradeLevel];
 
     [Header("--------------UnitPrefab---------------")]
     [SerializeField] private GameObject[] warriorPrefabs;
     [SerializeField] private GameObject[] archerPrefabs;
     [SerializeField] private GameObject[] spearPrefabs;
+
+    [Header("------------SpeacialUnit---------------")]
+    [SerializeField] private GameObject magicianObj;
+
 
     private int unitidx = 0;                //받아올 유닛의 클래스의정보
     
@@ -99,7 +99,11 @@ public class UI_UnitUpgradePopUp : UI_Base
                 RefreshUnitImgAnim(GlobalData.g_UnitSpearLv, spearPrefabs);
 
                 break;
+            case (int)UnitClass.Magician:
+                RefreshUnitStatUI(GlobalData.g_UnitMagicianLv, Managers.Data.magicDict);
+                RefreshUnitImgAnim(magicianObj);
 
+                break;
         }
 
     }
@@ -256,6 +260,15 @@ public class UI_UnitUpgradePopUp : UI_Base
     }
 
 
+    void RefreshUnitImgAnim(GameObject unitObj)
+    {
+        if(unitObj == magicianObj)
+        {
+            magicianObj.SetActive(true);
+            nextMagicianObj.SetActive(true);
+        }
+    }
+
     void UpgradeUnit()
     {
         Managers.Sound.Play("Effect/UI_Click");
@@ -279,6 +292,15 @@ public class UI_UnitUpgradePopUp : UI_Base
                     GlobalData.g_UnitSpearLv++;
                 RefreshUnitStatUI(GlobalData.g_UnitSpearLv, Managers.Data.spearDict);
                 RefreshUnitImgAnim(GlobalData.g_UnitSpearLv, spearPrefabs);
+
+                break;
+
+            case (int)UnitClass.Magician:
+                if (GlobalData.g_UnitMagicianLv < 10)
+                    GlobalData.g_UnitMagicianLv++;
+                RefreshUnitStatUI(GlobalData.g_UnitMagicianLv, Managers.Data.magicDict);
+                RefreshUnitImgAnim(magicianObj);
+
 
                 break;
 

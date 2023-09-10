@@ -19,7 +19,7 @@ public enum UpgradeNode
 public class UpgradeUnitNode : MonoBehaviour
 {
     private string className = "";
-    [SerializeField] private GameObject[] classObj = new GameObject[3];
+    [SerializeField] private GameObject[] classObj;
     [SerializeField] private TextMeshProUGUI lvText;
     [SerializeField] private Button upgradeBtn;
     [SerializeField] private UnitClass upgradeUnit;
@@ -31,7 +31,7 @@ public class UpgradeUnitNode : MonoBehaviour
     {
         Init();
 
-        Debug.Log(classObj[0]);
+
     }
 
     // Update is called once per frame
@@ -39,16 +39,13 @@ public class UpgradeUnitNode : MonoBehaviour
 
     void Init()
     {
-        className = this.gameObject.name;
-        for(int ii = 0; ii< classObj.Length; ii++)
-        {
-            if(classObj[ii] == null)
-                classObj[ii] = this.transform.GetChild(ii).gameObject;
-
-        }
-
 
         UpgradeUnitInit();
+
+        Debug.Log(classObj.Length);
+
+
+
 
 
 
@@ -82,7 +79,18 @@ public class UpgradeUnitNode : MonoBehaviour
 
         }
 
+        if ((int)upgradeUnit < (int)UnitClass.Magician)
+            classObj = new GameObject[(int)Define.UnitUILv.Count];
+        else 
+            classObj = new GameObject[(int)Define.UnitUILv.One];
 
+
+        for (int ii = 0; ii < classObj.Length; ii++)
+        {
+            if (classObj[ii] == null)
+                classObj[ii] = this.transform.GetChild(ii).gameObject;
+
+        }
 
         RefreshUnitImg(unitLv);
     }
@@ -115,6 +123,15 @@ public class UpgradeUnitNode : MonoBehaviour
 
                     break;
                 }
+
+            case (int)UnitClass.Magician:
+                {
+                    Managers.UI.ShowPopUp<UI_UnitUpgradePopUp>().GetUnitIndex(unitIdx);
+
+                    Debug.Log($"법사 업그판넬 온!{unitIdx}");
+
+                    break;
+                }
         }
 
 
@@ -124,25 +141,26 @@ public class UpgradeUnitNode : MonoBehaviour
 
     public void RefreshUnitImg(int unitLv)
     {
-
-        if (unitLv < 5)
+        if(upgradeUnit < UnitClass.Magician)
         {
-            classObj[(int)Define.UnitUILv.One].SetActive(true);
-            classObj[(int)Define.UnitUILv.Two].SetActive(false);
-            classObj[(int)Define.UnitUILv.Three].SetActive(false);
+            if (unitLv < 5)
+            {
+                classObj[(int)Define.UnitUILv.One].SetActive(true);
+                classObj[(int)Define.UnitUILv.Two].SetActive(false);
+                classObj[(int)Define.UnitUILv.Three].SetActive(false);
 
+            }
+
+            else
+            {
+
+                classObj[(int)Define.UnitUILv.Two].SetActive(true);
+                classObj[(int)Define.UnitUILv.One].SetActive(false);
+                classObj[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
         }
 
-        else
-        {
-            Debug.Log(classObj[0]);
-            Debug.Log(classObj[1]);
-
-            classObj[(int)Define.UnitUILv.Two].SetActive(true);
-            classObj[(int)Define.UnitUILv.One].SetActive(false);
-            classObj[(int)Define.UnitUILv.Three].SetActive(false);
-
-        }
 
         
         lvText.text = $"Lv{unitLv}";
