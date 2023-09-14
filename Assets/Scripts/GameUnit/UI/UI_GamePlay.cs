@@ -34,8 +34,19 @@ public class UI_GamePlay : UI_Base
     [SerializeField]
     Image coolImg;
     [SerializeField] Image fadeImg;
+
+
+    //---------Camera Move-----------------------------
     [SerializeField] Button leftCameraMoveBtn;
     [SerializeField] Button rightCameraMoveBtn;
+    Image leftCameraMoveImg;
+    Image rightCameraMoveImg;
+    byte clickOnMoveColorAlpha = 255;
+    byte clickOffMoveColorAlpha = 100;
+    Color clickOnMoveColor;
+    Color clickOffMoveColor;
+
+    //---------Camera Move-----------------------------
 
 
     //----------Game SkillSet---------------------
@@ -54,11 +65,17 @@ public class UI_GamePlay : UI_Base
 
 
     bool fadeCheck = true;
-    float uiAttBtnBeforePosY = -450.0f;
+
+    //----------DOTween MovePos--------------
+    float uiAttBtnBeforePosY = -580.0f;
     float uiAttBtnAfterPosY = -280.0f;
+
+    float uiSkillBtnBeforePosY = -435.0f;
+    float uiSkillBtnAfterPosY = -150.0f;
 
     float uiCostBeforePosY = -130.0f;
     float uiCostAfterPosY = 70.0f;
+    //----------DOTween MoveSetting--------------
 
 
 
@@ -135,6 +152,7 @@ public class UI_GamePlay : UI_Base
 
         ButtonEvent(skillBtn.gameObject, UpdateSkillCoolTimeSet, UIEvent.PointerDown);
 
+        CameraMoveColorInit();
 
         if (GlobalData.g_CurPlayerEquipSkill == Define.PlayerSkill.Count)   //스킬이 장착되어있지않다면 스킬을 꺼주고
             skillBtn.gameObject.SetActive(false);
@@ -209,8 +227,13 @@ public class UI_GamePlay : UI_Base
         if (rt != null)
         {
             UiMove(rt, uiAttBtnBeforePosY, uiAttBtnAfterPosY);
-            yield return wfs;
+        }
 
+        skillBtn.TryGetComponent(out rt);
+        if(rt != null)
+        {
+            UiMove(rt, uiSkillBtnBeforePosY, uiSkillBtnAfterPosY);
+            yield return wfs;
         }
 
         for (int ii = 0; ii < uiUnit.Length; ii++)
@@ -320,6 +343,19 @@ public class UI_GamePlay : UI_Base
     }
 
 
+    void CameraMoveColorInit()
+    {
+        clickOnMoveColor = new Color32(255, 255, 255, clickOnMoveColorAlpha);
+        clickOffMoveColor = new Color32(255, 255, 255, clickOffMoveColorAlpha);
+
+        if (leftCameraMoveBtn != null)
+            leftCameraMoveBtn.TryGetComponent(out leftCameraMoveImg);
+
+        if (rightCameraMoveBtn != null)
+            rightCameraMoveBtn.TryGetComponent(out rightCameraMoveImg);
+    }
+
+
     void FadeOut()
     {
         if (fadeCheck)
@@ -349,19 +385,26 @@ public class UI_GamePlay : UI_Base
     void LeftBtnOn()
     {
         leftBtnCheck = true;
+        leftCameraMoveImg.color = clickOnMoveColor;
     }
     void LeftBtnOff()
     {
         leftBtnCheck = false;
+        leftCameraMoveImg.color = clickOffMoveColor;
+
     }
 
     void RightBtnOn()
     {
         rightBtnCheck = true;
+        rightCameraMoveImg.color = clickOnMoveColor;
+
     }
     void RightBtnOff()
     {
         rightBtnCheck = false;
+        rightCameraMoveImg.color = clickOffMoveColor;
+
     }
 
 
