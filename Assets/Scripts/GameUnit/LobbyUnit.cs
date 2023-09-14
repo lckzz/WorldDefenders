@@ -4,39 +4,55 @@ using UnityEngine;
 
 public class LobbyUnit : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer sprend;
+    [SerializeField] private GameObject lobbyObj;
     [SerializeField] private UnitClass e_UnitClass = UnitClass.Count;
-
+    private GameObject unitPrefab;
 
     public UnitClass E_UniClass { get { return e_UnitClass; } set { e_UnitClass = value; } }
     // Start is called before the first frame update
 
+    string[] warriorStr = { "WarriorUnitLv1", "WarriorUnitLv2", "WarriorUnitLv3" };
+    string[] archerStr = { "ArcherUnitLv1", "ArcherUnitLv2", "ArcherUnitLv3" };
+    string[] spearStr = { "SpearUnitLv1", "SpearUnitLv2", "SpearUnitLv3" };
+    string magicianStr = "MagicianUnit";
+
 
     public void RefreshUnitSet()
     {
+        if(this.gameObject.transform.childCount > 0)    //갱신해줄때마다 기존의 게임오브젝트들은 삭제해주고 재생성
+        {
+            for(int ii = 0; ii < gameObject.transform.childCount; ii++)
+            {
+                Transform goTr = gameObject.transform.GetChild(ii);
+
+                Destroy(goTr.gameObject);
+            }
+        }
+
+
         switch (e_UnitClass)
         {
             case UnitClass.Warrior:
 
-                UnitSpriteRender(e_UnitClass, GlobalData.g_UnitWarriorLv, "KnifeUnitLv1Img", "KnifeUnitLv2Img");
+                UnitSpriteRender(e_UnitClass, GlobalData.g_UnitWarriorLv, warriorStr[0], warriorStr[1]);
                 break;
 
             case UnitClass.Archer:
                 Debug.Log($"아처 갱신! {e_UnitClass}");
-                UnitSpriteRender(e_UnitClass, GlobalData.g_UnitArcherLv, "BowUnitLv1Img", "BowUnitLv2Img");
+                UnitSpriteRender(e_UnitClass, GlobalData.g_UnitArcherLv, archerStr[0], archerStr[1]);
 
                 break;
 
             case UnitClass.Spear:
                 Debug.Log($"창병 갱신! {e_UnitClass}");
-                UnitSpriteRender(e_UnitClass, GlobalData.g_UnitSpearLv, "SpearUnitLv1Img", "SpearUnitLv2Img");
+                UnitSpriteRender(e_UnitClass, GlobalData.g_UnitSpearLv, spearStr[0], spearStr[1]);
 
                 break;
 
 
             case UnitClass.Magician:
                 Debug.Log($"마법사 갱신! {e_UnitClass}");
-                UnitSpriteRender(e_UnitClass, "Magician_Idle");
+                UnitSpriteRender(e_UnitClass, magicianStr);
 
                 break;
             default:
@@ -57,23 +73,23 @@ public class LobbyUnit : MonoBehaviour
             case UnitClass.Warrior:
                 if (unitLv < 5)
                 {
-                    sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Warrior/Lv1/{pathLv1}");
+                    unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Warrior/{pathLv1}",this.gameObject.transform);
                 }
                 else
                 {
-                    sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Warrior/Lv2/{pathLv2}");
+                    unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Warrior/{pathLv2}", this.gameObject.transform);
                 }
                 break;
             case UnitClass.Archer:
                 if (unitLv < 5)
                 {
-                    sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Archer/Lv1/{pathLv1}");
+                    unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Archer/{pathLv1}", this.gameObject.transform);
 
 
                 }
                 else
                 {
-                    sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Archer/Lv2/{pathLv2}");
+                    unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Archer/{pathLv2}", this.gameObject.transform);
 
 
                 }
@@ -81,13 +97,13 @@ public class LobbyUnit : MonoBehaviour
             case UnitClass.Spear:
                 if (unitLv < 5)
                 {
-                    sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Spear/Lv1/{pathLv1}");
+                    unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Spear/{pathLv1}", this.gameObject.transform);
 
 
                 }
                 else
                 {
-                    sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Spear/Lv2/{pathLv2}");
+                    unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Spear/{pathLv2}", this.gameObject.transform);
 
 
                 }
@@ -101,7 +117,7 @@ public class LobbyUnit : MonoBehaviour
         switch (uniClass)
         {
             case UnitClass.Magician:
-                sprend.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Magician/{path}");
+                unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Magician/{path}", this.gameObject.transform);
                 break;
 
 

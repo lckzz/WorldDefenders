@@ -16,8 +16,8 @@ public class GlobalData
 
     //----------플레이어의 스킬 레벨-------------
     public static int g_SkillHealLv = 1;
-    public static int g_SkillFireArrowLv = 0;
-    public static int g_SkillWeaknessLv = 0;
+    public static int g_SkillFireArrowLv = 1;
+    public static int g_SkillWeaknessLv = 1;
 
     //----------플레이어의 스킬 레벨-------------
 
