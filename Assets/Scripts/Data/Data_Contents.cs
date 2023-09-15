@@ -46,6 +46,8 @@ public class UnitStat
     public float attackRange;
     public int cost;
     public int price;
+    public string attackDesc;
+    public string desc;
 }
 
 
