@@ -38,6 +38,16 @@ public class MeteroSkill : ActiveSkill
 
     }
 
+    public override void SkillDataSetting(int id)
+    {
+        if (Managers.Data.magicSkillDict.TryGetValue(id, out SkillData data) == false)
+        {
+            Debug.LogError("ProjecteController SetInfo Failed");
+            return;
+        }
+
+        SkillData = data;
+    }
 
     void GenerateMeteor(int unitLv, Unit owner, Unit enemy, Vector3 spawnPos)
     {

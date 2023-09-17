@@ -13,6 +13,11 @@ public class SpecialUnitController : Unit
 
     protected bool isSkil = false;
     [SerializeField] protected bool skillOn = false;     //스킬 발동판단
+    [SerializeField] protected GameObject speechBubbleObj;           //말풍선
+    [SerializeField] protected SpeechBubbleCtrl speechBBCtrl;
+    [SerializeField] protected string[] skilldialogs;
+    protected int randomIdx;
+    protected int dialogCount = 2;
 
     protected Unit[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
     [SerializeField] protected Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
@@ -37,6 +42,13 @@ public class SpecialUnitController : Unit
         base.Init();
         spawnPosX = -9.2f;
 
+
+        GameObject canvas = this.gameObject.transform.Find("Canvas").gameObject;
+        if (canvas != null)
+        {
+            speechBubbleObj = canvas.gameObject.transform.Find("SpeechBubble").gameObject;
+            speechBubbleObj.TryGetComponent(out speechBBCtrl);
+        }
         //rig = this.GetComponent<Rigidbody2D>();
         //anim = GetComponent<Animator>();
         monsterPortal = GameObject.FindObjectOfType<MonsterPortal>();

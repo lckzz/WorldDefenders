@@ -49,7 +49,16 @@ public class MagicianController : SpecialUnitController
 
         magicPos = transform.Find("MagicPos");
         Skills.AddSkill<MeteroSkill>();
+        skilldialogs = new string[dialogCount];
+        for (int ii = 0; ii < dialogCount; ii++)
+        {
+            if (ii == 0)
+                skilldialogs[ii] = Skills.GetSkill<MeteroSkill>().SkillData.skillDialog1;
+            else if (ii == 1)
+                skilldialogs[ii] = Skills.GetSkill<MeteroSkill>().SkillData.skillDialog2;
 
+
+        }
 
     }
 
@@ -118,8 +127,26 @@ public class MagicianController : SpecialUnitController
             {
                 Debug.Log("발싸");
                 Skills.activeSkillList[0].UseSkill(this, skillMonList);     //스킬 사용
-
+                SpeechchBubbleOn();
             }
         }
+    }
+
+
+    public void SpeechchBubbleOn()
+    {
+
+        if (speechBubbleObj.activeSelf == false)
+            speechBubbleObj.SetActive(true);
+
+
+        if (speechBubbleObj.activeSelf == true && speechBBCtrl != null)
+        {
+            randomIdx = Random.Range(0, 2);
+
+
+            speechBBCtrl.GetSpeechString(skilldialogs[randomIdx]);
+        }
+
     }
 }

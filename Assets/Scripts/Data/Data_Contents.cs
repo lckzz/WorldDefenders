@@ -39,6 +39,7 @@ public class TowerData : ILoader<int, TowerStat>
 public class UnitStat
 {
     public int level;
+    public string name;
     public int hp;
     public int att;
     public int knockBackForce;

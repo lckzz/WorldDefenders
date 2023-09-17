@@ -19,13 +19,17 @@ public class EliteMonsterController : Unit
     [SerializeField]
     PlayerTower playerTowerCtrl;
     protected List<Unit> skillenemyList = new List<Unit>();
-
+    [SerializeField] protected GameObject speechBubbleObj;           //¸»Ç³¼±
+    [SerializeField] protected SpeechBubbleCtrl speechBBCtrl;
+    [SerializeField]  protected string[] skilldialogs;
+    protected int randomIdx;
+    protected int dialogCount = 2;
 
 
     protected MonsterStat monStat;
 
     protected float coolTime = 20.0f;
-
+    
 
     public float Hp { get { return hp; } }
 
@@ -41,6 +45,13 @@ public class EliteMonsterController : Unit
     public override void Init()
     {
         base.Init();
+
+        GameObject canvas = this.gameObject.transform.Find("Canvas").gameObject;
+        if(canvas != null)
+        {
+            speechBubbleObj = canvas.gameObject.transform.Find("SpeechBubble").gameObject;
+            speechBubbleObj.TryGetComponent(out speechBBCtrl);
+        }
 
         spawnPosX = 20.0f;
 
@@ -58,10 +69,12 @@ public class EliteMonsterController : Unit
 
 
     // Start is called before the first frame update
-    void Start()
-    {
-        Init();
-    }
+    //void Start()
+    //{
+    //    Debug.Log("asdas");
+    //    Init();
+
+    //}
 
     // Update is called once per frame
     //void Update()
@@ -822,6 +835,8 @@ public class EliteMonsterController : Unit
 
         }
     }
+
+
 
     IEnumerator UnitSKillCoolTime(float coolTime)
     {

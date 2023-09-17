@@ -32,7 +32,17 @@ public class EliteWarriorController : EliteMonsterController
 
         swordPos = transform.Find("SwordPos");
         Skills.AddSkill<SwordDanceSkill>();
+        skilldialogs = new string[dialogCount];
+        for (int ii = 0; ii < dialogCount; ii++)
+        {
+            if (ii == 0)
+                skilldialogs[ii] = Skills.GetSkill<SwordDanceSkill>().SkillData.skillDialog1;
+            else if (ii == 1)
+                skilldialogs[ii] = Skills.GetSkill<SwordDanceSkill>().SkillData.skillDialog2;
 
+
+        }
+      
     }
 
 
@@ -40,6 +50,8 @@ public class EliteWarriorController : EliteMonsterController
     void Start()
     {
         Init();
+        Debug.Log(speechBubbleObj);
+
 
     }
 
@@ -81,8 +93,26 @@ public class EliteWarriorController : EliteMonsterController
             {
                 Debug.Log("발싸");
                 Skills.activeSkillList[0].UseSkill(this, skillenemyList);     //스킬 사용
-
+                SpeechchBubbleOn();
             }
         }
+    }
+
+
+    public void SpeechchBubbleOn()
+    {
+
+        if (speechBubbleObj.activeSelf == false)
+            speechBubbleObj.SetActive(true);
+
+
+        if (speechBubbleObj.activeSelf == true && speechBBCtrl != null)
+        {
+            randomIdx = Random.Range(0, 2);
+
+
+            speechBBCtrl.GetSpeechString(skilldialogs[randomIdx]);
+        }
+            
     }
 }

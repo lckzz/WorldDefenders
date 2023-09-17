@@ -41,7 +41,7 @@ public class UI_UnitSettingWindow : UI_Base
 
 
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
         UiInit();
         UI_UnitSetInit();
@@ -154,6 +154,10 @@ public class UI_UnitSettingWindow : UI_Base
         if(Input.GetMouseButtonDown(0))
         {
 
+            if (Managers.UI.PeekPopupUI<UI_UnitInfoSelectPopUp>() != null)
+                return;
+
+
             unitSlotUI = UiRaycastGetFirstComponent<UnitSlotUI>(gr);
             unitNodeUI = UiRaycastGetFirstComponent<UnitNodeUI>(gr);
 
@@ -167,9 +171,6 @@ public class UI_UnitSettingWindow : UI_Base
                 //유닛배치슬롯을 클릭했을 때
                 if (nodeUiClick)     //슬롯을 클릭했을때 그전에 노드를 클릭했다면
                 {
-
-                    for (int ii = 0; ii < unitSlotUiList.Count; ii++)
-                        Debug.Log(unitSlotUiList[ii].E_UnitClass);
                     LoopEqualUnitSearch(unitSlotUI.SlotIdx);
                     nodeUiClick = false;        //노드클릭은 꺼줌
                     curUnitNodeUI.ClickImageOnOff(nodeUiClick);
@@ -177,7 +178,7 @@ public class UI_UnitSettingWindow : UI_Base
                 }
                 else
                 {
-                    if(!slotUiClick)
+                    if(!slotUiClick)  //슬롯을 클릭하지않았을때 (슬롯끼리 자리바꾸기)
                     {
 
                         curUnitSlotUI = unitSlotUI;  //선택한슬롯을 현재 가지고있는 슬롯에 넣어주고
@@ -188,7 +189,7 @@ public class UI_UnitSettingWindow : UI_Base
 
                         }
                     }
-                    else
+                    else  //슬롯을 클릭했을때 (슬롯끼리 자리바꾸기)
                     {
                         SwitchingSlotToSlot(curUnitSlotUI.SlotIdx,unitSlotUI.SlotIdx);
                         slotUiClick = false;
@@ -213,10 +214,10 @@ public class UI_UnitSettingWindow : UI_Base
 
 
                 nodeUiClick = true;
-                unitMaskObj.SetActive(true);
+                //unitMaskObj.SetActive(true);
                 curUnitNodeUI = unitNodeUI;     //현재 클릭한 유닛노드에 넣어주고
                 curUnitNodeUI.ClickImageOnOff(nodeUiClick);
-                
+                Managers.UI.ShowPopUp<UI_UnitInfoSelectPopUp>().PopUpOpenUnitInfoSetting(curUnitNodeUI.E_UnitClass,curUnitNodeUI);
 
 
             }
@@ -421,6 +422,14 @@ public class UI_UnitSettingWindow : UI_Base
         return rrList[0].gameObject.GetComponent<T>();
     }
 
+
+    public void MaskObjectOnOff(bool check)
+    {
+        if(unitMaskObj != null)
+        {
+            unitMaskObj.SetActive(check);
+        }
+    }
 
     public void BackFadeIn(Image fadeImg, UI_Base closePopup, bool fadeCheck)
     {

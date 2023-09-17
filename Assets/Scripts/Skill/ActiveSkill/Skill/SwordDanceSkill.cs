@@ -21,8 +21,20 @@ public class SwordDanceSkill : ActiveSkill
         //throw new System.NotImplementedException();
     }
 
+    public override void SkillDataSetting(int id)
+    {
+        if (Managers.Data.eliteWarriorSkillDict.TryGetValue(id, out SkillData data) == false)
+        {
+            Debug.LogError("ProjecteController SetInfo Failed");
+            return;
+        }
+
+        SkillData = data;
+    }
+
     void Generate(int id, Unit owner, List<Unit> enemy,Vector3 spawnPos)
     {
+        
         ///검기 한개
         if (Managers.Data.eliteWarriorSkillDict.TryGetValue(id, out SkillData data) == false)
         {

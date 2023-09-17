@@ -17,7 +17,7 @@ public class UI_Base : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    public virtual void Start()
     {
         Init();
     }

@@ -17,6 +17,7 @@ public class SkillBook : MonoBehaviour
         {
             skillPrefab.TryGetComponent(out MeteroSkill mk);
             activeSkillList.Add(mk);
+            activeSkillList[0].SkillDataSetting(GlobalData.g_UnitMagicianLv);
 
             return mk as T;
         }
@@ -24,6 +25,8 @@ public class SkillBook : MonoBehaviour
         {
             skillPrefab.TryGetComponent(out SwordDanceSkill sk);
             activeSkillList.Add(sk);
+            activeSkillList[0].SkillDataSetting(GlobalData.g_EliteWarriorID);
+
 
             return sk as T;
         }
@@ -31,4 +34,20 @@ public class SkillBook : MonoBehaviour
         return null;
     }
 
+
+    public T GetSkill<T>() where T : SkillBase
+    {
+        if(activeSkillList.Count > 0)
+        {
+            return activeSkillList[0] as T;
+
+        }
+        if (passiveSkillList.Count > 0)
+        {
+            return passiveSkillList[0] as T;
+
+        }
+
+        return null;
+    }
 }

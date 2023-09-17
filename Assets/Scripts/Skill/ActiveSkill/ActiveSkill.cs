@@ -18,6 +18,7 @@ public abstract class ActiveSkill : SkillBase
         return true;
     }
 
+    public abstract void SkillDataSetting(int id);
 
 
 

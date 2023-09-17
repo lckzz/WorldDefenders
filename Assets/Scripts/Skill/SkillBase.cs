@@ -9,7 +9,6 @@ public class SkillBase : MonoBehaviour
 
     public SkillData SkillData { get; protected set; }
 
-
     public SkillBase(Define.SkillType skillType)
     {
         SkillType = skillType;
@@ -57,6 +56,8 @@ public class SkillBase : MonoBehaviour
             _coDestroy = null;
         }
     }
+
+
 
     IEnumerator CoDestroy(float delaySeconds)
     {
