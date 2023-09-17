@@ -28,9 +28,9 @@ public class DataManager
     public Dictionary<int, SkillData> magicSkillDict { get; private set; } = new Dictionary<int, SkillData>();
     public Dictionary<int, SkillData> eliteWarriorSkillDict { get; private set; } = new Dictionary<int, SkillData>();
 
-    public Dictionary<int, PlayerSkillData> healSkillDict { get; private set; } = new Dictionary<int, PlayerSkillData>();
-    public Dictionary<int, PlayerSkillData> fireArrowSkillDict { get; private set; } = new Dictionary<int, PlayerSkillData>();
-    public Dictionary<int, PlayerSkillData> weaknessSkillDict { get; private set; } = new Dictionary<int, PlayerSkillData>();
+    public Dictionary<int, SkillData> healSkillDict { get; private set; } = new Dictionary<int, SkillData>();
+    public Dictionary<int, SkillData> fireArrowSkillDict { get; private set; } = new Dictionary<int, SkillData>();
+    public Dictionary<int, SkillData> weaknessSkillDict { get; private set; } = new Dictionary<int, SkillData>();
 
 
     public void Init()
@@ -45,9 +45,9 @@ public class DataManager
         magicSkillDict = LoadJson<MagicianSkillData, int, SkillData>("SkillData").MakeDict();
         eliteWarriorSkillDict = LoadJson<EliteWarriorSkillData, int, SkillData>("SkillData").MakeDict();
 
-        healSkillDict = LoadJson<HealSkillData, int, PlayerSkillData>("PlayerSkillData").MakeDict();
-        fireArrowSkillDict = LoadJson<FireArrowSkillData, int, PlayerSkillData>("PlayerSkillData").MakeDict();
-        weaknessSkillDict = LoadJson<WeaknessSkillData, int, PlayerSkillData>("PlayerSkillData").MakeDict();
+        healSkillDict = LoadJson<HealSkillData, int, SkillData>("SkillData").MakeDict();
+        fireArrowSkillDict = LoadJson<FireArrowSkillData, int, SkillData>("SkillData").MakeDict();
+        weaknessSkillDict = LoadJson<WeaknessSkillData, int, SkillData>("SkillData").MakeDict();
 
     }
     Loader LoadJson<Loader,Key,Value>(string path) where Loader : ILoader<Key,Value>

@@ -40,6 +40,18 @@ public class PlayerController : MonoBehaviour
     private bool lineSet = false;
 
 
+    //FireArrowSKill
+    private GameObject playerSkillFeverObj;
+    private bool skillOn = false;
+    private float durationTime = 0.0f;
+    private Define.PlayerArrowType playerArrow = Define.PlayerArrowType.Normal;
+    public Define.PlayerArrowType PlayerArrow { get { return playerArrow; } set { playerArrow = value; } }
+
+    public float DurationTime { get { return durationTime; } }
+    public SkillData SkillData { get; set; }
+    //FireArrowSKill
+
+
     public int Att { get { return att; } }
     public float AttackTimer { get { return attackTimer; } }
 
@@ -56,6 +68,7 @@ public class PlayerController : MonoBehaviour
         TryGetComponent<LineRenderer>(out lr);
         playerAimTr = this.transform.GetChild(0).transform;
         attackPosTr = this.transform.GetChild(1).transform;
+        playerSkillFeverObj = this.transform.Find("PlayerSkillFever").gameObject;
 
         startPlayerAimTr = playerAimTr.position;
         lr.startWidth = .1f;
@@ -69,6 +82,7 @@ public class PlayerController : MonoBehaviour
         PlayerAimMove();
         AttackCoolTimer();
         AimLine();
+        SkillDuration();
     }
 
 
@@ -120,6 +134,24 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void ArrowInfo(ref Vector3 Vecdir)
+    {
+
+        Vecdir = dir;
+    }
+
+    public float PercentCoolTime()
+    {
+        return attackTimer / attackMaxTimer;
+    }
+
+    public void SkillOnOffPlayerFever(bool check)
+    {
+        if (playerSkillFeverObj != null)
+            playerSkillFeverObj.SetActive(check);
+    }
+
+
     void PlayerIdle()
     {
 
@@ -167,12 +199,24 @@ public class PlayerController : MonoBehaviour
     {
         attack = false;
         attackTimer = 1.5f;
+        GameObject go;
+        if (playerArrow == Define.PlayerArrowType.Normal)
+        {
+            go = Resources.Load<GameObject>("Prefabs/Weapon/PlayerArrow");
+        }
 
-        GameObject go = Resources.Load<GameObject>("Prefabs/Weapon/PlayerArrow");
+        else
+        {
+            go = Resources.Load<GameObject>("Prefabs/Weapon/FireArrow");
+
+        }
+
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         angle += 180.0f;
         go.transform.eulerAngles = new Vector3(.0f, 0.0f, angle);
-        Instantiate(go, attackPosTr.position,go.transform.rotation);
+        Instantiate(go, attackPosTr.position, go.transform.rotation);
+
+
     }
 
 
@@ -214,14 +258,41 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void ArrowInfo(ref Vector3 Vecdir)
+    void SkillDuration()
     {
-       
-        Vecdir = dir;
+        if(playerSkillFeverObj.activeSelf == true)
+        {
+            //이 오브젝트가 켜지면 스킬이 써졌다는것
+            if(skillOn == false)
+            {
+                skillOn = true;
+                durationTime = SkillData.skillValue;
+                StartCoroutine(DurationSkillTime());
+            }
+
+        }
     }
 
-    public float PercentCoolTime()
+
+    IEnumerator DurationSkillTime()
     {
-        return attackTimer / attackMaxTimer;
+        while(true)
+        {
+            durationTime -= Time.deltaTime;
+
+
+            if(durationTime <= 0.0f)
+            {
+                skillOn = false;
+                playerSkillFeverObj.SetActive(false);
+                playerArrow = Define.PlayerArrowType.Normal;
+                yield break;
+            }
+
+
+            yield return null;
+        }
     }
+
+
 }

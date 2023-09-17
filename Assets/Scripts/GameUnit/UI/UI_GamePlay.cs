@@ -31,6 +31,7 @@ public class UI_GamePlay : UI_Base
     [SerializeField]
     TextMeshProUGUI unitCostTxt;
     PlayerController player;
+    Tower playerTower;
     [SerializeField]
     Image coolImg;
     [SerializeField] Image fadeImg;
@@ -55,10 +56,17 @@ public class UI_GamePlay : UI_Base
     [SerializeField] Image skillImg;
     [SerializeField] Image skillCoolImg;
     [SerializeField] Sprite[] skillsprites;
-    PlayerSkillData skillData;
+    SkillData skillData;
     bool skillOnOff = false;
     float skillCoolTime = .0f;
     float skillCool = .0f;
+
+
+    [SerializeField] private GameObject skillDurationObj;
+    [SerializeField] private Image skillDurationImg;
+    [SerializeField] private Image skillDurationTimeImg;
+    [SerializeField] private TextMeshProUGUI skillDurationTimeTxt;
+    private float durationTime;
     //----------Game SkillSet---------------------
 
 
@@ -93,6 +101,7 @@ public class UI_GamePlay : UI_Base
     [SerializeField] private Vector3[] unitNodePos;
     Vector3 unitNodeStartPos = new Vector3(105.0f, -260.0f, .0f);
 
+    public SkillBook Skills { get; protected set; }
 
 
     public static Queue<GameObject> gameQueue = new Queue<GameObject>();
@@ -141,6 +150,9 @@ public class UI_GamePlay : UI_Base
         }
 
         GameObject.Find("Player").TryGetComponent<PlayerController>(out player);
+        player.transform.parent.gameObject.TryGetComponent(out playerTower);
+
+
         ButtonEvent(uiAttackBtn.gameObject, player.AttackWait, UIEvent.PointerDown);
         ButtonEvent(uiAttackBtn.gameObject, player.ShotArrow, UIEvent.PointerUp);
 
@@ -153,6 +165,9 @@ public class UI_GamePlay : UI_Base
         ButtonEvent(skillBtn.gameObject, UpdateSkillCoolTimeSet, UIEvent.PointerDown);
 
         CameraMoveColorInit();
+
+        Skills = player.GetComponent<SkillBook>();
+
 
         if (GlobalData.g_CurPlayerEquipSkill == Define.PlayerSkill.Count)   //스킬이 장착되어있지않다면 스킬을 꺼주고
             skillBtn.gameObject.SetActive(false);
@@ -277,20 +292,25 @@ public class UI_GamePlay : UI_Base
         }
         skillImg.sprite = skillsprites[(int)GlobalData.g_CurPlayerEquipSkill];
 
-        skillData = new PlayerSkillData();
+        skillData = new SkillData();
 
         switch(GlobalData.g_CurPlayerEquipSkill)
         {
             case Define.PlayerSkill.Heal:
                 skillData = Managers.Data.healSkillDict[(int)GlobalData.g_SkillHealLv];
+                Skills.AddSkill<TowerHealSkill>();
                 break;
 
             case Define.PlayerSkill.FireArrow:
                 skillData = Managers.Data.fireArrowSkillDict[(int)GlobalData.g_SkillFireArrowLv];
+                Skills.AddSkill<FireArrowSkill>();
+
                 break;
 
             case Define.PlayerSkill.Weakness:
                 skillData = Managers.Data.weaknessSkillDict[(int)GlobalData.g_SkillWeaknessLv];
+                Skills.AddSkill<TowerHealSkill>();
+
                 break;
 
 
@@ -413,13 +433,66 @@ public class UI_GamePlay : UI_Base
         if (skillOnOff)
             return;
         //스킬을 누르면 장착된 스킬이 나가게 할것 (스킬북을 통해서)
+        if (Skills.activeSkillList.Count > 0)
+        {
+            Debug.Log("플레이어 스킬");
+            switch(GlobalData.g_CurPlayerEquipSkill)
+            {
+                case Define.PlayerSkill.Heal:
+                    Skills.activeSkillList[0].UseSkill(playerTower);     //스킬 사용
+                    break;
+
+                case Define.PlayerSkill.FireArrow:
+
+                    Skills.activeSkillList[0].UseSkill(player);     //스킬 사용
+                    break;
+
+                case Define.PlayerSkill.Weakness:
+
+                    break;
+            }
+            
+        }
         //스킬을 누르면 해당 스킬의 쿨타임을 받고
         skillCoolTime = skillData.skillCoolTime;
         skillOnOff = true; //스킬이 나가서 쿨타임 시작
         skillCoolImg.gameObject.SetActive(skillOnOff);
 
+        if(GlobalData.g_CurPlayerEquipSkill == Define.PlayerSkill.FireArrow || GlobalData.g_CurPlayerEquipSkill == Define.PlayerSkill.Weakness)
+        {
+            skillDurationObj.SetActive(true);
+            skillDurationImg.sprite = skillsprites[(int)GlobalData.g_CurPlayerEquipSkill];
+            StartCoroutine(SkillDurationTime());
+        }
+
+
     }
 
+    IEnumerator SkillDurationTime()
+    {
+        float duration = 0.0f;
+        while(true)
+        {
+            skillDurationTimeTxt.text = ((int)player.DurationTime).ToString();
+            duration = durationTime / skillData.skillValue;
+            Debug.Log(duration);
+            durationTime += Time.deltaTime;
+
+            if (skillDurationTimeImg?.fillAmount < duration)
+                skillDurationTimeImg.fillAmount += Time.deltaTime * 1.0f;
+
+
+            if (duration >= .99f)
+            {
+                skillDurationTimeImg.fillAmount = 1;
+                durationTime = 0.0f;
+                skillDurationObj.SetActive(false);
+                yield break;
+            }
+
+            yield return null;
+        }
+    }
 
     void UpdateSkill()
     {

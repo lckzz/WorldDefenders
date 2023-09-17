@@ -31,6 +31,10 @@ public class TowerUI : UnitUI
             if (hpbar.fillAmount > hp)
                 hpbar.fillAmount -= Time.deltaTime * hpspeed;
 
+            if(hpbar.fillAmount <= hp)
+                hpbar.fillAmount += Time.deltaTime * hpspeed;
+
+
         }
     }
 }

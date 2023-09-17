@@ -10,7 +10,8 @@ public class PlayerArrowCtrl : MonoBehaviour
     private bool arrowHit = false;
     private Animator anim;
     private Collider2D col;
-
+    private Define.PlayerArrowType arrowType;
+    private GameObject fire;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +20,15 @@ public class PlayerArrowCtrl : MonoBehaviour
         player.ArrowInfo(ref dir);
         TryGetComponent<Animator>(out anim);
         TryGetComponent<Collider2D>(out col);
+
+        if (this.gameObject.name.Contains("FireArrow"))
+        {
+            arrowType = Define.PlayerArrowType.Fire;
+            fire = this.gameObject.transform.GetChild(0).gameObject;
+        }
+
+        else
+            arrowType = Define.PlayerArrowType.Normal;
 
 
     }
@@ -46,8 +56,17 @@ public class PlayerArrowCtrl : MonoBehaviour
 
             Unit monctrl = null;
             coll.TryGetComponent<Unit>(out monctrl);
-            if (monctrl != null)
-                monctrl.OnDamage(player.Att);
+            if (arrowType == Define.PlayerArrowType.Fire)
+            {
+                if (monctrl != null)
+                    monctrl.OnDamage(player.Att * 2);
+            }
+            else
+            {
+                if (monctrl != null)
+                    monctrl.OnDamage(player.Att);
+            }
+
 
             Managers.Resource.ResourceEffectAndSound(monctrl.transform.position, "ArrowHit", "HitEff");
 
@@ -57,15 +76,20 @@ public class PlayerArrowCtrl : MonoBehaviour
         {
             if(!arrowHit)
             {
-                anim.SetTrigger("Hit");
 
+                anim.SetTrigger("Hit");
                 arrowHit = true;
                 col.enabled = false;
-
+                if (arrowType == Define.PlayerArrowType.Fire)
+                    fire.SetActive(false);
+                
 
                 Destroy(this.gameObject, 2.0f);
             }
 
         }
     }
+
+
+
 }

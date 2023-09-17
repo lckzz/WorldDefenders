@@ -101,6 +101,13 @@ public class Define
         Count
     }
 
+    public enum PlayerArrowType
+    {
+        Normal,
+        Fire,
+        Count
+    }
+
 
 
 }

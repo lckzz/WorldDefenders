@@ -17,6 +17,7 @@ public enum MonsterPortalState
 
 public abstract class Tower : MonoBehaviour
 {
+    [SerializeField]
     protected float hp;
     protected float maxHp;
     protected int level;

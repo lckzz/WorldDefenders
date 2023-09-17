@@ -18,9 +18,9 @@ public class SkillNode : MonoBehaviour
     Vector3[] pos = new Vector3[(int)Define.PlayerSkill.Count];
     Color[] colors = new Color[2];
 
-    PlayerSkillData skillData;
+    SkillData skillData;
 
-    public PlayerSkillData SkillData { get { return skillData; } }
+    public SkillData SkillData { get { return skillData; } }
 
 
     // Start is called before the first frame update
@@ -34,7 +34,7 @@ public class SkillNode : MonoBehaviour
     // Update is called once per frame
     void Init()
     {
-        skillData = new PlayerSkillData();
+        skillData = new SkillData();
 
 
 

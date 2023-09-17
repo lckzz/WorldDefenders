@@ -30,6 +30,22 @@ public class SkillBook : MonoBehaviour
 
             return sk as T;
         }
+        else if(type == typeof(TowerHealSkill))
+        {
+            skillPrefab = Managers.Resource.Load<GameObject>("Prefabs/Skill/TowerHealSkill");
+            skillPrefab.TryGetComponent(out TowerHealSkill thk);
+            activeSkillList.Add(thk);
+            activeSkillList[0].SkillDataSetting(GlobalData.g_SkillHealLv);
+
+        }
+        else if (type == typeof(FireArrowSkill))
+        {
+            skillPrefab = Managers.Resource.Load<GameObject>("Prefabs/Skill/FireArrowSkill");
+            skillPrefab.TryGetComponent(out FireArrowSkill fak);
+            activeSkillList.Add(fak);
+            activeSkillList[0].SkillDataSetting(GlobalData.g_SkillFireArrowLv);
+
+        }
 
         return null;
     }

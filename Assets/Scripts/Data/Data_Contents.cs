@@ -197,7 +197,7 @@ public class SkillData
     public string name;
     public string skillImg;
     public string desc;
-    public int skillDmgPercent;  //스킬데미지는 퍼센트로 받고 유닛의 공격력 * 퍼센트형식
+    public int skillValue;  //스킬데미지는 퍼센트로 받고 유닛의 공격력 * 퍼센트형식
     public int skillTargetCount;
     public int skillCoolTime;
     public string skillPrefab;
@@ -241,27 +241,16 @@ public class EliteWarriorSkillData : ILoader<int, SkillData>
 
 
 #region 플레이어 스킬
-[Serializable]
-public class PlayerSkillData
-{
-    public int id;
-    public int level;
-    public string name;
-    public string skillImg;
-    public string desc;
-    public int skillValue;  
-    public int skillCoolTime;
-    public string skillPrefab;
-}
-[Serializable]
-public class HealSkillData : ILoader<int, PlayerSkillData>
-{
-    public List<PlayerSkillData> healSkill = new List<PlayerSkillData>();
 
-    public Dictionary<int, PlayerSkillData> MakeDict()
+[Serializable]
+public class HealSkillData : ILoader<int, SkillData>
+{
+    public List<SkillData> healSkill = new List<SkillData>();
+
+    public Dictionary<int, SkillData> MakeDict()
     {
-        Dictionary<int, PlayerSkillData> dict = new Dictionary<int, PlayerSkillData>();
-        foreach (PlayerSkillData skill in healSkill)
+        Dictionary<int, SkillData> dict = new Dictionary<int, SkillData>();
+        foreach (SkillData skill in healSkill)
             dict.Add(skill.level, skill);
 
         return dict;
@@ -269,14 +258,14 @@ public class HealSkillData : ILoader<int, PlayerSkillData>
 }
 
 [Serializable]
-public class FireArrowSkillData : ILoader<int, PlayerSkillData>
+public class FireArrowSkillData : ILoader<int, SkillData>
 {
-    public List<PlayerSkillData> fireArrowSkill = new List<PlayerSkillData>();
+    public List<SkillData> fireArrowSkill = new List<SkillData>();
 
-    public Dictionary<int, PlayerSkillData> MakeDict()
+    public Dictionary<int, SkillData> MakeDict()
     {
-        Dictionary<int, PlayerSkillData> dict = new Dictionary<int, PlayerSkillData>();
-        foreach (PlayerSkillData skill in fireArrowSkill)
+        Dictionary<int, SkillData> dict = new Dictionary<int, SkillData>();
+        foreach (SkillData skill in fireArrowSkill)
             dict.Add(skill.level, skill);
 
         return dict;
@@ -284,14 +273,14 @@ public class FireArrowSkillData : ILoader<int, PlayerSkillData>
 }
 
 [Serializable]
-public class WeaknessSkillData : ILoader<int, PlayerSkillData>
+public class WeaknessSkillData : ILoader<int, SkillData>
 {
-    public List<PlayerSkillData> weaknessSkill = new List<PlayerSkillData>();
+    public List<SkillData> weaknessSkill = new List<SkillData>();
 
-    public Dictionary<int, PlayerSkillData> MakeDict()
+    public Dictionary<int, SkillData> MakeDict()
     {
-        Dictionary<int, PlayerSkillData> dict = new Dictionary<int, PlayerSkillData>();
-        foreach (PlayerSkillData skill in weaknessSkill)
+        Dictionary<int, SkillData> dict = new Dictionary<int, SkillData>();
+        foreach (SkillData skill in weaknessSkill)
             dict.Add(skill.level, skill);
 
         return dict;

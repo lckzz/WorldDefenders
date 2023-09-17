@@ -22,8 +22,11 @@ public abstract class ActiveSkill : SkillBase
 
 
 
-    public abstract void UseSkill(Unit unit, List<Unit> enemys);     //액티브 스킬 사용
-    public abstract void UseSkill(Unit unit, Tower tower);
-  
+    public virtual void UseSkill(Unit unit, List<Unit> enemys) { }     //액티브 스킬 사용
+    public virtual void UseSkill(Unit unit, Tower tower) { }
+    public virtual void UseSkill(Tower tower) { }
+    public virtual void UseSkill(PlayerController player) { }
+
+
 
 }

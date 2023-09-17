@@ -7,7 +7,6 @@ public class PlayerTower : Tower
     [SerializeField]
     private TowerState twState = TowerState.Idle;
 
-    [SerializeField]
     private float m_hp = 500;
     private int m_level = 1;
 
@@ -23,26 +22,27 @@ public class PlayerTower : Tower
         //if(Managers.Game.State != GameState.GameFail)
         //    Managers.Game.State = GameState.GameFail;
 
-
     }
 
+    public float GetSetHp { get { return hp; } set { if (value > 0) hp = value; } }
+    public float GetMaxHp { get { return maxHp; } }
 
     public override float hpPercent()
     {
-        return m_hp / maxHp;
+        return hp / maxHp;
     }
 
     public override void TowerDamage(int att)
     {
-        if (m_hp > 0)
+        if (hp > 0)
         {
-            m_hp -= att;
+            hp -= att;
 
-            if (m_hp <= 0)
+            if (hp <= 0)
             {
                 twState = TowerState.Destroy;
                 TowerDestroy();
-                m_hp = 0;
+                hp = 0;
 
             }
         }
