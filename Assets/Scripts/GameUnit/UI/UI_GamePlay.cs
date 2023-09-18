@@ -56,6 +56,8 @@ public class UI_GamePlay : UI_Base
     [SerializeField] Image skillImg;
     [SerializeField] Image skillCoolImg;
     [SerializeField] Sprite[] skillsprites;
+    [SerializeField] GameObject skillParticleObj;
+
     SkillData skillData;
     bool skillOnOff = false;
     float skillCoolTime = .0f;

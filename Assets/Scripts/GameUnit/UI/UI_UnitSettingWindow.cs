@@ -70,7 +70,9 @@ public class UI_UnitSettingWindow : UI_Base
         ped.position = Input.mousePosition;
         OnMousePointerDown();
         OnMousePointerDownCancel();
+#if UNITY_EDITOR
         OnMousePointer();
+#endif
     }
 
 
@@ -291,8 +293,10 @@ public class UI_UnitSettingWindow : UI_Base
         if (slotUiClick)
             return;
 
+        if (Managers.UI.PeekPopupUI<UI_UnitInfoSelectPopUp>() != null)
+            return;
 
-        if(mousePointerUnitSlotUI == null)
+        if (mousePointerUnitSlotUI == null)
             mousePointerUnitSlotUI = UiRaycastGetFirstComponent<UnitSlotUI>(gr);
 
 

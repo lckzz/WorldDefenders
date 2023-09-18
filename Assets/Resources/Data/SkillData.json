@@ -8,8 +8,8 @@
       "skillTargetCount": "0",
       "skillCoolTime": "0",
       "skillPrefab": "Skill/Meteor",
-      "skillDialog1": "메테오를 받아랏!",
-      "skillDialog2": "쏟아져라!",
+      "skillDialog1": "메테오!",
+      "skillDialog2": "운석 소환!",
       "skillImg": "",
       "desc": "상급마법을 구사하여 적 최대 3마리에게 피해를 가한다."
     },
@@ -21,8 +21,8 @@
       "skillTargetCount": "3",
       "skillCoolTime": "10",
       "skillPrefab": "Skill/Meteor",
-      "skillDialog1": "메테오를 받아랏!",
-      "skillDialog2": "쏟아져라!",
+      "skillDialog1": "메테오!",
+      "skillDialog2": "운석 소환!",
       "skillImg": "",
       "desc": "상급마법을 구사하여 적 최대 3마리에게 피해를 가한다."
     },
@@ -34,8 +34,8 @@
       "skillTargetCount": "3",
       "skillCoolTime": "10",
       "skillPrefab": "Skill/Meteor",
-      "skillDialog1": "메테오를 받아랏!",
-      "skillDialog2": "쏟아져라!",
+      "skillDialog1": "메테오!",
+      "skillDialog2": "운석 소환!",
       "skillImg": "",
       "desc": "상급마법을 구사하여 적 최대 3마리에게 피해를 가한다."
     },
@@ -47,8 +47,8 @@
       "skillTargetCount": "0",
       "skillCoolTime": "0",
       "skillPrefab": "Skill/Meteor",
-      "skillDialog1": "메테오를 받아랏!",
-      "skillDialog2": "발사!",
+      "skillDialog1": "메테오!",
+      "skillDialog2": "운석 소환!",
       "skillImg": "",
       "desc": "상급마법을 구사하여 적 최대 3마리에게 피해를 가한다."
     }
@@ -152,11 +152,24 @@
       "skillDialog1": "화염 화살 장전",
       "skillDialog2": "불타라",
       "skillImg": "Sprite/SKill/FireArrow",
-      "desc": "플레이어의 화살이 0초 동안 불화살로 바뀐다.\n *일반 화살의 2배의 데미지를 갖는다."
+      "desc": "플레이어의 화살이 10초 동안 불화살로 바뀐다.\n *일반 화살의 2배의 데미지를 갖는다."
     },
     {
       "id": "1001",
       "level": "2",
+      "name": "불화살",
+      "skillValue": "13",
+      "skillTargetCount": "0",
+      "skillCoolTime": "30",
+      "skillPrefab": "Skill/FireArrowSkill",
+      "skillDialog1": "화염 화살 장전",
+      "skillDialog2": "불타라",
+      "skillImg": "Sprite/SKill/FireArrow",
+      "desc": "플레이어의 화살이 13초 동안 불화살로 바뀐다.\n *일반 화살의 2배의 데미지를 갖는다."
+    },
+    {
+      "id": "1001",
+      "level": "3",
       "name": "불화살",
       "skillValue": "15",
       "skillTargetCount": "0",
@@ -165,20 +178,7 @@
       "skillDialog1": "화염 화살 장전",
       "skillDialog2": "불타라",
       "skillImg": "Sprite/SKill/FireArrow",
-      "desc": "플레이어의 화살이 0초 동안 불화살로 바뀐다.\n *일반 화살의 2배의 데미지를 갖는다."
-    },
-    {
-      "id": "1001",
-      "level": "3",
-      "name": "불화살",
-      "skillValue": "20",
-      "skillTargetCount": "0",
-      "skillCoolTime": "30",
-      "skillPrefab": "Skill/FireArrowSkill",
-      "skillDialog1": "화염 화살 장전",
-      "skillDialog2": "불타라",
-      "skillImg": "Sprite/SKill/FireArrow",
-      "desc": "플레이어의 화살이 0초 동안 불화살로 바뀐다.\n *일반 화살의 2배의 데미지를 갖는다."
+      "desc": "플레이어의 화살이 15초 동안 불화살로 바뀐다.\n *일반 화살의 2배의 데미지를 갖는다."
     }
 
 

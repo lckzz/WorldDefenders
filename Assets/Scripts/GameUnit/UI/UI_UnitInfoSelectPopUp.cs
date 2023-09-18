@@ -105,7 +105,7 @@ public class UI_UnitInfoSelectPopUp : UI_Base
     {
         unitInfoNameTxt.text = uniStat.name;           //이름 추가해서 넣기
         unitInfoLvTxt.text = $"Level : {uniStat.level}";
-        unitInfoTxt.text = $"공격력 : {uniStat.att}\n체력 : {uniStat.hp}\n코스트 : {uniStat.cost}";
+        unitInfoTxt.text = $"Hp : {uniStat.hp}\n공격력 : {uniStat.att}\n코스트 : {uniStat.cost}";
         unitInfoDescTxt.text = uniStat.desc.ToString();
 
 
