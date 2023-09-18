@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public class UI_UnitSettingWindow : UI_Base
 {
@@ -11,6 +12,15 @@ public class UI_UnitSettingWindow : UI_Base
     [SerializeField] private GameObject unitMaskObj;            //유닛클릭시 마스크오브젝트
     [SerializeField] private GameObject slots;            //유닛클릭시 마스크오브젝트
     [SerializeField] private Button backLobbyBtn;            //유닛클릭시 마스크오브젝트
+
+    [SerializeField] private Button leftScrollBtn;           
+    [SerializeField] private Button rightScrollBtn;      
+    [SerializeField] private Scrollbar scrollbar;
+    private bool rightScrollCheck = false;
+    private bool LeftScrollCheck = false;
+    private float scrollbarSpeed = 1.25f;
+
+
 
     List<UnitSlotUI> unitSlotUiList = new List<UnitSlotUI>();
 
@@ -25,7 +35,7 @@ public class UI_UnitSettingWindow : UI_Base
     private UnitSlotUI curUnitSlotUI;  //클릭했을 때 슬롯의 정보
     private bool nodeUiClick = false; //유닛을 클릭했을 때 현재 클릭한 정보를 가지고있다면 true고 true일 때 마우스 클릭을 하면 다시 false
     private bool slotUiClick = false;
-   
+    private float nodeClickTimer = .0f;
 
 
     //터치 
@@ -57,6 +67,14 @@ public class UI_UnitSettingWindow : UI_Base
                 GlobalData.SetUnitClass(unitSlotUiList);
             });
 
+
+        ButtonEvent(rightScrollBtn.gameObject, RightScrollMoveOn, UIEvent.PointerDown);
+        ButtonEvent(rightScrollBtn.gameObject, RightScrollMoveOff, UIEvent.PointerUp);
+        ButtonEvent(leftScrollBtn.gameObject, LeftScrollMoveOn, UIEvent.PointerDown);
+        ButtonEvent(leftScrollBtn.gameObject, LeftScrollMoveOff, UIEvent.PointerUp);
+        //ButtonEvent(leftScrollBtn.gameObject, RightBtnOn, UIEvent.PointerDown);
+
+
         startFadeOut = true;
 
     }
@@ -69,7 +87,10 @@ public class UI_UnitSettingWindow : UI_Base
 
         ped.position = Input.mousePosition;
         OnMousePointerDown();
+        OnMousePointerUp();
         OnMousePointerDownCancel();
+        RightScrollMove();
+        LeftScrollMove();
 #if UNITY_EDITOR
         OnMousePointer();
 #endif
@@ -142,7 +163,25 @@ public class UI_UnitSettingWindow : UI_Base
         
     }
 
+    void ButtonEvent(GameObject obj, Action action = null, UIEvent type = UIEvent.PointerDown)
+    {
+        UI_EventHandler evt;
+        obj.TryGetComponent(out evt);
 
+        switch (type)
+        {
+            case UIEvent.PointerDown:
+                evt.OnPointerDownHandler -= action;
+                evt.OnPointerDownHandler += action;
+                break;
+
+            case UIEvent.PointerUp:
+                evt.OnPointerUpHandler -= action;
+                evt.OnPointerUpHandler += action;
+                break;
+        }
+
+    }
     void UnitNodeUiInstantiate(UnitClass uniClass)
     {
         GameObject obj = Managers.Resource.Instantiate("UI/Unit", unitNodeContent.transform);
@@ -151,13 +190,68 @@ public class UI_UnitSettingWindow : UI_Base
     }
 
 
+    #region 버튼누를시 스크롤바 움직임
+
+    void RightScrollMoveOn()
+    {
+        rightScrollCheck = true;
+    }
+    void RightScrollMoveOff()
+    {
+        rightScrollCheck = false;
+    }
+
+    void LeftScrollMoveOn()
+    {
+        LeftScrollCheck = true;
+    }
+    void LeftScrollMoveOff()
+    {
+        LeftScrollCheck = false;
+    }
+
+
+    void RightScrollMove()
+    {
+        if(rightScrollCheck)
+        {
+            if(scrollbar.value < 1.0f)
+            {
+                scrollbar.value += Time.deltaTime * scrollbarSpeed;
+                if (scrollbar.value >= 1.0f)
+                    scrollbar.value = 1.0f;
+            }
+        }
+    }
+
+    void LeftScrollMove()
+    {
+        if (LeftScrollCheck)
+        {
+            if (scrollbar.value >= 0.0f)
+            {
+                scrollbar.value -= Time.deltaTime * scrollbarSpeed;
+                if (scrollbar.value <= 0.0f)
+                    scrollbar.value = 0.0f;
+            }
+        }
+    }
+    #endregion
+
     void OnMousePointerDown()
     {
-        if(Input.GetMouseButtonDown(0))
-        {
+        if(Input.GetMouseButton(0))
+            nodeClickTimer += Time.deltaTime;
+    }
 
+    void OnMousePointerUp()
+    {
+        if(Input.GetMouseButtonUp(0))
+        {
             if (Managers.UI.PeekPopupUI<UI_UnitInfoSelectPopUp>() != null)
                 return;
+
+
 
 
             unitSlotUI = UiRaycastGetFirstComponent<UnitSlotUI>(gr);
@@ -208,6 +302,12 @@ public class UI_UnitSettingWindow : UI_Base
 
             else if(unitNodeUI != null)
             {
+                if (nodeClickTimer > 0.15f)    //클릭한 시간이 0.15초이상 지났으면
+                {
+                    nodeClickTimer = 0.0f;
+                    return;
+                }
+
                 Managers.Sound.Play("Effect/UI_Click");
 
                 //유닛노드를 클릭했을 때
@@ -245,6 +345,7 @@ public class UI_UnitSettingWindow : UI_Base
                 }
             }
 
+            nodeClickTimer = 0.0f;
 
         }
     }
