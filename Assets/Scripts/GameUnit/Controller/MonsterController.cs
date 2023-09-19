@@ -6,11 +6,14 @@ using UnityEditor;
 using UnityEngine;
 using static Define;
 
-enum MonsterClass
+public enum MonsterClass
 {
     Warrior,
     Archer,
     EliteWarrior,
+    EliteCavalry,
+    EliteShaman,
+    Count
 }
 
 public enum MonsterState

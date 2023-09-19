@@ -85,34 +85,36 @@ public class EliteWarriorController : EliteMonsterController
         }
     }
 
-    public void OnSkill()
-    {
-        if (skillOn)  //스킬온이면
-        {
-            if (Skills.activeSkillList.Count > 0)
-            {
-                Debug.Log("발싸");
-                Skills.activeSkillList[0].UseSkill(this, skillenemyList);     //스킬 사용
-                SpeechchBubbleOn();
-            }
-        }
-    }
 
 
-    public void SpeechchBubbleOn()
-    {
+    //public void OnSkill()
+    //{
+    //    if (skillOn)  //스킬온이면
+    //    {
+    //        if (Skills.activeSkillList.Count > 0)
+    //        {
+    //            Debug.Log("발싸");
+    //            Skills.activeSkillList[0].UseSkill(this, skillenemyList);     //스킬 사용
+    //            SpeechchBubbleOn();
+    //        }
+    //    }
+    //}
 
-        if (speechBubbleObj.activeSelf == false)
-            speechBubbleObj.SetActive(true);
+
+    //public void SpeechchBubbleOn()
+    //{
+
+    //    if (speechBubbleObj.activeSelf == false)
+    //        speechBubbleObj.SetActive(true);
 
 
-        if (speechBubbleObj.activeSelf == true && speechBBCtrl != null)
-        {
-            randomIdx = Random.Range(0, 2);
+    //    if (speechBubbleObj.activeSelf == true && speechBBCtrl != null)
+    //    {
+    //        randomIdx = Random.Range(0, 2);
 
 
-            speechBBCtrl.GetSpeechString(skilldialogs[randomIdx]);
-        }
+    //        speechBBCtrl.GetSpeechString(skilldialogs[randomIdx]);
+    //    }
             
-    }
+    //}
 }

@@ -10,7 +10,9 @@ public enum UnitClass
     Warrior,
     Archer,
     Spear,
+    Priest,
     Magician,
+    Cavalry,
     Count
 }
 
@@ -50,10 +52,10 @@ public class UnitController : Unit
     public UnitState UniState { get { return state; } }
 
 
-    //아처 전용
-    Transform arrowPos;
+    //아처 사제 전용
+    Transform posTr;
 
-    //아처 전용
+    //아처 사제 전용
 
     UnitStat unitStat;
 
@@ -84,6 +86,12 @@ public class UnitController : Unit
             towerAttackRange = 2.0f;
 
         }
+        else if (unitClass == UnitClass.Priest)
+        {
+            unitStat = Managers.Data.spearDict[GlobalData.g_UnitSpearLv];
+            towerAttackRange = 6.0f;
+
+        }
 
 
 
@@ -102,9 +110,11 @@ public class UnitController : Unit
 
 
         if (unitClass == UnitClass.Archer)
-            arrowPos = transform.Find("ArrowPos");
+            posTr = transform.Find("ArrowPos");
+        else if(unitClass == UnitClass.Priest)
+            posTr = transform.Find("MagicPos");
         else
-            arrowPos = null;
+            posTr = null;
 
         SetUnitState(UnitState.Run);
 
@@ -600,7 +610,7 @@ public class UnitController : Unit
                     if (obj != null)
                     {
                         Managers.Sound.Play("Sounds/Effect/Bow");
-                        GameObject arrow = Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
+                        GameObject arrow = Instantiate(obj, posTr.position, Quaternion.identity, this.transform);
                         arrow.TryGetComponent(out ArrowCtrl arrowCtrl);
                         if(monTarget.gameObject.layer == LayerMask.NameToLayer("Monster") && monTarget is MonsterController monsterCtrl)
                         {
@@ -622,7 +632,7 @@ public class UnitController : Unit
                 if (obj != null)
                 {
                     Managers.Sound.Play("Sounds/Effect/Bow");
-                    GameObject arrow = Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
+                    GameObject arrow = Instantiate(obj, posTr.position, Quaternion.identity, this.transform);
                     arrow.TryGetComponent(out ArrowCtrl arrowCtrl);
                     arrowCtrl.SetType(null, monsterPortal);
                 }
@@ -793,57 +803,18 @@ public class UnitController : Unit
         Vector3 vec = obj.gameObject.transform.position - this.transform.position;
         traceDistance = vec.magnitude;
         Vector3 dir = vec.normalized;
-        if (unitClass == UnitClass.Archer)
+
+
+        if (traceDistance < attackRange)
         {
-
-            if (traceDistance < attackRange)
-            {
-
-                SetUnitState(UnitState.Attack);
-            }
-            else
-            {
-                rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
-                SetUnitState(UnitState.Trace);
-            }
+            SetUnitState(UnitState.Attack);
+        }
+        else
+        {
+            rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
+            SetUnitState(UnitState.Trace);
 
         }
-        else if (unitClass == UnitClass.Warrior)
-        {
-
-            if (traceDistance < attackRange)
-            {
-                SetUnitState(UnitState.Attack);
-            }
-            else
-            {
-                rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
-                SetUnitState(UnitState.Trace);
-
-            }
-
-        }
-
-        else if (unitClass == UnitClass.Spear)
-        {
-
-            if (traceDistance < attackRange)
-            {
-                SetUnitState(UnitState.Attack);
-            }
-            else
-            {
-                rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
-                SetUnitState(UnitState.Trace);
-
-            }
-
-        }
-
-
-
-
-
 
 
     }

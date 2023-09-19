@@ -6,7 +6,7 @@ using static Define;
 public class EliteMonsterController : Unit
 {
     [SerializeField]
-    private MonsterClass monsterClass;
+    protected MonsterClass monsterClass;
     [SerializeField]
     private EliteMonsterState state = EliteMonsterState.Run;
     private bool isSkil = false;
@@ -14,10 +14,8 @@ public class EliteMonsterController : Unit
 
 
     Unit[] unitCtrls;
-    [SerializeField]
-    Unit unitTarget;
-    [SerializeField]
-    PlayerTower playerTowerCtrl;
+    protected Unit unitTarget;
+    protected PlayerTower playerTowerCtrl;
     protected List<Unit> skillenemyList = new List<Unit>();
     [SerializeField] protected GameObject speechBubbleObj;           //말풍선
     [SerializeField] protected SpeechBubbleCtrl speechBBCtrl;
@@ -211,6 +209,11 @@ public class EliteMonsterController : Unit
             }
 
             if (monsterClass == MonsterClass.EliteWarrior)
+            {
+                TowerAttackRange(monStat.attackRange);
+            }
+
+            if (monsterClass == MonsterClass.EliteCavalry)
             {
                 TowerAttackRange(monStat.attackRange);
             }
@@ -575,37 +578,35 @@ public class EliteMonsterController : Unit
         }
     }
 
-
     public override void OnAttack()
     {
 
-        if (monsterClass == MonsterClass.EliteWarrior)
+
+        if (unitTarget != null)
         {
-
-
-            if (unitTarget != null)
-            {
-                float dist = (unitTarget.transform.position - this.gameObject.transform.position).sqrMagnitude;
-                if (dist < monStat.attackRange * monStat.attackRange)
-                    CriticalAttack(unitTarget);
-                else
-                {
-                    if (towerDist < monStat.attackRange * monStat.attackRange)
-                        CriticalAttack(playerTowerCtrl);
-                }
-
-            }
-
-
+            float dist = (unitTarget.transform.position - this.gameObject.transform.position).sqrMagnitude;
+            if (dist < monStat.attackRange * monStat.attackRange)
+                CriticalAttack(unitTarget);
             else
-                CriticalAttack(playerTowerCtrl);
-
+            {
+                if (towerDist < monStat.attackRange * monStat.attackRange)
+                    CriticalAttack(playerTowerCtrl);
+            }
 
         }
 
-        
-        
+
+        else
+            CriticalAttack(playerTowerCtrl);
+
+
+
+
+
+
     }
+
+
 
     public override bool CriticalCheck()
     {
@@ -655,6 +656,19 @@ public class EliteMonsterController : Unit
             tower.TowerDamage(att);        //넉백은 없이
             MeleeUnitEffectAndSound(tower.transform.position, "WarriorAttack", "HitEff");
 
+        }
+    }
+
+    public void OnSkill()
+    {
+        if (skillOn)  //스킬온이면
+        {
+            if (Skills.activeSkillList.Count > 0)
+            {
+                Debug.Log("발싸");
+                Skills.activeSkillList[0].UseSkill(this, skillenemyList);     //스킬 사용
+                SpeechchBubbleOn();
+            }
         }
     }
 
@@ -738,21 +752,19 @@ public class EliteMonsterController : Unit
         float distance = vec.magnitude;
         Vector3 dir = vec.normalized;
 
-        if (monsterClass == MonsterClass.EliteWarrior)
+
+        if (distance < attackRange)
         {
-
-            if (distance < attackRange)
-            {
-                SetMonsterState(EliteMonsterState.Attack);
-            }
-            else
-            {
-                rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
-                SetMonsterState(EliteMonsterState.Trace);
-
-            }
+            SetMonsterState(EliteMonsterState.Attack);
+        }
+        else
+        {
+            rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
+            SetMonsterState(EliteMonsterState.Trace);
 
         }
+
+        
 
 
 
@@ -836,7 +848,22 @@ public class EliteMonsterController : Unit
         }
     }
 
+    public void SpeechchBubbleOn()
+    {
 
+        if (speechBubbleObj.activeSelf == false)
+            speechBubbleObj.SetActive(true);
+
+
+        if (speechBubbleObj.activeSelf == true && speechBBCtrl != null)
+        {
+            randomIdx = Random.Range(0, 2);
+
+
+            speechBBCtrl.GetSpeechString(skilldialogs[randomIdx]);
+        }
+
+    }
 
     IEnumerator UnitSKillCoolTime(float coolTime)
     {

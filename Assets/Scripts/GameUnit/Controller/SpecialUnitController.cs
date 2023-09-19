@@ -233,6 +233,12 @@ public class SpecialUnitController : Unit
                 TowerAttackRange(6.5f);
             }
 
+            if (unitClass == UnitClass.Cavalry)
+            {
+
+                TowerAttackRange(2.0f);
+            }
+
 
 
         }
@@ -447,6 +453,7 @@ public class SpecialUnitController : Unit
 
     void UnitMove()
     {
+
         if (monTarget != null)
             SetUnitState(SpecialUnitState.Trace);
 
@@ -456,7 +463,6 @@ public class SpecialUnitController : Unit
 
         if (IsTargetOn())
             return;
-
 
         rigbody.transform.position += Vector3.right * moveSpeed * Time.deltaTime;
 
@@ -746,7 +752,24 @@ public class SpecialUnitController : Unit
             }
 
         }
-       
+
+        else if (unitClass == UnitClass.Cavalry)
+        {
+            Debug.Log(traceDistance);
+            Debug.Log(attackRange);
+            if (traceDistance < attackRange)
+            {
+
+                SetUnitState(SpecialUnitState.Attack);
+            }
+            else
+            {
+                rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
+                SetUnitState(SpecialUnitState.Trace);
+            }
+
+        }
+
     }
 
     Vector2 RandomPosSetting(Vector3 pos)
