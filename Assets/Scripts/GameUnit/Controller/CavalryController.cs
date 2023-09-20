@@ -5,6 +5,12 @@ using static Define;
 
 public class CavalryController : SpecialUnitController
 {
+
+
+    string warriorHitSound = "WarriorAttack";
+    string warriorCriticalSound = "CriticalSound";
+    string warriorHitEff = "HitEff";
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +31,7 @@ public class CavalryController : SpecialUnitController
         base.Init();
         unitStat = new UnitStat();
 
-        unitStat = Managers.Data.magicDict[GlobalData.g_UnitMagicianLv];
+        unitStat = Managers.Data.warriorDict[GlobalData.g_UnitWarriorLv];
 
 
 
@@ -58,7 +64,22 @@ public class CavalryController : SpecialUnitController
 
     public override void OnAttack()
     {
+        if (monTarget != null)
+        {
+            float dist = (monTarget.transform.position - this.gameObject.transform.position).magnitude;
+            if (dist < unitStat.attackRange + 0.5f)
+                CriticalAttack(monTarget, warriorHitSound, warriorCriticalSound, warriorHitEff);
+            else
+            {
+                if (towerDist < unitStat.attackRange * unitStat.attackRange)
+                    CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound, warriorHitEff);
 
+            }
+        }
+
+
+        else
+            CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound, warriorHitEff);
     }
 
 

@@ -31,9 +31,11 @@ public class PlayerUnitUI : UnitUI
         {
             float hp = unitCtrl.hpPercent();
 
-
             if (hpbar.fillAmount > hp)
                 hpbar.fillAmount -= Time.deltaTime * hpspeed;
+
+            if (hpbar.fillAmount <= hp)
+                hpbar.fillAmount += Time.deltaTime * hpspeed;
 
         }
     }

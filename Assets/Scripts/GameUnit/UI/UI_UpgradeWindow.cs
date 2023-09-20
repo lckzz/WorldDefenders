@@ -17,8 +17,8 @@ public class UI_UpgradeWindow : UI_Base
 
     [SerializeField] private Image fadeImg;
 
-    [SerializeField] private GameObject[] unitUpgradePrefabs = new GameObject[(int)UnitClass.Count];
-    [SerializeField] private GameObject[] unitUpgradeObjs = new GameObject[(int)UnitClass.Count];
+    [SerializeField] private GameObject[] unitUpgradePrefabs;
+    [SerializeField] private GameObject[] unitUpgradeObjs;
 
 
     [Space(25)]
@@ -37,11 +37,15 @@ public class UI_UpgradeWindow : UI_Base
     UpgradeUnitNode unitUpgradeNode;
 
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
         if (GlobalData.g_PlayerLevel == 0)
             GlobalData.g_PlayerLevel = 1;
 
+        Debug.Log((int)UnitClass.Count);
+
+        unitUpgradePrefabs =  new GameObject[(int)UnitClass.Count];
+        unitUpgradeObjs =  new GameObject[(int)UnitClass.Count];
 
 
         if (upgradeBtn != null)
@@ -82,6 +86,7 @@ public class UI_UpgradeWindow : UI_Base
     {
         for (int ii = 0; ii < (int)UnitClass.Count; ii++)
         {
+            Debug.Log(unitUpgradePrefabs.Length);
             switch (ii)
             {
                 case (int)UnitClass.Warrior:
@@ -96,6 +101,10 @@ public class UI_UpgradeWindow : UI_Base
                 case (int)UnitClass.Magician:
                     unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/MagicianUpgrade");
 
+                    break;
+
+                default:
+                    Debug.Log("아직 못넣음");
                     break;
             }
         }

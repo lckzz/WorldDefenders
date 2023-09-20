@@ -28,6 +28,12 @@ public class SpecialUnitController : Unit
 
     protected float coolTime = 20.0f;
 
+
+    string warriorHitSound = "WarriorAttack";
+    string warriorCriticalSound = "CriticalSound";
+    string warriorHitEff = "HitEff";
+
+
     public SkillBook Skills { get; protected set; }
     public Unit Monctrl { get { return monTarget; } }
 
@@ -572,6 +578,17 @@ public class SpecialUnitController : Unit
         }
     }
 
+    public override void OnHeal(int heal)
+    {
+        if (hp > 0)
+            hp += heal;
+
+
+        if (hp >= maxHp)
+            hp = maxHp;
+
+    }
+
 
     public override void OnDamage(int att, int knockBack = 0)
     {
@@ -620,37 +637,37 @@ public class SpecialUnitController : Unit
     }
 
 
-    public override void CriticalAttack(Unit monCtrl)
+    public override void CriticalAttack(Unit monCtrl, string soundPath, string criticlaSoundPath, string hitPath)
     {
         if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
         {
             int attack = att * 2;
             monCtrl.OnDamage(attack, unitStat.knockBackForce);      //크리티컬이면 데미지2배에 넉백까지
-            UnitEffectAndSound(monTarget.transform.position, "CriticalSound", "HitEff");
+            UnitEffectAndSound(monTarget.transform.position,warriorCriticalSound,warriorHitEff);
 
         }
         else  //노크리티컬이면 일반공격
         {
 
             monCtrl.OnDamage(att);        //넉백은 없이
-            UnitEffectAndSound(monTarget.transform.position, "WarriorAttack", "HitEff");
+            UnitEffectAndSound(monTarget.transform.position, warriorHitSound, warriorHitEff);
 
         }
     }
 
-    public override void CriticalAttack(Tower monPortal)
+    public override void CriticalAttack(Tower monPortal, string soundPath,string criticlaSoundPath, string hitPath)
     {
         if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
         {
             int attack = att * 2;
             monPortal.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
-            UnitEffectAndSound(monPortal.transform.position, "CriticalSound", "HitEff");
+            UnitEffectAndSound(monPortal.transform.position,  warriorCriticalSound, warriorHitEff);
 
         }
         else  //노크리티컬이면 일반공격
         {
             monPortal.TowerDamage(att);        //넉백은 없이
-            UnitEffectAndSound(monPortal.transform.position, "WarriorAttack", "HitEff");
+            UnitEffectAndSound(monPortal.transform.position, warriorHitSound, warriorHitEff);
 
         }
     }

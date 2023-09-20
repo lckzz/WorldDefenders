@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using static UnityEngine.GraphicsBuffer;
+using static UnityEngine.UI.CanvasScaler;
 
 
 public enum UnitClass
@@ -34,12 +35,12 @@ public class UnitController : Unit
     [SerializeField]
     private UnitClass unitClass;
     [SerializeField]
-    private UnitState state = UnitState.Run;        //테스트용이라 런 
+    protected UnitState state = UnitState.Run;        //테스트용이라 런 
 
 
-    [SerializeField] Unit[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
-    [SerializeField] Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
-    [SerializeField] MonsterPortal monsterPortal;
+    protected Unit[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
+    protected Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
+    protected MonsterPortal monsterPortal;
 
     
 
@@ -51,13 +52,18 @@ public class UnitController : Unit
 
     public UnitState UniState { get { return state; } }
 
+    public UnitClass UniClass { get { return unitClass; } }
 
     //아처 사제 전용
-    Transform posTr;
+    protected Transform posTr;
 
     //아처 사제 전용
 
-    UnitStat unitStat;
+    protected UnitStat unitStat;
+
+    string warriorHitSound = "WarriorAttack";
+    string warriorCriticalSound = "CriticalSound";
+    string warriorHitEff = "HitEff";
 
 
 
@@ -88,7 +94,7 @@ public class UnitController : Unit
         }
         else if (unitClass == UnitClass.Priest)
         {
-            unitStat = Managers.Data.spearDict[GlobalData.g_UnitSpearLv];
+            unitStat = Managers.Data.archerDict[GlobalData.g_UnitArcherLv];
             towerAttackRange = 6.0f;
 
         }
@@ -154,6 +160,7 @@ public class UnitController : Unit
         //Debug.Log($"타겟팅{isTageting}");
         #region 타겟구현
 
+
         enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Monster") | LayerMask.GetMask("EliteMonster"));
         if (enemyColls2D != null)
         {
@@ -191,13 +198,13 @@ public class UnitController : Unit
         }
 
 
-        if(monCtrls.Length > 0)
+        if (monCtrls.Length > 0)
         {
             float disMin = 0;
             int min = 0;
 
 
-            if(monCtrls.Length > 1)
+            if (monCtrls.Length > 1)
             {
                 for (int i = 0; i < monCtrls.Length; i++)
                 {
@@ -222,7 +229,7 @@ public class UnitController : Unit
                     {
                         float distB = (monCtrls[i + 1].transform.position - this.transform.position).sqrMagnitude;
 
-                        if (disMin > distB *  distB)
+                        if (disMin > distB * distB)
                         {
                             disMin = distB * distB;
                             min = i + 1;
@@ -233,7 +240,7 @@ public class UnitController : Unit
 
                 }
             }
-                
+
 
             if (monCtrls.Length != 0)
             {
@@ -241,10 +248,11 @@ public class UnitController : Unit
             }
 
 
+
+
+
+
         }
-
-
-        
 
 
 #endregion
@@ -348,7 +356,7 @@ public class UnitController : Unit
     }
 
 
-    void SetUnitState(UnitState state)
+    protected void SetUnitState(UnitState state)
     {
         if (isDie)
             return;
@@ -441,7 +449,7 @@ public class UnitController : Unit
     }
 
 
-    void UnitMove()
+    protected virtual void UnitMove()
     {
         if (monTarget != null)
             SetUnitState(UnitState.Trace);
@@ -462,7 +470,7 @@ public class UnitController : Unit
     }
 
 
-    void UnitTrace()
+    protected virtual void UnitTrace()
     {
         if (!IsTargetOn())
         {
@@ -483,7 +491,7 @@ public class UnitController : Unit
             Trace(monsterPortal);
     }
 
-    bool IsTargetOn()
+    protected virtual bool IsTargetOn()
     {
         if (monTarget == null && towerTrace == false)
             return false;
@@ -523,6 +531,7 @@ public class UnitController : Unit
         {
             if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
             {
+
                 SetUnitState(UnitState.Idle);
 
                 attackCoolTime = 1.0f;
@@ -570,7 +579,14 @@ public class UnitController : Unit
 
 
 
+    public override void OnHeal(int heal)
+    {
+        if(hp > 0)
+            hp += heal;
 
+        if (hp >= maxHp)
+            hp = maxHp;
+    }
 
 
     public override void OnAttack()    //애니메이션 이벤트 함수
@@ -582,18 +598,18 @@ public class UnitController : Unit
             {
                 float dist = (monTarget.transform.position - this.gameObject.transform.position).magnitude;
                 if (dist < unitStat.attackRange + 0.5f)
-                    CriticalAttack(monTarget);
+                    CriticalAttack(monTarget,warriorHitSound,warriorCriticalSound, warriorHitEff);
                 else
                 {
                     if (towerDist < unitStat.attackRange * unitStat.attackRange) 
-                        CriticalAttack(monsterPortal);
+                        CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound ,warriorHitEff);
 
                 }
             }
 
             
             else
-                CriticalAttack(monsterPortal);
+                CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound ,warriorHitEff);
             
 
         }
@@ -654,18 +670,18 @@ public class UnitController : Unit
                 Debug.Log(unitStat.attackRange);
 
                 if (dist < unitStat.attackRange + 0.5f)
-                    CriticalAttack(monTarget);
+                    CriticalAttack(monTarget, warriorHitSound, warriorCriticalSound, warriorHitEff);
                 else
                 {
                     if (towerDist < unitStat.attackRange * unitStat.attackRange)
-                        CriticalAttack(monsterPortal);
+                        CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound, warriorHitEff);
 
                 }
             }
 
 
             else
-                CriticalAttack(monsterPortal);
+                CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound, warriorHitEff);
 
         }
 
@@ -686,50 +702,56 @@ public class UnitController : Unit
     }
 
 
-    public override void CriticalAttack(Unit monCtrl)
+    public override void CriticalAttack(Unit monCtrl,string soundPath, string criticalSoundPath, string hitPath)
     {
         if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
         {
             int attack = att * 2;
             monCtrl.OnDamage(attack, unitStat.knockBackForce);      //크리티컬이면 데미지2배에 넉백까지
-            UnitEffectAndSound(monTarget.transform.position, "CriticalSound", "HitEff");
+            UnitEffectAndSound(monTarget.transform.position, criticalSoundPath, hitPath);
 
         }
         else  //노크리티컬이면 일반공격
         {
             
             monCtrl.OnDamage(att);        //넉백은 없이
-            UnitEffectAndSound(monTarget.transform.position, "WarriorAttack", "HitEff");
+            UnitEffectAndSound(monTarget.transform.position, soundPath, hitPath);
 
         }
     }
 
-    public override void CriticalAttack(Tower monPortal)
+    public override void CriticalAttack(Tower monPortal, string soundPath, string criticalSoundPath, string hitPath)
     {
         if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
         {
             int attack = att * 2;
             monPortal.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
-            UnitEffectAndSound(monPortal.transform.position, "CriticalSound", "HitEff");
+            UnitEffectAndSound(monPortal.transform.position, criticalSoundPath, hitPath);
 
         }
         else  //노크리티컬이면 일반공격
         {
             monPortal.TowerDamage(att);        //넉백은 없이
-            UnitEffectAndSound(monPortal.transform.position, "WarriorAttack", "HitEff");
+            UnitEffectAndSound(monPortal.transform.position, soundPath, hitPath);
 
         }
     }
 
 
-    void UnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
+    protected void UnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
     {
         Managers.Sound.Play($"Sounds/Effect/{soundPath}");
         GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
         Vector2 randomPos = RandomPosSetting(pos);
 
         if (eff != null)
-            Instantiate(eff, randomPos, Quaternion.identity);
+        {
+            if(unitClass == UnitClass.Priest)
+                Instantiate(eff, pos, Quaternion.identity);
+            else
+                Instantiate(eff, randomPos, Quaternion.identity);
+
+        }
     }
 
 
@@ -797,7 +819,7 @@ public class UnitController : Unit
 
     #endregion
 
-    void Trace<T>(T obj) where T : UnityEngine.Component 
+    protected void Trace<T>(T obj) where T : UnityEngine.Component 
     {
 
         Vector3 vec = obj.gameObject.transform.position - this.transform.position;

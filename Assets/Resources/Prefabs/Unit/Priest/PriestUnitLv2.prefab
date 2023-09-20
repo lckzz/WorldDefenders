@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 2543639107843710660}
   - component: {fileID: 9179658497030861654}
   - component: {fileID: 8453364018650819507}
-  - component: {fileID: 7629217270668401377}
+  - component: {fileID: 7692339083986446749}
   - component: {fileID: 1874855729779324824}
   - component: {fileID: 6089705612693859708}
   - component: {fileID: 4803188364004413385}
@@ -144,7 +144,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7629217270668401377
+--- !u!114 &7692339083986446749
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -153,17 +153,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 2293215773682665455}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa1d6cd426bcb464dbf942dfde966298, type: 3}
+  m_Script: {fileID: 11500000, guid: 4daf6d583d6233a48b1bfac16188cafe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 0
-  att: 100
-  anim: {fileID: 8453364018650819507}
+  att: 0
+  anim: {fileID: 0}
   attackCoolTime: 1.5
   enemyColls2D: []
   pos: {fileID: 143658876262989664}
   boxSize: {x: 9.36, y: 3.55}
-  unitClass: 1
+  unitClass: 3
   state: 1
   monCtrls: []
   monTarget: {fileID: 0}
@@ -265,7 +265,7 @@ GameObject:
   m_Component:
   - component: {fileID: 143658876262989664}
   m_Layer: 6
-  m_Name: bow
+  m_Name: AttackBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -280,7 +280,7 @@ Transform:
   m_GameObject: {fileID: 5890603734546685905}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.99, y: 0, z: 0}
+  m_LocalPosition: {x: -4.08, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

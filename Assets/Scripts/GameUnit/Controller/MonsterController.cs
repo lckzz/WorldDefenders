@@ -63,7 +63,9 @@ public class MonsterController : Unit
     public MonsterState MonState { get { return state; } }
 
 
-
+    string warriorHitSound = "WarriorAttack";
+    string warriorCriticalSound = "CriticalSound";
+    string warriorHitEff = "HitEff";
 
     public override void Init()
     {
@@ -580,18 +582,18 @@ public class MonsterController : Unit
             {
                 float dist = (unitTarget.transform.position - this.gameObject.transform.position).sqrMagnitude;
                 if (dist < monStat.attackRange * monStat.attackRange)
-                    CriticalAttack(unitTarget);
+                    CriticalAttack(unitTarget,warriorHitSound,warriorCriticalSound, warriorHitEff);
                 else
                 {
                     if(towerDist < monStat.attackRange * monStat.attackRange)
-                        CriticalAttack(playerTowerCtrl);
+                        CriticalAttack(playerTowerCtrl,warriorHitSound,warriorCriticalSound, warriorHitEff);
 
                 }
             }
                 
             
             else
-                CriticalAttack(playerTowerCtrl);
+                CriticalAttack(playerTowerCtrl,warriorHitSound,warriorCriticalSound, warriorHitEff);
             
 
         }
@@ -660,13 +662,13 @@ public class MonsterController : Unit
     }
 
 
-    public override void CriticalAttack(Unit uniCtrl)
+    public override void CriticalAttack(Unit uniCtrl, string soundPath, string criticalSoundPath,  string hitPath)
     {
         if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
         {
             int attack = att * 2;
             uniCtrl.OnDamage(attack, monStat.knockBackForce);      //크리티컬이면 데미지2배에 넉백까지
-            MeleeUnitEffectAndSound(unitTarget.transform.position, "CriticalSound", "HitEff");
+            MeleeUnitEffectAndSound(unitTarget.transform.position, criticalSoundPath, hitPath);
 
         }
         else  //노크리티컬이면 일반공격
@@ -674,24 +676,24 @@ public class MonsterController : Unit
 
 
             uniCtrl.OnDamage(att);        //넉백은 없이
-            MeleeUnitEffectAndSound(unitTarget.transform.position, "WarriorAttack", "HitEff");
+            MeleeUnitEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
 
         }
     }
 
-    public override void CriticalAttack(Tower tower)
+    public override void CriticalAttack(Tower tower, string soundPath, string criticalSoundPath, string hitPath)
     {
         if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
         {
             int attack = att * 2;
             tower.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
-            MeleeUnitEffectAndSound(tower.transform.position, "CriticalSound", "HitEff");
+            MeleeUnitEffectAndSound(tower.transform.position, criticalSoundPath, hitPath);
 
         }
         else  //노크리티컬이면 일반공격
         {
             tower.TowerDamage(att);        //넉백은 없이
-            MeleeUnitEffectAndSound(tower.transform.position, "WarriorAttack", "HitEff");
+            MeleeUnitEffectAndSound(tower.transform.position, soundPath, hitPath);
 
         }
     }

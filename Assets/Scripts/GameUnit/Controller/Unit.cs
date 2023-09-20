@@ -32,7 +32,7 @@ public abstract class Unit : MonoBehaviour,ISensor
     protected float attackCoolTime = 1.5f;
     protected bool attackTime = true;      //공격쿨이 다돈 상태
 
-    [SerializeField]
+ 
     protected Collider2D[] enemyColls2D;
     protected Collider2D tower;
     protected Collider2D unitColl;
@@ -65,6 +65,10 @@ public abstract class Unit : MonoBehaviour,ISensor
 
     public bool IsDie { get { return isDie; } }
     public int Att { get { return att; } }
+    public float Hp { get { return hp; } }
+    public float MaxHp { get { return maxHp; } }
+
+
 
     public virtual void Init()
     {
@@ -91,7 +95,7 @@ public abstract class Unit : MonoBehaviour,ISensor
         }
     }
 
-
+    public virtual void OnHeal(int heal) { }
 
     public abstract void EnemySensor(); //적감지 센서
 
@@ -103,8 +107,8 @@ public abstract class Unit : MonoBehaviour,ISensor
 
     public abstract bool CriticalCheck();
 
-    public abstract void CriticalAttack(Unit ctrl);
-    public abstract void CriticalAttack(Tower ctrl);
+    public abstract void CriticalAttack(Unit ctrl,string soundPath,string criticalSoundPath,string hitPath);
+    public abstract void CriticalAttack(Tower ctrl, string soundPath, string criticalSoundPath, string hitPath);
 
 
 
