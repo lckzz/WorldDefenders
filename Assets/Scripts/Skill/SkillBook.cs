@@ -41,6 +41,16 @@ public class SkillBook : MonoBehaviour
             return sk as T;
         }
 
+        else if (type == typeof(SkeletonSummonSkill))
+        {
+            skillPrefab.TryGetComponent(out SkeletonSummonSkill ssk);
+            activeSkillList.Add(ssk);
+            activeSkillList[0].SkillDataSetting(GlobalData.g_EliteCavalryID);
+
+
+            return ssk as T;
+        }
+
 
         else if(type == typeof(TowerHealSkill))
         {

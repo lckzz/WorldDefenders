@@ -16,7 +16,7 @@ public interface ILoader<Key, Value>
 public class DataManager 
 {
 
-
+    #region ÇÃ·¹ÀÌ¾î & À¯´Ö µñ¼Å³Ê¸®
     public Dictionary<int,TowerStat> towerDict { get; private set; } = new Dictionary<int,TowerStat>();
     public Dictionary<int, UnitStat> warriorDict { get; private set; } = new Dictionary<int, UnitStat>();
     public Dictionary<int, UnitStat> archerDict { get; private set; } = new Dictionary<int, UnitStat>();
@@ -24,17 +24,21 @@ public class DataManager
     public Dictionary<int, UnitStat> priestDict { get; private set; } = new Dictionary<int, UnitStat>();
 
     public Dictionary<int, UnitStat> magicDict { get; private set; } = new Dictionary<int, UnitStat>();
-    public Dictionary<int, MonsterStat> monsterDict { get; private set; } = new Dictionary<int, MonsterStat>();
-   
 
+    #endregion
+    public Dictionary<int, MonsterStat> monsterDict { get; private set; } = new Dictionary<int, MonsterStat>();
+
+
+    #region ½ºÅ³
     public Dictionary<int, SkillData> magicSkillDict { get; private set; } = new Dictionary<int, SkillData>();
     public Dictionary<int, SkillData> cavalrySkillDict { get; private set; } = new Dictionary<int, SkillData>();
     public Dictionary<int, SkillData> eliteWarriorSkillDict { get; private set; } = new Dictionary<int, SkillData>();
+    public Dictionary<int, SkillData> eliteCavalrySkillDict { get; private set; } = new Dictionary<int, SkillData>();
 
     public Dictionary<int, SkillData> healSkillDict { get; private set; } = new Dictionary<int, SkillData>();
     public Dictionary<int, SkillData> fireArrowSkillDict { get; private set; } = new Dictionary<int, SkillData>();
     public Dictionary<int, SkillData> weaknessSkillDict { get; private set; } = new Dictionary<int, SkillData>();
-
+    #endregion
 
     public void Init()
     {
@@ -49,6 +53,7 @@ public class DataManager
         magicSkillDict = LoadJson<MagicianSkillData, int, SkillData>("SkillData").MakeDict();
         cavalrySkillDict = LoadJson<CavalrySKillData, int, SkillData>("SkillData").MakeDict();
         eliteWarriorSkillDict = LoadJson<EliteWarriorSkillData, int, SkillData>("SkillData").MakeDict();
+        eliteCavalrySkillDict = LoadJson<EliteCavalrySkillData, int, SkillData>("SkillData").MakeDict();
 
         healSkillDict = LoadJson<HealSkillData, int, SkillData>("SkillData").MakeDict();
         fireArrowSkillDict = LoadJson<FireArrowSkillData, int, SkillData>("SkillData").MakeDict();

@@ -5,6 +5,12 @@ using static Define;
 
 public class EliteCavalryController : EliteMonsterController
 {
+    GameObject miniPortal1;
+    GameObject miniPortal2;
+
+    public GameObject MiniPortal1 { get { return miniPortal1; } }
+    public GameObject MiniPortal2 { get { return miniPortal2; } }
+
     public override void Init()
     {
         base.Init();
@@ -22,17 +28,28 @@ public class EliteCavalryController : EliteMonsterController
         attackRange = monStat.attackRange;
         moveSpeed = 2.0f;
 
-        //Skills.AddSkill<SwordDanceSkill>();
-        //skilldialogs = new string[dialogCount];
-        //for (int ii = 0; ii < dialogCount; ii++)
-        //{
-        //    if (ii == 0)
-        //        skilldialogs[ii] = Skills.GetSkill<SwordDanceSkill>().SkillData.skillDialog1;
-        //    else if (ii == 1)
-        //        skilldialogs[ii] = Skills.GetSkill<SwordDanceSkill>().SkillData.skillDialog2;
+        Skills.AddSkill<SkeletonSummonSkill>();
+        skilldialogs = new string[dialogCount];
+        for (int ii = 0; ii < dialogCount; ii++)
+        {
+            if (ii == 0)
+                skilldialogs[ii] = Skills.GetSkill<SkeletonSummonSkill>().SkillData.skillDialog1;
+            else if (ii == 1)
+                skilldialogs[ii] = Skills.GetSkill<SkeletonSummonSkill>().SkillData.skillDialog2;
 
 
-        //}
+        }
+
+
+        for (int ii = 0;ii < this.transform.childCount;ii++)
+        {
+            if (this.transform.GetChild(ii).name.Contains("PortalPos1"))
+                miniPortal1 = transform.GetChild(ii).gameObject;
+
+            if(this.transform.GetChild(ii).name.Contains("PortalPos2"))
+                miniPortal2 = transform.GetChild(ii).gameObject;
+
+        }
 
     }
 
@@ -75,14 +92,15 @@ public class EliteCavalryController : EliteMonsterController
         }
     }
 
-    public void OnSkill()
+    public override void OnSkill()
     {
+        Debug.Log("테스트");
         if (skillOn)  //스킬온이면
         {
             if (Skills.activeSkillList.Count > 0)
             {
                 Debug.Log("발싸");
-                Skills.activeSkillList[0].UseSkill(this, skillenemyList);     //스킬 사용
+                Skills.activeSkillList[0].UseSkill(this);     //스킬 사용
                 SpeechchBubbleOn();
             }
         }

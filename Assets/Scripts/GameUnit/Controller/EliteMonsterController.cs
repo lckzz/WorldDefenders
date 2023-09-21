@@ -662,7 +662,7 @@ public class EliteMonsterController : Unit
         }
     }
 
-    public void OnSkill()
+    public virtual void OnSkill()
     {
         if (skillOn)  //스킬온이면
         {

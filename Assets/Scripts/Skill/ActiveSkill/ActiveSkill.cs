@@ -27,6 +27,6 @@ public abstract class ActiveSkill : SkillBase
     public virtual void UseSkill(Tower tower) { }
     public virtual void UseSkill(PlayerController player) { }
 
-
+    public virtual void UseSkill(Unit unit) { }     //액티브 스킬 사용
 
 }

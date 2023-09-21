@@ -35,6 +35,8 @@ public class GlobalData
     public static int g_BowSkeletonID = 0002;
     public static int g_SpearSkeletonID = 0003;
     public static int g_EliteWarriorID = 0004;
+    public static int g_EliteCavalryID = 0005;
+
 
     //-------------몬스터 아이디-----------
 
