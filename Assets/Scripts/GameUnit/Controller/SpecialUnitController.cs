@@ -12,6 +12,7 @@ public class SpecialUnitController : Unit
     protected Define.SpecialUnitState state = Define.SpecialUnitState.Run;
 
     protected bool isSkil = false;
+    protected bool isAttacking = false;
     [SerializeField] protected bool skillOn = false;     //스킬 발동판단
     [SerializeField] protected GameObject speechBubbleObj;           //말풍선
     [SerializeField] protected SpeechBubbleCtrl speechBBCtrl;
@@ -28,10 +29,9 @@ public class SpecialUnitController : Unit
 
     protected float coolTime = 20.0f;
 
-
-    string warriorHitSound = "WarriorAttack";
-    string warriorCriticalSound = "CriticalSound";
-    string warriorHitEff = "HitEff";
+    protected string warriorHitSound = "WarriorAttack";
+    protected string warriorCriticalSound = "CriticalSound";
+    protected string warriorHitEff = "HitEff";
 
 
     public SkillBook Skills { get; protected set; }
@@ -327,6 +327,7 @@ public class SpecialUnitController : Unit
 
     protected void SetUnitState(SpecialUnitState state)
     {
+
         this.state = state;
 
         switch (this.state)
@@ -391,6 +392,16 @@ public class SpecialUnitController : Unit
                         isSkil = false;
                         anim.SetBool("SkillAttack", isSkil);
                     }
+
+                    if (monCtrls.Length > 0)
+                    {
+                        if (skillOn)      //스킬On이면
+                        {
+                            SetUnitState(SpecialUnitState.Skill);
+                            return;
+                        }
+                    }
+
                     break;
                 }
             case SpecialUnitState.Skill:
@@ -527,26 +538,14 @@ public class SpecialUnitController : Unit
     void UnitAttack()
     {
 
-        if(monCtrls.Length > 0)
-        {
-            if (skillOn)      //스킬On이면
-            {
-                SetUnitState(SpecialUnitState.Skill);
-                return;
-            }
-        }
-
-
 
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("NormalAttack"))
         {
+
             if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
-            {
+            { 
                 SetUnitState(SpecialUnitState.Idle);
-
                 attackCoolTime = 1.0f;
-
-
             }
 
 
@@ -571,9 +570,9 @@ public class SpecialUnitController : Unit
     {
         if (myColl.enabled)
         {
-            SetUnitState(SpecialUnitState.Die);
             myColl.enabled = false;
             GameObject.Destroy(gameObject, 5.0f);
+            SetUnitState(SpecialUnitState.Die);
 
         }
     }
@@ -772,8 +771,6 @@ public class SpecialUnitController : Unit
 
         else if (unitClass == UnitClass.Cavalry)
         {
-            Debug.Log(traceDistance);
-            Debug.Log(attackRange);
             if (traceDistance < attackRange)
             {
 
@@ -841,7 +838,9 @@ public class SpecialUnitController : Unit
                     Vector3 vec = monTarget.gameObject.transform.position - this.transform.position;
                     traceDistance = vec.sqrMagnitude;
                     if (traceDistance < attackRange * attackRange)
+                    {
                         SetUnitState(SpecialUnitState.Attack);
+                    }
                     else
                         SetUnitState(SpecialUnitState.Run);
                 }

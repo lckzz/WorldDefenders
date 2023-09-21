@@ -21,11 +21,14 @@ public class DataManager
     public Dictionary<int, UnitStat> warriorDict { get; private set; } = new Dictionary<int, UnitStat>();
     public Dictionary<int, UnitStat> archerDict { get; private set; } = new Dictionary<int, UnitStat>();
     public Dictionary<int, UnitStat> spearDict { get; private set; } = new Dictionary<int, UnitStat>();
+    public Dictionary<int, UnitStat> priestDict { get; private set; } = new Dictionary<int, UnitStat>();
+
     public Dictionary<int, UnitStat> magicDict { get; private set; } = new Dictionary<int, UnitStat>();
     public Dictionary<int, MonsterStat> monsterDict { get; private set; } = new Dictionary<int, MonsterStat>();
    
 
     public Dictionary<int, SkillData> magicSkillDict { get; private set; } = new Dictionary<int, SkillData>();
+    public Dictionary<int, SkillData> cavalrySkillDict { get; private set; } = new Dictionary<int, SkillData>();
     public Dictionary<int, SkillData> eliteWarriorSkillDict { get; private set; } = new Dictionary<int, SkillData>();
 
     public Dictionary<int, SkillData> healSkillDict { get; private set; } = new Dictionary<int, SkillData>();
@@ -39,10 +42,12 @@ public class DataManager
         warriorDict = LoadJson<WarriorData, int, UnitStat>("UnitData").MakeDict();
         archerDict = LoadJson<ArcherData, int, UnitStat>("UnitData").MakeDict();
         spearDict = LoadJson<SpearData, int, UnitStat>("UnitData").MakeDict();
+        priestDict = LoadJson<priestData, int, UnitStat>("UnitData").MakeDict();
         magicDict = LoadJson<MagicianData, int, UnitStat>("UnitData").MakeDict();
         monsterDict = LoadJson<MonsterData, int, MonsterStat>("MonsterData").MakeDict();
 
         magicSkillDict = LoadJson<MagicianSkillData, int, SkillData>("SkillData").MakeDict();
+        cavalrySkillDict = LoadJson<CavalrySKillData, int, SkillData>("SkillData").MakeDict();
         eliteWarriorSkillDict = LoadJson<EliteWarriorSkillData, int, SkillData>("SkillData").MakeDict();
 
         healSkillDict = LoadJson<HealSkillData, int, SkillData>("SkillData").MakeDict();

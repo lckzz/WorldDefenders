@@ -7,9 +7,7 @@ public class CavalryController : SpecialUnitController
 {
 
 
-    string warriorHitSound = "WarriorAttack";
-    string warriorCriticalSound = "CriticalSound";
-    string warriorHitEff = "HitEff";
+
 
     // Start is called before the first frame update
     void Start()
@@ -46,17 +44,17 @@ public class CavalryController : SpecialUnitController
         maxHp = hp;
 
 
-        //Skills.AddSkill<MeteroSkill>();
-        //skilldialogs = new string[dialogCount];
-        //for (int ii = 0; ii < dialogCount; ii++)
-        //{
-        //    if (ii == 0)
-        //        skilldialogs[ii] = Skills.GetSkill<MeteroSkill>().SkillData.skillDialog1;
-        //    else if (ii == 1)
-        //        skilldialogs[ii] = Skills.GetSkill<MeteroSkill>().SkillData.skillDialog2;
+        Skills.AddSkill<SwordSummonSkill>();
+        skilldialogs = new string[dialogCount];
+        for (int ii = 0; ii < dialogCount; ii++)
+        {
+            if (ii == 0)
+                skilldialogs[ii] = Skills.GetSkill<SwordSummonSkill>().SkillData.skillDialog1;
+            else if (ii == 1)
+                skilldialogs[ii] = Skills.GetSkill<SwordSummonSkill>().SkillData.skillDialog2;
 
 
-        //}
+        }
 
     }
 

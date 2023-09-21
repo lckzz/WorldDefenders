@@ -21,6 +21,16 @@ public class SkillBook : MonoBehaviour
 
             return mk as T;
         }
+        else if (type == typeof(SwordSummonSkill))
+        {
+            skillPrefab.TryGetComponent(out SwordSummonSkill ssk);
+            activeSkillList.Add(ssk);
+            activeSkillList[0].SkillDataSetting(GlobalData.g_UnitCarlvrySkillLv);
+
+
+            return ssk as T;
+        }
+
         else if (type == typeof(SwordDanceSkill))
         {
             skillPrefab.TryGetComponent(out SwordDanceSkill sk);
@@ -30,6 +40,8 @@ public class SkillBook : MonoBehaviour
 
             return sk as T;
         }
+
+
         else if(type == typeof(TowerHealSkill))
         {
             skillPrefab = Managers.Resource.Load<GameObject>("Prefabs/Skill/TowerHealSkill");

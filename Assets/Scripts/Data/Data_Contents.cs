@@ -96,6 +96,20 @@ public class SpearData : ILoader<int, UnitStat>
     }
 }
 
+public class priestData : ILoader<int, UnitStat>
+{
+    public List<UnitStat> priest = new List<UnitStat>();
+
+    public Dictionary<int, UnitStat> MakeDict()
+    {
+        Dictionary<int, UnitStat> dict = new Dictionary<int, UnitStat>();
+        foreach (UnitStat stat in priest)
+            dict.Add(stat.level, stat);
+
+        return dict;
+    }
+}
+
 
 public class MagicianData : ILoader<int, UnitStat>
 {
@@ -204,7 +218,7 @@ public class SkillData
     public string skillDialog1;
     public string skillDialog2;
 }
-[Serializable]
+
 public class MagicianSkillData : ILoader<int, SkillData>
 {
     public List<SkillData> magicianSkill = new List<SkillData>();
@@ -219,7 +233,22 @@ public class MagicianSkillData : ILoader<int, SkillData>
     }
 }
 
-[Serializable]
+
+public class CavalrySKillData : ILoader<int, SkillData>
+{
+    public List<SkillData> cavalrySkill = new List<SkillData>();
+
+    public Dictionary<int, SkillData> MakeDict()
+    {
+        Dictionary<int, SkillData> dict = new Dictionary<int, SkillData>();
+        foreach (SkillData skill in cavalrySkill)
+            dict.Add(skill.level, skill);
+
+        return dict;
+    }
+}
+
+
 public class EliteWarriorSkillData : ILoader<int, SkillData>
 {
     public List<SkillData> eliteWarriorSkill = new List<SkillData>();

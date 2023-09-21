@@ -9,8 +9,8 @@ public class PriestController : UnitController
 {
     //UnitController에서 프리스트 데이터를 초기화를 일단 해놓음
     Collider2D[] unitColls2D;
-    Unit unitTarget;
-    List<Unit> unitCtrls = new List<Unit>();
+    [SerializeField]  Unit unitTarget;
+    [SerializeField] List<Unit> unitCtrls = new List<Unit>();
 
     string priestSound = "PriestHeal";
     string priestHitEff = "PriestEff";
@@ -18,7 +18,7 @@ public class PriestController : UnitController
 
     public override void EnemySensor()
     {
-        unitColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Unit"));  //박스안의 아군들을 받아온다.
+        unitColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Unit") | LayerMask.GetMask("SpecialUnit"));  //박스안의 아군들을 받아온다.
         if (unitColls2D != null)
         {
             if (unitTarget != null)  //이전에 유닛들의 타겟팅이 잡혓더라면
@@ -32,14 +32,21 @@ public class PriestController : UnitController
             //힐러는 박스안의 모든유닛들중에서 hp값을 받아서 hp가 최대치가 아닌 유닛들을 감지해야한다.
             for (int ii = 0; ii < unitColls2D.Length; ii++)
             {
+
                 if (unitColls2D[ii].gameObject.layer == LayerMask.NameToLayer("Unit"))
                 {
                     UnitController unitCtrl;
                     unitColls2D[ii].TryGetComponent<UnitController>(out unitCtrl);
                     if(unitCtrl != null)
                         unitCtrls.Add(unitCtrl);
+                }
 
-
+                if(unitColls2D[ii].gameObject.layer == LayerMask.NameToLayer("SpecialUnit"))
+                {
+                    SpecialUnitController unitCtrl;
+                    unitColls2D[ii].TryGetComponent<SpecialUnitController>(out unitCtrl);
+                    if (unitCtrl != null)
+                        unitCtrls.Add(unitCtrl);
                 }
             }
 
@@ -159,6 +166,13 @@ public class PriestController : UnitController
             UnitEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
 
             
+        }
+
+        else if(unit is SpecialUnitController spUnitCtrl)
+        {
+            int heal = (int)(att * 0.5f);     //힐량은 기본공격력의 반토막(크리는 터져도 똑같음)
+            spUnitCtrl.OnHeal((int)spUnitCtrl.MaxHp);
+            UnitEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
         }
 
         else if(unit is MonsterController monsterCtrl)

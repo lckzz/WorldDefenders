@@ -94,8 +94,8 @@ public class UnitController : Unit
         }
         else if (unitClass == UnitClass.Priest)
         {
-            unitStat = Managers.Data.archerDict[GlobalData.g_UnitArcherLv];
-            towerAttackRange = 6.0f;
+            unitStat = Managers.Data.priestDict[GlobalData.g_UnitPriestLv];
+            towerAttackRange = 6.5f;
 
         }
 

@@ -11,8 +11,16 @@ public class GlobalData
     public static int g_UnitWarriorLv = 1;
     public static int g_UnitArcherLv = 1;
     public static int g_UnitSpearLv = 1;
+    public static int g_UnitPriestLv = 1;
     public static int g_UnitMagicianLv = 1;
+    public static int g_UnitCarlvryLv = 1;
     //-----------유닛 레벨-----------------
+
+    //-----------유닛 스킬-----------------         //유닛스킬은 유닛들의 레벨이 1,5,10일때 레벨이 자동으로 오름
+    public static int g_UnitMagicianSkillLv = 1;
+    public static int g_UnitCarlvrySkillLv = 1;
+    //-----------유닛 스킬-----------------
+
 
     //----------플레이어의 스킬 레벨-------------
     public static int g_SkillHealLv = 1;
