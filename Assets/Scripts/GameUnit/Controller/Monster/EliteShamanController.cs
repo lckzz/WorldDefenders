@@ -18,7 +18,7 @@ public class EliteShamanController : EliteMonsterController
         monStat = new MonsterStat();
 
 
-        monStat = Managers.Data.monsterDict[GlobalData.g_EliteWarriorID];
+        monStat = Managers.Data.monsterDict[GlobalData.g_BowSkeletonID];
 
 
         att = monStat.att;
@@ -85,25 +85,37 @@ public class EliteShamanController : EliteMonsterController
     public override void OnAttack()
     {
         //부모클래스에서의 공격은 근접용이라 새로 덮어써서 공격함수를 오버라이드한다.
+        GameObject obj = Resources.Load<GameObject>("Prefabs/Weapon/ShamanMagicShot");
 
-        //if (unitTarget != null)
-        //{
-        //    float dist = (unitTarget.transform.position - this.gameObject.transform.position).sqrMagnitude;
-        //    if (dist < monStat.attackRange * monStat.attackRange)
-        //        CriticalAttack(unitTarget);
-        //    else
-        //    {
-        //        if (towerDist < monStat.attackRange * monStat.attackRange)
-        //            CriticalAttack(playerTowerCtrl);
-        //    }
+        if (unitTarget != null)
+        {
 
-        //}
+            if (obj != null)
+            {
+                GameObject magicBall = Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
+                magicBall.TryGetComponent(out ShamanMagicAttackCtrl magicCtrl);
+                if (unitTarget.gameObject.layer == LayerMask.NameToLayer("Unit") && unitTarget is UnitController ctrl)
+                {
+                    magicCtrl.SetType(ctrl, null);
 
+                }
+                else if (unitTarget.gameObject.layer == LayerMask.NameToLayer("SpecialUnit") && unitTarget is SpecialUnitController special)
+                {
+                    magicCtrl.SetType(special, null);
 
-        //else
-        //    CriticalAttack(playerTowerCtrl);
+                }
+            }
+        }
+        else
+        {
 
-
+            if (obj != null)
+            {
+                GameObject magicBall = Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
+                magicBall.TryGetComponent(out ShamanMagicAttackCtrl magicCtrl);
+                magicCtrl.SetType(null, playerTowerCtrl);
+            }
+        }
 
 
 
