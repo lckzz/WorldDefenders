@@ -34,6 +34,8 @@ public class DataManager
     public Dictionary<int, SkillData> cavalrySkillDict { get; private set; } = new Dictionary<int, SkillData>();
     public Dictionary<int, SkillData> eliteWarriorSkillDict { get; private set; } = new Dictionary<int, SkillData>();
     public Dictionary<int, SkillData> eliteCavalrySkillDict { get; private set; } = new Dictionary<int, SkillData>();
+    public Dictionary<int, SkillData> eliteShamanSkillDict { get; private set; } = new Dictionary<int, SkillData>();
+
 
     public Dictionary<int, SkillData> healSkillDict { get; private set; } = new Dictionary<int, SkillData>();
     public Dictionary<int, SkillData> fireArrowSkillDict { get; private set; } = new Dictionary<int, SkillData>();
@@ -54,6 +56,7 @@ public class DataManager
         cavalrySkillDict = LoadJson<CavalrySKillData, int, SkillData>("SkillData").MakeDict();
         eliteWarriorSkillDict = LoadJson<EliteWarriorSkillData, int, SkillData>("SkillData").MakeDict();
         eliteCavalrySkillDict = LoadJson<EliteCavalrySkillData, int, SkillData>("SkillData").MakeDict();
+        eliteShamanSkillDict = LoadJson<EliteShamanSkillData, int, SkillData>("SkillData").MakeDict();
 
         healSkillDict = LoadJson<HealSkillData, int, SkillData>("SkillData").MakeDict();
         fireArrowSkillDict = LoadJson<FireArrowSkillData, int, SkillData>("SkillData").MakeDict();

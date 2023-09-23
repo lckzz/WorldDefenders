@@ -58,6 +58,6 @@ public class MeteroSkill : ActiveSkill
             return;
         }
         MeteorController mc = Managers.Resource.Instantiate(data.skillPrefab).GetComponent<MeteorController>();
-        mc.SetInfo(unitLv, owner, enemy, data, spawnPos);
+        mc.SetInfo(owner, enemy, data, spawnPos);
     }
 }

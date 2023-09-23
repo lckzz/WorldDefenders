@@ -21,7 +21,7 @@ public class SkeletonSummonSkill : ActiveSkill
 
         for (int ii = 0; ii < goList.Count; ii++)
         {
-            //리스트안에 있는 수만큼 메테오를 소환
+            
             Vector3 pos = goList[ii].transform.position;
 
             GenerateMiniPortal(GlobalData.g_EliteCavalryID, summonidx, unit, pos);

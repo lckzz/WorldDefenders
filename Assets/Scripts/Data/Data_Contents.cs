@@ -277,6 +277,20 @@ public class EliteCavalrySkillData : ILoader<int, SkillData>
     }
 }
 
+public class EliteShamanSkillData : ILoader<int, SkillData>
+{
+    public List<SkillData> eliteShamanSkill = new List<SkillData>();
+
+    public Dictionary<int, SkillData> MakeDict()
+    {
+        Dictionary<int, SkillData> dict = new Dictionary<int, SkillData>();
+        foreach (SkillData skill in eliteShamanSkill)
+            dict.Add(skill.id, skill);
+
+        return dict;
+    }
+}
+
 
 
 

@@ -2,21 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwordSummonSkill : ActiveSkill
+public class DarkPowerSkill : ActiveSkill
 {
     public override void UseSkill(Unit unit, List<Unit> enemys)
     {
         if (unit == null || enemys == null)
             return;
 
-        for (int ii = 0; ii < enemys.Count; ii++)
-        {
-            //리스트안에 있는 수만큼 메테오를 소환
-            Vector3 pos = enemys[ii].transform.position;
-            pos.y += 1.5f;
 
-            GenerateSword(GlobalData.g_UnitCarlvrySkillLv, unit, enemys[ii], pos);
-        }
+        GenerateDark(GlobalData.g_EliteShamanID, unit, enemys);
+        
+
     }
 
     public override void UseSkill(Unit unit, Tower tower)
@@ -37,7 +33,7 @@ public class SwordSummonSkill : ActiveSkill
 
     public override void SkillDataSetting(int id)
     {
-        if (Managers.Data.cavalrySkillDict.TryGetValue(id, out SkillData data) == false)
+        if (Managers.Data.eliteShamanSkillDict.TryGetValue(id, out SkillData data) == false)
         {
             Debug.LogError("ProjecteController SetInfo Failed");
             return;
@@ -46,16 +42,15 @@ public class SwordSummonSkill : ActiveSkill
         SkillData = data;
     }
 
-    void GenerateSword(int unitLv, Unit owner, Unit enemy, Vector3 spawnPos)
+    void GenerateDark(int unitLv, Unit owner, List<Unit> enemy)
     {
-        ////칼날 소환
-        if (Managers.Data.cavalrySkillDict.TryGetValue(unitLv, out SkillData data) == false)
+        ////메테오 3개 소환
+        if (Managers.Data.eliteShamanSkillDict.TryGetValue(unitLv, out SkillData data) == false)
         {
             Debug.LogError("ProjecteController SetInfo Failed");
             return;
         }
-        
-        SwordSummonController ssc = Managers.Resource.Instantiate(data.skillPrefab).GetComponent<SwordSummonController>();
-        ssc.SetInfo(owner, enemy, data, spawnPos);
+        DarkPowerController dc = Managers.Resource.Instantiate(data.skillPrefab).GetComponent<DarkPowerController>();
+        dc.SetInfo(owner, enemy, data);
     }
 }

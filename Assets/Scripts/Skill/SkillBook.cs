@@ -51,6 +51,16 @@ public class SkillBook : MonoBehaviour
             return ssk as T;
         }
 
+        else if (type == typeof(DarkPowerSkill))
+        {
+            skillPrefab.TryGetComponent(out DarkPowerSkill dps);
+            activeSkillList.Add(dps);
+            activeSkillList[0].SkillDataSetting(GlobalData.g_EliteShamanID);
+
+
+            return dps as T;
+        }
+
 
         else if(type == typeof(TowerHealSkill))
         {

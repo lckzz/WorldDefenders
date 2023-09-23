@@ -16,7 +16,7 @@ public class SwordSummonController :SkillBase
     {
 
     }
-    public void SetInfo(int Unitlv, Unit owner, Unit enemy, SkillData data, Vector3 startPos)
+    public void SetInfo(Unit owner, Unit enemy, SkillData data, Vector3 startPos)
     {
         //if (Managers.Data.magicSkillDict.TryGetValue(Unitlv, out SkillData data) == false)
         //{

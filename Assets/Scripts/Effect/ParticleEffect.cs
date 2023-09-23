@@ -7,7 +7,7 @@ public class ParticleEffect : MonoBehaviour
     ParticleSystem particle;
     ParticleSystem particle2;
 
-    float durationTime = 0.7f;
+    float durationTime = 0.3f;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +20,8 @@ public class ParticleEffect : MonoBehaviour
     {
         if(particle != null)
         {
-            if (particle.time > durationTime)
+
+            if (particle.time >= durationTime)
             {
                 Destroy(this.gameObject,0.5f);
 

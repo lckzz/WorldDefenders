@@ -7,7 +7,8 @@ public class EliteShamanController : EliteMonsterController
 {
     //매직포스
     Transform magicPos;
-
+    float distacne = 9999999;
+    float dis;
     //매직포스
 
 
@@ -29,17 +30,17 @@ public class EliteShamanController : EliteMonsterController
         moveSpeed = 2.0f;
 
         magicPos = transform.Find("MagicPos");
-        //Skills.AddSkill<SwordDanceSkill>();
-        //skilldialogs = new string[dialogCount];
-        //for (int ii = 0; ii < dialogCount; ii++)
-        //{
-        //    if (ii == 0)
-        //        skilldialogs[ii] = Skills.GetSkill<SwordDanceSkill>().SkillData.skillDialog1;
-        //    else if (ii == 1)
-        //        skilldialogs[ii] = Skills.GetSkill<SwordDanceSkill>().SkillData.skillDialog2;
+        Skills.AddSkill<DarkPowerSkill>();
+        skilldialogs = new string[dialogCount];
+        for (int ii = 0; ii < dialogCount; ii++)
+        {
+            if (ii == 0)
+                skilldialogs[ii] = Skills.GetSkill<DarkPowerSkill>().SkillData.skillDialog1;
+            else if (ii == 1)
+                skilldialogs[ii] = Skills.GetSkill<DarkPowerSkill>().SkillData.skillDialog2;
 
 
-        //}
+        }
 
     }
 
@@ -61,6 +62,43 @@ public class EliteShamanController : EliteMonsterController
         MonsterVictory();
 
     }
+
+    public override void EnemySensor()
+    {
+        base.EnemySensor();
+
+        for (int i = 0; i < unitCtrls.Length; i++)   //최대 타겟수
+        {
+            if (i == 0)
+                skillenemyList.Add(unitCtrls[i]);
+
+            else if (i < 3)
+            {
+                Debug.Log(unitCtrls.Length);
+                skillenemyList.Add(unitCtrls[unitCtrls.Length - i]);
+
+            }
+        }
+        //for(var i = 0; i < unitCtrls.Length;i++)
+        //{
+        //    dis = ((Vector2)unitCtrls[i].transform.position - (Vector2)this.gameObject.transform.position).sqrMagnitude;
+
+        //    if (unitCtrls[i].gameObject.activeInHierarchy)
+        //    {
+        //        if(unitCtrls[i].IsDie == false)
+        //        {
+        //            if(dis < distacne)
+        //            {
+        //                unitCtrlsOrder.Add(unitCtrls[i]);
+        //                distacne = dis;
+        //            }
+        //        }
+        //    }
+
+        //}
+
+    }
+
 
     public override void MonsterSkill()
     {

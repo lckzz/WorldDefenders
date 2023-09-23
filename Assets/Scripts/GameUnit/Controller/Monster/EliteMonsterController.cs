@@ -13,7 +13,8 @@ public class EliteMonsterController : Unit
     [SerializeField] protected bool skillOn = false;     //스킬 발동판단
 
 
-    Unit[] unitCtrls;
+    protected Unit[] unitCtrls;
+    protected List<Unit> unitCtrlsOrder = new List<Unit>();    //순서정렬
     protected Unit unitTarget;
     protected PlayerTower playerTowerCtrl;
     protected List<Unit> skillenemyList = new List<Unit>();
@@ -94,6 +95,9 @@ public class EliteMonsterController : Unit
         //Debug.Log($"타겟팅{isTageting}");
         #region 타겟구현
 
+
+        skillenemyList.Clear();
+        unitCtrlsOrder.Clear();
         enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Unit") | LayerMask.GetMask("SpecialUnit"));
 
 
@@ -134,53 +138,89 @@ public class EliteMonsterController : Unit
 
         }
 
+
+
+
+
         if (unitCtrls.Length > 0)
         {
-            float disMin = 0;
-            int min = 0;
-
 
             if (unitCtrls.Length > 1)
             {
                 for (int i = 0; i < unitCtrls.Length; i++)
                 {
-                    if (i == 0 && unitCtrls.Length > 1)
+                    for(int j = i + 1; j < unitCtrls.Length; j++)
                     {
-                        float distA = (unitCtrls[i].transform.position - this.transform.position).sqrMagnitude;
-                        float distB = (unitCtrls[i + 1].transform.position - this.transform.position).sqrMagnitude;
+                        if (j == unitCtrls.Length)
+                            break;
 
+                        float distA = (unitCtrls[i].transform.position - this.transform.position).sqrMagnitude;
+                        float distB = (unitCtrls[j].transform.position - this.transform.position).sqrMagnitude;
                         if (distA * distA > distB * distB)
                         {
-                            disMin = distB * distB;
-                            min = i + 1;
+                            Unit unitTemp = unitCtrls[i];
+                            unitCtrls[i] = unitCtrls[j];
+                            unitCtrls[j] = unitTemp;
+
                         }
-                        else
-                        {
-                            disMin = distA * distA;
-                            min = i;
-                        }
+     
                     }
 
-                    else if (i < unitCtrls.Length - 1)
-                    {
-                        float distB = (unitCtrls[i + 1].transform.position - this.transform.position).sqrMagnitude;
-
-                        if (disMin > distB * distB)
-                        {
-                            disMin = distB * distB;
-                            min = i + 1;
-                        }
 
 
-                    }
+                    //if (i == 0 && unitCtrls.Length > 1)
+                    //{
+                    //    float distA = (unitCtrls[i].transform.position - this.transform.position).sqrMagnitude;
+                    //    float distB = (unitCtrls[i + 1].transform.position - this.transform.position).sqrMagnitude;
+
+                    //    if (distA * distA > distB * distB)
+                    //    {
+                    //        disMin = distB * distB;
+                    //        min = i + 1;
+                    //    }
+                    //    else
+                    //    {
+                    //        disMin = distA * distA;
+                    //        min = i;
+                    //    }
+
+                    //    unitCtrlsOrder.Add(unitCtrls[min]);
+                    //}
+
+                    //else if (i < unitCtrls.Length - 1)
+                    //{
+                    //    float distB = (unitCtrls[i + 1].transform.position - this.transform.position).sqrMagnitude;
+
+                    //    if (disMin > distB * distB)
+                    //    {
+                    //        disMin = distB * distB;
+                    //        min = i + 1;
+                    //    }
+
+                    //    unitCtrlsOrder.Add(unitCtrls[min]);
+
+
+
+                    //}
 
                 }
+
+
+
+            }
+
+
+
+            for (int ii = 0; ii < skillenemyList.Count; ii++)
+            {
+                if (skillenemyList[ii].IsDie)
+                    skillenemyList.RemoveAt(ii);
             }
 
 
             if (unitCtrls.Length != 0)
             {
-                unitTarget = unitCtrls[min];
+                unitTarget = unitCtrls[0];
             }
 
 
