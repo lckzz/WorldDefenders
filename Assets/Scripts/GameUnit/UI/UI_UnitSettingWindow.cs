@@ -121,10 +121,20 @@ public class UI_UnitSettingWindow : UI_Base
                     if (GlobalData.g_UnitSpearLv > 0)
                         UnitNodeUiInstantiate(UnitClass.Spear);
                 }
+                else if (ii == (int)UnitClass.Priest)
+                {
+                    if (GlobalData.g_UnitPriestLv > 0)
+                        UnitNodeUiInstantiate(UnitClass.Priest);
+                }
                 else if (ii == (int)UnitClass.Magician)
                 {
                     if (GlobalData.g_UnitMagicianLv > 0)
                         UnitNodeUiInstantiate(UnitClass.Magician);
+                }
+                else if (ii == (int)UnitClass.Cavalry)
+                {
+                    if (GlobalData.g_UnitCarlvryLv > 0)
+                        UnitNodeUiInstantiate(UnitClass.Cavalry);
                 }
             }
 

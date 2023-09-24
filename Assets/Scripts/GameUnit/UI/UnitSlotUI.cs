@@ -85,12 +85,28 @@ public class UnitSlotUI : UI_BaseSettingUnit
 
                 break;
 
+            case UnitClass.Priest:
+                //Debug.Log($"아처 갱신! {e_UnitClass}");
+                rt.sizeDelta = defalutSizeDelta;
+                rt.transform.localPosition = defalutTr;
+                UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitArcherLv, "PriestLv1Img", "PriestLv2Img");
+
+                break;
+
             case UnitClass.Magician:
                 //Debug.Log($"창병 갱신! {e_UnitClass}");
 
                 rt.sizeDelta = defalutSizeDelta;
                 rt.transform.localPosition = defalutTr;
                 UnitUISpriteInit(e_UnitClass, "Magician_Idle");
+
+                break;
+            case UnitClass.Cavalry:
+                //Debug.Log($"창병 갱신! {e_UnitClass}");
+
+                rt.sizeDelta = defalutSizeDelta;
+                rt.transform.localPosition = defalutTr;
+                UnitUISpriteInit(e_UnitClass, "Cavalry_Idle");
 
                 break;
 

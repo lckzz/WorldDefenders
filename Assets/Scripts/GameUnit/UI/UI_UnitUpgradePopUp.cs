@@ -31,7 +31,10 @@ public class UI_UnitUpgradePopUp : UI_Base
     [SerializeField] private GameObject[] nextWarriorObjs;
     [SerializeField] private GameObject[] nextArcherObjs;
     [SerializeField] private GameObject[] nextSpearObjs;
+    [SerializeField] private GameObject[] nextPriestObjs;
     [SerializeField] private GameObject nextMagicianObj;
+    [SerializeField] private GameObject nextCavarlyObj;
+
 
 
 
@@ -40,9 +43,13 @@ public class UI_UnitUpgradePopUp : UI_Base
     [SerializeField] private GameObject[] warriorPrefabs;
     [SerializeField] private GameObject[] archerPrefabs;
     [SerializeField] private GameObject[] spearPrefabs;
+    [SerializeField] private GameObject[] priestPrefabs;
+
 
     [Header("------------SpeacialUnit---------------")]
     [SerializeField] private GameObject magicianObj;
+    [SerializeField] private GameObject cavarlyObj;
+
 
 
     private int unitidx = 0;                //받아올 유닛의 클래스의정보
@@ -51,7 +58,7 @@ public class UI_UnitUpgradePopUp : UI_Base
 
 
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
         UnitInit();
 
@@ -97,12 +104,18 @@ public class UI_UnitUpgradePopUp : UI_Base
             case (int)UnitClass.Spear:
                 RefreshUnitStatUI(GlobalData.g_UnitSpearLv, Managers.Data.spearDict);
                 RefreshUnitImgAnim(GlobalData.g_UnitSpearLv, spearPrefabs);
-
+                break;
+            case (int)UnitClass.Priest:
+                RefreshUnitStatUI(GlobalData.g_UnitPriestLv, Managers.Data.priestDict);
+                RefreshUnitImgAnim(GlobalData.g_UnitPriestLv, priestPrefabs);
                 break;
             case (int)UnitClass.Magician:
                 RefreshUnitStatUI(GlobalData.g_UnitMagicianLv, Managers.Data.magicDict);
                 RefreshUnitImgAnim(magicianObj);
-
+                break;
+            case (int)UnitClass.Cavalry:
+                RefreshUnitStatUI(GlobalData.g_UnitCarlvryLv, Managers.Data.cavarlyDict);
+                RefreshUnitImgAnim(cavarlyObj);
                 break;
         }
 
@@ -252,6 +265,41 @@ public class UI_UnitUpgradePopUp : UI_Base
             }
         }
 
+        if (unitObjs == priestPrefabs)
+        {
+            if (unitLv < 5)
+            {
+                priestPrefabs[(int)Define.UnitUILv.One].SetActive(true);
+                priestPrefabs[(int)Define.UnitUILv.Two].SetActive(false);
+                priestPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
+
+            else
+            {
+                priestPrefabs[(int)Define.UnitUILv.One].SetActive(false);
+                priestPrefabs[(int)Define.UnitUILv.Two].SetActive(true);
+                priestPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
+
+            if (unitLv + 1 < 5)
+            {
+                nextPriestObjs[(int)Define.UnitUILv.One].SetActive(true);
+                nextPriestObjs[(int)Define.UnitUILv.Two].SetActive(false);
+                nextPriestObjs[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
+
+            else
+            {
+                nextPriestObjs[(int)Define.UnitUILv.One].SetActive(false);
+                nextPriestObjs[(int)Define.UnitUILv.Two].SetActive(true);
+                nextPriestObjs[(int)Define.UnitUILv.Three].SetActive(false);
+
+            }
+        }
+
 
 
 
@@ -266,6 +314,11 @@ public class UI_UnitUpgradePopUp : UI_Base
         {
             magicianObj.SetActive(true);
             nextMagicianObj.SetActive(true);
+        }
+        if (unitObj == cavarlyObj)
+        {
+            cavarlyObj.SetActive(true);
+            nextCavarlyObj.SetActive(true);
         }
     }
 
@@ -292,7 +345,12 @@ public class UI_UnitUpgradePopUp : UI_Base
                     GlobalData.g_UnitSpearLv++;
                 RefreshUnitStatUI(GlobalData.g_UnitSpearLv, Managers.Data.spearDict);
                 RefreshUnitImgAnim(GlobalData.g_UnitSpearLv, spearPrefabs);
-
+                break;
+            case (int)UnitClass.Priest:
+                if (GlobalData.g_UnitPriestLv < 10)
+                    GlobalData.g_UnitPriestLv++;
+                RefreshUnitStatUI(GlobalData.g_UnitPriestLv, Managers.Data.priestDict);
+                RefreshUnitImgAnim(GlobalData.g_UnitPriestLv, priestPrefabs);
                 break;
 
             case (int)UnitClass.Magician:
@@ -300,8 +358,12 @@ public class UI_UnitUpgradePopUp : UI_Base
                     GlobalData.g_UnitMagicianLv++;
                 RefreshUnitStatUI(GlobalData.g_UnitMagicianLv, Managers.Data.magicDict);
                 RefreshUnitImgAnim(magicianObj);
-
-
+                break;
+            case (int)UnitClass.Cavalry:
+                if (GlobalData.g_UnitCarlvryLv < 10)
+                    GlobalData.g_UnitCarlvryLv++;
+                RefreshUnitStatUI(GlobalData.g_UnitCarlvryLv, Managers.Data.cavarlyDict);
+                RefreshUnitImgAnim(cavarlyObj);
                 break;
 
         }

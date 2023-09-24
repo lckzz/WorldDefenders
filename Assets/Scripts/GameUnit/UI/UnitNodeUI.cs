@@ -31,7 +31,6 @@ public class UnitNodeUI : UI_BaseSettingUnit
             case UnitClass.Archer:
                 Debug.Log($"아처 갱신! {e_UnitClass}");
                 UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitArcherLv, "BowUnitLv1Img", "BowUnitLv2Img");
-
                 break;
 
             case UnitClass.Spear:
@@ -39,13 +38,19 @@ public class UnitNodeUI : UI_BaseSettingUnit
                 rt.sizeDelta = spearSizeDelta;
                 rt.transform.localPosition = spearTr;
                 UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitSpearLv, "SpearUnitLv1Img", "SpearUnitLv2Img");
-
+                break;
+            case UnitClass.Priest:
+                Debug.Log($"사제 갱신! {e_UnitClass}");
+                UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitPriestLv, "PriestLv1Img", "PriestLv2Img");
                 break;
 
             case UnitClass.Magician:
                 Debug.Log($"마법사 갱신! {e_UnitClass}");
                 UnitUISpriteInit(e_UnitClass, "Magician_Idle");
-
+                break;
+            case UnitClass.Cavalry:
+                Debug.Log($"마법사 갱신! {e_UnitClass}");
+                UnitUISpriteInit(e_UnitClass, "Cavalry_Idle");
                 break;
 
             default:

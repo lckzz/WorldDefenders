@@ -332,13 +332,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 216e32474673641429a8bb7bacff306a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hp: 0
   att: 0
+  anim: {fileID: 8605843468858636045}
   attackCoolTime: 1.5
   pos: {fileID: 7538820149075274424}
   boxSize: {x: 5.97, y: 3.59}
-  anim: {fileID: 8605843468858636045}
   monsterClass: 0
   state: 1
+  unitTarget: {fileID: 0}
+  playerTowerCtrl: {fileID: 0}
 --- !u!61 &5063627544534786591
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -461,7 +464,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.64}
+  m_AnchoredPosition: {x: 0, y: 0.7}
   m_SizeDelta: {x: 1.2, y: 0.19}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7901814038272439528

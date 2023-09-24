@@ -23,7 +23,11 @@ public class UnitNode : MonoBehaviour
     [SerializeField] Sprite[] unitWarriorimgs;
     [SerializeField] Sprite[] unitArcherimgs;
     [SerializeField] Sprite[] unitSpearimgs;
+    [SerializeField] Sprite[] unitPriestimgs;
+
     [SerializeField] Sprite unitMagicianimg;
+    [SerializeField] Sprite unitCavalryimg;
+
 
 
 
@@ -129,11 +133,35 @@ public class UnitNode : MonoBehaviour
 
                 }
                 break;
+
+            case UnitClass.Priest:
+                if (GlobalData.g_UnitPriestLv < 5)
+                    unitImg.sprite = unitPriestimgs[0];
+                else
+                    unitImg.sprite = unitPriestimgs[1];
+
+                if (unitStat != null)
+                {
+                    unitStat = Managers.Data.priestDict[GlobalData.g_UnitPriestLv];
+                    unitCost = unitStat.cost;
+
+                }
+                break;
             case UnitClass.Magician:
                     unitImg.sprite = unitMagicianimg;
                 if (unitStat != null)
                 {
                     unitStat = Managers.Data.magicDict[GlobalData.g_UnitMagicianLv];
+                    unitCost = unitStat.cost;
+
+                }
+                break;
+
+            case UnitClass.Cavalry:
+                unitImg.sprite = unitCavalryimg;
+                if (unitStat != null)
+                {
+                    unitStat = Managers.Data.cavarlyDict[GlobalData.g_UnitCarlvryLv];
                     unitCost = unitStat.cost;
 
                 }

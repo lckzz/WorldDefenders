@@ -34,7 +34,11 @@ public class UI_UnitInfoSelectPopUp : UI_Base
     private string[] warriorStr = { "WarriorLv1", "WarriorLv2", "WarriorLv3" };
     private string[] archerStr = { "ArcherLv1", "ArcherLv2", "ArcherLv3" };
     private string[] spearStr = { "SpearManLv1", "SpearManLv2", "SpearManLv3" };
+    private string[] priestStr = { "PriestLv1", "PriestLv2", "PriestLv3" };
+
     private string magicianStr = "MagicianLv1";
+    private string cavalryStr = "CavalryLv1";
+
 
 
     public override bool Init()
@@ -84,8 +88,14 @@ public class UI_UnitInfoSelectPopUp : UI_Base
             case UnitClass.Spear:
                 uniStat = Managers.Data.spearDict[GlobalData.g_UnitSpearLv];
                 break;
+            case UnitClass.Priest:
+                uniStat = Managers.Data.priestDict[GlobalData.g_UnitPriestLv];
+                break;
             case UnitClass.Magician:
                 uniStat = Managers.Data.magicDict[GlobalData.g_UnitMagicianLv];
+                break;
+            case UnitClass.Cavalry:
+                uniStat = Managers.Data.cavarlyDict[GlobalData.g_UnitCarlvryLv];
                 break;
 
             default:
@@ -139,10 +149,20 @@ public class UI_UnitInfoSelectPopUp : UI_Base
                     UnitInstantiate($"UI/UIUnit/Spear/{spearStr[1]}");
 
                 break;
+            case UnitClass.Priest:
+                if (GlobalData.g_UnitPriestLv < 5)
+                    UnitInstantiate($"UI/UIUnit/Priest/{priestStr[0]}");
+
+                else
+                    UnitInstantiate($"UI/UIUnit/Priest/{priestStr[1]}");
+
+                break;
             case UnitClass.Magician:
                 UnitInstantiate($"UI/UIUnit/Magician/{magicianStr}");
+                break;
 
-
+            case UnitClass.Cavalry:
+                UnitInstantiate($"UI/UIUnit/Cavalry/{cavalryStr}");
                 break;
 
             default:

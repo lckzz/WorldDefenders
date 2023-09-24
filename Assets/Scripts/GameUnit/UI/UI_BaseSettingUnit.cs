@@ -25,41 +25,36 @@ public abstract class UI_BaseSettingUnit : MonoBehaviour
         {
             case UnitClass.Warrior:
                 if (unitLv < 5)
-                {
                     unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Warrior/Lv1/{pathLv1}");
-                }
+                
                 else
-                {
                     unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Warrior/Lv2/{pathLv2}");
-                }
+                
                 break;
             case UnitClass.Archer:
                 if (unitLv < 5)
-                {
                     unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Archer/Lv1/{pathLv1}");
 
 
-                }
+                
                 else
-                {
                     unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Archer/Lv2/{pathLv2}");
 
 
-                }
+                
                 break;
             case UnitClass.Spear:
                 if (unitLv < 5)
-                {
                     unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Spear/Lv1/{pathLv1}");
-
-
-                }
                 else
-                {
                     unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Spear/Lv2/{pathLv2}");
+                break;
 
-
-                }
+            case UnitClass.Priest:
+                if (unitLv < 5)
+                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Priest/Lv1/{pathLv1}");
+                else
+                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Priest/Lv2/{pathLv2}");
                 break;
         }
 
@@ -78,7 +73,10 @@ public abstract class UI_BaseSettingUnit : MonoBehaviour
             case UnitClass.Magician:
                 unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Magician/{path}");
                 break;
-                
+            case UnitClass.Cavalry:
+                unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Cavalry/{path}");
+                break;
+
         }
 
     }

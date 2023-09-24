@@ -124,6 +124,20 @@ public class MagicianData : ILoader<int, UnitStat>
         return dict;
     }
 }
+
+public class CavarlyData : ILoader<int, UnitStat>
+{
+    public List<UnitStat> cavarly = new List<UnitStat>();
+
+    public Dictionary<int, UnitStat> MakeDict()
+    {
+        Dictionary<int, UnitStat> dict = new Dictionary<int, UnitStat>();
+        foreach (UnitStat stat in cavarly)
+            dict.Add(stat.level, stat);
+
+        return dict;
+    }
+}
 #endregion
 
 

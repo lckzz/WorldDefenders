@@ -210,8 +210,19 @@ public class UI_GamePlay : UI_Base
                         UnitButtonSetting(i, "Prefabs/Unit/Spear/SpearUnitLv2");
 
                     break;
+
+                case UnitClass.Priest:
+                    if (GlobalData.g_UnitPriestLv < 5)
+                        UnitButtonSetting(i, "Prefabs/Unit/Priest/PriestUnitLv1");
+                    else
+                        UnitButtonSetting(i, "Prefabs/Unit/Priest/PriestUnitLv2");
+
+                    break;
                 case UnitClass.Magician:
                     UnitButtonSetting(i, "Prefabs/Unit/MagicianUnit");
+                    break;
+                case UnitClass.Cavalry:
+                    UnitButtonSetting(i, "Prefabs/Unit/CavalryUnit");
                     break;
             }
         }

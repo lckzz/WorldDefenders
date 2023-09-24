@@ -98,9 +98,15 @@ public class UI_UpgradeWindow : UI_Base
                 case (int)UnitClass.Spear:
                     unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/SpearManUpgrade");
                     break;
+                case (int)UnitClass.Priest:
+                    unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/PriestUpgrade");
+                    break;
                 case (int)UnitClass.Magician:
                     unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/MagicianUpgrade");
+                    break;
 
+                case (int)UnitClass.Cavalry:
+                    unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/CavalryUpgrade");
                     break;
 
                 default:
@@ -172,8 +178,14 @@ public class UI_UpgradeWindow : UI_Base
                 case (int)UnitClass.Spear:
                     unitUpgradeNode.RefreshUnitImg(GlobalData.g_UnitSpearLv);
                     break;
+                case (int)UnitClass.Priest:
+                    unitUpgradeNode.RefreshUnitImg(GlobalData.g_UnitPriestLv);
+                    break;
                 case (int)UnitClass.Magician:
                     unitUpgradeNode.RefreshUnitImg(GlobalData.g_UnitMagicianLv);
+                    break;
+                case (int)UnitClass.Cavalry:
+                    unitUpgradeNode.RefreshUnitImg(GlobalData.g_UnitCarlvryLv);
                     break;
             }
         }

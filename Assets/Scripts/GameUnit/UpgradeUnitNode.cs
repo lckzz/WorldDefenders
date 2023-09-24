@@ -6,15 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public enum UpgradeNode
-{
-    Lv1,
-    Lv2,
-    Lv3,
-    LvTxt,
-    UpgradeBtn,
-    Count
-}
+
 
 public class UpgradeUnitNode : MonoBehaviour
 {
@@ -44,11 +36,6 @@ public class UpgradeUnitNode : MonoBehaviour
 
         Debug.Log(classObj.Length);
 
-
-
-
-
-
         UnitButtonEvent(upgradeBtn.gameObject, (int)upgradeUnit, OpenUpgradeUnitPopUp, UIEvent.PointerDown);
       
     }
@@ -72,12 +59,25 @@ public class UpgradeUnitNode : MonoBehaviour
             upgradeUnit = UnitClass.Spear;
             unitLv = GlobalData.g_UnitSpearLv;
         }
+        else if (gameObject.name.Contains("Priest"))
+        {
+            upgradeUnit = UnitClass.Priest;
+            unitLv = GlobalData.g_UnitPriestLv;
+
+        }
         else if (gameObject.name.Contains("Magician"))
         {
             upgradeUnit = UnitClass.Magician;
             unitLv = GlobalData.g_UnitMagicianLv;
 
         }
+        else if (gameObject.name.Contains("Cavalry"))
+        {
+            upgradeUnit = UnitClass.Cavalry;
+            unitLv = GlobalData.g_UnitCarlvryLv;
+
+        }
+
 
         if ((int)upgradeUnit < (int)UnitClass.Magician)
             classObj = new GameObject[(int)Define.UnitUILv.Count];
@@ -124,11 +124,28 @@ public class UpgradeUnitNode : MonoBehaviour
                     break;
                 }
 
+            case (int)UnitClass.Priest:
+                {
+                    Managers.UI.ShowPopUp<UI_UnitUpgradePopUp>().GetUnitIndex(unitIdx);
+
+                    Debug.Log($"창병 업그판넬 온!{unitIdx}");
+
+                    break;
+                }
+
             case (int)UnitClass.Magician:
                 {
                     Managers.UI.ShowPopUp<UI_UnitUpgradePopUp>().GetUnitIndex(unitIdx);
 
                     Debug.Log($"법사 업그판넬 온!{unitIdx}");
+
+                    break;
+                }
+            case (int)UnitClass.Cavalry:
+                {
+                    Managers.UI.ShowPopUp<UI_UnitUpgradePopUp>().GetUnitIndex(unitIdx);
+
+                    Debug.Log($"기마병 업그판넬 온!{unitIdx}");
 
                     break;
                 }
