@@ -74,7 +74,6 @@ public class EliteShamanController : EliteMonsterController
 
             else if (i < 3)
             {
-                Debug.Log(unitCtrls.Length);
                 skillenemyList.Add(unitCtrls[unitCtrls.Length - i]);
 
             }

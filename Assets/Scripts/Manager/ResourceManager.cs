@@ -32,6 +32,19 @@ public class ResourceManager
         }
 
         return Object.Instantiate(prefab, parent);
+
+    }
+
+    public GameObject Instantiate(GameObject prefab,Vector3 instantPos)
+    {
+        if (prefab == null)
+        {
+            Debug.Log($"Failed to load prefab null");
+            return null;
+        }
+
+        return Object.Instantiate(prefab, instantPos,Quaternion.identity);
+
     }
 
     public GameObject ResourceEffect(Vector3 pos, string effPath)

@@ -67,7 +67,7 @@ public class LobbyScene : BaseScene
             //GlobalData.g_SlotUnitClass
             lobbyUnits[ii].E_UniClass = GlobalData.g_SlotUnitClass[ii];
             lobbyUnits[ii].RefreshUnitSet();
-            if (lobbyUnits[ii].E_UniClass == UnitClass.Magician)
+            if ((int)lobbyUnits[ii].E_UniClass >= (int)UnitClass.Magician)
                 lobbyUnits[ii].transform.localScale = new Vector3(-1.3f, 1.3f, 1.3f);
             else
             {

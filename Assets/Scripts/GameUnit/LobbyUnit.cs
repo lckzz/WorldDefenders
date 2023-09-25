@@ -11,10 +11,12 @@ public class LobbyUnit : MonoBehaviour
     public UnitClass E_UniClass { get { return e_UnitClass; } set { e_UnitClass = value; } }
     // Start is called before the first frame update
 
-    string[] warriorStr = { "WarriorUnitLv1", "WarriorUnitLv2", "WarriorUnitLv3" };
-    string[] archerStr = { "ArcherUnitLv1", "ArcherUnitLv2", "ArcherUnitLv3" };
-    string[] spearStr = { "SpearUnitLv1", "SpearUnitLv2", "SpearUnitLv3" };
-    string magicianStr = "MagicianUnit";
+    private string[] warriorStr = { "WarriorUnitLv1", "WarriorUnitLv2", "WarriorUnitLv3" };
+    private string[] archerStr = { "ArcherUnitLv1", "ArcherUnitLv2", "ArcherUnitLv3" };
+    private string[] spearStr = { "SpearUnitLv1", "SpearUnitLv2", "SpearUnitLv3" };
+    private string[] priestStr = { "PriestUnitLv1", "PriestUnitLv2", "PriestUnitLv3" };
+    private string magicianStr = "MagicianUnit";
+    private string cavalryStr = "CavalryUnit";
 
 
     public void RefreshUnitSet()
@@ -40,20 +42,26 @@ public class LobbyUnit : MonoBehaviour
             case UnitClass.Archer:
                 Debug.Log($"아처 갱신! {e_UnitClass}");
                 UnitSpriteRender(e_UnitClass, GlobalData.g_UnitArcherLv, archerStr[0], archerStr[1]);
-
                 break;
 
             case UnitClass.Spear:
                 Debug.Log($"창병 갱신! {e_UnitClass}");
                 UnitSpriteRender(e_UnitClass, GlobalData.g_UnitSpearLv, spearStr[0], spearStr[1]);
+                break;
 
+            case UnitClass.Priest:
+                Debug.Log($"사제 갱신! {e_UnitClass}");
+                UnitSpriteRender(e_UnitClass, GlobalData.g_UnitPriestLv, priestStr[0], priestStr[1]);
                 break;
 
 
             case UnitClass.Magician:
                 Debug.Log($"마법사 갱신! {e_UnitClass}");
-                UnitSpriteRender(e_UnitClass, magicianStr);
-
+                SpecialUnitSpriteRender(e_UnitClass, magicianStr);
+                break;
+            case UnitClass.Cavalry:
+                Debug.Log($"기마병 갱신! {e_UnitClass}");
+                SpecialUnitSpriteRender(e_UnitClass, cavalryStr);
                 break;
             default:
                 Debug.Log("유닛노드에 유닛클래스가 설정이 안됫어요;");
@@ -72,45 +80,36 @@ public class LobbyUnit : MonoBehaviour
         {
             case UnitClass.Warrior:
                 if (unitLv < 5)
-                {
                     unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Warrior/{pathLv1}",this.gameObject.transform);
-                }
+                
                 else
-                {
                     unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Warrior/{pathLv2}", this.gameObject.transform);
-                }
+                
                 break;
             case UnitClass.Archer:
                 if (unitLv < 5)
-                {
                     unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Archer/{pathLv1}", this.gameObject.transform);
 
-
-                }
                 else
-                {
                     unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Archer/{pathLv2}", this.gameObject.transform);
 
-
-                }
                 break;
             case UnitClass.Spear:
                 if (unitLv < 5)
-                {
                     unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Spear/{pathLv1}", this.gameObject.transform);
-
-
-                }
                 else
-                {
                     unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Spear/{pathLv2}", this.gameObject.transform);
+                break;
 
-
-                }
+            case UnitClass.Priest:
+                if (unitLv < 5)
+                    unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Priest/{pathLv1}", this.gameObject.transform);
+                else
+                    unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Priest/{pathLv2}", this.gameObject.transform);
                 break;
         }
     }
-    void UnitSpriteRender(UnitClass uniClass, string path)
+    void SpecialUnitSpriteRender(UnitClass uniClass, string path)
     {
         gameObject.SetActive(true);
 
@@ -119,7 +118,9 @@ public class LobbyUnit : MonoBehaviour
             case UnitClass.Magician:
                 unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Magician/{path}", this.gameObject.transform);
                 break;
-
+            case UnitClass.Cavalry:
+                unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Cavalry/{path}", this.gameObject.transform);
+                break;
 
         }
     }

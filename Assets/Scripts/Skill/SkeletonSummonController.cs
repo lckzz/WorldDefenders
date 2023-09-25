@@ -10,7 +10,7 @@ public class SkeletonSummonController : SkillBase
     Unit owener;
     Vector3 pos;
     Vector3 curPos;
-    float _lifeTime = 3.0f;
+
     Animator anim;
     int summonidx;
     bool firstSummon = false;
@@ -38,7 +38,6 @@ public class SkeletonSummonController : SkillBase
     {
         base.Init();
         TryGetComponent(out anim);
-        StartDestroy(_lifeTime);
 
         return true;
     }
@@ -72,14 +71,13 @@ public class SkeletonSummonController : SkillBase
         {
             Debug.Log("евев");
             yield return wfs;
-            Managers.Resource.Instantiate(go);
+            Managers.Resource.Instantiate(go,this.transform.position);
         }
 
-
-        yield return wfs;
-
         if (anim != null)
+        {
             anim.SetTrigger("Destroy");
+        }
 
     }
 
