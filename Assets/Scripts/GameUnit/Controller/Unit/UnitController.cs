@@ -42,7 +42,12 @@ public class UnitController : Unit
     protected Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
     protected MonsterPortal monsterPortal;
 
-    
+    //아처 사제 전용
+    protected Transform posTr;
+
+    //아처 사제 전용
+
+    protected UnitStat unitStat;
 
     public int KnockBackForce { get { return knockbackForce; } }
 
@@ -54,12 +59,7 @@ public class UnitController : Unit
 
     public UnitClass UniClass { get { return unitClass; } }
 
-    //아처 사제 전용
-    protected Transform posTr;
 
-    //아처 사제 전용
-
-    protected UnitStat unitStat;
 
     string warriorHitSound = "WarriorAttack";
     string warriorCriticalSound = "CriticalSound";
