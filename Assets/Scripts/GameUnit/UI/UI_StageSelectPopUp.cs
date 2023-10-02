@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,9 +15,13 @@ public class UI_StageSelectPopUp : UI_Base
     [SerializeField] private Button backBtn;
     [SerializeField] private Button startBtn;
     [SerializeField] private Image fadeImg;
+    [SerializeField] private GameObject uiObj;
+    [SerializeField] private GameObject paperBg;
+    private RectTransform paperRt;
+    private Vector2 rtSizeDelta;
 
     private bool fadeCheck = false;
-
+    private StageNode stagenode;
 
     [SerializeField] private GameObject player;
 
@@ -29,9 +34,14 @@ public class UI_StageSelectPopUp : UI_Base
 
     public bool FadeCheck { get { return fadeCheck; }}
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
+        paperBg?.TryGetComponent(out paperRt);
+        rtSizeDelta = paperRt.sizeDelta;
+        rtSizeDelta.x = 0.0f;
+        paperRt.sizeDelta = rtSizeDelta;
 
+        StartCoroutine(StartPaperDeltaSizeDo(1340.0f,true));
         if (backBtn != null)
             backBtn.onClick.AddListener(ClosePopUp);
         if (startBtn != null)
@@ -52,12 +62,12 @@ public class UI_StageSelectPopUp : UI_Base
     // Update is called once per frame
     void Update()
     {
-        if(fadeCheck)   //다음씬을 넘어갈떄
+        if (fadeCheck)   //다음씬을 넘어갈떄
             FadeIn();
-        
+
         //뒤로가거나 들어올때
-        Util.FadeOut(ref startFadeOut, fadeImg);
-        BackFadeIn(fadeImg, this, backFadeCheck);
+        //Util.FadeOut(ref startFadeOut, fadeImg);
+        //BackFadeIn(fadeImg, this, backFadeCheck);
     }
 
 
@@ -90,8 +100,15 @@ public class UI_StageSelectPopUp : UI_Base
 
     void GetStageInfo(int ii)
     {
+        for(int i = 0; i < onestageSels.Length; i++)
+        {
+            onestageSels[i].TryGetComponent(out stagenode);
+            stagenode.ClickStageDoOff();
+
+        }
+
         //해당 스테이지를 누르면 지금 스테이지가 어떤 스테이지인지 확인하고 해당스테이지 몬스터의 정보를 받아온다
-        onestageSels[ii].TryGetComponent(out StageNode stagenode);
+        onestageSels[ii].TryGetComponent(out stagenode);
         if(stagenode.StState == Define.StageState.Open)
         {
             GlobalData.SetMonsterList(stagenode.StageMonsterList);  //정적변수에 몬스터의 정보들을 받아둔다.
@@ -101,7 +118,7 @@ public class UI_StageSelectPopUp : UI_Base
             StartBtnActive();
         }
 
-
+        stagenode.ClickStageDoOn();
 
 
 
@@ -116,13 +133,13 @@ public class UI_StageSelectPopUp : UI_Base
         {
             switch (subStage)
             {
-                case Define.SubStage.One:
+                case Define.SubStage.West:
                     curSelectText.text = "Stage 1 - 1";
                     break;
-                case Define.SubStage.Two:
+                case Define.SubStage.East:
                     curSelectText.text = "Stage 1 - 2";
                     break;
-                case Define.SubStage.Three:
+                case Define.SubStage.South:
                     curSelectText.text = "Stage 1 - 3";
                     break;
                 case Define.SubStage.Boss:
@@ -208,6 +225,19 @@ public class UI_StageSelectPopUp : UI_Base
         //Managers.Scene.LoadScene(Define.Scene.BattleStage_Field);
     }
 
+    float waitTime = 0.7f;
+    IEnumerator StartPaperDeltaSizeDo(float endValue, bool uiObjActive)
+    {
+        WaitForSeconds wfs = new WaitForSeconds(waitTime);
+
+        paperRt?.DOSizeDelta(new Vector2(endValue, paperRt.sizeDelta.y), waitTime);
+        yield return wfs;
+
+        if (uiObj?.activeSelf == !uiObjActive)
+            uiObj.SetActive(uiObjActive);
+
+        yield return null;
+    }
 
     public void BackFadeIn(Image fadeImg, UI_Base closePopup, bool fadeCheck)
     {

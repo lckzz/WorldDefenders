@@ -71,9 +71,9 @@ public class Define
 
     public enum SubStage
     {
-        One,
-        Two,
-        Three,
+        West,
+        East,
+        South,
         Boss
 
     }
