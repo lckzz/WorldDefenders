@@ -41,7 +41,7 @@ public class UI_StageSelectPopUp : UI_Base
         rtSizeDelta.x = 0.0f;
         paperRt.sizeDelta = rtSizeDelta;
 
-        StartCoroutine(StartPaperDeltaSizeDo(1340.0f,true));
+        StartCoroutine(StartPaperDeltaSizeDo(1810.0f,true));
         if (backBtn != null)
             backBtn.onClick.AddListener(ClosePopUp);
         if (startBtn != null)
@@ -209,7 +209,7 @@ public class UI_StageSelectPopUp : UI_Base
 
                 if (fadeImg.color.a >= 0.99f)
                 {
-                    Managers.Scene.LoadScene(Define.Scene.BattleStage_Field);
+                    Managers.Loading.LoadScene(Define.Scene.BattleStage_Field);
 
 
                 }

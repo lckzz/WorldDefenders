@@ -14,6 +14,12 @@ public class SceneManagerEx
         SceneManager.LoadScene(GetSceneName(type));
     }
 
+    public AsyncOperation LoadSceneAsync(Define.Scene type)
+    {
+        //Managers.Clear();
+        return SceneManager.LoadSceneAsync(GetSceneName(type));
+    }
+
 
     string GetSceneName(Define.Scene type)
     {

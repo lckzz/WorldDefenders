@@ -107,7 +107,7 @@ public class UIManager
 
     public void CloseAllPopUpUI()
     {
-        while (_uiStack.Count > 0)
+        while (_uiStack.Count > 0 && _uiStack.Peek() != null)
             ClosePopUp();
     }
 
