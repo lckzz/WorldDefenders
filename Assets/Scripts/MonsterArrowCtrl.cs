@@ -100,7 +100,8 @@ public class MonsterArrowCtrl : MonoBehaviour
             }
 
 
-            Destroy(this.gameObject);
+            StartCoroutine(Util.UnitDieTime(gameObject));
+
         }
         else if(coll.tag.Contains("Tower") && coll.name.Contains("Tower"))
         {
@@ -118,7 +119,7 @@ public class MonsterArrowCtrl : MonoBehaviour
                 }
             }
 
-            Destroy(this.gameObject);
+            StartCoroutine(Util.UnitDieTime(gameObject));
 
         }
 

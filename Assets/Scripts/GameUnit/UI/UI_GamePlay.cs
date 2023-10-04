@@ -235,6 +235,12 @@ public class UI_GamePlay : UI_Base
 
     Coroutine StartUISet = null;
 
+    private void OnEnable()
+    {
+        Managers.UI.ShowSceneUI<UI_GamePlay>();
+    }
+
+
     private void Update()
     {
         UpdateSkill();
@@ -603,7 +609,7 @@ public class UI_GamePlay : UI_Base
     public void Summon(GameObject obj, Transform[] tr)
     {
         obj = gameQueue.Dequeue();
-        GameObject instancObj = Instantiate(obj);
+        GameObject instancObj = Managers.Resource.Instantiate(obj);
 
         int ran = UnityEngine.Random.Range(0, 3);
         instancObj.transform.position = tr[ran].position;

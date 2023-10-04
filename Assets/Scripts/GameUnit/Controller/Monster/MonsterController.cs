@@ -542,7 +542,8 @@ public class MonsterController : Unit
         {
             SetMonsterState(MonsterState.Die);
             myColl.enabled = false;
-            GameObject.Destroy(gameObject, 3.0f);
+            StartCoroutine(Util.UnitDieTime(gameObject, 3.0f));
+
 
         }
     }
@@ -668,7 +669,7 @@ public class MonsterController : Unit
         {
             int attack = att * 2;
             uniCtrl.OnDamage(attack, monStat.knockBackForce);      //크리티컬이면 데미지2배에 넉백까지
-            MeleeUnitEffectAndSound(unitTarget.transform.position, criticalSoundPath, hitPath);
+            Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, criticalSoundPath, hitPath);
 
         }
         else  //노크리티컬이면 일반공격
@@ -676,7 +677,7 @@ public class MonsterController : Unit
 
 
             uniCtrl.OnDamage(att);        //넉백은 없이
-            MeleeUnitEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
+            Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
 
         }
     }
@@ -687,27 +688,28 @@ public class MonsterController : Unit
         {
             int attack = att * 2;
             tower.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
-            MeleeUnitEffectAndSound(tower.transform.position, criticalSoundPath, hitPath);
+            Managers.Resource.ResourceEffectAndSound(tower.transform.position, criticalSoundPath, hitPath);
 
         }
         else  //노크리티컬이면 일반공격
         {
+            Debug.Log("여기맞죵");
             tower.TowerDamage(att);        //넉백은 없이
-            MeleeUnitEffectAndSound(tower.transform.position, soundPath, hitPath);
+            Managers.Resource.ResourceEffectAndSound(tower.transform.position, soundPath, hitPath);
 
         }
     }
 
 
-    void MeleeUnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
-    {
-        Managers.Sound.Play($"Sounds/Effect/{soundPath}");
-        GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
-        Vector2 randomPos = RandomPosSetting(pos);
+    //void MeleeUnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
+    //{
+    //    Managers.Sound.Play($"Sounds/Effect/{soundPath}");
+    //    GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
+    //    Vector2 randomPos = RandomPosSetting(pos);
 
-        if (eff != null)
-            Instantiate(eff, randomPos, Quaternion.identity);
-    }
+    //    if (eff != null)
+    //        Instantiate(eff, randomPos, Quaternion.identity);
+    //}
 
 
     void ApplyKnockBack(Vector2 dir, float force)

@@ -31,7 +31,6 @@ public enum UnitState
 public class UnitController : Unit
 {
 
-
     [SerializeField]
     private UnitClass unitClass;
     [SerializeField]
@@ -40,7 +39,7 @@ public class UnitController : Unit
 
     protected Unit[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
     protected Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
-    protected MonsterPortal monsterPortal;
+    [SerializeField] protected MonsterPortal monsterPortal;
 
     //아처 사제 전용
     protected Transform posTr;
@@ -549,10 +548,11 @@ public class UnitController : Unit
         {
             SetUnitState(UnitState.Die);
             myColl.enabled = false;
-            GameObject.Destroy(gameObject, 5.0f);
-
+            StartCoroutine(Util.UnitDieTime(gameObject,5.0f));
         }
     }
+
+
    
 
     public override void OnDamage(int att,int knockBack = 0)
@@ -708,14 +708,14 @@ public class UnitController : Unit
         {
             int attack = att * 2;
             monCtrl.OnDamage(attack, unitStat.knockBackForce);      //크리티컬이면 데미지2배에 넉백까지
-            UnitEffectAndSound(monTarget.transform.position, criticalSoundPath, hitPath);
+            Managers.Resource.ResourceEffectAndSound(monTarget.transform.position, criticalSoundPath, hitPath);
 
         }
         else  //노크리티컬이면 일반공격
         {
             
             monCtrl.OnDamage(att);        //넉백은 없이
-            UnitEffectAndSound(monTarget.transform.position, soundPath, hitPath);
+            Managers.Resource.ResourceEffectAndSound(monTarget.transform.position, soundPath, hitPath);
 
         }
     }
@@ -726,33 +726,33 @@ public class UnitController : Unit
         {
             int attack = att * 2;
             monPortal.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
-            UnitEffectAndSound(monPortal.transform.position, criticalSoundPath, hitPath);
+            Managers.Resource.ResourceEffectAndSound(monPortal.transform.position, criticalSoundPath, hitPath);
 
         }
         else  //노크리티컬이면 일반공격
         {
             monPortal.TowerDamage(att);        //넉백은 없이
-            UnitEffectAndSound(monPortal.transform.position, soundPath, hitPath);
+            Managers.Resource.ResourceEffectAndSound(monPortal.transform.position, soundPath, hitPath);
 
         }
     }
 
 
-    protected void UnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
-    {
-        Managers.Sound.Play($"Sounds/Effect/{soundPath}");
-        GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
-        Vector2 randomPos = RandomPosSetting(pos);
+    //protected void UnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
+    //{
+    //    Managers.Sound.Play($"Sounds/Effect/{soundPath}");
+    //    GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
+    //    Vector2 randomPos = RandomPosSetting(pos);
 
-        if (eff != null)
-        {
-            if(unitClass == UnitClass.Priest)
-                Instantiate(eff, pos, Quaternion.identity);
-            else
-                Instantiate(eff, randomPos, Quaternion.identity);
+    //    if (eff != null)
+    //    {
+    //        if(unitClass == UnitClass.Priest)
+    //            Instantiate(eff, pos, Quaternion.identity);
+    //        else
+    //            Instantiate(eff, randomPos, Quaternion.identity);
 
-        }
-    }
+    //    }
+    //}
 
 
     #region 넉백

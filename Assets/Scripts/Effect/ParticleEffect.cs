@@ -23,9 +23,11 @@ public class ParticleEffect : MonoBehaviour
 
             if (particle.time >= durationTime)
             {
-                Destroy(this.gameObject,0.5f);
+                StartCoroutine(Util.UnitDieTime(gameObject,0.5f));
 
             }
         }
     }
+
+
 }

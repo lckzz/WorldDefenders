@@ -86,7 +86,7 @@ public class UIManager
             return;
 
         UI_Base popUp = _uiStack.Pop();
-        Managers.Resource.Destory(popUp.gameObject);
+        Managers.Resource.Destroy(popUp.gameObject);
         popUp = null;
         _ui = null;
     }

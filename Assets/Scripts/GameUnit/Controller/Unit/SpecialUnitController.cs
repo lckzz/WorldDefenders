@@ -571,7 +571,8 @@ public class SpecialUnitController : Unit
         if (myColl.enabled)
         {
             myColl.enabled = false;
-            GameObject.Destroy(gameObject, 5.0f);
+            StartCoroutine(Util.UnitDieTime(gameObject, 5.0f));
+
             SetUnitState(SpecialUnitState.Die);
 
         }
@@ -642,14 +643,14 @@ public class SpecialUnitController : Unit
         {
             int attack = att * 2;
             monCtrl.OnDamage(attack, unitStat.knockBackForce);      //크리티컬이면 데미지2배에 넉백까지
-            UnitEffectAndSound(monTarget.transform.position,warriorCriticalSound,warriorHitEff);
+            Managers.Resource.ResourceEffectAndSound(monTarget.transform.position,warriorCriticalSound,warriorHitEff);
 
         }
         else  //노크리티컬이면 일반공격
         {
 
             monCtrl.OnDamage(att);        //넉백은 없이
-            UnitEffectAndSound(monTarget.transform.position, warriorHitSound, warriorHitEff);
+            Managers.Resource.ResourceEffectAndSound(monTarget.transform.position, warriorHitSound, warriorHitEff);
 
         }
     }
@@ -660,27 +661,27 @@ public class SpecialUnitController : Unit
         {
             int attack = att * 2;
             monPortal.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
-            UnitEffectAndSound(monPortal.transform.position,  warriorCriticalSound, warriorHitEff);
+            Managers.Resource.ResourceEffectAndSound(monPortal.transform.position,  warriorCriticalSound, warriorHitEff);
 
         }
         else  //노크리티컬이면 일반공격
         {
             monPortal.TowerDamage(att);        //넉백은 없이
-            UnitEffectAndSound(monPortal.transform.position, warriorHitSound, warriorHitEff);
+            Managers.Resource.ResourceEffectAndSound(monPortal.transform.position, warriorHitSound, warriorHitEff);
 
         }
     }
 
 
-    void UnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
-    {
-        Managers.Sound.Play($"Sounds/Effect/{soundPath}");
-        GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
-        Vector2 randomPos = RandomPosSetting(pos);
+    //void UnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
+    //{
+    //    Managers.Sound.Play($"Sounds/Effect/{soundPath}");
+    //    GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
+    //    Vector2 randomPos = RandomPosSetting(pos);
 
-        if (eff != null)
-            Instantiate(eff, randomPos, Quaternion.identity);
-    }
+    //    if (eff != null)
+    //        Instantiate(eff, randomPos, Quaternion.identity);
+    //}
 
 
     #region 넉백

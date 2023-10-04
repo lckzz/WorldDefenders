@@ -140,7 +140,8 @@ public class MagicAttackCtrl : MonoBehaviour
         
 
         if (eff != null)
-            Instantiate(eff, pos, Quaternion.identity);
+            Managers.Resource.Instantiate(eff, pos, Quaternion.identity);
+
     }
 
     public void SetType(Unit monCtrl, MonsterPortal monPort)

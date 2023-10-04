@@ -20,12 +20,12 @@ public class HitEffect : MonoBehaviour
     {
         if(anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
-            Destroy(this.gameObject,0.2f);
+            StartCoroutine(Util.UnitDieTime(gameObject, 0.2f));
         }
     }
 
     private void OnEnable()
     {
-        //
+        
     }
 }

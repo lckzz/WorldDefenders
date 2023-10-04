@@ -1,11 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UI.Image;
 
 public class ResourceManager 
 {
     public T Load<T>(string path) where T : Object
     {
+        //오브젝트 풀에서 찾아서 있으면 
+        if(typeof(T) == typeof(GameObject))
+        {
+            string name = path;
+            int index = name.LastIndexOf('/');
+            if (index >= 0)
+                name = name.Substring(index + 1);
+            Debug.Log($"여기 안오나여{name}");
+
+            GameObject go = Managers.Pool.GetOriginal(name);
+            if (go != null)
+                return go as T;
+        }
+
+        Debug.Log("여기 안오나여2");
+
         return Resources.Load<T>(path);
     }
 
@@ -13,45 +30,73 @@ public class ResourceManager
 
     public GameObject Instantiate(string path, Transform parent = null)
     {
-        GameObject prefab = Load<GameObject>($"Prefabs/{path}");
-        if(prefab == null)
+        GameObject original = Load<GameObject>($"Prefabs/{path}");
+        if(original == null)
         {
             Debug.Log($"Failed to load prefab : {path}");
             return null;
         }
 
-        return Object.Instantiate(prefab, parent);
+        if (original.GetComponent<Poolable>() != null)
+            return Managers.Pool.Pop(original, parent).gameObject;
+
+        return Object.Instantiate(original, parent);
     }
 
-    public GameObject Instantiate(GameObject prefab, Transform parent = null)
+    public GameObject Instantiate(GameObject original, Transform parent = null)
     {
-        if (prefab == null)
+        if (original == null)
         {
             Debug.Log($"Failed to load prefab null");
             return null;
         }
 
-        return Object.Instantiate(prefab, parent);
+        if (original.GetComponent<Poolable>() != null)
+            return Managers.Pool.Pop(original, parent).gameObject;
+
+
+        return Object.Instantiate(original, parent);
 
     }
 
-    public GameObject Instantiate(GameObject prefab,Vector3 instantPos)
+    public GameObject Instantiate(GameObject original,Vector3 instantPos,Transform parent = null)
     {
-        if (prefab == null)
+        if (original == null)
         {
             Debug.Log($"Failed to load prefab null");
             return null;
         }
 
-        return Object.Instantiate(prefab, instantPos,Quaternion.identity);
+        if (original.GetComponent<Poolable>() != null)
+            return Managers.Pool.Pop(original, parent).gameObject;
+
+        return Object.Instantiate(original, instantPos,Quaternion.identity);
 
     }
 
-    public GameObject ResourceEffect(Vector3 pos, string effPath)
+    public GameObject Instantiate(GameObject original, Vector3 instantPos, Quaternion rot, Transform parent = null)
+    {
+        if (original == null)
+        {
+            Debug.Log($"Failed to load prefab null");
+            return null;
+        }
+
+        if (original.GetComponent<Poolable>() != null)
+            return Managers.Pool.Pop(original, parent).gameObject;
+
+        return Object.Instantiate(original, instantPos, rot,parent);
+
+    }
+
+    public GameObject ResourceEffect(Vector3 pos, string effPath,Transform parent = null)
     {
         //Managers.Sound.Play($"Sounds/Effect/{soundPath}");
         GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
 
+
+        if (eff.GetComponent<Poolable>() != null)
+            return Managers.Pool.Pop(eff, parent).gameObject;
 
         if (eff != null)
             GameObject.Instantiate(eff, pos, Quaternion.identity);
@@ -65,11 +110,17 @@ public class ResourceManager
 
     }
 
-    public GameObject ResourceEffectAndSound(Vector3 pos, string soundPath, string effPath)
+    public GameObject ResourceEffectAndSound(Vector3 pos, string soundPath, string effPath,Transform parent = null)
     {
         Managers.Sound.Play($"Sounds/Effect/{soundPath}");
         GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
 
+        if (eff.GetComponent<Poolable>() != null)
+        {
+            GameObject go =  Managers.Pool.Pop(eff, parent).gameObject;
+            go.transform.position = pos;
+            return go;
+        }
 
         if (eff != null)
             GameObject.Instantiate(eff, pos, Quaternion.identity);
@@ -77,11 +128,26 @@ public class ResourceManager
         return eff;
     }
 
-    public void Destory(GameObject go)
+    public void Destroy(GameObject go,float time = .0f)
     {
         if (go == null)
             return;
 
-        Object.Destroy(go);
+
+        go.TryGetComponent(out Poolable poolable);
+
+        if(poolable != null)
+        {
+            Managers.Pool.Push(poolable);
+            return;
+        }
+
+        if (time > .0f)
+            Object.Destroy(go);
+        else
+            Object.Destroy(go, time);
     }
+
+
+    
 }

@@ -160,8 +160,8 @@ public class PriestController : UnitController
         {
 
             int heal = (int)(att * 0.5f);     //힐량은 기본공격력의 반토막(크리는 터져도 똑같음)
-            unitCtrl.OnHeal((int)unitCtrl.MaxHp);        
-            UnitEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
+            unitCtrl.OnHeal((int)unitCtrl.MaxHp);
+            Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
 
             
         }
@@ -170,7 +170,7 @@ public class PriestController : UnitController
         {
             int heal = (int)(att * 0.5f);     //힐량은 기본공격력의 반토막(크리는 터져도 똑같음)
             spUnitCtrl.OnHeal((int)spUnitCtrl.MaxHp);
-            UnitEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
+            Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
         }
 
         else if(unit is MonsterController monsterCtrl)
@@ -179,14 +179,14 @@ public class PriestController : UnitController
             {
                 int attack = att * 2;
                 monsterCtrl.OnDamage(attack, unitStat.knockBackForce);      //크리티컬이면 데미지2배에 넉백까지
-                UnitEffectAndSound(monTarget.transform.position, soundPath, hitPath);
+                Managers.Resource.ResourceEffectAndSound(monTarget.transform.position, soundPath, hitPath);
 
             }
             else  //노크리티컬이면 일반공격
             {
 
                 monsterCtrl.OnDamage(att);        //넉백은 없이
-                UnitEffectAndSound(monTarget.transform.position, soundPath, hitPath);
+                Managers.Resource.ResourceEffectAndSound(monTarget.transform.position, soundPath, hitPath);
 
             }
         }

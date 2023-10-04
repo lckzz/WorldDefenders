@@ -90,6 +90,7 @@ GameObject:
   - component: {fileID: 2521825923425544953}
   - component: {fileID: -6698686812739961535}
   - component: {fileID: 7087058752390936821}
+  - component: {fileID: 1905261723071912557}
   m_Layer: 6
   m_Name: ArcherUnitLv1
   m_TagString: Unit
@@ -208,6 +209,7 @@ MonoBehaviour:
   boxSize: {x: 9.36, y: 3.55}
   unitClass: 1
   state: 1
+  monsterPortal: {fileID: 0}
 --- !u!50 &2521825923425544953
 Rigidbody2D:
   serializedVersion: 4
@@ -295,6 +297,19 @@ MonoBehaviour:
   hpbar: {fileID: 2666724782825662061}
   hpbarCover: {fileID: 7822031417770775971}
   hpSpeed: 1.7
+--- !u!114 &1905261723071912557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6766953926792227137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 131b0d3f724bb6b4a9819c7808b822a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsUsing: 0
 --- !u!1 &6942861249999275266
 GameObject:
   m_ObjectHideFlags: 0

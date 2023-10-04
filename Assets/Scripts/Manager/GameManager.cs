@@ -88,7 +88,7 @@ public class GameManager : MonoBehaviour
                 {
                     bossOn = true;
                     int ranPos = Random.Range(0, 3);
-                    GameObject obj = Instantiate(eliteWarrior, monsterSpawnPos[ranPos].position, Quaternion.identity);
+                    GameObject obj = Managers.Resource.Instantiate(eliteWarrior, monsterSpawnPos[ranPos].position);
                 }
 
                
@@ -123,7 +123,7 @@ public class GameManager : MonoBehaviour
                     monsterSpawn = 0.0f;
                     int ran = Random.Range(0, 2);
                     int ranPos = Random.Range(0, 3);
-                    GameObject obj = Instantiate(monsters[ran], monsterSpawnPos[ranPos].position, Quaternion.identity);
+                    GameObject obj = Managers.Resource.Instantiate(monsters[ran], monsterSpawnPos[ranPos].position, Quaternion.identity);
                     obj.transform.position = monsterSpawnPos[ranPos].position;
                     monsterSpawn = spawnTimer;
 

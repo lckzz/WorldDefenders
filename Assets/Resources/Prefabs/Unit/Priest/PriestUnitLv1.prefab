@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 6492573707843977888}
   - component: {fileID: 1839673201575314846}
   - component: {fileID: 6980710665630366038}
+  - component: {fileID: 5710958872489926488}
   m_Layer: 6
   m_Name: PriestUnitLv1
   m_TagString: Unit
@@ -164,6 +165,7 @@ MonoBehaviour:
   boxSize: {x: 9.36, y: 3.55}
   unitClass: 3
   state: 1
+  monsterPortal: {fileID: 0}
   unitTarget: {fileID: 0}
   unitCtrls: []
 --- !u!50 &6492573707843977888
@@ -253,6 +255,19 @@ MonoBehaviour:
   hpbar: {fileID: 2616185122972654349}
   hpbarCover: {fileID: 6856213582262122382}
   hpSpeed: 1.7
+--- !u!114 &5710958872489926488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3343289586800229662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 131b0d3f724bb6b4a9819c7808b822a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsUsing: 0
 --- !u!1 &4586519628554397574
 GameObject:
   m_ObjectHideFlags: 0

@@ -122,6 +122,7 @@ GameObject:
   - component: {fileID: 256589240056525657}
   - component: {fileID: 3393874936773754789}
   - component: {fileID: 5316840494800197309}
+  - component: {fileID: 8055828376928902318}
   m_Layer: 6
   m_Name: SpearUnitLv1
   m_TagString: Unit
@@ -239,6 +240,7 @@ MonoBehaviour:
   boxSize: {x: 5.97, y: 3.59}
   unitClass: 2
   state: 1
+  monsterPortal: {fileID: 0}
 --- !u!50 &256589240056525657
 Rigidbody2D:
   serializedVersion: 4
@@ -326,6 +328,19 @@ MonoBehaviour:
   hpbar: {fileID: 6686876903189901336}
   hpbarCover: {fileID: 5998118240220906595}
   hpSpeed: 1.7
+--- !u!114 &8055828376928902318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6243391127948420735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 131b0d3f724bb6b4a9819c7808b822a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsUsing: 0
 --- !u!1 &6612753820545959207
 GameObject:
   m_ObjectHideFlags: 0

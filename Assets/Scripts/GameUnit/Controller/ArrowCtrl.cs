@@ -95,9 +95,10 @@ public class ArrowCtrl : MonoBehaviour
                 if (monctrl != null)
                     monctrl.OnDamage(unitCtrl.Att);
             }
-            
 
-            Destroy(this.gameObject);
+
+            StartCoroutine(Util.UnitDieTime(gameObject));
+
         }
         else if (coll.tag.Contains("Tower") && coll.name.Contains("MonsterPortal"))
         {
@@ -109,7 +110,8 @@ public class ArrowCtrl : MonoBehaviour
                 if (monPort != null)
                     monPort.TowerDamage(unitCtrl.Att);
 
-                Destroy(this.gameObject);
+                StartCoroutine(Util.UnitDieTime(gameObject));
+
             }
         }
 

@@ -82,13 +82,16 @@ public class PlayerArrowCtrl : MonoBehaviour
                 col.enabled = false;
                 if (arrowType == Define.PlayerArrowType.Fire)
                     fire.SetActive(false);
-                
 
-                Destroy(this.gameObject, 2.0f);
+
+                StartCoroutine(Util.UnitDieTime(gameObject,2.0f));
             }
 
         }
     }
+
+
+
 
 
 

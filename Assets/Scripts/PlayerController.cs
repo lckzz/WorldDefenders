@@ -202,19 +202,19 @@ public class PlayerController : MonoBehaviour
         GameObject go;
         if (playerArrow == Define.PlayerArrowType.Normal)
         {
-            go = Resources.Load<GameObject>("Prefabs/Weapon/PlayerArrow");
+            go = Managers.Resource.Load<GameObject>("Prefabs/Weapon/PlayerArrow");
         }
 
         else
         {
-            go = Resources.Load<GameObject>("Prefabs/Weapon/FireArrow");
+            go = Managers.Resource.Load<GameObject>("Prefabs/Weapon/FireArrow");
 
         }
 
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         angle += 180.0f;
         go.transform.eulerAngles = new Vector3(.0f, 0.0f, angle);
-        Instantiate(go, attackPosTr.position, go.transform.rotation);
+        Managers.Resource.Instantiate(go, attackPosTr.position, go.transform.rotation);
 
 
     }

@@ -24,12 +24,14 @@ public class GameScene : BaseScene
         Init();
 
 
+        
+
         Managers.UI.CloseAllPopUpUI();
-        Managers.UI.ShowSceneUI<UI_GamePlay>();
 
         Debug.Log(Managers.UI.GetSceneUI<UI_GamePlay>());
 
         Dictionary<int,TowerStat> dict = Managers.Data.towerDict;
+
 
     }
 
@@ -44,6 +46,9 @@ public class GameScene : BaseScene
     // Update is called once per frame
     void Update()
     {
+        if (Managers.UI.GetSceneUI<UI_GamePlay>() == null)
+            return;
+
 
         Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCoolTime(speed);
         GameManager.instance.CostCoolTimer(costCoolTime, 30.0f);

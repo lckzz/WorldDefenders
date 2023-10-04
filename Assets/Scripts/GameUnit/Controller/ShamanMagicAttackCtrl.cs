@@ -140,7 +140,7 @@ public class ShamanMagicAttackCtrl : MonoBehaviour
 
 
         if (eff != null)
-            Instantiate(eff, pos, Quaternion.identity);
+            Managers.Resource.Instantiate(eff, pos, Quaternion.identity);
     }
 
     public void SetType(Unit unit, PlayerTower playertower)

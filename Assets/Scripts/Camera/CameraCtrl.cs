@@ -67,19 +67,27 @@ public class CameraCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+
+
         //카메라 화면 좌측하단 코너의 월드 좌표
         m_CamWMin = Camera.main.ViewportToWorldPoint(Vector3.zero);
         //카메라 화면 우측상단 코너의 월드 좌표
         m_CamWMax = Camera.main.ViewportToWorldPoint(Vector3.zero);
 
 
-        if (Managers.UI.GetSceneUI<UI_GamePlay>().RightBtnCheck)
+        if (Managers.UI.GetSceneUI<UI_GamePlay>() != null)
         {
-            transform.position += Vector3.right * moveSpeed * Time.deltaTime;
+            if (Managers.UI.GetSceneUI<UI_GamePlay>().RightBtnCheck)
+            {
+                transform.position += Vector3.right * moveSpeed * Time.deltaTime;
+            }
+
+            else if (Managers.UI.GetSceneUI<UI_GamePlay>().LeftBtnCheck)
+                transform.position += Vector3.left * moveSpeed * Time.deltaTime;
         }
 
-        else if (Managers.UI.GetSceneUI<UI_GamePlay>().LeftBtnCheck)
-            transform.position += Vector3.left * moveSpeed * Time.deltaTime;
+    
 
         #region 카메라 움직임 제한범위
         if (groundCheck.GroundMin.x + width + 0.3f > this.transform.position.x)     //플레이어가 배경의 왼쪽으로 벗어나려고하면

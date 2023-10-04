@@ -22,6 +22,23 @@ public static class Util
             return null;
     }
 
+    public static IEnumerator UnitDieTime(GameObject go, float time = 0.0f)
+    {
+
+        WaitForSeconds wfs = new WaitForSeconds(time);
+        yield return wfs;  //초만큼 대기하고
+
+        Managers.Resource.Destroy(go, time);
+
+
+
+
+        yield return null;
+
+
+    }
+
+
     public static void FadeOut(ref bool fade, Image fadeImg, Image startFadeImg = null)
     {
         if (fade)
