@@ -64,14 +64,14 @@ public class MagicianController : SpecialUnitController
 
     public override void OnAttack()
     {
-        GameObject obj = Resources.Load<GameObject>("Prefabs/Weapon/MagicShot");
+        GameObject obj = Managers.Resource.Load<GameObject>("Prefabs/Weapon/MagicShot");
 
         if (monTarget != null)
         {
 
             if (obj != null)
             {
-                GameObject magicBall = Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
+                GameObject magicBall = Managers.Resource.Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
                 magicBall.TryGetComponent(out MagicAttackCtrl magicCtrl);
                 if (monTarget.gameObject.layer == LayerMask.NameToLayer("Monster") && monTarget is MonsterController monsterCtrl)
                 {
@@ -90,7 +90,7 @@ public class MagicianController : SpecialUnitController
 
             if (obj != null)
             {
-                GameObject magicBall = Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
+                GameObject magicBall = Managers.Resource.Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
                 magicBall.TryGetComponent(out MagicAttackCtrl magicCtrl);
                 magicCtrl.SetType(null, monsterPortal);
             }

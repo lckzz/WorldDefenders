@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 using static UnityEngine.UI.Image;
 
 public class ResourceManager 
@@ -68,7 +69,11 @@ public class ResourceManager
         }
 
         if (original.GetComponent<Poolable>() != null)
-            return Managers.Pool.Pop(original, parent).gameObject;
+        {
+            GameObject go = Managers.Pool.Pop(original, parent).gameObject;
+            go.transform.position = instantPos;
+            return go;
+        }
 
         return Object.Instantiate(original, instantPos,Quaternion.identity);
 
@@ -83,7 +88,11 @@ public class ResourceManager
         }
 
         if (original.GetComponent<Poolable>() != null)
-            return Managers.Pool.Pop(original, parent).gameObject;
+        {
+            GameObject go = Managers.Pool.Pop(original, parent).gameObject;
+            go.transform.position = instantPos;
+            return go;
+        }
 
         return Object.Instantiate(original, instantPos, rot,parent);
 
@@ -96,7 +105,11 @@ public class ResourceManager
 
 
         if (eff.GetComponent<Poolable>() != null)
-            return Managers.Pool.Pop(eff, parent).gameObject;
+        {
+            GameObject go = Managers.Pool.Pop(eff, parent).gameObject;
+            go.transform.position = pos;
+            return go;
+        }
 
         if (eff != null)
             GameObject.Instantiate(eff, pos, Quaternion.identity);

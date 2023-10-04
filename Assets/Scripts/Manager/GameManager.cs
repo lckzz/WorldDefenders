@@ -89,9 +89,10 @@ public class GameManager : MonoBehaviour
                     bossOn = true;
                     int ranPos = Random.Range(0, 3);
                     GameObject obj = Managers.Resource.Instantiate(eliteWarrior, monsterSpawnPos[ranPos].position);
+
                 }
 
-               
+
             }
 
             if(eventOn == false)

@@ -621,12 +621,12 @@ public class UnitController : Unit
             {
                 if(monTarget != null)
                 {
-                    GameObject obj = Resources.Load<GameObject>("Prefabs/Weapon/UnitArrow");
+                    GameObject obj = Managers.Resource.Load<GameObject>("Prefabs/Weapon/UnitArrow");
 
                     if (obj != null)
                     {
                         Managers.Sound.Play("Sounds/Effect/Bow");
-                        GameObject arrow = Instantiate(obj, posTr.position, Quaternion.identity, this.transform);
+                        GameObject arrow = Managers.Resource.Instantiate(obj, posTr.position, Quaternion.identity, this.transform);
                         arrow.TryGetComponent(out ArrowCtrl arrowCtrl);
                         if(monTarget.gameObject.layer == LayerMask.NameToLayer("Monster") && monTarget is MonsterController monsterCtrl)
                         {
@@ -648,7 +648,7 @@ public class UnitController : Unit
                 if (obj != null)
                 {
                     Managers.Sound.Play("Sounds/Effect/Bow");
-                    GameObject arrow = Instantiate(obj, posTr.position, Quaternion.identity, this.transform);
+                    GameObject arrow = Managers.Resource.Instantiate(obj, posTr.position, Quaternion.identity, this.transform);
                     arrow.TryGetComponent(out ArrowCtrl arrowCtrl);
                     arrowCtrl.SetType(null, monsterPortal);
                 }

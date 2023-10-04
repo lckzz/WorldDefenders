@@ -605,12 +605,12 @@ public class MonsterController : Unit
             {
                 if (unitTarget != null)
                 {
-                    GameObject obj = Resources.Load<GameObject>("Prefabs/Weapon/MonsterArrow");
+                    GameObject obj = Managers.Resource.Load<GameObject>("Prefabs/Weapon/MonsterArrow");
 
                     if (obj != null)
                     {
                         Managers.Sound.Play("Sounds/Effect/Bow");
-                        GameObject arrow = Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
+                        GameObject arrow = Managers.Resource.Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
                         arrow.TryGetComponent(out MonsterArrowCtrl arrowCtrl);
                         if (unitTarget.gameObject.layer == LayerMask.NameToLayer("Unit"))
                         {
@@ -640,7 +640,7 @@ public class MonsterController : Unit
                 if (obj != null)
                 {
                     Managers.Sound.Play("Sounds/Effect/Bow");
-                    GameObject arrow = Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
+                    GameObject arrow = Managers.Resource.Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
                     arrow.TryGetComponent(out MonsterArrowCtrl arrowCtrl);
                     arrowCtrl.SetType(null, playerTowerCtrl);
                 }
@@ -693,7 +693,7 @@ public class MonsterController : Unit
         }
         else  //노크리티컬이면 일반공격
         {
-            Debug.Log("여기맞죵");
+
             tower.TowerDamage(att);        //넉백은 없이
             Managers.Resource.ResourceEffectAndSound(tower.transform.position, soundPath, hitPath);
 
