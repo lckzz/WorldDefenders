@@ -554,6 +554,8 @@ public class MonsterController : Unit
         if (hp > 0)
         {
             hp -= att;
+            unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.enemy);
+
 
             if (knockBack > 0)
             {

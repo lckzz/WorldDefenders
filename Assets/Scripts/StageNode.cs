@@ -22,7 +22,9 @@ public class StageNode : MonoBehaviour
 
     private Color stageLockColor = new Color32(82, 82, 82, 255);
     private Color stageNormalColor = new Color32(255, 255, 255, 255);
-    private Color stageOpenColor = new Color32(202, 95, 52, 255);
+    private Color stageNonClickColor = new Color32(176, 0, 255, 255);       //보라색
+    private Color stageClickColor = new Color32(203, 95, 53, 255);         //자홍색
+
     private Color bossstageOpneColor = new Color32(255, 117, 125, 255);
 
 
@@ -119,7 +121,7 @@ public class StageNode : MonoBehaviour
 
                 if(stage != Define.SubStage.Boss)
                 {
-                    stageImg.color = stageOpenColor;
+                    stageImg.color = stageNonClickColor;
                     stageSubImg.color = stageNormalColor;
                     stageTxtImg.color = stageNormalColor;
                 }
@@ -141,6 +143,7 @@ public class StageNode : MonoBehaviour
         stageSubImgRt?.DOSizeDelta(new Vector2(300.0f, 300.0f), 0.1f);
         stageObjectiveRt?.gameObject.SetActive(true);
         stageObjectiveRt?.DOSizeDelta(new Vector2(230.0f, stageObjectiveRt.sizeDelta.y), 0.3f);
+        stageImg.color = stageClickColor;
     }
 
     public void ClickStageDoOff()
@@ -148,6 +151,6 @@ public class StageNode : MonoBehaviour
         stageImgRt?.DOSizeDelta(new Vector2(100.0f, 50.0f), 0.1f);
         stageSubImgRt?.DOSizeDelta(new Vector2(200.0f, 200.0f), 0.1f);
         stageObjectiveRt?.DOSizeDelta(new Vector2(0.0f, stageObjectiveRt.sizeDelta.y), 0.3f);
-
+        stageImg.color = stageNonClickColor;
     }
 }

@@ -15,14 +15,14 @@ public class ResourceManager
             int index = name.LastIndexOf('/');
             if (index >= 0)
                 name = name.Substring(index + 1);
-            Debug.Log($"여기 안오나여{name}");
+
 
             GameObject go = Managers.Pool.GetOriginal(name);
             if (go != null)
                 return go as T;
         }
 
-        Debug.Log("여기 안오나여2");
+
 
         return Resources.Load<T>(path);
     }

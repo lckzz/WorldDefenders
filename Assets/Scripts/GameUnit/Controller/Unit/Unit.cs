@@ -58,6 +58,8 @@ public abstract class Unit : MonoBehaviour,ISensor
     [SerializeField]
     protected Vector2 boxSize;
 
+    protected UnitHp unitHUDHp;
+
 
     //넉백 관련 변수
     protected bool knockbackStart = false;
@@ -75,6 +77,9 @@ public abstract class Unit : MonoBehaviour,ISensor
         TryGetComponent<Animator>(out anim);
         TryGetComponent<Rigidbody2D>(out rigbody);
         TryGetComponent<Collider2D>(out myColl);
+        TryGetComponent<UnitHp>(out unitHUDHp);
+            
+
     }
 
     public float hpPercent()

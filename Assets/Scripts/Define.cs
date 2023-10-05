@@ -109,5 +109,12 @@ public class Define
     }
 
 
+    public enum UnitDamageType
+    {
+        enemy,
+        team,
+        Count
+    }
+
 
 }

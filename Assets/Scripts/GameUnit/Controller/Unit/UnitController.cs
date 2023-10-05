@@ -561,6 +561,8 @@ public class UnitController : Unit
         if (hp > 0)
         {
             hp -= att;
+            unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.enemy);
+
             if(knockBack > 0)
             {
                 SetUnitState(UnitState.KnockBack);
@@ -582,7 +584,12 @@ public class UnitController : Unit
     public override void OnHeal(int heal)
     {
         if(hp > 0)
+        {
+            unitHUDHp?.SpawnHUDText(heal.ToString(), (int)Define.UnitDamageType.team);
+
             hp += heal;
+
+        }
 
         if (hp >= maxHp)
             hp = maxHp;

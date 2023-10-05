@@ -22,14 +22,7 @@ public class GameScene : BaseScene
     {
 
         Init();
-
-
-        
-
         Managers.UI.CloseAllPopUpUI();
-
-        Debug.Log(Managers.UI.GetSceneUI<UI_GamePlay>());
-
         Dictionary<int,TowerStat> dict = Managers.Data.towerDict;
 
 
