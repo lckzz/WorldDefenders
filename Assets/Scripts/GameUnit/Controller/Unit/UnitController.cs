@@ -38,7 +38,7 @@ public class UnitController : Unit
 
 
     protected Unit[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
-    protected Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
+    [SerializeField] protected Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
     [SerializeField] protected MonsterPortal monsterPortal;
 
     //아처 사제 전용

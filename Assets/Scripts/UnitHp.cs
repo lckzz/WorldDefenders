@@ -8,6 +8,12 @@ public class UnitHp : MonoBehaviour
     [SerializeField] private GameObject hudTextPrefab;
 
 
+    public void Init(Transform parentTr, GameObject prefab)
+    {
+        this.parentTr = parentTr;
+        hudTextPrefab = prefab;
+    }
+
     public void SpawnHUDText(string text, int type)
     {
         Color color = type == 0 ? Color.red : Color.green;

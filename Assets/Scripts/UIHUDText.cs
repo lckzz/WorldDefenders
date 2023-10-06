@@ -25,7 +25,7 @@ public class UIHUDText : MonoBehaviour
             TryGetComponent(out textHUD);
         }
 
-        textHUD.text = "-" + text;
+        textHUD.text = text;
         textHUD.color = color;
         StartCoroutine(OnHUDText(pos, gap));
     }

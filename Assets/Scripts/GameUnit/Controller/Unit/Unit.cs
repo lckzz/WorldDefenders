@@ -65,6 +65,10 @@ public abstract class Unit : MonoBehaviour,ISensor
     protected bool knockbackStart = false;
     protected float knockbackDuration = 0.25f;
 
+    //HUDUI
+    private Transform parentTr;
+    private GameObject hudPrefab;
+
     public bool IsDie { get { return isDie; } }
     public int Att { get { return att; } }
     public float Hp { get { return hp; } }
@@ -78,8 +82,13 @@ public abstract class Unit : MonoBehaviour,ISensor
         TryGetComponent<Rigidbody2D>(out rigbody);
         TryGetComponent<Collider2D>(out myColl);
         TryGetComponent<UnitHp>(out unitHUDHp);
-            
+        if (unitHUDHp == null)
+            this.gameObject.AddComponent<UnitHp>().TryGetComponent(out unitHUDHp);
 
+
+        parentTr = GameObject.Find("HUD_Canvas").transform;
+        hudPrefab = Managers.Resource.Load<GameObject>("Prefabs/HUDDamage/DamageTxt");
+        unitHUDHp.Init(parentTr,hudPrefab);
     }
 
     public float hpPercent()
