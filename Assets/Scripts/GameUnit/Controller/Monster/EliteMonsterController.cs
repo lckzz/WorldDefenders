@@ -599,12 +599,17 @@ public class EliteMonsterController : Unit
         }
     }
 
-    public override void OnDamage(int att, int knockBack = 0)
+    public override void OnDamage(int att, int knockBack = 0, bool criticalCheck = false)
     {
 
         if (hp > 0)
         {
             hp -= att;
+            if (criticalCheck)
+                unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Critical);
+            else
+                unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Enemy);
+
 
             if (knockBack > 0)
             {
@@ -672,7 +677,7 @@ public class EliteMonsterController : Unit
         {
             Debug.Log("크리티컬!!!!");
             int attack = att * 2;
-            uniCtrl.OnDamage(attack, monStat.knockBackForce);      //크리티컬이면 데미지2배에 넉백까지
+            uniCtrl.OnDamage(attack, monStat.knockBackForce,true);      //크리티컬이면 데미지2배에 넉백까지
             Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, criticalSoundPath, hitPath);
 
         }

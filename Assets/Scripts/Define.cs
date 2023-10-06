@@ -111,8 +111,9 @@ public class Define
 
     public enum UnitDamageType
     {
-        enemy,
-        team,
+        Enemy,
+        Team,
+        Critical,
         Count
     }
 

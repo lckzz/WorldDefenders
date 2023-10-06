@@ -548,13 +548,16 @@ public class MonsterController : Unit
         }
     }
 
-    public override void OnDamage(int att, int knockBack = 0)
+    public override void OnDamage(int att, int knockBack = 0, bool criticalCheck = false)
     {
 
         if (hp > 0)
         {
             hp -= att;
-            unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.enemy);
+            if (criticalCheck)
+                unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Critical);
+            else
+                unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Enemy);
 
 
             if (knockBack > 0)
@@ -670,7 +673,7 @@ public class MonsterController : Unit
         if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
         {
             int attack = att * 2;
-            uniCtrl.OnDamage(attack, monStat.knockBackForce);      //크리티컬이면 데미지2배에 넉백까지
+            uniCtrl.OnDamage(attack, monStat.knockBackForce,true);      //크리티컬이면 데미지2배에 넉백까지
             Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, criticalSoundPath, hitPath);
 
         }

@@ -178,7 +178,7 @@ public class PriestController : UnitController
             if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
             {
                 int attack = att * 2;
-                monsterCtrl.OnDamage(attack, unitStat.knockBackForce);      //크리티컬이면 데미지2배에 넉백까지
+                monsterCtrl.OnDamage(attack, unitStat.knockBackForce,true);      //크리티컬이면 데미지2배에 넉백까지
                 Managers.Resource.ResourceEffectAndSound(monTarget.transform.position, soundPath, hitPath);
 
             }

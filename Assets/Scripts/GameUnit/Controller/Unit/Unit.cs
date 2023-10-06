@@ -117,7 +117,7 @@ public abstract class Unit : MonoBehaviour,ISensor
 
     public abstract void OnAttack();
 
-    public abstract void OnDamage(int att, int knockBack = 0);
+    public abstract void OnDamage(int att, int knockBack = 0, bool criticalCheck = false);
 
     public abstract bool CriticalCheck();
 
