@@ -36,6 +36,8 @@ public class UI_GamePlay : UI_Base
     Image coolImg;
     [SerializeField] Image fadeImg;
 
+    [SerializeField] Button settingBtn;
+
 
     //---------Camera Move-----------------------------
     [SerializeField] Button leftCameraMoveBtn;
@@ -154,6 +156,8 @@ public class UI_GamePlay : UI_Base
         GameObject.Find("Player").TryGetComponent<PlayerController>(out player);
         player.transform.parent.gameObject.TryGetComponent(out playerTower);
 
+        if (settingBtn != null)
+            settingBtn.onClick.AddListener(InGameSetting);
 
         ButtonEvent(uiAttackBtn.gameObject, player.AttackWait, UIEvent.PointerDown);
         ButtonEvent(uiAttackBtn.gameObject, player.ShotArrow, UIEvent.PointerUp);
@@ -381,6 +385,15 @@ public class UI_GamePlay : UI_Base
         ButtonEvent1(uiUnit[i].gameObject, path, i, UnitSummon, UIEvent.PointerDown);
     }
 
+    void InGameSetting()
+    {
+        Debug.Log("wqeqwe");
+        Managers.UI.ClosePopUp(this);
+        Managers.UI.ShowPopUp<UI_SettingPopUp>();
+        Managers.UI.PeekPopupUI<UI_SettingPopUp>().SettingType(Define.SettingType.InGameSetting);
+        Time.timeScale = 0.0f;
+    }
+
 
     void CameraMoveColorInit()
     {
@@ -423,11 +436,17 @@ public class UI_GamePlay : UI_Base
 
     void LeftBtnOn()
     {
+        if (Managers.UI.PeekPopupUI<UI_SettingPopUp>() != null)
+            return;
+
         leftBtnCheck = true;
         leftCameraMoveImg.color = clickOnMoveColor;
     }
     void LeftBtnOff()
     {
+        if (Managers.UI.PeekPopupUI<UI_SettingPopUp>() != null)
+            return;
+
         leftBtnCheck = false;
         leftCameraMoveImg.color = clickOffMoveColor;
 
@@ -435,12 +454,18 @@ public class UI_GamePlay : UI_Base
 
     void RightBtnOn()
     {
+        if (Managers.UI.PeekPopupUI<UI_SettingPopUp>() != null)
+            return;
+
         rightBtnCheck = true;
         rightCameraMoveImg.color = clickOnMoveColor;
 
     }
     void RightBtnOff()
     {
+        if (Managers.UI.PeekPopupUI<UI_SettingPopUp>() != null)
+            return;
+
         rightBtnCheck = false;
         rightCameraMoveImg.color = clickOffMoveColor;
 

@@ -104,6 +104,11 @@ public class UIManager
         return _uiStack.Peek() as T;
     }
 
+    public UI_Base GetCurrentPopUpUI()
+    {
+        return _uiStack.Peek();
+    }
+
 
     public void CloseAllPopUpUI()
     {

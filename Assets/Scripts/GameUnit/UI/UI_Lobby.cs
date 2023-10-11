@@ -11,6 +11,7 @@ public class UI_Lobby : UI_Base
     public Button upgradeBtn;
     public Button unitSettingBtn;
     public Button skillBtn;
+    public Button settingBtn;
 
     public Button stageSelectBtn;
     public LobbyScene lobbyScene;
@@ -27,7 +28,7 @@ public class UI_Lobby : UI_Base
     bool lobbyPanelCheck = false;
 
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
         GameObject.Find("LobbyScene").TryGetComponent(out lobbyScene);
         LobbySceneRefresh();
@@ -38,6 +39,10 @@ public class UI_Lobby : UI_Base
         ButtonEvent(stageSelectBtn.gameObject, StageSelectOn, UIEvent.PointerDown);
         RefreshSKillicon(GlobalData.g_CurPlayerEquipSkill);
         startFadeOut = true;
+
+
+        if (settingBtn != null)
+            settingBtn.onClick.AddListener(OpenSettingPopUp);
 
 
     }
@@ -107,6 +112,14 @@ public class UI_Lobby : UI_Base
             lobbyScene.RefreshUnit();
 
         }
+    }
+
+
+    void OpenSettingPopUp()
+    {
+        Managers.UI.ClosePopUp(this);
+        Managers.UI.ShowPopUp<UI_SettingPopUp>();
+        Managers.UI.PeekPopupUI<UI_SettingPopUp>().SettingType(Define.SettingType.LobbySetting);
     }
 
     public void RefreshSKillicon(Define.PlayerSkill playersk)

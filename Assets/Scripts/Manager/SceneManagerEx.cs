@@ -12,6 +12,7 @@ public class SceneManagerEx
     {
         Managers.Clear();
         SceneManager.LoadScene(GetSceneName(type));
+        Time.timeScale = 1.0f;
     }
 
     public AsyncOperation LoadSceneAsync(Define.Scene type)

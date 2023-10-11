@@ -1,18 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_SettingPopUp : UI_Base
 {
-    // Start is called before the first frame update
-    public override void Start()
+    [SerializeField] private GameObject lobbySettingCanvas;
+    [SerializeField] private GameObject inGameSettingCanvas;
+
+
+
+    public void SettingType(Define.SettingType type)
     {
-        
+        if (type == Define.SettingType.LobbySetting)
+        {
+            lobbySettingCanvas.SetActive(true);
+            inGameSettingCanvas.SetActive(false);
+        }
+        else
+        {
+            lobbySettingCanvas.SetActive(false);
+            inGameSettingCanvas.SetActive(true);
+        }
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

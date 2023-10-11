@@ -117,5 +117,19 @@ public class Define
         Count
     }
 
+    public enum SettingType
+    {
+        LobbySetting,
+        InGameSetting,
+        Count
+    }
+
+    public enum LobbyUnitState
+    {
+        Idle,
+        Run,
+        Attack
+    }
+
 
 }

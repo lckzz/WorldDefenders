@@ -7,6 +7,15 @@ public class GlobalData
     public static int g_Gold = 0;
     public static int g_PlayerLevel = 1;
 
+    //----------저장할 음량의 값-----------
+    public static float g_BgmValue = 0.5f;                  //지금 설정된값이 디폴트값
+    public static float g_EffValue = 0.5f;
+    public static bool g_BgmisOn = false;
+    public static bool g_EffisOn = false;
+
+    //----------저장할 음량의 값-----------
+
+
     //-----------유닛 레벨-----------------
     public static int g_UnitWarriorLv = 1;
     public static int g_UnitArcherLv = 1;

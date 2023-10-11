@@ -63,6 +63,7 @@ public class SoundManager
 
             audioSource.pitch = pitch;
             audioSource.clip = audioClip;
+            audioSource.volume = GlobalData.g_BgmValue;
             audioSource.Play();
 
         }
@@ -79,8 +80,11 @@ public class SoundManager
 
             AudioSource audioSource = _audioSources[(int)Define.Sound.Effect];
             audioSource.pitch = pitch;
+            audioSource.volume = GlobalData.g_EffValue;
             audioSource.PlayOneShot(audioClip);
         }
+
+
     }
 
 
@@ -95,5 +99,22 @@ public class SoundManager
         }
 
         return audioClip;
+    }
+
+
+    public void SoundMute(Define.Sound type,bool toggle)
+    {
+        if (_audioSources.Length <= 0)
+            return;
+
+        _audioSources[(int)type].mute = toggle;
+    }
+
+    public void SoundValue(Define.Sound type, float value)
+    {
+        if (_audioSources.Length <= 0)
+            return;
+
+        _audioSources[(int)type].volume = value;
     }
 }

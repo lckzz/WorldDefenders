@@ -14,6 +14,7 @@ public class LoadingSceneManager
     {
         nextScene = scenetype;
         SceneManager.LoadScene("LoadingScene");
+        Time.timeScale = 1.0f;
     }
 
     public IEnumerator LoadScene(Image prograssBar)

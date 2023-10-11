@@ -108,6 +108,14 @@ public class LobbyUnit : MonoBehaviour
                     unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Priest/{pathLv2}", this.gameObject.transform);
                 break;
         }
+
+
+        if (unitPrefab != null)
+        {
+            unitPrefab.AddComponent<LobbyUnitController>();
+            unitPrefab.AddComponent<BoxCollider2D>();
+            unitPrefab.tag = "Unit";
+        }
     }
     void SpecialUnitSpriteRender(UnitClass uniClass, string path)
     {
@@ -122,6 +130,13 @@ public class LobbyUnit : MonoBehaviour
                 unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Cavalry/{path}", this.gameObject.transform);
                 break;
 
+        }
+
+        if (unitPrefab != null)
+        {
+            unitPrefab.AddComponent<LobbyUnitController>();
+            unitPrefab.AddComponent<BoxCollider2D>();
+            unitPrefab.tag = "Unit";
         }
     }
 }
