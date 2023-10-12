@@ -12,6 +12,8 @@ public class LobbyScene : BaseScene
 
     [SerializeField] private GameObject goalCircle;
     [SerializeField] private GameObject player;
+    [SerializeField] private GameObject ui_Lobby;
+
 
 
     private bool attackAnimCheck = false;
@@ -36,15 +38,18 @@ public class LobbyScene : BaseScene
     {
         SceneMove();
         MouseClick();
-        CheckUIPopUp();
+
+
     }
 
 
     protected override void Init()
     {
         base.Init();
+        ui_Lobby?.SetActive(true);
+
         SceneType = Define.Scene.Lobby;
-        Managers.UI.ShowPopUp<UI_Lobby>();
+
         GlobalData.InitUnitClass();  //이건 로비에서 적용할것 로비에서 유닛클래스를 초기화해준다.
         RefreshUnit();
         Managers.Sound.Play("BGM/LobbyBGM", Define.Sound.BGM);
@@ -126,12 +131,12 @@ public class LobbyScene : BaseScene
 
     }
 
-    public void CheckUIPopUp()           //현재 팝업이 로비팝업이 아닐때는 전부다 초기화시켜준다. 로비팝업은 씬의UI로 바꿔야할듯?
-    {
-        if (Managers.UI.GetCurrentPopUpUI() as UI_Lobby)
-            return;
 
-        if(lobbyUnit != null)
+  
+
+    public void LobbyTouchUnitInit()
+    {
+        if (lobbyUnit != null)
         {
             lobbyUnit.SelectUnitCircleOnOff(false);
             lobbyUnit.SetState(Define.LobbyUnitState.Idle);
@@ -142,8 +147,8 @@ public class LobbyScene : BaseScene
         goalCircle.transform.position = saveStartGoalPos;
         player.transform.position = startPlayerPos;
         player.transform.localScale = new Vector3(1, 1, 1);
+        RefreshUnit();
     }
-  
 
 
     public void RefreshUnit()
@@ -188,6 +193,13 @@ public class LobbyScene : BaseScene
     void LobbyUnitScaleSet(int idx, Vector3 scaleVec)
     {
         lobbyUnits[idx].transform.localScale = scaleVec;
+    }
+
+
+    public void LobbyUIOnOff(bool isOn)
+    {
+        if (Managers.UI.GetSceneUI<UI_Lobby>() != null)
+            Managers.UI.GetSceneUI<UI_Lobby>().LobbyUIOnOff(isOn);
     }
 
     public override void Clear()

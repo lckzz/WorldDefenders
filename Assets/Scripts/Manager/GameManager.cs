@@ -28,9 +28,6 @@ public class GameManager : MonoBehaviour
     float costCoolTime = 1.0f;
     [SerializeField]
     public GameState state = GameState.GamePlaying;
-    public Button uiUnitSword;
-    public Button uiUnitBow;
-    public Button uiAttackBtn;
     public Transform[] spawnPos;
     public Transform[] monsterSpawnPos;
     public GameObject[] monsters;

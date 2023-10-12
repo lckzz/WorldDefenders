@@ -20,12 +20,9 @@ public class UI_Lobby : UI_Base
     [SerializeField] TextMeshProUGUI skilltxt;
     [SerializeField] Sprite[] skilliconSptrites;
 
+    [SerializeField] Button test;
 
 
-    bool upgradeBtnFadeCheck = false;
-    bool unitBtnFadeCheck = false;
-    bool stageBtnFadeCheck = false;
-    bool lobbyPanelCheck = false;
 
     // Start is called before the first frame update
     public override void Start()
@@ -43,7 +40,8 @@ public class UI_Lobby : UI_Base
 
         if (settingBtn != null)
             settingBtn.onClick.AddListener(OpenSettingPopUp);
-
+        if (test != null)
+            test.onClick.AddListener(LobbySceneRefresh);
 
     }
 
@@ -54,6 +52,12 @@ public class UI_Lobby : UI_Base
         //UpgradeFadeIn(fadeImg, this, upgradeBtnFadeCheck);
         //UnitFadeIn(fadeImg, this, unitBtnFadeCheck);
         //StageFadeIn(fadeImg, this, stageBtnFadeCheck);
+
+    }
+
+    private void OnEnable()
+    {
+        Managers.UI.ShowSceneUI<UI_Lobby>();
 
     }
 
@@ -80,27 +84,27 @@ public class UI_Lobby : UI_Base
 
     void UpgradeOn()
     {
-        Managers.UI.ClosePopUp(this);
+        LobbyUIOnOff(false);
         Managers.UI.ShowPopUp<UI_UpgradeWindow>();
 
     }
 
     void UnitSettingOn()
     {
-        Managers.UI.ClosePopUp(this);
+        LobbyUIOnOff(false);
         Managers.UI.ShowPopUp<UI_UnitSettingWindow>();
 
     }
 
     void PlayerSkillOn()
     {
-        Managers.UI.ClosePopUp(this);
+        LobbyUIOnOff(false);
         Managers.UI.ShowPopUp<UI_PlayerSkillWindow>();
     }
 
     void StageSelectOn()
     {
-        Managers.UI.ClosePopUp(this);
+        LobbyUIOnOff(false);
         Managers.UI.ShowPopUp<UI_StageSelectPopUp>();
 
     }
@@ -110,6 +114,7 @@ public class UI_Lobby : UI_Base
         if (lobbyScene != null)
         {
             lobbyScene.RefreshUnit();
+            lobbyScene.LobbyTouchUnitInit();
 
         }
     }
@@ -117,9 +122,15 @@ public class UI_Lobby : UI_Base
 
     void OpenSettingPopUp()
     {
-        Managers.UI.ClosePopUp(this);
+        LobbyUIOnOff(false);
         Managers.UI.ShowPopUp<UI_SettingPopUp>();
         Managers.UI.PeekPopupUI<UI_SettingPopUp>().SettingType(Define.SettingType.LobbySetting);
+    }
+
+
+    public void LobbyUIOnOff(bool isOn)
+    {
+        this.gameObject.SetActive(isOn);
     }
 
     public void RefreshSKillicon(Define.PlayerSkill playersk)

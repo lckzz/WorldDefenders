@@ -41,6 +41,12 @@ public class UIManager
         return ui;
     }
 
+    public void SceneUIClear()
+    {
+        if (_ui != null)
+            _ui = null;
+    }
+
     public void OnOffSceneUI<T>(bool onoff) where T : UI_Base
     { 
 
@@ -88,7 +94,6 @@ public class UIManager
         UI_Base popUp = _uiStack.Pop();
         Managers.Resource.Destroy(popUp.gameObject);
         popUp = null;
-        _ui = null;
     }
 
     public T FindPopup<T>() where T : UI_Base

@@ -119,15 +119,14 @@ public class MonsterController : Unit
     void Update()
     {
 
-        if (GameManager.instance.State == GameState.GamePlaying)
-        {
-            EnemySensor();
-            TowerSensor();
-            MonsterStateCheck();
 
-        }
+        EnemySensor();
+        TowerSensor();
+        MonsterStateCheck();
 
-        MonsterVictory();
+        
+
+        //MonsterVictory();
 
     }
 

@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneManagerEx
 {
+    public BaseScene _scene;
 
     public BaseScene CurrentScene{ get { return GameObject.FindObjectOfType<BaseScene>(); }}
 
@@ -27,6 +28,8 @@ public class SceneManagerEx
         string name = System.Enum.GetName(typeof(Define.Scene), type);
         return name;
     }
+
+    
 
 
     public void Clear()

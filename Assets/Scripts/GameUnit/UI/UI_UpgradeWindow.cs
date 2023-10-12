@@ -57,7 +57,11 @@ public class UI_UpgradeWindow : UI_Base
                 Managers.Sound.Play("Effect/UI_Click");
 
                 Managers.UI.ClosePopUp(this);
-                Managers.UI.ShowPopUp<UI_Lobby>();
+                if (Managers.Scene.CurrentScene is LobbyScene lobby)
+                {
+                    lobby.LobbyUIOnOff(true);
+                    lobby.LobbyTouchUnitInit();
+                }
 
             });
 
@@ -217,7 +221,11 @@ public class UI_UpgradeWindow : UI_Base
                     if (fadeImg.color.a >= 0.99f)
                     {
                         Managers.UI.ClosePopUp(closePopup);
-                        Managers.UI.ShowPopUp<UI_Lobby>();
+                        if (Managers.Scene.CurrentScene is LobbyScene lobby)
+                        {
+                            lobby.LobbyUIOnOff(true);
+                            lobby.LobbyTouchUnitInit();
+                        }
 
 
                     }

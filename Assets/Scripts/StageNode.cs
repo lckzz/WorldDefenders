@@ -16,6 +16,7 @@ public class StageNode : MonoBehaviour
     private RectTransform stageSubImgRt;
     private RectTransform stageObjectiveRt;
 
+    private StageAnim stageAnim;
 
 
 
@@ -57,14 +58,17 @@ public class StageNode : MonoBehaviour
         if (stageObjectiveRt == null)
             stageObjectiveImg?.TryGetComponent(out stageObjectiveRt);
 
+        if (stageAnim == null)
+            this.gameObject.TryGetComponent(out stageAnim);
+
         //해당 스테이지에 따라서 몬스터리스트를 갱신해주고 현재 스테이지의 상태를 보여줌
         switch (stage)
         {
             case Define.SubStage.West:
-                for(int ii = 0;ii < (int)Define.MonsterType.BowSkeleton + 1;ii++)
-                {
-                    stageMonsterList.Add((Define.MonsterType)ii);
-                }
+                stageMonsterList.Add(Define.MonsterType.NormalSkeleton);
+                stageMonsterList.Add(Define.MonsterType.BowSkeleton);
+                stageMonsterList.Add(Define.MonsterType.EliteWarrior);
+
 
                 stageState = Define.StageState.Open;
                 break;
@@ -139,8 +143,10 @@ public class StageNode : MonoBehaviour
 
     public void ClickStageDoOn()
     {
+        stageAnim?.StageAnimSet("Close", false);
+        stageAnim?.StageAnimSet("Open",true);
         stageImgRt?.DOSizeDelta(new Vector2(140.0f, 75.0f), 0.1f);
-        stageSubImgRt?.DOSizeDelta(new Vector2(300.0f, 300.0f), 0.1f);
+        stageSubImgRt?.DOSizeDelta(new Vector2(130.0f, 130.0f), 0.1f);
         stageObjectiveRt?.gameObject.SetActive(true);
         stageObjectiveRt?.DOSizeDelta(new Vector2(230.0f, stageObjectiveRt.sizeDelta.y), 0.3f);
         stageImg.color = stageClickColor;
@@ -148,8 +154,10 @@ public class StageNode : MonoBehaviour
 
     public void ClickStageDoOff()
     {
+        stageAnim?.StageAnimSet("Open", false);
+        stageAnim?.StageAnimSet("Close", true);
         stageImgRt?.DOSizeDelta(new Vector2(100.0f, 50.0f), 0.1f);
-        stageSubImgRt?.DOSizeDelta(new Vector2(200.0f, 200.0f), 0.1f);
+        stageSubImgRt?.DOSizeDelta(new Vector2(102.0f, 107.0f), 0.1f);
         stageObjectiveRt?.DOSizeDelta(new Vector2(0.0f, stageObjectiveRt.sizeDelta.y), 0.3f);
         stageImg.color = stageNonClickColor;
     }

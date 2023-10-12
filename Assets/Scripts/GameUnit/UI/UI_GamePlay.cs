@@ -241,6 +241,7 @@ public class UI_GamePlay : UI_Base
 
     private void OnEnable()
     {
+        //Managers.UI.SceneUIClear();
         Managers.UI.ShowSceneUI<UI_GamePlay>();
     }
 
@@ -255,7 +256,6 @@ public class UI_GamePlay : UI_Base
     IEnumerator StartUnitNodeUIMove()
     {
         WaitForSeconds wfs = new WaitForSeconds(delaySeconds);
-
 
         yield return wfs;
 
@@ -388,7 +388,7 @@ public class UI_GamePlay : UI_Base
     void InGameSetting()
     {
         Debug.Log("wqeqwe");
-        Managers.UI.ClosePopUp(this);
+        this.gameObject.SetActive(false);
         Managers.UI.ShowPopUp<UI_SettingPopUp>();
         Managers.UI.PeekPopupUI<UI_SettingPopUp>().SettingType(Define.SettingType.InGameSetting);
         Time.timeScale = 0.0f;
@@ -591,13 +591,16 @@ public class UI_GamePlay : UI_Base
 
     public void UpdateUnitCostEnable(Image img,Color grayColor, float unitCost)
     {
-
-        if (GameManager.instance.CurCost < unitCost)
+        if(Managers.Scene.CurrentScene is GameScene game)
         {
-            img.color = grayColor;      //매개변수에서 받은 컬러값
+            if (game.CurCost < unitCost)
+            {
+                img.color = grayColor;      //매개변수에서 받은 컬러값
+            }
+            else
+                img.color = new Color(1, 1, 1);
         }
-        else
-            img.color = new Color(1,1,1);
+
     }
 
     public void UpdateCost(float curCost)
@@ -619,13 +622,18 @@ public class UI_GamePlay : UI_Base
 
         if (unitNode?.CoolCheck == false) //쿨타임이 돌고 있지않을 때
         {
-            if(GameManager.instance.CostCheck(GameManager.instance.CurCost, unitNode.UnitCost))
+            if(Managers.Scene.CurrentScene is GameScene game)
             {
-                GameManager.instance.CurCost = GameManager.instance.CostUse(GameManager.instance.CurCost,unitNode.UnitCost);
-                UpdateCost(GameManager.instance.CurCost);
-                gameQueue.Enqueue(unitObj);
-                unitNode.CoolCheck = true;          //큐에 넣어주면서 쿨타임 온
+                if(game.CostCheck(game.CurCost, unitNode.UnitCost))
+                {
+                    game.CurCost = game.CostUse(game.CurCost, unitNode.UnitCost);
+                    UpdateCost(game.CurCost);
+                    gameQueue.Enqueue(unitObj);
+                    unitNode.CoolCheck = true;          //큐에 넣어주면서 쿨타임 온
+                }
             }
+
+
 
 
         }

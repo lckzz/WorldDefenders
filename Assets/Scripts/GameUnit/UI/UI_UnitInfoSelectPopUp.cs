@@ -20,6 +20,12 @@ public class UI_UnitInfoSelectPopUp : UI_Base
 
     [SerializeField] private TextMeshProUGUI unitInfoDescTxt;
     [SerializeField] private GameObject unitInfoBgObj;
+    [SerializeField] private GameObject normalSkillObj;
+    [SerializeField] private GameObject specialSkillObj;
+    private Image normalImg;
+    private Image specialImg;
+
+
 
     [Space(10)]
     [Header("Button")]
@@ -39,6 +45,7 @@ public class UI_UnitInfoSelectPopUp : UI_Base
     private string magicianStr = "MagicianLv1";
     private string cavalryStr = "CavalryLv1";
 
+    private string[] skillStr = { "Icon_Sword", "Icon_Bow", "Icon_Spear", "Icon_Magic", "Icon_MagicianSkill", "Icon_CavalrySkill" };
 
 
     public override bool Init()
@@ -70,6 +77,10 @@ public class UI_UnitInfoSelectPopUp : UI_Base
                 Managers.UI.PeekPopupUI<UI_UnitSettingWindow>()?.MaskObjectOnOff(true);
                 //배치를 누르면 팝업이 꺼지고 선택할 수 있게
             });
+
+
+
+
     }
 
     public void PopUpOpenUnitInfoSetting(UnitClass uniClass,UnitNodeUI nodeUI)
@@ -77,25 +88,42 @@ public class UI_UnitInfoSelectPopUp : UI_Base
         unitClass = uniClass;
         this.nodeUI = nodeUI;
         uniStat = new UnitStat();
-        switch(unitClass)
+
+        normalSkillObj?.transform.GetChild(0).TryGetComponent(out normalImg);
+        if (UnitClass.Magician <= unitClass)  //스페셜 유닛일때만 정보창에 스페셜스킬이 나오도록
+        {
+            specialSkillObj.SetActive(true);
+            specialSkillObj?.transform.GetChild(0).TryGetComponent(out specialImg);
+        }
+
+        Debug.Log(skillStr[(int)Define.UnitWeaponType.Magic]);
+        switch (unitClass)
         {
             case UnitClass.Warrior:
                 uniStat = Managers.Data.warriorDict[GlobalData.g_UnitWarriorLv];
+                normalImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.Sword]}");
                 break;
             case UnitClass.Archer:
                 uniStat = Managers.Data.archerDict[GlobalData.g_UnitArcherLv];
+                normalImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.Bow]}");
                 break;
             case UnitClass.Spear:
                 uniStat = Managers.Data.spearDict[GlobalData.g_UnitSpearLv];
+                normalImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.Spear]}");
                 break;
             case UnitClass.Priest:
                 uniStat = Managers.Data.priestDict[GlobalData.g_UnitPriestLv];
+                normalImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.Magic]}");
                 break;
             case UnitClass.Magician:
                 uniStat = Managers.Data.magicDict[GlobalData.g_UnitMagicianLv];
+                normalImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.Magic]}");
+                specialImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.MagicianSkill]}");
                 break;
             case UnitClass.Cavalry:
                 uniStat = Managers.Data.cavarlyDict[GlobalData.g_UnitCarlvryLv];
+                normalImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.Spear]}");
+                specialImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.CavalrySkill]}");
                 break;
 
             default:

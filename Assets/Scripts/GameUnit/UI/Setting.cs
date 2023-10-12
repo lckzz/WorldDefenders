@@ -81,7 +81,18 @@ public abstract class Setting : MonoBehaviour
     public void CloseSettingPopUp()
     {
         Managers.UI.ClosePopUp(ui_Setting);
-        Managers.UI.ShowPopUp<UI_Lobby>();
+        if (Managers.Scene.CurrentScene is LobbyScene lobby)
+        {
+            lobby.LobbyUIOnOff(true);
+            //lobby.LobbyTouchUnitInit();
+        }
+
+        if (Managers.Scene.CurrentScene is GameScene game)
+        {
+            game.UiOnOff(true);
+            //lobby.LobbyTouchUnitInit();
+        }
+
 
     }
 

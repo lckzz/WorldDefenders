@@ -42,7 +42,7 @@ public class UI_PlayerSkillWindow : UI_Base
 
 
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
         TryGetComponent(out gr);
         if (gr == null)
@@ -90,7 +90,12 @@ public class UI_PlayerSkillWindow : UI_Base
                 Managers.Sound.Play("Effect/UI_Click");
 
                 Managers.UI.ClosePopUp(this);
-                Managers.UI.ShowPopUp<UI_Lobby>();
+
+                if (Managers.Scene.CurrentScene is LobbyScene lobby)
+                {
+                    lobby.LobbyUIOnOff(true);
+                    lobby.LobbyTouchUnitInit();
+                }
                 //GlobalData.SetUnitClass(unitSlotUiList);  //스킬셋팅
             });
 
@@ -107,6 +112,8 @@ public class UI_PlayerSkillWindow : UI_Base
     // Update is called once per frame
     void Update()
     {
+
+
         Util.FadeOut(ref startFadeOut, fadeImg);
         BackFadeIn(fadeImg, this, backFadeCheck);
 
@@ -220,7 +227,11 @@ public class UI_PlayerSkillWindow : UI_Base
                     if (fadeImg.color.a >= 0.99f)
                     {
                         Managers.UI.ClosePopUp(closePopup);
-                        Managers.UI.ShowPopUp<UI_Lobby>();
+                        if (Managers.Scene.CurrentScene is LobbyScene lobby)
+                        {
+                            lobby.LobbyUIOnOff(true);
+                            lobby.LobbyTouchUnitInit();
+                        }
 
 
                     }

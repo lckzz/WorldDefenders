@@ -140,7 +140,7 @@ public class UnitController : Unit
         EnemySensor();
         UnitStateCheck();
         
-        UnitVictory();
+        //UnitVictory();
 
         //if (Input.GetKeyDown(KeyCode.Q))
         //{
@@ -863,17 +863,17 @@ public class UnitController : Unit
         return randomPos;
     }
 
-    void UnitVictory()
-    {
-        if(GameManager.instance.State == GameState.GameVictory)
-        {
-            isRun = false;
-            anim.SetBool("Run", isRun);
-            isAtt = false;
-            anim.SetBool("Attack", isAtt);
+    //void UnitVictory()
+    //{
+    //    if(GameManager.instance.State == GameState.GameVictory)
+    //    {
+    //        isRun = false;
+    //        anim.SetBool("Run", isRun);
+    //        isAtt = false;
+    //        anim.SetBool("Attack", isAtt);
            
-        }
-    }
+    //    }
+    //}
 
 
 

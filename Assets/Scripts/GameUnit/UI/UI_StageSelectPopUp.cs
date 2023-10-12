@@ -100,6 +100,7 @@ public class UI_StageSelectPopUp : UI_Base
 
     void GetStageInfo(int ii)
     {
+        //모든 1챕터를 돌아서 전부 클릭된곳을 꺼준다.
         for(int i = 0; i < onestageSels.Length; i++)
         {
             onestageSels[i].TryGetComponent(out stagenode);
@@ -159,7 +160,11 @@ public class UI_StageSelectPopUp : UI_Base
         Managers.Sound.Play("Effect/UI_Click");
 
         Managers.UI.ClosePopUp(this);
-        Managers.UI.ShowPopUp<UI_Lobby>();
+        if (Managers.Scene.CurrentScene is LobbyScene lobby)
+        {
+            lobby.LobbyUIOnOff(true);
+            lobby.LobbyTouchUnitInit();
+        }
     }
 
 
@@ -263,7 +268,11 @@ public class UI_StageSelectPopUp : UI_Base
                     if (fadeImg.color.a >= 0.99f)
                     {
                         Managers.UI.ClosePopUp(closePopup);
-                        Managers.UI.ShowPopUp<UI_Lobby>();
+                        if (Managers.Scene.CurrentScene is LobbyScene lobby)
+                        {
+                            lobby.LobbyUIOnOff(true);
+                            lobby.LobbyTouchUnitInit();
+                        }
 
 
                     }

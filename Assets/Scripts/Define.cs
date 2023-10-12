@@ -51,6 +51,10 @@ public class Define
     {
         NormalSkeleton,
         BowSkeleton,
+        SpearSkeleton,
+        EliteWarrior,
+        EliteShaman,
+        EliteCavarly,
         Count
     }
 
@@ -129,6 +133,16 @@ public class Define
         Idle,
         Run,
         Attack
+    }
+
+    public enum UnitWeaponType
+    {
+        Sword,
+        Bow,
+        Spear,
+        Magic,
+        MagicianSkill,
+        CavalrySkill
     }
 
 
