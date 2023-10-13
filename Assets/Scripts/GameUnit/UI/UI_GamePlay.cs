@@ -39,7 +39,7 @@ public class UI_GamePlay : UI_Base
     [SerializeField] Button settingBtn;
 
 
-    //---------Camera Move-----------------------------
+    //---------Camera Move Btn-----------------------------
     [SerializeField] Button leftCameraMoveBtn;
     [SerializeField] Button rightCameraMoveBtn;
     Image leftCameraMoveImg;
@@ -49,7 +49,7 @@ public class UI_GamePlay : UI_Base
     Color clickOnMoveColor;
     Color clickOffMoveColor;
 
-    //---------Camera Move-----------------------------
+    //---------Camera Move Btn-----------------------------
 
 
     //----------Game SkillSet---------------------
@@ -108,7 +108,7 @@ public class UI_GamePlay : UI_Base
     public SkillBook Skills { get; protected set; }
 
 
-    public static Queue<GameObject> gameQueue = new Queue<GameObject>();
+    public Queue<GameObject> gameQueue = new Queue<GameObject>();
     //UI_EventHandler evt;
 
     // Start is called before the first frame update
@@ -147,10 +147,7 @@ public class UI_GamePlay : UI_Base
 
         for(int ii = 0; ii < uiUnit.Length; ii++)
         {
-
             contents.transform.GetChild(ii).TryGetComponent(out uiUnit[ii]);
-
-
         }
 
         GameObject.Find("Player").TryGetComponent<PlayerController>(out player);
@@ -589,17 +586,15 @@ public class UI_GamePlay : UI_Base
 
     }
 
-    public void UpdateUnitCostEnable(Image img,Color grayColor, float unitCost)
+    public void UpdateUnitCostEnable(Image img,Color grayColor, float unitCost,float gameCost)
     {
-        if(Managers.Scene.CurrentScene is GameScene game)
+        if (gameCost < unitCost)
         {
-            if (game.CurCost < unitCost)
-            {
-                img.color = grayColor;      //매개변수에서 받은 컬러값
-            }
-            else
-                img.color = new Color(1, 1, 1);
+            img.color = grayColor;      //매개변수에서 받은 컬러값
         }
+        else
+            img.color = new Color(1, 1, 1);
+        
 
     }
 
@@ -614,9 +609,7 @@ public class UI_GamePlay : UI_Base
     //유닛 버튼을 누를시 소환
     public void UnitSummon(string namePath,int idx)
     {
-        //오브젝트 풀링은 나중에(최적화 작업)
         unitObj = Resources.Load<GameObject>(namePath);
-        unitObj.TryGetComponent(out unitNode);
 
         uiUnit[idx].TryGetComponent(out unitNode);
 
@@ -624,10 +617,10 @@ public class UI_GamePlay : UI_Base
         {
             if(Managers.Scene.CurrentScene is GameScene game)
             {
-                if(game.CostCheck(game.CurCost, unitNode.UnitCost))
+                if(game.MoneyCost.CostCheck(unitNode.UnitCost))
                 {
-                    game.CurCost = game.CostUse(game.CurCost, unitNode.UnitCost);
-                    UpdateCost(game.CurCost);
+                    game.MoneyCost.CostUse(unitNode.UnitCost);
+                    UpdateCost(game.MoneyCost.CurCost);
                     gameQueue.Enqueue(unitObj);
                     unitNode.CoolCheck = true;          //큐에 넣어주면서 쿨타임 온
                 }

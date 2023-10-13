@@ -1692,6 +1692,7 @@ GameObject:
   m_Component:
   - component: {fileID: 380642882}
   - component: {fileID: 380642881}
+  - component: {fileID: 380642884}
   - component: {fileID: 380642883}
   m_Layer: 0
   m_Name: GameScene
@@ -1713,11 +1714,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monSpawn: {fileID: 1813163749}
-  spawnPos:
-  - {fileID: 618873556}
-  - {fileID: 1362379457}
-  - {fileID: 484396061}
-  coolTime: 4.5
 --- !u!4 &380642882
 Transform:
   m_ObjectHideFlags: 0
@@ -1759,6 +1755,21 @@ PlayableDirector:
     - 5ed95eb9441daa54f99e81419490eaa1: {fileID: 2104002354}
     - 6f1892f7071ffbd4f89e71276c0af66c: {fileID: 2104002354}
     - ddb8bbc936b21414c81915709ed14b47: {fileID: 1784744245}
+--- !u!114 &380642884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 380642880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 339c8d939f568224cb13f69c8e3f8fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPos: []
+  coolTime: 4.5
+  cost: 30
 --- !u!1 &387331595
 GameObject:
   m_ObjectHideFlags: 0
@@ -3230,28 +3241,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76e8d9dce72e6124ebc991e9b87995b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
-  spawnPos:
-  - {fileID: 618873556}
-  - {fileID: 1362379457}
-  - {fileID: 484396061}
-  monsterSpawnPos:
-  - {fileID: 1564243401}
-  - {fileID: 915953209}
-  - {fileID: 1777131347}
-  monsters:
-  - {fileID: 7018641801502834989, guid: 56311171da5708746adaf1da1980b56a, type: 3}
-  - {fileID: 5445838591781029827, guid: 2ecd9db610e76be4490351535193deb9, type: 3}
-  eliteWarrior: {fileID: 5304574456889812272, guid: fa0dce440427c964c915237e2a74fa6c, type: 3}
-  sprends:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  sceneEndPanel: {fileID: 387331595}
-  timerSec: 0
-  ui_GameResult: {fileID: 0}
-  monsterSpawn: 6.5
-  spawnTimer: 8.5
 --- !u!1 &757351943
 GameObject:
   m_ObjectHideFlags: 0
@@ -5592,8 +5581,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uAC8C\uC774\uD2B8\uC5D0\uC11C \uAC15\uB825\uD55C \uBAAC\uC2A4\uD130 \uAC1C\uCCB4\uAC00
-    \uBC1C\uACAC\uB418\uC5C8\uC2B5\uB2C8\uB2E4."
+  m_text: "\uAC8C\uC774\uD2B8\uC5D0\uC11C \uAC15\uB825\uD55C \uBAAC\uC2A4\uD130 \uAC1C\uCCB4
+    \uCD9C\uD604!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8581f370002b34a40afc77783ff445c1, type: 2}
   m_sharedMaterial: {fileID: 1226892546505360513, guid: 8581f370002b34a40afc77783ff445c1, type: 2}
@@ -5620,14 +5609,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28.15
+  m_fontSize: 34.35
   m_fontSizeBase: 28.41
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0

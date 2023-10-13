@@ -68,7 +68,7 @@ public class UnitNode : MonoBehaviour
             }
         }
 
-        Managers.UI.GetSceneUI<UI_GamePlay>().UpdateUnitCostEnable(unitImg,grayColor,unitCost);
+        //Managers.UI.GetSceneUI<UI_GamePlay>().UpdateUnitCostEnable(unitImg,grayColor,unitCost,);
 
     }
 
