@@ -2,30 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterSpawn : MonoBehaviour
+public class MonsterSpawn
 {
 
     List<string> monNameList = new List<string>();
-    [SerializeField] List<GameObject> spawnList = new List<GameObject>();
+    List<GameObject> spawnList = new List<GameObject>();
 
-    [SerializeField] private Transform[] monsterSpawnPos = new Transform[3];
-    [SerializeField] private float spawnTime = .0f;
+    private Transform[] monsterSpawnPos = new Transform[3];
+    private float spawnTime = .0f;
     private bool isSpawn = false;       
 
-    // Start is called before the first frame update
-    void Start()
+
+    public void MonsterSpawnInit(Transform parentTr)
     {
         monNameList.Clear();
         //인게임 들어올 때 스테이지에 맞는 몬스터들을 받는다.
-        for(int ii = 0; ii < GlobalData.g_MonsterTypeList.Count; ii++)
+        for (int ii = 0; ii < GlobalData.g_MonsterTypeList.Count; ii++)
         {
             monNameList.Add(System.Enum.GetName(typeof(Define.MonsterType), GlobalData.g_MonsterTypeList[ii]));
             spawnList.Add(Managers.Resource.Load<GameObject>($"Prefabs/Monster/{monNameList[ii]}"));
         }
 
-        for(int i = 0; i < this.transform.childCount;i++)
+        for (int i = 0; i < parentTr.childCount; i++)
         {
-            monsterSpawnPos[i] = transform.GetChild(i);
+            monsterSpawnPos[i] = parentTr.GetChild(i);
         }
     }
 

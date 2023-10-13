@@ -10,17 +10,17 @@ public class Managers : MonoBehaviour
     PoolManager _pool = new PoolManager();
     SceneManagerEx _scene = new SceneManagerEx();
     UIManager _ui = new UIManager();
-    GameManager _game = new GameManager();
     ResourceManager _resource = new ResourceManager();
     DataManager _data = new DataManager();
     SoundManager _sound = new SoundManager();
     LoadingSceneManager _loading = new LoadingSceneManager();
+    GameManagerEx _game = new GameManagerEx();
 
 
     public static PoolManager Pool { get { return Instance?._pool; } }
     public static SceneManagerEx Scene { get { return Instance?._scene; } }
     public static UIManager UI { get { return Instance?._ui; } }
-    public static GameManager Game { get { return Instance?._game; } }
+    public static GameManagerEx Game { get { return Instance?._game; } }
     public static ResourceManager Resource { get { return Instance?._resource; } }
     public static SoundManager Sound { get { return Instance?._sound; } }
     public static DataManager Data { get { return Instance?._data; } }
@@ -50,11 +50,6 @@ public class Managers : MonoBehaviour
 
   
 
-    private void Start()
-    {
-        Debug.Log(_game);
-
-    }
 
     public static void Clear()
     {

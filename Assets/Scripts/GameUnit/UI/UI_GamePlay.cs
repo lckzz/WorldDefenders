@@ -247,6 +247,7 @@ public class UI_GamePlay : UI_Base
     {
         UpdateSkill();
         FadeOut();
+        UpdateCost(Managers.Game.Cost);
     }
 
     float delaySeconds = 0.1f;
@@ -379,7 +380,7 @@ public class UI_GamePlay : UI_Base
 
     void UnitButtonSetting(int i , string path)
     {
-        ButtonEvent1(uiUnit[i].gameObject, path, i, UnitSummon, UIEvent.PointerDown);
+        ButtonEvent1(uiUnit[i].gameObject, path, i, UnitSummonBtnClick, UIEvent.PointerDown);
     }
 
     void InGameSetting()
@@ -607,7 +608,7 @@ public class UI_GamePlay : UI_Base
 
 
     //유닛 버튼을 누를시 소환
-    public void UnitSummon(string namePath,int idx)
+    public void UnitSummonBtnClick(string namePath,int idx)
     {
         unitObj = Resources.Load<GameObject>(namePath);
 
@@ -615,31 +616,10 @@ public class UI_GamePlay : UI_Base
 
         if (unitNode?.CoolCheck == false) //쿨타임이 돌고 있지않을 때
         {
-            if(Managers.Scene.CurrentScene is GameScene game)
-            {
-                if(game.MoneyCost.CostCheck(unitNode.UnitCost))
-                {
-                    game.MoneyCost.CostUse(unitNode.UnitCost);
-                    UpdateCost(game.MoneyCost.CurCost);
-                    gameQueue.Enqueue(unitObj);
-                    unitNode.CoolCheck = true;          //큐에 넣어주면서 쿨타임 온
-                }
-            }
-
-
-
-
+            Managers.Game.UnitSummonEnqueue(unitObj, unitNode.UnitCost, unitNode);
         }
     }
 
-    public void Summon(GameObject obj, Transform[] tr)
-    {
-        obj = gameQueue.Dequeue();
-        GameObject instancObj = Managers.Resource.Instantiate(obj);
-
-        int ran = UnityEngine.Random.Range(0, 3);
-        instancObj.transform.position = tr[ran].position;
-    }
 
     public void UiMove(RectTransform rt, float beforePosY , float afterPosY)
     {

@@ -6,17 +6,17 @@ using UnityEngine.Playables;
 public class GameScene : BaseScene
 {
     //게임씬에 들어왔을때 씬에서 필요한것들을 처음에 갱신해주는 역할
-    [SerializeField] private MonsterSpawn monSpawn;
 
     private PlayableDirector playable;
-    private MoneyCost moneyCost;
 
+    GameObject obj;           //유닛소환할때 큐에서 게임오브젝트를 받아줄 변수
+    [SerializeField] Transform unitParentTr;
+    Transform[] unitSpawnTr = new Transform[3];
+    [SerializeField] Transform monsterParentTr;
 
-    GameObject obj;
-    UnitNode unitnode;
     float speed = 1.0f;
 
-    public MoneyCost MoneyCost { get { return moneyCost; } }
+
 
     // Start is called before the first frame update
     void Start()
@@ -32,17 +32,23 @@ public class GameScene : BaseScene
     protected override void Init()
     {
         base.Init();
+        
+        for(int ii = 0; ii < unitParentTr.childCount; ii++)
+        {
+            unitSpawnTr[ii] = unitParentTr?.GetChild(ii);
+        }
+
         SceneType = Define.Scene.BattleStage_Field;
+        Managers.Game.MonsterSpawnInit(monsterParentTr);
         Managers.Sound.Play("BGM/GameBGM", Define.Sound.BGM);
         TryGetComponent(out playable);
-        TryGetComponent(out moneyCost);
-
 
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if (playable.state == PlayState.Playing)  //타임라인이 작동중이면 리턴
             return;
 
@@ -59,9 +65,9 @@ public class GameScene : BaseScene
         //    //unitnode.CoolCheck = true;  //해당 유닛이 소환이 되면 쿨타임 추가 (true면 쿨온)
         //}
 
-
-        moneyCost.CostCoolTimer();
-        monSpawn.NormalMonsterSpawn();
+        Managers.Game.unitSummonDequeue(obj,unitSpawnTr);
+        Managers.Game.CostIncreaseTime();
+        Managers.Game.NormalMonsterSpawn();
 
     }
 
