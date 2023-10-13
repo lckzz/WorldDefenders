@@ -65,16 +65,16 @@ public class UI_GameResult : UI_Base
 
     private void OnEnable()
     {
-        if(GameManager.instance.State == GameState.GameVictory)
-        {
-            failOrVictoryImg.sprite = ImageSetting("Images/Image_Victory");
-        }
+        //if(GameManager.instance.State == GameState.GameVictory)
+        //{
+        //    failOrVictoryImg.sprite = ImageSetting("Images/Image_Victory");
+        //}
 
-        if(GameManager.instance.State == GameState.GameFail)
-        {
-            failOrVictoryImg.sprite = ImageSetting("Images/Image_Fail");
+        //if(GameManager.instance.State == GameState.GameFail)
+        //{
+        //    failOrVictoryImg.sprite = ImageSetting("Images/Image_Fail");
 
-        }
+        //}
 
         TimerSetting();
     }
@@ -84,8 +84,8 @@ public class UI_GameResult : UI_Base
     void TimerSetting()
     {
        
-        min = (int)GameManager.instance.timerSec / 60;
-        sec = (int)GameManager.instance.timerSec % 60;
+        //min = (int)GameManager.instance.timerSec / 60;
+        //sec = (int)GameManager.instance.timerSec % 60;
         timecheck = true;
     }
 
@@ -134,8 +134,8 @@ public class UI_GameResult : UI_Base
 
             int curTimer = (curmin * 60) + cursec;
 
-            if (curTimer == GameManager.instance.timerSec)
-                timer = false;
+            //if (curTimer == GameManager.instance.timerSec)
+            //    timer = false;
 
 
             yield return timewfs;
@@ -175,7 +175,7 @@ public class UI_GameResult : UI_Base
                     if (fadeImg.color.a >= 0.99f)
                     {
                         Managers.UI.ClosePopUp(this);
-                        GameManager.instance.SceneEndOn();
+                        //GameManager.instance.SceneEndOn();
                         Managers.Scene.LoadScene(Define.Scene.BattleStage_Field);
 
 
@@ -214,7 +214,7 @@ public class UI_GameResult : UI_Base
                     {
 
                         Managers.UI.ClosePopUp(this);
-                        GameManager.instance.SceneEndOn();
+                        //GameManager.instance.SceneEndOn();
                         Managers.Scene.LoadScene(Define.Scene.Lobby);
 
 

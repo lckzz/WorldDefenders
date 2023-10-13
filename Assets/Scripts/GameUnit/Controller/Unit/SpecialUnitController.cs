@@ -806,7 +806,7 @@ public class SpecialUnitController : Unit
 
     void UnitVictory()
     {
-        if (GameManager.instance.State == GameState.GameVictory)
+        //if (GameManager.instance.State == GameState.GameVictory)
         {
             isRun = false;
             anim.SetBool("Run", isRun);

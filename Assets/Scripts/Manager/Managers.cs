@@ -14,7 +14,6 @@ public class Managers : MonoBehaviour
     ResourceManager _resource = new ResourceManager();
     DataManager _data = new DataManager();
     SoundManager _sound = new SoundManager();
-    SkillManager _skill = new SkillManager();
     LoadingSceneManager _loading = new LoadingSceneManager();
 
 
@@ -25,7 +24,6 @@ public class Managers : MonoBehaviour
     public static ResourceManager Resource { get { return Instance?._resource; } }
     public static SoundManager Sound { get { return Instance?._sound; } }
     public static DataManager Data { get { return Instance?._data; } }
-    public static SkillManager Skill { get { return Instance?._skill; } }
     public static LoadingSceneManager Loading { get { return Instance?._loading; } }
 
     static void Init()

@@ -52,7 +52,7 @@ public class PlayerTower : Tower
     {
         if(twState == TowerState.Destroy)
         {
-            GameManager.instance.state = GameState.GameFail;
+            //GameManager.instance.state = GameState.GameFail;
         }
     }
 

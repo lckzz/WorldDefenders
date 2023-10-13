@@ -840,7 +840,7 @@ public class EliteMonsterController : Unit
         //Managers.Game.state = GameState.GameFail;
 
 
-        if (GameManager.instance.State == GameState.GameFail)
+        //if (GameManager.instance.State == GameState.GameFail)
         {
             isRun = false;
             anim.SetBool("Run", isRun);

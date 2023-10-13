@@ -5,7 +5,7 @@ using UnityEngine.Playables;
 
 public class GameScene : BaseScene
 {
-    //현재 게임에서 보여주는 플레이
+    //게임씬에 들어왔을때 씬에서 필요한것들을 처음에 갱신해주는 역할
     //float speed = 1.0f;
     //float curCost = .0f;
     //float maxCost = 500.0f;
@@ -16,7 +16,7 @@ public class GameScene : BaseScene
     private PlayableDirector playable;
     float curCost = .0f;
     float maxCost = 500.0f;
-    float costCoolTime = 1.0f;
+    float costCoolTime = 4.5f;
     GameObject obj;
     UnitNode unitnode;
     float speed = 1.0f;
