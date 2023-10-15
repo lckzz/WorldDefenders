@@ -65,6 +65,15 @@ public class MonsterPortal : Tower
         if (m_hp > 0)
         {
             m_hp -= att;
+            if(Managers.Game.EliteMonsterCheck() == false)
+            {
+                //엘리트몬스터스폰타입이 아니라면
+                if(hpPercent() <= 0.3f)   //체력이 30퍼미만이 되면
+                {
+                    Debug.Log("erwewr");
+                    Managers.Game.EliteMonsterEvent();
+                }
+            }
 
             if (m_hp <= 0)
             {

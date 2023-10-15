@@ -22,7 +22,6 @@ public class MoneyCost
 
         if (costCoolTime > .0f)
         {
-            Debug.Log(curCost);
             costCoolTime -= Time.deltaTime;
             if (costCoolTime <= .0f)
             {

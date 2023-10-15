@@ -55,17 +55,6 @@ public class GameScene : BaseScene
             return;
 
 
-            
-        if(Input.GetKeyDown(KeyCode.Q))
-        {
-            monSpawnType = Define.MonsterSpawnType.Wave;
-
-        }
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-
-            Managers.Game.EliteMonsterSpawn();
-        }
 
         Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCoolTime(speed);
 
@@ -73,14 +62,19 @@ public class GameScene : BaseScene
         Managers.Game.CostIncreaseTime();
         Managers.Game.NormalMonsterSpawn(monSpawnType);
 
+        if (Managers.Game.EliteMonsterCheck())
+            monSpawnType = Define.MonsterSpawnType.Elite;
 
         if (monSpawnType == Define.MonsterSpawnType.Normal)
             monSpawnType = Managers.Game.MonsterWaveEvent(monSpawnType, 100);
         else if (monSpawnType == Define.MonsterSpawnType.Wave)
             monSpawnType = Managers.Game.MonsterWave(monSpawnType);
+        //else if(monSpawnType == Define.MonsterSpawnType.Elite)
+        //    monSpawnType = Managers.Game.EliteMonsterEventSpawn(monSpawnType);
 
 
-        Debug.Log(monSpawnType);
+
+        //Debug.Log(monSpawnType);
 
     }
 

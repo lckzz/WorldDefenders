@@ -68,7 +68,7 @@ public class EliteCavalryController : EliteMonsterController
         EnemySensor();
         TowerSensor();
         MonsterStateCheck();
-        MonsterVictory();
+        //MonsterVictory();
 
     }
 

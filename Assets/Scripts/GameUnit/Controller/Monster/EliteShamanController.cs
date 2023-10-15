@@ -59,7 +59,7 @@ public class EliteShamanController : EliteMonsterController
         EnemySensor();
         TowerSensor();
         MonsterStateCheck();
-        MonsterVictory();
+
 
     }
 

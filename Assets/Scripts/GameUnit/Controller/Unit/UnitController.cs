@@ -209,6 +209,7 @@ public class UnitController : Unit
                 {
                     if (i == 0 && monCtrls.Length > 1)
                     {
+
                         float distA = (monCtrls[i].transform.position - this.transform.position).sqrMagnitude;
                         float distB = (monCtrls[i + 1].transform.position - this.transform.position).sqrMagnitude;
 
@@ -561,10 +562,15 @@ public class UnitController : Unit
         if (hp > 0)
         {
             hp -= att;
-            if(criticalCheck)
-                unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Critical);
-            else
-                unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Enemy);
+
+            if(att > 0)
+            {
+                if (criticalCheck)
+                    unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Critical);
+                else
+                    unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Enemy);
+            }
+
 
 
             if (knockBack > 0)

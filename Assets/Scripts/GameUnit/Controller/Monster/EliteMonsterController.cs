@@ -23,17 +23,17 @@ public class EliteMonsterController : Unit
     [SerializeField]  protected string[] skilldialogs;
     protected int randomIdx;
     protected int dialogCount = 2;
+    [SerializeField] protected GameObject appearDust;
 
 
     protected MonsterStat monStat;
 
     protected float coolTime = 20.0f;
 
-    string warriorHitSound = "WarriorAttack";
-    string warriorCriticalSound = "CriticalSound";
-    string warriorHitEff = "HitEff";
+    readonly string warriorHitSound = "WarriorAttack";
+    readonly string warriorCriticalSound = "CriticalSound";
+    readonly string warriorHitEff = "HitEff";
 
-    public float Hp { get { return hp; } }
 
     public SkillBook Skills { get; protected set; }
 
@@ -62,10 +62,10 @@ public class EliteMonsterController : Unit
 
         TryGetComponent<Collider2D>(out myColl);
 
-
-
         SetMonsterState(EliteMonsterState.Run);
         startCoolTime = StartCoroutine(UnitSKillCoolTime(coolTime));
+        appearDust?.SetActive(true);
+
 
     }
 
@@ -465,6 +465,9 @@ public class EliteMonsterController : Unit
                 }
         }
     }
+
+
+
 
 
     void MonsterIdle()

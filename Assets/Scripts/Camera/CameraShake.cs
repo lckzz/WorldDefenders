@@ -5,15 +5,27 @@ using UnityEngine;
 
 public class CameraShake : MonoBehaviour
 {
-    Vector3 cameraPos;
 
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     Camera mainCamera;
-    [SerializeField]
-    [Range(0.01f, 0.1f)] float shakeRange = 0.05f;
-    [SerializeField]
-    [Range(0.1f, 1f)] float duration = 0.5f;
 
+    Vector3 cameraPos;
+
+    private float shakeTime;
+    private float shakeIntensity;
+
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Q))
+            OnShakeCamera(0.2f,0.25f);
+
+    }
+
+    private void Start()
+    {
+        cameraPos = Camera.main.transform.position;
+    }
 
     public void VirtulCameraShake(float amplitudeGainValue, float frequencyGainValue)
     {
@@ -33,57 +45,38 @@ public class CameraShake : MonoBehaviour
 
     }
 
-
-
-    IEnumerator StartShake()
+    public void OnShakeCamera(float shakeTime = 1.0f, float shakeIntensity = 0.1f)
     {
-        WaitForSeconds wfs = new WaitForSeconds(0.005f);
+        
+        this.shakeTime = shakeTime;
+        this.shakeIntensity = shakeIntensity;
 
-        while (true)
+        StopCoroutine("ShakeByPosition");
+        StartCoroutine("ShakeByPosition");
+    }
+
+    private IEnumerator ShakeByPosition()
+    {
+        cameraPos = Camera.main.transform.position;
+        Vector3 startPos = transform.position;
+
+        while( shakeTime > 0.0f)
         {
-            cameraPos = mainCamera.transform.position;
+            transform.position = startPos + Random.insideUnitSphere * shakeIntensity;
 
-            float cameraPosX = Random.value * shakeRange * 2 - shakeRange;
-            float cameraPosY = Random.value * shakeRange * 2 - shakeRange;
-            cameraPos = mainCamera.transform.position;
-            cameraPos.x += cameraPosX;
-            cameraPos.y += cameraPosY;
-            mainCamera.transform.position = cameraPos;
-            Debug.Log(mainCamera.transform.position);
-            yield return wfs;
+            shakeTime -= Time.deltaTime;
+
+            yield return null;
         }
+
+        transform.position = cameraPos;
     }
 
 
-
-    //void StartShake()
-    //{
-    //    Debug.Log("여기 흔들고있어요");
-    //    float cameraPosX = Random.value * shakeRange * 2 - shakeRange;
-    //    float cameraPosY = Random.value * shakeRange * 2 - shakeRange;
-    //    cameraPos = Camera.main.transform.position;
-    //    cameraPos.x += cameraPosX;
-    //    cameraPos.y += cameraPosY;
-    //    Camera.main.transform.position = cameraPos;
-    //}
-
-    IEnumerator StopShake(float duration)
-    {
-
-        WaitForSeconds wfs = new WaitForSeconds(duration);
-        yield return wfs;
-        Debug.Log("wqewqe");
+  
 
 
-        StopCoroutine(StartShake());
-        Camera.main.transform.position = cameraPos;
-    }
 
-    void StopShake()
-    {
-        CancelInvoke("StartShake");
-        mainCamera.transform.position = cameraPos;
-    }
 
 
 }

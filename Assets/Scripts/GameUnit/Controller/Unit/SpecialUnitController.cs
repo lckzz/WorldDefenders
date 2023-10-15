@@ -597,10 +597,15 @@ public class SpecialUnitController : Unit
         {
             hp -= att;
 
-            if (criticalCheck)
-                unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Critical);
-            else
-                unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Enemy);
+
+            if(att > 0)   //받은 데미지가 0보다 클때만 데미지 표시
+            {
+                if (criticalCheck)
+                    unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Critical);
+                else
+                    unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Enemy);
+            }
+
 
             if (knockBack > 0)
             {

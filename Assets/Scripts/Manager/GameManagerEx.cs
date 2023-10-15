@@ -70,6 +70,7 @@ public class GameManagerEx
     //몬스터 소환
     #endregion
 
+    #region 이벤트 타입 변경
 
     //몬스터 스폰 이벤트
     public Define.MonsterSpawnType MonsterWaveEvent(Define.MonsterSpawnType spawnType, int gateHp)
@@ -88,8 +89,24 @@ public class GameManagerEx
         return monsterEvent.MonsterWaveCheck();
     }
 
+    public bool EliteMonsterCheck()
+    {
+        return monsterEvent.EliteMonsterCheck();
+    }
+
+    public void EliteMonsterEvent()
+    {
+        monsterEvent.EliteMonsterEvent();
+    }
+
+    public Define.MonsterSpawnType EliteMonsterEventSpawn(Define.MonsterSpawnType spawnType)
+    {
+        return monsterEvent.EliteMonsterEventSpawn(spawnType);
+
+    }
+
     //몬스터 스폰 이벤트
 
-
+    #endregion
 
 }

@@ -176,8 +176,8 @@ public class CameraCtrl : MonoBehaviour
     }
 
 
-    public void VibrateForTime(float time)
+    public void ShakeCamera(float shakeTime, float shakeIntensity)
     {
-        ShakeTime = time;
+        Shake.OnShakeCamera(shakeTime, shakeIntensity);
     }
 }
