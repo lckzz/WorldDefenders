@@ -9,9 +9,10 @@ public class GameManagerEx
     private MoneyCost moneyCost = new MoneyCost();
     private UnitSpawn unitSpawn = new UnitSpawn();
     private MonsterSpawn monsterSpawn = new MonsterSpawn();
+    private MonsterEvent monsterEvent = new MonsterEvent();
 
     //코스트 관리
-
+    #region 코스트 관리
     public float Cost { get { return moneyCost.CurCost; } }
 
     public void CostIncreaseTime()
@@ -30,7 +31,10 @@ public class GameManagerEx
     }
 
     //코스트 관리
+    #endregion
 
+
+    #region 유닛 소환
 
     //유닛 소환
     public void UnitSummonEnqueue(GameObject unitObj,float unitCost,UnitNode node)
@@ -45,22 +49,47 @@ public class GameManagerEx
 
     //유닛 소환
 
+    #endregion
+
+    #region 몬스터 소환
     //몬스터 소환
     public void MonsterSpawnInit(Transform parentTr)
     {
         monsterSpawn.MonsterSpawnInit(parentTr);
     }
 
-    public void NormalMonsterSpawn()
+    public void NormalMonsterSpawn(Define.MonsterSpawnType spawnType)
     {
-        monsterSpawn.NormalMonsterSpawn();
+        monsterSpawn.MonsterSpawnTimer(spawnType);
     }
 
     public void EliteMonsterSpawn()
     {
-
+        monsterSpawn.EliteMonsterSpawn();
     }
     //몬스터 소환
+    #endregion
+
+
+    //몬스터 스폰 이벤트
+    public Define.MonsterSpawnType MonsterWaveEvent(Define.MonsterSpawnType spawnType, int gateHp)
+    {
+        return monsterEvent.MonsterWaveEvent(spawnType, gateHp);
+    }
+
+    public Define.MonsterSpawnType MonsterWave(Define.MonsterSpawnType spawnType)
+    {
+        return monsterEvent.MonsterWave(spawnType);
+    }
+
+
+    public bool MonsterWaveCheck()
+    {
+        return monsterEvent.MonsterWaveCheck();
+    }
+
+    //몬스터 스폰 이벤트
+
 
 
 }

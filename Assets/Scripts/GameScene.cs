@@ -13,7 +13,7 @@ public class GameScene : BaseScene
     [SerializeField] Transform unitParentTr;
     Transform[] unitSpawnTr = new Transform[3];
     [SerializeField] Transform monsterParentTr;
-
+    Define.MonsterSpawnType monSpawnType = Define.MonsterSpawnType.Normal;      //이벤트에서 관리한값을 받아서 적용
     float speed = 1.0f;
 
 
@@ -48,26 +48,39 @@ public class GameScene : BaseScene
     // Update is called once per frame
     void Update()
     {
-
         if (playable.state == PlayState.Playing)  //타임라인이 작동중이면 리턴
             return;
 
         if (Managers.UI.GetSceneUI<UI_GamePlay>() == null)
             return;
 
+
+            
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            monSpawnType = Define.MonsterSpawnType.Wave;
+
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+
+            Managers.Game.EliteMonsterSpawn();
+        }
+
         Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCoolTime(speed);
-
-
-        //if (UI_GamePlay.gameQueue.Count > 0)
-        //{
-        //    Managers.UI.GetSceneUI<UI_GamePlay>().Summon(obj, spawnPos);
-        //    //go.TryGetComponent(out unitnode);
-        //    //unitnode.CoolCheck = true;  //해당 유닛이 소환이 되면 쿨타임 추가 (true면 쿨온)
-        //}
 
         Managers.Game.unitSummonDequeue(obj,unitSpawnTr);
         Managers.Game.CostIncreaseTime();
-        Managers.Game.NormalMonsterSpawn();
+        Managers.Game.NormalMonsterSpawn(monSpawnType);
+
+
+        if (monSpawnType == Define.MonsterSpawnType.Normal)
+            monSpawnType = Managers.Game.MonsterWaveEvent(monSpawnType, 100);
+        else if (monSpawnType == Define.MonsterSpawnType.Wave)
+            monSpawnType = Managers.Game.MonsterWave(monSpawnType);
+
+
+        Debug.Log(monSpawnType);
 
     }
 

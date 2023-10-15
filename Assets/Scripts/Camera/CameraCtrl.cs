@@ -32,6 +32,10 @@ public class CameraCtrl : MonoBehaviour
     float height;
 
     GroundCheck groundCheck;
+    CameraShake shake;
+
+
+    public CameraShake Shake { get { return shake; } }
 
     //카메라 흔들기
     [HideInInspector] public float ShakeAmount;
@@ -44,6 +48,7 @@ public class CameraCtrl : MonoBehaviour
         moveObj = GameObject.Find("CameraMoveObj");
         GameObject Groundobj = GameObject.Find("GroundObj");
         Groundobj.TryGetComponent<GroundCheck>(out groundCheck);
+        TryGetComponent(out shake);
         Vector3 a_GrdHalfSize = Vector3.zero;
         a_GrdHalfSize.x = Groundobj.transform.localScale.x / 2.0f;
         a_GrdHalfSize.y = Groundobj.transform.localScale.y / 2.0f;

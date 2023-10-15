@@ -1516,7 +1516,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &329276112
 Transform:
   m_ObjectHideFlags: 0
@@ -2002,6 +2002,7 @@ GameObject:
   - component: {fileID: 413016576}
   - component: {fileID: 413016579}
   - component: {fileID: 413016580}
+  - component: {fileID: 413016582}
   - component: {fileID: 413016581}
   m_Layer: 0
   m_Name: Main Camera
@@ -2152,6 +2153,21 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &413016582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413016575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f805f29b9f635d84b890ce4b948930e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  virtualCamera: {fileID: 1784744245}
+  shakeRange: 0.0711
+  duration: 0.1
 --- !u!1 &456209246
 GameObject:
   m_ObjectHideFlags: 0
@@ -5186,6 +5202,7 @@ GameObject:
   - component: {fileID: 1184141247}
   - component: {fileID: 1184141246}
   - component: {fileID: 1184141245}
+  - component: {fileID: 1184141248}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -5269,6 +5286,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1184141248
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184141243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NoiseProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
+  m_PivotOffset: {x: 0, y: 0, z: 0}
+  m_AmplitudeGain: 0
+  m_FrequencyGain: 0
+  mNoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &1186985272
 GameObject:
   m_ObjectHideFlags: 0
@@ -5811,7 +5845,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 1859, y: -126.8}
+  m_AnchoredPosition: {x: 1300, y: -126.8}
   m_SizeDelta: {x: 708.5, y: 96.47}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1292562813
@@ -9096,6 +9130,7 @@ GameObject:
   - component: {fileID: 1953002915}
   - component: {fileID: 1953002914}
   - component: {fileID: 1953002917}
+  - component: {fileID: 1953002918}
   m_Layer: 0
   m_Name: UI_GamePlay
   m_TagString: Untagged
@@ -9229,6 +9264,19 @@ MonoBehaviour:
   skillDurationTimeImg: {fileID: 576269413}
   skillDurationTimeTxt: {fileID: 1836766803}
   unitNodePos: []
+--- !u!114 &1953002918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1953002912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e65d9844ab51cb40aa26330723c79cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  warningObj: {fileID: 1292562811}
 --- !u!1 &1977462604
 GameObject:
   m_ObjectHideFlags: 0

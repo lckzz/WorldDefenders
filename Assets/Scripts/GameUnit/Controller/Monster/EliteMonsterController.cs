@@ -15,8 +15,8 @@ public class EliteMonsterController : Unit
 
     protected Unit[] unitCtrls;
     protected List<Unit> unitCtrlsOrder = new List<Unit>();    //순서정렬
-    protected Unit unitTarget;
-    protected PlayerTower playerTowerCtrl;
+    [SerializeField] protected Unit unitTarget;
+    [SerializeField] protected PlayerTower playerTowerCtrl;
     protected List<Unit> skillenemyList = new List<Unit>();
     [SerializeField] protected GameObject speechBubbleObj;           //말풍선
     [SerializeField] protected SpeechBubbleCtrl speechBBCtrl;
@@ -370,6 +370,7 @@ public class EliteMonsterController : Unit
                 }
             case EliteMonsterState.Run:
                 {
+
                     if (!isRun)
                     {
                         isRun = true;
@@ -878,7 +879,6 @@ public class EliteMonsterController : Unit
                 }
                 else
                 {
-
                     if (towerDist < attackRange * attackRange)
                         SetMonsterState(EliteMonsterState.Attack);
                     else

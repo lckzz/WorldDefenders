@@ -13,6 +13,8 @@ public class MonsterPortal : Tower
 
     Animator anim;
 
+    bool check = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +29,26 @@ public class MonsterPortal : Tower
         {
             if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f)
                 Destroy(this.gameObject);
+        }
+
+        if(anim.GetCurrentAnimatorStateInfo(0).IsName("GenerateGate"))
+        {
+            //게이트가 열리는 애니메이션이라면
+            if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime <= 0.6f)
+            {
+                if(check == false)
+                {
+                    check = true;
+                    Camera.main.TryGetComponent(out CameraCtrl cameraCtrl);
+                    cameraCtrl?.Shake.VirtulCameraShake(1,1);
+                }
+            }
+            else
+            {
+                check = false;
+                Camera.main.TryGetComponent(out CameraCtrl cameraCtrl);
+                cameraCtrl?.Shake.VirtulCameraShake(0, 0);
+            }
         }
 
     }

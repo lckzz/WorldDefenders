@@ -145,5 +145,12 @@ public class Define
         CavalrySkill
     }
 
+    public enum MonsterSpawnType
+    {
+        Normal,
+        Wave,
+        Elite
+    }
+
 
 }

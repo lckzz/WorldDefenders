@@ -30,12 +30,16 @@ public class MonsterSpawn
     }
 
 
-    public void NormalMonsterSpawn()  //일반적인 몬스터 스폰
+    public void MonsterSpawnTimer(Define.MonsterSpawnType spawnType)  //일반적인 몬스터 스폰
     {
         if(!isSpawn)
         {
             isSpawn = true;   //스폰타이머 시작
-            spawnTime = Random.Range(4.0f, 6.0f);
+            if(spawnType == Define.MonsterSpawnType.Wave)
+                spawnTime = Random.Range(1.0f, 2.0f);
+            else
+                spawnTime = Random.Range(4.0f, 6.0f);
+
         }
         else
         {
@@ -51,5 +55,13 @@ public class MonsterSpawn
             }
         }
     }
-    
+
+
+    public void EliteMonsterSpawn()
+    {
+        int randPosidx = Random.Range(0, 3);
+        GameObject go = Managers.Resource.Instantiate(spawnList[spawnList.Count - 1], monsterSpawnPos[randPosidx].position);
+
+    }
+
 }

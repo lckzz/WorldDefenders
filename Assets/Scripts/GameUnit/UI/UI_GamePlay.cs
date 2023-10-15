@@ -39,6 +39,7 @@ public class UI_GamePlay : UI_Base
     [SerializeField] Button settingBtn;
 
 
+
     //---------Camera Move Btn-----------------------------
     [SerializeField] Button leftCameraMoveBtn;
     [SerializeField] Button rightCameraMoveBtn;
@@ -72,9 +73,6 @@ public class UI_GamePlay : UI_Base
     [SerializeField] private TextMeshProUGUI skillDurationTimeTxt;
     private float durationTime;
     //----------Game SkillSet---------------------
-
-
-
 
     bool fadeCheck = true;
 
@@ -404,6 +402,7 @@ public class UI_GamePlay : UI_Base
         if (rightCameraMoveBtn != null)
             rightCameraMoveBtn.TryGetComponent(out rightCameraMoveImg);
     }
+
 
 
     void FadeOut()
