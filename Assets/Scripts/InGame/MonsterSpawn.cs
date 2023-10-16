@@ -32,7 +32,7 @@ public class MonsterSpawn
     }
 
 
-    public void MonsterSpawnTimer(Define.MonsterSpawnType spawnType,Action action)  //일반적인 몬스터 스폰
+    public void MonsterSpawnTimer(Define.MonsterSpawnType spawnType,Action<string> action,string warningTxt)  //일반적인 몬스터 스폰
     {
         if(!isSpawn)
         {
@@ -58,7 +58,7 @@ public class MonsterSpawn
                 if(monsterCount >= 10)
                 {
                     monsterCount = 0;
-                    Managers.Game.EliteMonsterEvent(action);
+                    Managers.Game.EliteMonsterEvent(action,warningTxt);
                     //Managers.Resource.Instantiate(spawnList[monNameList.Count - 1], monsterSpawnPos[randPosidx].position);
                 }
                 isSpawn = false;

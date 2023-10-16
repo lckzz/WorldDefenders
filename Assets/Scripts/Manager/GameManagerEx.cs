@@ -59,9 +59,9 @@ public class GameManagerEx
         monsterSpawn.MonsterSpawnInit(parentTr);
     }
 
-    public void NormalMonsterSpawn(Define.MonsterSpawnType spawnType,Action action = null)
+    public void NormalMonsterSpawn(Define.MonsterSpawnType spawnType,Action<string> action,string warningTxt)
     {
-        monsterSpawn.MonsterSpawnTimer(spawnType, action);
+        monsterSpawn.MonsterSpawnTimer(spawnType, action,warningTxt);
     }
 
     public void EliteMonsterSpawn()
@@ -90,18 +90,18 @@ public class GameManagerEx
         monsterEvent.MonSpawnType = type;
     }
 
-    public void MonsterWaveEvent(Action action =null)
+    public void MonsterWaveEvent(Action<string> action ,string warningTxt)
     {
-        monsterEvent.MonsterWaveEvent(action);
+        monsterEvent.MonsterWaveEvent(action, warningTxt);
     }
 
     public void MonsterWave()
     {
         monsterEvent.MonsterWave();
     }
-    public void EliteMonsterEvent(Action action)
+    public void EliteMonsterEvent(Action<string> action, string warningTxt)
     {
-        monsterEvent.EliteMonsterEvent(action);
+        monsterEvent.EliteMonsterEvent(action,warningTxt);
     }
 
     public bool MonsterNormalCheck()
@@ -123,9 +123,9 @@ public class GameManagerEx
         return monsterEvent.FinalMonsterCheck();
     }
 
-    public void FinalMonsterWave(Action action, int eliteMonsterCount)
+    public void FinalMonsterWave(Action<string> action, string warningTxt, int eliteMonsterCount)
     {
-        monsterEvent.FinalMonsterWave(action,eliteMonsterCount);
+        monsterEvent.FinalMonsterWave(action,warningTxt, eliteMonsterCount);
     }
 
 

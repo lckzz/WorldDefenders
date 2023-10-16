@@ -19,7 +19,7 @@ public class MonsterEvent
 
     private int finalEliteMonsterCount = 0;
     private bool finalOneWarningUI = false;
-    private float finalEliteMonsterTime = 2.5f;
+    private float finalEliteMonsterTime = 1.0f;
 
     private int eliteMonsterCount = 2;
 
@@ -66,7 +66,7 @@ public class MonsterEvent
         monSpawnType = Define.MonsterSpawnType.Normal;
         monsterWaveTime = 10.0f;
         monsterWaveDuration = 10.0f;
-        finalEliteMonsterTime = 2.5f;
+        finalEliteMonsterTime = 1.0f;
         monsterWaveisOn = false;
         eliteMonsterisOn = false;
         finalOneWarningUI = false;
@@ -108,7 +108,7 @@ public class MonsterEvent
     }
 
 
-    public void MonsterWaveEvent(Action action)
+    public void MonsterWaveEvent(Action<string> action,string warningTxt)
     {
         //일반 이벤트중일때
 
@@ -119,7 +119,7 @@ public class MonsterEvent
             monsterWaveisOn = true;
             monsterWaveDuration = 10.0f;
             MonSpawnType = Define.MonsterSpawnType.Wave;
-            action();  //받아온 액션함수를 사용
+            action(warningTxt);  //받아온 액션함수를 사용
             //Debug.Log("여기 웨이브");
         }
 
@@ -146,23 +146,23 @@ public class MonsterEvent
     }
 
 
-    public void EliteMonsterEvent(Action action)
+    public void EliteMonsterEvent(Action<string> action, string warningTxt)
     {
         eliteMonsterisOn = true;
-        action();
+        action(warningTxt);
         Managers.Game.EliteMonsterSpawn();
 
     }
 
-    public void FinalMonsterWave(Action action,int eliteMonsterCount)
+    public void FinalMonsterWave(Action<string> action, string warningTxt, int eliteMonsterCount)
     {
-        if (finalEliteMonsterCount > eliteMonsterCount)
+        if (finalEliteMonsterCount >= eliteMonsterCount)
             return;
 
         if(finalOneWarningUI == false)
         {
             finalOneWarningUI = true;
-            action();       //경고창 띄우기
+            action(warningTxt);       //경고창 띄우기
 
         }
         finalEliteMonsterTime -= Time.deltaTime;

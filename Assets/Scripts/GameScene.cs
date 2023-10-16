@@ -19,7 +19,9 @@ public class GameScene : BaseScene
     float speed = 1.0f;
     int finalMonsterCount = 3;          //마지막이벤트에서 나올 엘리트몬스터의 숫자
 
-
+    private readonly string warningWave = "게이트에서 몬스터가 대량으로 몰려옵니다!..";
+    private readonly string warningElite = "게이트에서 강력한 몬스터 개체 출현!";
+    private readonly string warningFinal = "강력한 몬스터 여러 개체가 출현!!!";
 
     // Start is called before the first frame update
     void Start()
@@ -67,14 +69,14 @@ public class GameScene : BaseScene
 
         Managers.Game.unitSummonDequeue(obj,unitSpawnTr);
         Managers.Game.CostIncreaseTime();
-        Managers.Game.NormalMonsterSpawn(Managers.Game.GetMonSpawnType(), warningNotice.WarningObjisOn);
+        Managers.Game.NormalMonsterSpawn(Managers.Game.GetMonSpawnType(), warningNotice.WarningObjisOn, warningElite);
 
         //Debug.Log(Managers.Game.GetMonSpawnType());
         if (Managers.Game.GetMonSpawnType() == Define.MonsterSpawnType.Normal)
         {
             //웨이브를 기다리는 타이머함수
 
-            Managers.Game.MonsterWaveEvent(warningNotice.WarningObjisOn);
+            Managers.Game.MonsterWaveEvent(warningNotice.WarningObjisOn, warningWave);
             //경고창을 띄우는 함수를 보내서 Wave이벤트일때 사용
         }
         else if (Managers.Game.GetMonSpawnType() == Define.MonsterSpawnType.Wave)
@@ -86,7 +88,7 @@ public class GameScene : BaseScene
         }
         else if(Managers.Game.GetMonSpawnType() == Define.MonsterSpawnType.Final)
         {
-            Managers.Game.FinalMonsterWave(warningNotice.WarningObjisOn, finalMonsterCount);
+            Managers.Game.FinalMonsterWave(warningNotice.WarningObjisOn,warningFinal,finalMonsterCount);
         }
         //else if(monSpawnType == Define.MonsterSpawnType.Elite)
         //    monSpawnType = Managers.Game.EliteMonsterEventSpawn(monSpawnType);

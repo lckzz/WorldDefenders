@@ -783,7 +783,7 @@ public class EliteMonsterController : Unit
     {
         WaitForSeconds wfs = new WaitForSeconds(knockbackDuration);
         float knockBackSpeed = 0.0f;
-        float knockBackAccleration = 100.0f;            //Èû
+        float knockBackAccleration = 25.0f;            //Èû
 
         float knockbackTime = 0.0f;
         float maxKnockBackTime = 0.3f;

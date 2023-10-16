@@ -83,6 +83,10 @@ public class ArrowCtrl : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
+        if (monsterCtrl == null)
+            return;
+
+
         if (coll.tag == "Monster")
         {
             Debug.Log(coll.gameObject);

@@ -14,8 +14,8 @@ public class WarningNotice : MonoBehaviour
 
     private Coroutine co;
 
-    private readonly string warningWave = "게이트에서 몬스터가 대량으로 몰려옵니다!..";
-    private readonly string warningElite = "게이트에서 강력한 몬스터 개체 출현!";
+
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -37,31 +37,13 @@ public class WarningNotice : MonoBehaviour
     }
 
 
-    public void WarningObjisOn()
+    public void WarningObjisOn(string warningTxt)
     {
-        //Debug.Log("여기 액션함수로 들어왓져요");
-        if (Managers.Game.EliteMonsterCheck() || Managers.Game.FinalMonsterCheck())               //엘리트 몬스터 이벤트가 발생하면
-        {
 
-            //경고창의 체크가 꺼져있을때
-            if (co != null)
-                StopCoroutine(co);
-            co = StartCoroutine(WarningObject(warningElite)); //경고창을 켜준다
-
-
-            
-        }
-
-        else if (Managers.Game.MonsterWaveCheck())          // 웨이브이벤트가 발생하면
-        {
-
-            if (co != null)
-                StopCoroutine(co);
-
-            co = StartCoroutine(WarningObject(warningWave));  //경고창을 켜준다
-            
-        }
-
+        //경고창의 체크가 꺼져있을때
+        if (co != null)
+            StopCoroutine(co);
+        co = StartCoroutine(WarningObject(warningTxt)); //경고창을 켜준다
 
 
         //if (Managers.Game.MonsterWaveCheck())
