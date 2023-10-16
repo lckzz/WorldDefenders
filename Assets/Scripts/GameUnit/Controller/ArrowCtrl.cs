@@ -85,6 +85,8 @@ public class ArrowCtrl : MonoBehaviour
     {
         if (coll.tag == "Monster")
         {
+            Debug.Log(coll.gameObject);
+            Debug.Log(monsterCtrl.gameObject);
 
             if (coll.gameObject == monsterCtrl.gameObject)
             {

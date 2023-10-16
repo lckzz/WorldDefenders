@@ -43,6 +43,21 @@ public class EliteMonsterController : Unit
 
     Coroutine startCoolTime;
 
+    public override void OnEnable()
+    {
+        if (sp != null && myColl != null)
+        {
+            //오브젝트 풀에서 생성되면 초기화 시켜줘야함
+            isDie = false;
+            hp = maxHp;
+            SetMonsterState(EliteMonsterState.Run);
+            sp.color = new Color32(255, 255, 255, 255);
+            myColl.enabled = true;
+            appearDust?.SetActive(true);
+
+        }
+
+    }
 
     public override void Init()
     {
@@ -609,10 +624,15 @@ public class EliteMonsterController : Unit
         if (hp > 0)
         {
             hp -= att;
-            if (criticalCheck)
-                unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Critical);
-            else
-                unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Enemy);
+
+            if(att > 0)
+            {
+                if (criticalCheck)
+                    unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Critical);
+                else
+                    unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Enemy);
+            }
+
 
 
             if (knockBack > 0)
@@ -763,7 +783,7 @@ public class EliteMonsterController : Unit
     {
         WaitForSeconds wfs = new WaitForSeconds(knockbackDuration);
         float knockBackSpeed = 0.0f;
-        float knockBackAccleration = 25.0f;            //힘
+        float knockBackAccleration = 100.0f;            //힘
 
         float knockbackTime = 0.0f;
         float maxKnockBackTime = 0.3f;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -58,9 +59,9 @@ public class GameManagerEx
         monsterSpawn.MonsterSpawnInit(parentTr);
     }
 
-    public void NormalMonsterSpawn(Define.MonsterSpawnType spawnType)
+    public void NormalMonsterSpawn(Define.MonsterSpawnType spawnType,Action action = null)
     {
-        monsterSpawn.MonsterSpawnTimer(spawnType);
+        monsterSpawn.MonsterSpawnTimer(spawnType, action);
     }
 
     public void EliteMonsterSpawn()
@@ -73,16 +74,40 @@ public class GameManagerEx
     #region 이벤트 타입 변경
 
     //몬스터 스폰 이벤트
-    public Define.MonsterSpawnType MonsterWaveEvent(Define.MonsterSpawnType spawnType, int gateHp)
+
+    public void EventInit()
     {
-        return monsterEvent.MonsterWaveEvent(spawnType, gateHp);
+        monsterEvent.EventInit();               //씬을 다시 불러오면 변수 초기화 해줘야함
     }
 
-    public Define.MonsterSpawnType MonsterWave(Define.MonsterSpawnType spawnType)
+    public Define.MonsterSpawnType GetMonSpawnType()
     {
-        return monsterEvent.MonsterWave(spawnType);
+        return monsterEvent.MonSpawnType;
+    }
+    
+    public void SetMonSpawnType(Define.MonsterSpawnType type)
+    {
+        monsterEvent.MonSpawnType = type;
     }
 
+    public void MonsterWaveEvent(Action action =null)
+    {
+        monsterEvent.MonsterWaveEvent(action);
+    }
+
+    public void MonsterWave()
+    {
+        monsterEvent.MonsterWave();
+    }
+    public void EliteMonsterEvent(Action action)
+    {
+        monsterEvent.EliteMonsterEvent(action);
+    }
+
+    public bool MonsterNormalCheck()
+    {
+        return monsterEvent.MonsterNormalCheck();
+    }
 
     public bool MonsterWaveCheck()
     {
@@ -93,17 +118,18 @@ public class GameManagerEx
     {
         return monsterEvent.EliteMonsterCheck();
     }
-
-    public void EliteMonsterEvent()
+    public bool FinalMonsterCheck()
     {
-        monsterEvent.EliteMonsterEvent();
+        return monsterEvent.FinalMonsterCheck();
     }
 
-    public Define.MonsterSpawnType EliteMonsterEventSpawn(Define.MonsterSpawnType spawnType)
+    public void FinalMonsterWave(Action action, int eliteMonsterCount)
     {
-        return monsterEvent.EliteMonsterEventSpawn(spawnType);
-
+        monsterEvent.FinalMonsterWave(action,eliteMonsterCount);
     }
+
+
+
 
     //몬스터 스폰 이벤트
 

@@ -189,39 +189,39 @@ public class UI_GamePlay : UI_Base
             {
                 case UnitClass.Warrior:
                     if(GlobalData.g_UnitWarriorLv < 5)
-                        UnitButtonSetting(i, "Prefabs/Unit/Warrior/WarriorUnitLv1");
+                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Warrior/WarriorUnitLv1");
                     else if(GlobalData.g_UnitWarriorLv >= 5)
-                        UnitButtonSetting(i, "Prefabs/Unit/Warrior/WarriorUnitLv2");
+                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Warrior/WarriorUnitLv2");
                     break;
 
                 case UnitClass.Archer:
                     if(GlobalData.g_UnitArcherLv < 5)
-                        UnitButtonSetting(i, "Prefabs/Unit/Archer/ArcherUnitLv1");
+                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Archer/ArcherUnitLv1");
                     else
-                        UnitButtonSetting(i, "Prefabs/Unit/Archer/ArcherUnitLv2");
+                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Archer/ArcherUnitLv2");
 
                     break;
 
                 case UnitClass.Spear:
                     if(GlobalData.g_UnitSpearLv < 5)
-                        UnitButtonSetting(i, "Prefabs/Unit/Spear/SpearUnitLv1");
+                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Spear/SpearUnitLv1");
                     else
-                        UnitButtonSetting(i, "Prefabs/Unit/Spear/SpearUnitLv2");
+                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Spear/SpearUnitLv2");
 
                     break;
 
                 case UnitClass.Priest:
                     if (GlobalData.g_UnitPriestLv < 5)
-                        UnitButtonSetting(i, "Prefabs/Unit/Priest/PriestUnitLv1");
+                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Priest/PriestUnitLv1");
                     else
-                        UnitButtonSetting(i, "Prefabs/Unit/Priest/PriestUnitLv2");
+                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Priest/PriestUnitLv2");
 
                     break;
                 case UnitClass.Magician:
-                    UnitButtonSetting(i, "Prefabs/Unit/MagicianUnit");
+                    UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/MagicianUnit");
                     break;
                 case UnitClass.Cavalry:
-                    UnitButtonSetting(i, "Prefabs/Unit/CavalryUnit");
+                    UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/CavalryUnit");
                     break;
             }
         }

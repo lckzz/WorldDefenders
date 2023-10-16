@@ -125,7 +125,18 @@ public class UnitController : Unit
 
     }
 
+    public override void OnEnable()
+    {
+        if(sp != null && myColl != null)
+        {
+            //오브젝트 풀에서 생성되면 초기화 시켜줘야함
+            hp = maxHp;
+            SetUnitState(UnitState.Run);
+            sp.color = new Color32(255, 255, 255, 255);
+            myColl.enabled = true;
+        }
 
+    }
     // Start is called before the first frame update
     void Start()
     {

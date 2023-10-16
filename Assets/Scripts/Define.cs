@@ -149,7 +149,8 @@ public class Define
     {
         Normal,
         Wave,
-        Elite
+        Elite,
+        Final
     }
 
 

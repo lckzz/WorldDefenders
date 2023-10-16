@@ -29,9 +29,12 @@ public class SpecialUnitController : Unit
 
     protected float coolTime = 20.0f;
 
-    protected string warriorHitSound = "WarriorAttack";
-    protected string warriorCriticalSound = "CriticalSound";
-    protected string warriorHitEff = "HitEff";
+    protected readonly string warriorHitSound = "WarriorAttack";
+    protected readonly string warriorCriticalSound = "CriticalSound";
+    protected readonly string warriorHitEff = "HitEff";
+
+    [SerializeField] protected GameObject appearDust;
+
 
 
     public SkillBook Skills { get; protected set; }
@@ -42,6 +45,22 @@ public class SpecialUnitController : Unit
     public SpecialUnitState UniState { get { return state; } }
 
     Coroutine startCoolTime;
+
+    public override void OnEnable()
+    {
+        if (sp != null && myColl != null)
+        {
+            //오브젝트 풀에서 생성되면 초기화 시켜줘야함
+            isDie = false;
+            hp = maxHp;
+            SetUnitState(SpecialUnitState.Run);
+            sp.color = new Color32(255, 255, 255, 255);
+            myColl.enabled = true;
+            appearDust?.SetActive(true);
+
+        }
+
+    }
 
     public override void Init()
     {
@@ -64,8 +83,11 @@ public class SpecialUnitController : Unit
         SetUnitState(SpecialUnitState.Run);
 
         startCoolTime = StartCoroutine(UnitSKillCoolTime(coolTime));
+        appearDust?.SetActive(true);
 
     }
+
+
 
     // Start is called before the first frame update
     //void Start()
@@ -684,16 +706,6 @@ public class SpecialUnitController : Unit
     }
 
 
-    //void UnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
-    //{
-    //    Managers.Sound.Play($"Sounds/Effect/{soundPath}");
-    //    GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
-    //    Vector2 randomPos = RandomPosSetting(pos);
-
-    //    if (eff != null)
-    //        Instantiate(eff, randomPos, Quaternion.identity);
-    //}
-
 
     #region 넉백
     void ApplyKnockBack(Vector2 dir, float force)
@@ -760,7 +772,6 @@ public class SpecialUnitController : Unit
 
     void Trace<T>(T obj) where T : UnityEngine.Component
     {
-
         Vector3 vec = obj.gameObject.transform.position - this.transform.position;
         traceDistance = vec.magnitude;
         Vector3 dir = vec.normalized;

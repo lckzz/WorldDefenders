@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,8 @@ public class MonsterSpawn
 
     private Transform[] monsterSpawnPos = new Transform[3];
     private float spawnTime = .0f;
-    private bool isSpawn = false;       
+    private bool isSpawn = false;
+    private int monsterCount = 0;           //몬스터 카운트
 
 
     public void MonsterSpawnInit(Transform parentTr)
@@ -30,27 +32,35 @@ public class MonsterSpawn
     }
 
 
-    public void MonsterSpawnTimer(Define.MonsterSpawnType spawnType)  //일반적인 몬스터 스폰
+    public void MonsterSpawnTimer(Define.MonsterSpawnType spawnType,Action action)  //일반적인 몬스터 스폰
     {
         if(!isSpawn)
         {
             isSpawn = true;   //스폰타이머 시작
             if(spawnType == Define.MonsterSpawnType.Wave)
-                spawnTime = Random.Range(1.0f, 2.0f);
+                spawnTime = UnityEngine.Random.Range(1.0f, 2.0f);
             else
-                spawnTime = Random.Range(4.0f, 6.0f);
+                spawnTime = UnityEngine.Random.Range(3.0f, 6.0f);
 
+            
         }
         else
         {
+            //Debug.Log($"스폰타임{spawnTime}");
             spawnTime -= Time.deltaTime;
             if(spawnTime <= 0.0f)
             {
                 spawnTime = 0.0f;
-                int randidx = Random.Range(0, 2);
-                int randPosidx = Random.Range(0, 3);
+                int randidx = UnityEngine.Random.Range(0, 2);
+                int randPosidx = UnityEngine.Random.Range(0, 3);
                 GameObject go = Managers.Resource.Instantiate(spawnList[randidx], monsterSpawnPos[randPosidx].position);
-                Debug.Log(go);
+                monsterCount++;
+                if(monsterCount >= 10)
+                {
+                    monsterCount = 0;
+                    Managers.Game.EliteMonsterEvent(action);
+                    //Managers.Resource.Instantiate(spawnList[monNameList.Count - 1], monsterSpawnPos[randPosidx].position);
+                }
                 isSpawn = false;
             }
         }
@@ -59,8 +69,8 @@ public class MonsterSpawn
 
     public void EliteMonsterSpawn()
     {
-        int randPosidx = Random.Range(0, 3);
-        GameObject go = Managers.Resource.Instantiate(spawnList[spawnList.Count - 1], monsterSpawnPos[randPosidx].position);
+        int randPosidx = UnityEngine.Random.Range(0, 3);
+        Managers.Resource.Instantiate(spawnList[spawnList.Count - 1], monsterSpawnPos[randPosidx].position);
 
     }
 

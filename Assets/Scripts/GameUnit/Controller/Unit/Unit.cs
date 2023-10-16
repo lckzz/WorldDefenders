@@ -27,6 +27,7 @@ public abstract class Unit : MonoBehaviour,ISensor
     [SerializeField]
     protected Animator anim; 
     protected Rigidbody2D rigbody;
+    protected SpriteRenderer sp;
 
     [SerializeField]
     protected float attackCoolTime = 1.5f;
@@ -81,6 +82,8 @@ public abstract class Unit : MonoBehaviour,ISensor
         TryGetComponent<Animator>(out anim);
         TryGetComponent<Rigidbody2D>(out rigbody);
         TryGetComponent<Collider2D>(out myColl);
+        TryGetComponent<SpriteRenderer>(out sp);
+
         TryGetComponent<UnitHp>(out unitHUDHp);
         if (unitHUDHp == null)
             this.gameObject.AddComponent<UnitHp>().TryGetComponent(out unitHUDHp);
@@ -88,7 +91,7 @@ public abstract class Unit : MonoBehaviour,ISensor
 
         parentTr = GameObject.Find("HUD_Canvas").transform;
         hudPrefab = Managers.Resource.Load<GameObject>("Prefabs/HUDDamage/DamageTxt");
-        unitHUDHp.Init(parentTr,hudPrefab);
+        unitHUDHp.Init(parentTr, hudPrefab);
     }
 
     public float hpPercent()
@@ -109,8 +112,11 @@ public abstract class Unit : MonoBehaviour,ISensor
         }
     }
 
+
+
     public virtual void OnHeal(int heal) { }
 
+    public abstract void OnEnable();
     public abstract void EnemySensor(); //적감지 센서
 
     public abstract void AttackDelay();

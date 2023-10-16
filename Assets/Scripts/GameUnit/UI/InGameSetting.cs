@@ -35,11 +35,13 @@ public class InGameSetting : Setting
 
     void InGameRetry()
     {
+        Managers.Game.EventInit();
         Managers.Scene.LoadScene(Define.Scene.BattleStage_Field);
     }
 
     void InGameExit()
     {
+        Managers.Game.EventInit();
         Managers.Scene.LoadScene(Define.Scene.Lobby);
     }
 }

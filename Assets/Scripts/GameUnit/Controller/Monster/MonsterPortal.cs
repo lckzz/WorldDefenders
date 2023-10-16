@@ -65,13 +65,12 @@ public class MonsterPortal : Tower
         if (m_hp > 0)
         {
             m_hp -= att;
-            if(Managers.Game.EliteMonsterCheck() == false)
+            if(Managers.Game.FinalMonsterCheck() == false)          //마지막웨이브가 꺼진상태라면
             {
                 //엘리트몬스터스폰타입이 아니라면
                 if(hpPercent() <= 0.3f)   //체력이 30퍼미만이 되면
                 {
-                    Debug.Log("erwewr");
-                    Managers.Game.EliteMonsterEvent();
+                    Managers.Game.SetMonSpawnType(Define.MonsterSpawnType.Final);  //마지막웨이브상태로 바꿔준다.
                 }
             }
 
