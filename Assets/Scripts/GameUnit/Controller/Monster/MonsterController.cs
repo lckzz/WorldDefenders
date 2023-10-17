@@ -114,6 +114,7 @@ public class MonsterController : Unit
         {
             //오브젝트 풀에서 생성되면 초기화 시켜줘야함
             isDie = false;
+            isRun = false;
             hp = maxHp;
             SetMonsterState(MonsterState.Run);
             sp.color = new Color32(255, 255, 255, 255);
@@ -132,7 +133,8 @@ public class MonsterController : Unit
     // Update is called once per frame
     void Update()
     {
-
+        if (Managers.Game.GameEndResult())       //게임이 끝났으면 리턴
+            return;
 
         EnemySensor();
         TowerSensor();

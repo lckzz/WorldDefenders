@@ -61,6 +61,9 @@ public class StageNode : MonoBehaviour
         if (stageAnim == null)
             this.gameObject.TryGetComponent(out stageAnim);
 
+
+       
+
         //해당 스테이지에 따라서 몬스터리스트를 갱신해주고 현재 스테이지의 상태를 보여줌
         switch (stage)
         {
@@ -73,18 +76,19 @@ public class StageNode : MonoBehaviour
                 stageState = Define.StageState.Open;
                 break;
             case Define.SubStage.East:
-                for (int ii = 0; ii < (int)Define.MonsterType.BowSkeleton + 1; ii++)
-                {
-                    stageMonsterList.Add((Define.MonsterType)ii);
-                }
+                stageMonsterList.Add(Define.MonsterType.NormalSkeleton);
+                stageMonsterList.Add(Define.MonsterType.BowSkeleton);
+                stageMonsterList.Add(Define.MonsterType.EliteShaman);
+
+
                 stageState = Define.StageState.Open;
 
                 break;
             case Define.SubStage.South:
-                for (int ii = 0; ii < (int)Define.MonsterType.BowSkeleton + 1; ii++)
-                {
-                    stageMonsterList.Add((Define.MonsterType)ii);
-                }
+                stageMonsterList.Add(Define.MonsterType.NormalSkeleton);
+                stageMonsterList.Add(Define.MonsterType.BowSkeleton);
+                stageMonsterList.Add(Define.MonsterType.EliteCavalry);
+
                 stageState = Define.StageState.Open;
 
                 break;

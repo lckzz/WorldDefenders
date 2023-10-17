@@ -54,7 +54,7 @@ public class Define
         SpearSkeleton,
         EliteWarrior,
         EliteShaman,
-        EliteCavarly,
+        EliteCavalry,
         Count
     }
 
@@ -151,6 +151,14 @@ public class Define
         Wave,
         Elite,
         Final
+    }
+
+
+    public enum StageStageType
+    {
+        Playing,
+        Victory,
+        Defeat,
     }
 
 

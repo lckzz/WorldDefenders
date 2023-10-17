@@ -46,6 +46,7 @@ public class GameScene : BaseScene
         SceneType = Define.Scene.BattleStage_Field;
         Managers.Game.MonsterSpawnInit(monsterParentTr);
         Managers.Game.SetMonSpawnType(Define.MonsterSpawnType.Normal);
+        Managers.Game.SetStageStateType(Define.StageStageType.Playing);
         Managers.Sound.Play("BGM/GameBGM", Define.Sound.BGM);
         TryGetComponent(out playable);
 
@@ -60,6 +61,10 @@ public class GameScene : BaseScene
 
         if (Managers.UI.GetSceneUI<UI_GamePlay>() == null)
             return;
+        if (Managers.Game.GameEndResult())
+            return;
+
+
         if(warningNotice == null)
             Managers.UI.GetSceneUI<UI_GamePlay>().TryGetComponent(out warningNotice);
 

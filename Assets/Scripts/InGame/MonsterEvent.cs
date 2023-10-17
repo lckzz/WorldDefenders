@@ -13,9 +13,9 @@ public class MonsterEvent
 
 
 
-    private float monsterWaveTime = 10.0f;
+    private float monsterWaveTime = 30.0f;
 
-    private float monsterWaveDuration = 10.0f; //지속 시간
+    private float monsterWaveDuration = 15.0f; //지속 시간
 
     private int finalEliteMonsterCount = 0;
     private bool finalOneWarningUI = false;
@@ -64,8 +64,8 @@ public class MonsterEvent
     public void EventInit()
     {
         monSpawnType = Define.MonsterSpawnType.Normal;
-        monsterWaveTime = 10.0f;
-        monsterWaveDuration = 10.0f;
+        monsterWaveTime = 30.0f;
+        monsterWaveDuration = 15.0f;
         finalEliteMonsterTime = 1.0f;
         monsterWaveisOn = false;
         eliteMonsterisOn = false;
@@ -117,7 +117,7 @@ public class MonsterEvent
         {
             monsterWaveTime = 0.0f;
             monsterWaveisOn = true;
-            monsterWaveDuration = 10.0f;
+            monsterWaveDuration = 15.0f;
             MonSpawnType = Define.MonsterSpawnType.Wave;
             action(warningTxt);  //받아온 액션함수를 사용
             //Debug.Log("여기 웨이브");
@@ -137,7 +137,7 @@ public class MonsterEvent
 
             monsterWaveisOn = false;
             monsterWaveDuration = 0.0f;
-            monsterWaveTime = 20.0f;
+            monsterWaveTime = 30.0f;
             MonSpawnType = Define.MonsterSpawnType.Normal;
             
 

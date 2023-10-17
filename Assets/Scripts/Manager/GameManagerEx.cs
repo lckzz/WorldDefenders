@@ -11,10 +11,16 @@ public class GameManagerEx
     private UnitSpawn unitSpawn = new UnitSpawn();
     private MonsterSpawn monsterSpawn = new MonsterSpawn();
     private MonsterEvent monsterEvent = new MonsterEvent();
+    private StageState stageState = new StageState();
 
     //코스트 관리
-    #region 코스트 관리
+    #region 코스트 및 재화 관리
     public float Cost { get { return moneyCost.CurCost; } }
+
+    public void MoneyCostInit()
+    {
+        moneyCost.MoneyCostInit();
+    }
 
     public void CostIncreaseTime()
     {
@@ -29,6 +35,16 @@ public class GameManagerEx
     public float CostUse(float unitCost)
     {
         return moneyCost.CostUse(unitCost);
+    }
+
+    public void InGameTimer()
+    {
+        moneyCost.InGameTimer();
+    }
+
+    public float GetInGameTimer()
+    {
+        return moneyCost.GetInGameTime();
     }
 
     //코스트 관리
@@ -135,4 +151,34 @@ public class GameManagerEx
 
     #endregion
 
+
+
+    #region 스테이지상태
+
+
+    public Define.SubStage CurStageType { get { return stageState.CurStageType; } set { stageState.CurStageType = value; } }
+
+
+    public Define.StageStageType GetStageStateType()
+    {
+        return stageState.StageStateType;
+    }
+
+    public Define.StageStageType SetStageStateType(Define.StageStageType type)
+    {
+        return stageState.StageStateType = type;
+    }
+
+    public void ResultState(Define.StageStageType type)
+    {
+        stageState.ResultState(type);
+    }
+
+    public bool GameEndResult()
+    {
+        return stageState.GameEndResult();
+    }
+
+
+    #endregion
 }

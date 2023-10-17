@@ -25,17 +25,6 @@ public class WarningNotice : MonoBehaviour
     }
 
 
-    // Update is called once per frame
-    void Update()
-    {
-
-        //Debug.Log(Managers.Game.EliteMonsterCheck());
-        //Debug.Log(warningCheck);
-
-
-        //WarningObjisOn();
-    }
-
 
     public void WarningObjisOn(string warningTxt)
     {
@@ -45,34 +34,6 @@ public class WarningNotice : MonoBehaviour
             StopCoroutine(co);
         co = StartCoroutine(WarningObject(warningTxt)); //경고창을 켜준다
 
-
-        //if (Managers.Game.MonsterWaveCheck())
-        //{
-        //    if (warningCheck == false)
-        //    {
-        //        if (Managers.Game.EliteMonsterCheck())
-        //        {
-        //            StartCoroutine(WarningObject(warningElite));
-        //        }
-        //        else
-        //            StartCoroutine(WarningObject(warningWave));
-
-        //    }
-        //}
-        //else if(Managers.Game.MonsterNormalCheck())
-        //{
-        //    if (warningCheck == false)
-        //    {
-        //        if (Managers.Game.EliteMonsterCheck())
-        //        {
-        //            StartCoroutine(WarningObject(warningElite));
-        //        }
-
-
-        //    }
-        //}
-        //else
-        //    warningCheck = false;
     }
 
     IEnumerator WarningObject(string warningTxt)
@@ -94,7 +55,6 @@ public class WarningNotice : MonoBehaviour
         rt.DOLocalMoveX(0.0f, 1.0f).SetEase(Ease.OutBounce);
         yield return wfs;
         rt.DOLocalMoveX(-1300.0f, 1.0f).SetEase(Ease.OutBack);
-        Debug.Log("두트윈 여기서 ㄴ움직여요");
         yield return wfs;
         Vector3 pos = rt.localPosition;
         pos.x = 1300.0f;

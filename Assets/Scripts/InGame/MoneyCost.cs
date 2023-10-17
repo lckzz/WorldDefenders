@@ -14,8 +14,25 @@ public class MoneyCost
     float maxCostCoolTime = 4.5f;
     private float cost = 30.0f;
 
+    //시간체크
+    float timesec = 0.0f;
+    //시간체크
+
+
     public float CurCost { get { return curCost; } set { curCost = value; } }
     public float MaxCost { get { return maxCost; } set { maxCost = value; } }
+
+    public void MoneyCostInit()
+    {
+        curCost = .0f;
+        maxCost = 500.0f;
+        costCoolTime = 4.5f;
+        maxCostCoolTime = 4.5f;
+        cost = 30.0f;
+        timesec = .0f;
+    }
+
+
 
     public void CostCoolTimer()
     {
@@ -48,5 +65,17 @@ public class MoneyCost
         curCost -= unitCost;
 
         return curCost;
+    }
+
+
+    public void InGameTimer()
+    {
+        //인게임 타이머
+        timesec += Time.deltaTime;
+    }
+
+    public float GetInGameTime()
+    {
+        return timesec;
     }
 }

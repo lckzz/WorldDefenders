@@ -8,7 +8,11 @@ using Image = UnityEngine.UI.Image;
 
 public class LoadingSceneManager
 {
-    public static Define.Scene nextScene;
+    private Define.Scene nextScene;
+
+    public Define.Scene NextScene { get { return nextScene; } }
+
+
 
     public void LoadScene(Define.Scene scenetype)
     {

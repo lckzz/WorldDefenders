@@ -65,6 +65,9 @@ public class EliteCavalryController : EliteMonsterController
     // Update is called once per frame
     void Update()
     {
+
+        if (Managers.Game.GameEndResult())       //게임이 끝났으면 리턴
+            return;
         EnemySensor();
         TowerSensor();
         MonsterStateCheck();

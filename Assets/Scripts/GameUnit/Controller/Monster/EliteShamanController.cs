@@ -56,6 +56,10 @@ public class EliteShamanController : EliteMonsterController
     // Update is called once per frame
     void Update()
     {
+        if (Managers.Game.GameEndResult())       //게임이 끝났으면 리턴
+            return;
+
+
         EnemySensor();
         TowerSensor();
         MonsterStateCheck();
@@ -78,23 +82,6 @@ public class EliteShamanController : EliteMonsterController
 
             }
         }
-        //for(var i = 0; i < unitCtrls.Length;i++)
-        //{
-        //    dis = ((Vector2)unitCtrls[i].transform.position - (Vector2)this.gameObject.transform.position).sqrMagnitude;
-
-        //    if (unitCtrls[i].gameObject.activeInHierarchy)
-        //    {
-        //        if(unitCtrls[i].IsDie == false)
-        //        {
-        //            if(dis < distacne)
-        //            {
-        //                unitCtrlsOrder.Add(unitCtrls[i]);
-        //                distacne = dis;
-        //            }
-        //        }
-        //    }
-
-        //}
 
     }
 

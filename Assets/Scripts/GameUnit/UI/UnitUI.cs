@@ -19,6 +19,15 @@ public class UnitUI : MonoBehaviour
     protected float hp;
 
 
+    private void OnEnable()
+    {
+        destoryTimer = 1.5f;
+        startImgFadeOut = false;
+        hpbarCover.gameObject.SetActive(true);
+        hpbar.fillAmount = 1.0f;
+    }
+
+
     protected T ComponentInit<T>(out T compo) where T : Component
     {
         if(TryGetComponent<T>(out compo))

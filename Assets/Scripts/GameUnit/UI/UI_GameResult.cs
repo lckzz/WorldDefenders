@@ -27,11 +27,14 @@ public class UI_GameResult : UI_Base
     int curmin = 0;
     int cursec = 0;
 
+    Define.StageStageType stageType;
+
+
     WaitForSeconds timewfs = new WaitForSeconds(0.05f);
     WaitForSeconds wfs = new WaitForSeconds(0.5f);
 
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
         if (retryBtn != null)
             retryBtn.onClick.AddListener(()=>
@@ -65,27 +68,21 @@ public class UI_GameResult : UI_Base
 
     private void OnEnable()
     {
-        //if(GameManager.instance.State == GameState.GameVictory)
-        //{
-        //    failOrVictoryImg.sprite = ImageSetting("Images/Image_Victory");
-        //}
-
-        //if(GameManager.instance.State == GameState.GameFail)
-        //{
-        //    failOrVictoryImg.sprite = ImageSetting("Images/Image_Fail");
-
-        //}
-
+        Managers.UI.GetSceneUI<UI_GamePlay>().gameObject.SetActive(false);
         TimerSetting();
     }
 
+    public void SetStageType(Define.StageStageType type)
+    {
+        stageType = type;
+    }
 
 
     void TimerSetting()
     {
-       
-        //min = (int)GameManager.instance.timerSec / 60;
-        //sec = (int)GameManager.instance.timerSec % 60;
+
+        min = (int)Managers.Game.GetInGameTimer() / 60;
+        sec = (int)Managers.Game.GetInGameTimer() % 60;
         timecheck = true;
     }
 

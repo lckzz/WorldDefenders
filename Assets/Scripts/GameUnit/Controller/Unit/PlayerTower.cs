@@ -52,6 +52,8 @@ public class PlayerTower : Tower
     {
         if(twState == TowerState.Destroy)
         {
+            Managers.Game.ResultState(Define.StageStageType.Defeat);
+
             //GameManager.instance.state = GameState.GameFail;
         }
     }

@@ -116,6 +116,7 @@ public class UI_GamePlay : UI_Base
         if (base.Init() == false)
             return false;
 
+        Managers.Game.MoneyCostInit();
 
         unitNodePos = new Vector3[5];
 

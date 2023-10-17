@@ -55,7 +55,7 @@ public class MonsterSpawn
                 int randPosidx = UnityEngine.Random.Range(0, 3);
                 GameObject go = Managers.Resource.Instantiate(spawnList[randidx], monsterSpawnPos[randPosidx].position);
                 monsterCount++;
-                if(monsterCount >= 10)
+                if(monsterCount >= 20)
                 {
                     monsterCount = 0;
                     Managers.Game.EliteMonsterEvent(action,warningTxt);

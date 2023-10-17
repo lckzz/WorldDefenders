@@ -87,9 +87,11 @@ public class MonsterPortal : Tower
     protected override void TowerDestroy()
     {
         if (twState == TowerState.Destroy)
-        {
+        {   
+
+            //게이트가 파괴상태라면 승리 애니메이션과 결과팝업을 킨다.
             anim.SetTrigger("Destroy");
-            //GameManager.instance.State = GameState.GameVictory;
+            Managers.Game.ResultState(Define.StageStageType.Victory);   
         }
     }
 }

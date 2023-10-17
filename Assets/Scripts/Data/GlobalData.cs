@@ -15,6 +15,14 @@ public class GlobalData
 
     //----------저장할 음량의 값-----------
 
+    //----------스테이지 진행값-----------
+    public static bool g_WestStageClear = false;
+    public static bool g_EastStageClear = false;
+    public static bool g_SouthStageClear = false;
+
+    //----------스테이지 진행값-----------
+
+
 
     //-----------유닛 레벨-----------------
     public static int g_UnitWarriorLv = 1;

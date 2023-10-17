@@ -13,7 +13,7 @@ public class EliteMonsterController : Unit
     [SerializeField] protected bool skillOn = false;     //스킬 발동판단
 
 
-    protected Unit[] unitCtrls;
+    protected List<Unit> unitCtrls = new List<Unit>();
     protected List<Unit> unitCtrlsOrder = new List<Unit>();    //순서정렬
     [SerializeField] protected Unit unitTarget;
     [SerializeField] protected PlayerTower playerTowerCtrl;
@@ -113,6 +113,7 @@ public class EliteMonsterController : Unit
 
         skillenemyList.Clear();
         unitCtrlsOrder.Clear();
+        unitCtrls.Clear();
         enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Unit") | LayerMask.GetMask("SpecialUnit"));
 
 
@@ -129,7 +130,7 @@ public class EliteMonsterController : Unit
                 }
             }
 
-            unitCtrls = new Unit[enemyColls2D.Length];
+
 
             //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
             for (int ii = 0; ii < enemyColls2D.Length; ii++)
@@ -138,7 +139,9 @@ public class EliteMonsterController : Unit
                 {
                     UnitController unitctrl;
                     enemyColls2D[ii].TryGetComponent<UnitController>(out unitctrl);
-                    unitCtrls[ii] = unitctrl;
+                    unitCtrls.Add(unitctrl);
+
+                    //unitCtrls[ii] = unitctrl;
 
                 }
                 else if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("SpecialUnit"))
@@ -157,16 +160,16 @@ public class EliteMonsterController : Unit
 
 
 
-        if (unitCtrls.Length > 0)
+        if (unitCtrls.Count > 0)
         {
 
-            if (unitCtrls.Length > 1)
+            if (unitCtrls.Count > 1)
             {
-                for (int i = 0; i < unitCtrls.Length; i++)
+                for (int i = 0; i < unitCtrls.Count; i++)
                 {
-                    for(int j = i + 1; j < unitCtrls.Length; j++)
+                    for(int j = i + 1; j < unitCtrls.Count; j++)
                     {
-                        if (j == unitCtrls.Length)
+                        if (j == unitCtrls.Count)
                             break;
 
                         float distA = (unitCtrls[i].transform.position - this.transform.position).sqrMagnitude;
@@ -181,42 +184,6 @@ public class EliteMonsterController : Unit
      
                     }
 
-
-
-                    //if (i == 0 && unitCtrls.Length > 1)
-                    //{
-                    //    float distA = (unitCtrls[i].transform.position - this.transform.position).sqrMagnitude;
-                    //    float distB = (unitCtrls[i + 1].transform.position - this.transform.position).sqrMagnitude;
-
-                    //    if (distA * distA > distB * distB)
-                    //    {
-                    //        disMin = distB * distB;
-                    //        min = i + 1;
-                    //    }
-                    //    else
-                    //    {
-                    //        disMin = distA * distA;
-                    //        min = i;
-                    //    }
-
-                    //    unitCtrlsOrder.Add(unitCtrls[min]);
-                    //}
-
-                    //else if (i < unitCtrls.Length - 1)
-                    //{
-                    //    float distB = (unitCtrls[i + 1].transform.position - this.transform.position).sqrMagnitude;
-
-                    //    if (disMin > distB * distB)
-                    //    {
-                    //        disMin = distB * distB;
-                    //        min = i + 1;
-                    //    }
-
-                    //    unitCtrlsOrder.Add(unitCtrls[min]);
-
-
-
-                    //}
 
                 }
 
@@ -233,7 +200,7 @@ public class EliteMonsterController : Unit
             }
 
 
-            if (unitCtrls.Length != 0)
+            if (unitCtrls.Count != 0)
             {
                 unitTarget = unitCtrls[0];
             }
@@ -575,7 +542,7 @@ public class EliteMonsterController : Unit
     void UnitAttack()
     {
 
-        if (unitCtrls.Length > 0)
+        if (unitCtrls.Count > 0)
         {
             if (skillOn)      //스킬On이면
             {
