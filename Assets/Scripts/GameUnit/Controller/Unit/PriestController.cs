@@ -7,7 +7,7 @@ public class PriestController : UnitController
 {
     //UnitController에서 프리스트 데이터를 초기화를 일단 해놓음
     Collider2D[] unitColls2D;
-    [SerializeField]  Unit unitTarget;
+    [SerializeField] Unit unitTarget;
     [SerializeField] List<Unit> unitCtrls = new List<Unit>();
 
     string priestSound = "PriestHeal";
@@ -16,6 +16,8 @@ public class PriestController : UnitController
 
     public override void EnemySensor()
     {
+
+
         unitColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Unit") | LayerMask.GetMask("SpecialUnit"));  //박스안의 아군들을 받아온다.
         if (unitColls2D != null)
         {

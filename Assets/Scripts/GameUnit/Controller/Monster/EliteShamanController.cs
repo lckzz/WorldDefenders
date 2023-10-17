@@ -71,14 +71,14 @@ public class EliteShamanController : EliteMonsterController
     {
         base.EnemySensor();
 
-        for (int i = 0; i < unitCtrls.Length; i++)   //ÃÖ´ë Å¸°Ù¼ö
+        for (int i = 0; i < unitCtrls.Count; i++)   //ÃÖ´ë Å¸°Ù¼ö
         {
             if (i == 0)
                 skillenemyList.Add(unitCtrls[i]);
 
             else if (i < 3)
             {
-                skillenemyList.Add(unitCtrls[unitCtrls.Length - i]);
+                skillenemyList.Add(unitCtrls[unitCtrls.Count - i]);
 
             }
         }

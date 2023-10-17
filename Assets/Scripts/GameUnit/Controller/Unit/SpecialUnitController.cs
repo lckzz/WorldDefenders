@@ -20,7 +20,7 @@ public class SpecialUnitController : Unit
     protected int randomIdx;
     protected int dialogCount = 2;
 
-    protected Unit[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
+    protected List<Unit> monCtrls = new List<Unit>();  //범위안에 들어온 몬스터의 정보들을 모아둠
     [SerializeField] protected Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
     [SerializeField] protected MonsterPortal monsterPortal;
     protected List<Unit> skillMonList = new List<Unit>();
@@ -109,7 +109,7 @@ public class SpecialUnitController : Unit
         if (state == SpecialUnitState.Attack || state == SpecialUnitState.Skill)
             return;
 
-
+        monCtrls.Clear();
         skillMonList.Clear();
         enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Monster") | LayerMask.GetMask("EliteMonster"));
         if (enemyColls2D != null)
@@ -124,7 +124,7 @@ public class SpecialUnitController : Unit
                 }
             }
 
-            monCtrls = new Unit[enemyColls2D.Length];
+
 
             //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
             for (int ii = 0; ii < enemyColls2D.Length; ii++)
@@ -133,14 +133,15 @@ public class SpecialUnitController : Unit
                 {
                     MonsterController monctrl;
                     enemyColls2D[ii].TryGetComponent<MonsterController>(out monctrl);
-                    monCtrls[ii] = monctrl;
+                    monCtrls.Add(monctrl);
 
                 }
                 else if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("EliteMonster"))
                 {
                     EliteMonsterController elite;
                     enemyColls2D[ii].TryGetComponent<EliteMonsterController>(out elite);
-                    monCtrls[ii] = elite;
+                    monCtrls.Add(elite);
+
 
                 }
             }
@@ -149,23 +150,23 @@ public class SpecialUnitController : Unit
         }
 
 
-        if (monCtrls.Length > 0)
+        if (monCtrls.Count > 0)
         {
             float disMin = 0;
             int min = 0;
 
 
-            if (monCtrls.Length > 1)
+            if (monCtrls.Count > 1)
             {
 
-                for (int i = 0; i < monCtrls.Length; i++)
+                for (int i = 0; i < monCtrls.Count; i++)
                 {
                     
                     if(i < 3)
                         skillMonList.Add(monCtrls[i]);
 
 
-                    if (i == 0 && monCtrls.Length > 1)
+                    if (i == 0 && monCtrls.Count > 1)
                     {
                         float distA = (monCtrls[i].transform.position - this.transform.position).sqrMagnitude;
                         float distB = (monCtrls[i + 1].transform.position - this.transform.position).sqrMagnitude;
@@ -185,7 +186,7 @@ public class SpecialUnitController : Unit
                         }
                     }
 
-                    else if (i < monCtrls.Length - 1)
+                    else if (i < monCtrls.Count - 1)
                     {
                         float distB = (monCtrls[i + 1].transform.position - this.transform.position).sqrMagnitude;
 
@@ -203,7 +204,7 @@ public class SpecialUnitController : Unit
                 }
             }
 
-            if(monCtrls.Length == 1)
+            if(monCtrls.Count == 1)
             {
                 skillMonList.Add(monCtrls[0]);
 
@@ -216,7 +217,7 @@ public class SpecialUnitController : Unit
             }
 
 
-            if (monCtrls.Length != 0)
+            if (monCtrls.Count != 0)
             {
                 monTarget = monCtrls[min];
                 //skillMonList.Add(monTarget);
@@ -415,7 +416,7 @@ public class SpecialUnitController : Unit
                         anim.SetBool("SkillAttack", isSkil);
                     }
 
-                    if (monCtrls.Length > 0)
+                    if (monCtrls.Count > 0)
                     {
                         if (skillOn)      //스킬On이면
                         {

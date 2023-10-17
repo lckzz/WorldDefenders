@@ -18,6 +18,8 @@ public class UI_GameResult : UI_Base
     private TextMeshProUGUI timer;
     [SerializeField]
     private Image fadeImg;
+
+    [SerializeField] private Sprite[] resultsprite;
     bool exitFade = false;
     bool retryFade = false;
 
@@ -36,6 +38,13 @@ public class UI_GameResult : UI_Base
     // Start is called before the first frame update
     public override void Start()
     {
+        if (Managers.Game.GetStageStateType() == Define.StageStageType.Victory)
+            failOrVictoryImg.sprite = resultsprite[(int)Managers.Game.GetStageStateType() - 1];
+
+        else if (Managers.Game.GetStageStateType() == Define.StageStageType.Defeat)
+            failOrVictoryImg.sprite = resultsprite[(int)Managers.Game.GetStageStateType() - 1];
+
+
         if (retryBtn != null)
             retryBtn.onClick.AddListener(()=>
             {

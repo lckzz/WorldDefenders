@@ -36,7 +36,7 @@ public class MonsterController : Unit
 
 
 
-    Unit[] unitCtrls;
+    List<Unit> unitCtrls = new List<Unit>();
     [SerializeField]
     Unit unitTarget;
     [SerializeField]
@@ -162,6 +162,7 @@ public class MonsterController : Unit
         //Debug.Log($"타겟팅{isTageting}");
         #region 타겟구현
 
+        unitCtrls.Clear();
         enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Unit") | LayerMask.GetMask("SpecialUnit"));
 
         
@@ -178,7 +179,6 @@ public class MonsterController : Unit
                 }
             }
 
-            unitCtrls = new Unit[enemyColls2D.Length];
             //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
             for (int ii = 0; ii < enemyColls2D.Length; ii++)
             {
@@ -186,14 +186,16 @@ public class MonsterController : Unit
                 {
                     UnitController unitctrl;
                     enemyColls2D[ii].TryGetComponent<UnitController>(out unitctrl);
-                    unitCtrls[ii] = unitctrl;
+                    unitCtrls.Add(unitctrl);
+
 
                 }
                 else if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("SpecialUnit"))
                 {
                     SpecialUnitController specialUnit;
                     enemyColls2D[ii].TryGetComponent<SpecialUnitController>(out specialUnit);
-                    unitCtrls[ii] = specialUnit;
+                    unitCtrls.Add(specialUnit);
+
 
                 }
             }
@@ -201,17 +203,17 @@ public class MonsterController : Unit
 
         }
 
-        if (unitCtrls.Length > 0)
+        if (unitCtrls.Count > 0)
         {
             float disMin = 0;
             int min = 0;
 
 
-            if (unitCtrls.Length > 1)
+            if (unitCtrls.Count > 1)
             {
-                for (int i = 0; i < unitCtrls.Length; i++)
+                for (int i = 0; i < unitCtrls.Count; i++)
                 {
-                    if (i == 0 && unitCtrls.Length > 1)
+                    if (i == 0 && unitCtrls.Count > 1)
                     {
                         float distA = (unitCtrls[i].transform.position - this.transform.position).sqrMagnitude;
                         float distB = (unitCtrls[i + 1].transform.position - this.transform.position).sqrMagnitude;
@@ -228,7 +230,7 @@ public class MonsterController : Unit
                         }
                     }
 
-                    else if (i < unitCtrls.Length - 1)
+                    else if (i < unitCtrls.Count - 1)
                     {
                         float distB = (unitCtrls[i + 1].transform.position - this.transform.position).sqrMagnitude;
 
@@ -245,7 +247,7 @@ public class MonsterController : Unit
             }
 
 
-            if (unitCtrls.Length != 0)
+            if (unitCtrls.Count != 0)
             {
                 unitTarget = unitCtrls[min];
             }
@@ -637,24 +639,19 @@ public class MonsterController : Unit
                         Managers.Sound.Play("Sounds/Effect/Bow");
                         GameObject arrow = Managers.Resource.Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
                         arrow.TryGetComponent(out MonsterArrowCtrl arrowCtrl);
-                        if (unitTarget.gameObject.layer == LayerMask.NameToLayer("Unit"))
-                        {
-                            if (unitTarget is UnitController unitCtrl)
-                            {
-                                arrowCtrl.SetType(unitCtrl, null);
 
-                            }
+                        if (unitTarget is UnitController unitCtrl)
+                        {
+                            arrowCtrl.SetType(unitCtrl, null);
 
                         }
-                        else if (unitTarget.gameObject.layer == LayerMask.NameToLayer("SpecialUnit"))
+                        if (unitTarget is SpecialUnitController specialUnit)
                         {
-                            if (unitTarget is SpecialUnitController specialUnit)
-                            {
-                                arrowCtrl.SetType(specialUnit, null);
-
-                            }
+                            arrowCtrl.SetType(specialUnit, null);
 
                         }
+
+                        
                     }
                 }
             }

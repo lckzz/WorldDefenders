@@ -31,6 +31,18 @@ public class ArrowCtrl : MonoBehaviour
 
     }
 
+    private void OnEnable()
+    {
+        if (unitCtrl == null)
+            return;
+
+        unitCtrl = GetComponentInParent<UnitController>();
+        if (unitCtrl.Monctrl != null)
+            monsterCtrl = unitCtrl.Monctrl;
+        if (unitCtrl.MonsterPortal != null)
+            monPortal = unitCtrl.MonsterPortal;
+    }
+
 
     // Start is called before the first frame update
     void Start()

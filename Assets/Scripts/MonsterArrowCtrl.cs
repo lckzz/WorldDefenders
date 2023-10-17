@@ -23,6 +23,18 @@ public class MonsterArrowCtrl : MonoBehaviour
 
     }
 
+    private void OnEnable()
+    {
+        if (monsterCtrl == null)
+            return;
+
+
+        if (monsterCtrl.UnitCtrl != null)
+            unitCtrl = monsterCtrl.UnitCtrl;
+        if (monsterCtrl.PlayerTowerCtrl != null)
+            playerTower = monsterCtrl.PlayerTowerCtrl;
+    }
+
     // Start is called before the first frame update
     void Start()
     {

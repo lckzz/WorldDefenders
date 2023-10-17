@@ -14,7 +14,6 @@ public class EliteMonsterController : Unit
 
 
     protected List<Unit> unitCtrls = new List<Unit>();
-    protected List<Unit> unitCtrlsOrder = new List<Unit>();    //순서정렬
     [SerializeField] protected Unit unitTarget;
     [SerializeField] protected PlayerTower playerTowerCtrl;
     protected List<Unit> skillenemyList = new List<Unit>();
@@ -112,7 +111,6 @@ public class EliteMonsterController : Unit
 
 
         skillenemyList.Clear();
-        unitCtrlsOrder.Clear();
         unitCtrls.Clear();
         enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Unit") | LayerMask.GetMask("SpecialUnit"));
 
@@ -148,7 +146,7 @@ public class EliteMonsterController : Unit
                 {
                     SpecialUnitController specialUnit;
                     enemyColls2D[ii].TryGetComponent<SpecialUnitController>(out specialUnit);
-                    unitCtrls[ii] = specialUnit;
+                    unitCtrls.Add(specialUnit);
 
                 }
             }

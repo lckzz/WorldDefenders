@@ -37,7 +37,7 @@ public class UnitController : Unit
     protected UnitState state = UnitState.Run;        //테스트용이라 런 
 
 
-    protected Unit[] monCtrls;  //범위안에 들어온 몬스터의 정보들을 모아둠
+    protected List<Unit> monCtrls = new List<Unit>();  //범위안에 들어온 몬스터의 정보들을 모아둠
     [SerializeField] protected Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
     [SerializeField] protected MonsterPortal monsterPortal;
 
@@ -175,7 +175,7 @@ public class UnitController : Unit
         //Debug.Log($"타겟팅{isTageting}");
         #region 타겟구현
 
-
+        monCtrls.Clear();
         enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Monster") | LayerMask.GetMask("EliteMonster"));
         if (enemyColls2D != null)
         {
@@ -189,7 +189,7 @@ public class UnitController : Unit
                 }
             }
 
-            monCtrls = new Unit[enemyColls2D.Length];
+
             //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
             for(int ii = 0; ii < enemyColls2D.Length;ii++)
             {
@@ -197,14 +197,14 @@ public class UnitController : Unit
                 {
                     MonsterController monctrl;
                     enemyColls2D[ii].TryGetComponent<MonsterController>(out monctrl);
-                    monCtrls[ii] = monctrl;
+                    monCtrls.Add(monctrl);
 
                 }
                 else if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("EliteMonster"))
                 {
                     EliteMonsterController elite;
                     enemyColls2D[ii].TryGetComponent<EliteMonsterController>(out elite);
-                    monCtrls[ii] = elite;
+                    monCtrls.Add(elite);
 
                 }
             }
@@ -213,17 +213,17 @@ public class UnitController : Unit
         }
 
 
-        if (monCtrls.Length > 0)
+        if (monCtrls.Count > 0)
         {
             float disMin = 0;
             int min = 0;
 
 
-            if (monCtrls.Length > 1)
+            if (monCtrls.Count > 1)
             {
-                for (int i = 0; i < monCtrls.Length; i++)
+                for (int i = 0; i < monCtrls.Count; i++)
                 {
-                    if (i == 0 && monCtrls.Length > 1)
+                    if (i == 0 && monCtrls.Count > 1)
                     {
 
                         float distA = (monCtrls[i].transform.position - this.transform.position).sqrMagnitude;
@@ -241,7 +241,7 @@ public class UnitController : Unit
                         }
                     }
 
-                    else if (i < monCtrls.Length - 1)
+                    else if (i < monCtrls.Count - 1)
                     {
                         float distB = (monCtrls[i + 1].transform.position - this.transform.position).sqrMagnitude;
 
@@ -258,7 +258,7 @@ public class UnitController : Unit
             }
 
 
-            if (monCtrls.Length != 0)
+            if (monCtrls.Count != 0)
             {
                 monTarget = monCtrls[min];
             }

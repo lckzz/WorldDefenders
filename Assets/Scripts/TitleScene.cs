@@ -24,6 +24,7 @@ public class TitleScene : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Managers.Sound.Play("BGM/TitleBGM", Define.Sound.BGM);
         GameObject canvas = GameObject.Find("Canvas");
         canvas?.TryGetComponent(out gr);
 
