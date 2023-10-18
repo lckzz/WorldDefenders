@@ -92,14 +92,9 @@ public class StageNode : MonoBehaviour
                 stageState = Define.StageState.Open;
 
                 break;
-            case Define.SubStage.Boss:
-                for (int ii = 0; ii < (int)Define.MonsterType.BowSkeleton + 1; ii++)
-                {
-                    stageMonsterList.Add((Define.MonsterType)ii);
-                }
-                stageState = Define.StageState.Lock;
 
-                break;
+
+               
 
         }
 

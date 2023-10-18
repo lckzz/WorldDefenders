@@ -171,8 +171,7 @@ public class UnitController : Unit
 
     public override void EnemySensor()      //利皑瘤
     {
-        //Debug.Log(isTargeting);
-        //Debug.Log($"鸥百泼{isTageting}");
+
         #region 鸥百备泅
 
         monCtrls.Clear();
