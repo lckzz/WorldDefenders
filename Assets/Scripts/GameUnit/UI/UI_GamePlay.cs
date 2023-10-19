@@ -105,8 +105,6 @@ public class UI_GamePlay : UI_Base
 
     public SkillBook Skills { get; protected set; }
 
-
-    public Queue<GameObject> gameQueue = new Queue<GameObject>();
     //UI_EventHandler evt;
 
     // Start is called before the first frame update
@@ -245,7 +243,7 @@ public class UI_GamePlay : UI_Base
     private void Update()
     {
         UpdateSkill();
-        FadeOut();
+        //FadeOut();
         UpdateCost(Managers.Game.Cost);
     }
 
