@@ -28,7 +28,7 @@ public class UI_Lobby : UI_Base
     public override void Start()
     {
         GameObject.Find("LobbyScene").TryGetComponent(out lobbyScene);
-        LobbySceneRefresh();
+        //LobbySceneRefresh();
         ButtonEvent(upgradeBtn.gameObject, UpgradeOn, UIEvent.PointerDown);
         ButtonEvent(unitSettingBtn.gameObject, UnitSettingOn, UIEvent.PointerDown);
         ButtonEvent(skillBtn.gameObject, PlayerSkillOn, UIEvent.PointerDown);

@@ -71,8 +71,10 @@ public class GameScene : BaseScene
 
 
         Managers.Game.InGameTimer();
+        
         //Debug.Log(Managers.Game.GetMonSpawnType());
         Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCoolTime(speed);
+        Managers.UI.GetSceneUI<UI_GamePlay>().InGameTimer();
 
         Managers.Game.unitSummonDequeue(obj,unitSpawnTr);
         Managers.Game.CostIncreaseTime();

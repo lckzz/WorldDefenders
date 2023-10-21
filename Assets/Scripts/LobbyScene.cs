@@ -47,10 +47,10 @@ public class LobbyScene : BaseScene
     {
         base.Init();
         ui_Lobby?.SetActive(true);
+        GlobalData.InitUnitClass();  //이건 로비에서 적용할것 로비에서 유닛클래스를 초기화해준다.
 
         SceneType = Define.Scene.Lobby;
 
-        GlobalData.InitUnitClass();  //이건 로비에서 적용할것 로비에서 유닛클래스를 초기화해준다.
         RefreshUnit();
         Managers.Sound.Play("BGM/LobbyBGM", Define.Sound.BGM);
         saveStartGoalPos = goalCircle.transform.position;
@@ -158,6 +158,8 @@ public class LobbyScene : BaseScene
 
         for (int ii = 0; ii < lobbyUnits.Length; ii++)
         {
+            //if(GlobalData.g_SlotUnitClass.Count == 0)
+            //    GlobalData.InitUnitClass();  //이건 로비에서 적용할것 로비에서 유닛클래스를 초기화해준다.
 
             //GlobalData.g_SlotUnitClass
             lobbyUnits[ii].E_UniClass = GlobalData.g_SlotUnitClass[ii];

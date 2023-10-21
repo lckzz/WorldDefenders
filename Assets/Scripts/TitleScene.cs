@@ -21,6 +21,8 @@ public class TitleScene : MonoBehaviour
     //ÅÍÄ¡
 
 
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +36,9 @@ public class TitleScene : MonoBehaviour
 
         titleLogoRt.DOSizeDelta(new Vector2(900.0f, 900.0f), 0.5f).SetEase(Ease.OutBounce);
         touchTxt.DOFade(0, 1f).SetLoops(-1,LoopType.Yoyo);
+
+        Debug.Log(Description(10, 10, 2, 2));
+
     }
 
     // Update is called once per frame
@@ -60,4 +65,20 @@ public class TitleScene : MonoBehaviour
 
         return rrList[0].gameObject.GetComponent<T>();
     }
+
+
+    private int Description(int oldWeapon, int golds, int sellingPrice, int repairCost)
+    {
+
+
+        while (oldWeapon * repairCost >= golds)
+        {
+            oldWeapon--;
+            golds += sellingPrice;
+        }
+
+        return oldWeapon;
+
+
+}
 }

@@ -38,6 +38,8 @@ public class UI_GamePlay : UI_Base
 
     [SerializeField] Button settingBtn;
 
+    [SerializeField] TextMeshProUGUI timerTxt;
+
 
 
     //---------Camera Move Btn-----------------------------
@@ -603,6 +605,23 @@ public class UI_GamePlay : UI_Base
 
     }
 
+    public void InGameTimer()
+    {
+        int time = (int)Managers.Game.GetInGameTimer();
+        int min = time / 60;
+        int sec = time % 60;
+        if (min >= 10 && sec < 10)
+            timerTxt.text = $"{min} : 0{sec}";
+        else if(min >= 10 && sec >= 10)
+            timerTxt.text = $"{min} : {sec}";
+        else if(min <10 && sec >= 10)
+            timerTxt.text = $"0{min} : {sec}";
+        else if(min < 10 && sec < 10)
+            timerTxt.text = $"0{min} : 0{sec}";
+
+
+    }
+
 
 
     //유닛 버튼을 누를시 소환
@@ -628,4 +647,6 @@ public class UI_GamePlay : UI_Base
         if (rt.anchoredPosition.y == beforePosY)
             rt.DOLocalMoveY(afterPosY, 0.5f).SetEase(Ease.OutBack);
     }
+
+
 }

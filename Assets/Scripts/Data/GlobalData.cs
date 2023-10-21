@@ -76,6 +76,8 @@ public class GlobalData
         {
             for (int ii = 0; ii < g_unitSlotMax; ii++)
             {
+                Debug.Log("¿©±â");
+
                 if (ii == 0)
                     g_SlotUnitClass.Add(UnitClass.Warrior);
                 else

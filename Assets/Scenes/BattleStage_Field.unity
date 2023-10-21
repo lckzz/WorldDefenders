@@ -188,7 +188,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 325}
+  m_AnchoredPosition: {x: 0, y: 291.1}
   m_SizeDelta: {x: 679.1, y: 82.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &13390354
@@ -211,7 +211,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC11C\uBD80 \uC232 \uC9C0\uB300"
+  m_text: "\uC2A4\uD14C\uC774\uC9C0 \uC774\uB984"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8581f370002b34a40afc77783ff445c1, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 39448b065f3f6f64caa44a42bc6f8c7c, type: 2}
@@ -1897,7 +1897,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &371314657
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1993,7 +1993,7 @@ GameObject:
   - component: {fileID: 376670350}
   - component: {fileID: 376670349}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: GameTimer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5389,8 +5389,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -60, y: -55.5}
-  m_SizeDelta: {x: 151.3, y: 21.7}
+  m_AnchoredPosition: {x: -59.9999, y: -61.306}
+  m_SizeDelta: {x: 151.3002, y: 25.714}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1089370637
 MonoBehaviour:
@@ -5456,7 +5456,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 41c602b13cd8f4ad08df66ca3b2cdc6c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a25ffaef8c9004723b66733ec094ddae, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9807,7 +9807,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1953002913
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9921,6 +9921,7 @@ MonoBehaviour:
   coolImg: {fileID: 554067194}
   fadeImg: {fileID: 1977462606}
   settingBtn: {fileID: 1089370637}
+  timerTxt: {fileID: 376670349}
   leftCameraMoveBtn: {fileID: 1433294513}
   rightCameraMoveBtn: {fileID: 517701969}
   skillBtn: {fileID: 1711817233}
@@ -10956,6 +10957,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -0.74
       objectReference: {fileID: 0}
+    - target: {fileID: 1460027015704259356, guid: fd1ee192927494049947427866a3114f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 3f07155a4356b1a488e8fc6cfcb5935b, type: 3}
     - target: {fileID: 2057339530117321754, guid: fd1ee192927494049947427866a3114f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.2361727
@@ -11084,6 +11089,14 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 7d37754838fc449fbbaaa8a63abeea14, type: 3}
+    - target: {fileID: 8575913240932887217, guid: fd1ee192927494049947427866a3114f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 4.69
+      objectReference: {fileID: 0}
+    - target: {fileID: 8696651502751625607, guid: fd1ee192927494049947427866a3114f, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 8.91
+      objectReference: {fileID: 0}
     - target: {fileID: 9180760256832471728, guid: fd1ee192927494049947427866a3114f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -9.81
