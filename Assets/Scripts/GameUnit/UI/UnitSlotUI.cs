@@ -7,9 +7,9 @@ using TMPro;
 public class UnitSlotUI : UI_BaseSettingUnit
 {
     Vector2 defalutSizeDelta = new Vector2(120.0f, 135.0f);
-    Vector3 defalutTr = new Vector3(0.0f, 58.0f, 0.0f);
+    Vector3 defalutTr = new Vector3(0.0f, -20.0f, 0.0f);
     Vector2 spearSizeDelta = new Vector2(150.0f, 135.0f);
-    Vector3 spearTr = new Vector3(-16.0f, 58.0f, 0.0f);
+    Vector3 spearTr = new Vector3(-16.0f, -20.0f, 0.0f);
 
     [SerializeField] private GameObject slotTxtObj;
     [SerializeField] private GameObject selectImgObj;
@@ -48,6 +48,7 @@ public class UnitSlotUI : UI_BaseSettingUnit
 
     public void SetUnitClass(UnitClass uniClass)
     {
+        Debug.Log("¿©±ë¤±¤©");
         this.e_UnitClass = uniClass;
     }
 

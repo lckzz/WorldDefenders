@@ -168,7 +168,9 @@ public class UI_UnitSettingWindow : UI_Base
             unitSlotUiList.Add(slots.transform.GetChild(ii).GetComponent<UnitSlotUI>());
         }
 
-        for(int ii = 0; ii< unitSlotUiList.Count;ii++)
+        Debug.Log(unitSlotUiList.Count);
+
+        for (int ii = 0; ii< unitSlotUiList.Count;ii++)
         {
             unitSlotUiList[ii].SetUnitClass(GlobalData.g_SlotUnitClass[ii]);        //각각의 슬롯에 초기화된 유닛클래슬르 넣어준다.
             unitSlotUiList[ii].RefreshUnitImg();  //유닛클래스와 해당 레벨에 맞는 이미지가 갱신된다.
@@ -260,27 +262,31 @@ public class UI_UnitSettingWindow : UI_Base
 
     void OnMousePointerUp()
     {
-        if(Input.GetMouseButtonUp(0))
+        //Debug.Log(nodeUiClick);
+
+        if (Input.GetMouseButtonUp(0))
         {
             if (Managers.UI.PeekPopupUI<UI_UnitInfoSelectPopUp>() != null)
                 return;
 
 
 
-
             unitSlotUI = UiRaycastGetFirstComponent<UnitSlotUI>(gr);
             unitNodeUI = UiRaycastGetFirstComponent<UnitNodeUI>(gr);
 
-            if(unitSlotUI != null)
+            if(unitSlotUI != null)  //슬롯을 클릭했다면
             {
                 Managers.Sound.Play("Effect/UI_Click");
 
                 if (unitMaskObj.activeSelf)  //마스크 오브젝트가 켜져있다면 리턴
                     unitMaskObj.SetActive(false);
 
+
+
                 //유닛배치슬롯을 클릭했을 때
                 if (nodeUiClick)     //슬롯을 클릭했을때 그전에 노드를 클릭했다면
                 {
+                    Debug.Log("요기용");
                     LoopEqualUnitSearch(unitSlotUI.SlotIdx);
                     nodeUiClick = false;        //노드클릭은 꺼줌
                     curUnitNodeUI.ClickImageOnOff(nodeUiClick);
@@ -314,7 +320,7 @@ public class UI_UnitSettingWindow : UI_Base
 
             }
 
-            else if(unitNodeUI != null)
+            else if(unitNodeUI != null)  //유닛을 클릭했다면
             {
                 if (nodeClickTimer > 0.15f)    //클릭한 시간이 0.15초이상 지났으면
                 {
@@ -330,7 +336,7 @@ public class UI_UnitSettingWindow : UI_Base
 
 
                 nodeUiClick = true;
-                //unitMaskObj.SetActive(true);
+                unitMaskObj.SetActive(true);
                 curUnitNodeUI = unitNodeUI;     //현재 클릭한 유닛노드에 넣어주고
                 curUnitNodeUI.ClickImageOnOff(nodeUiClick);
                 Managers.UI.ShowPopUp<UI_UnitInfoSelectPopUp>().PopUpOpenUnitInfoSetting(curUnitNodeUI.E_UnitClass,curUnitNodeUI);
@@ -338,11 +344,12 @@ public class UI_UnitSettingWindow : UI_Base
 
             }
 
-            else
+            else if(curUnitSlotUI == null && curUnitNodeUI == null)
             {
+                Debug.Log("우에에에엑");
                 if (nodeUiClick)
                 {
-                    unitMaskObj.SetActive(false);
+                    //unitMaskObj.SetActive(false);
                     nodeUiClick = false;
                     curUnitNodeUI.ClickImageOnOff(nodeUiClick);
                     unitNodeUI = null;
@@ -386,14 +393,14 @@ public class UI_UnitSettingWindow : UI_Base
                 }
             }
 
-            //else if(unitSlotUI != null)
-            //{
-            //    slotUiClick = false;
-            //    curUnitSlotUI.ClickImageOnOff(slotUiClick);
-            //    unitSlotUI = null;
-            //    curUnitSlotUI = null;
+            else if (unitSlotUI != null)
+            {
+                slotUiClick = false;
+                curUnitSlotUI.ClickImageOnOff(slotUiClick);
+                unitSlotUI = null;
+                curUnitSlotUI = null;
 
-            //}
+            }
 
             else if(unitSlotUICancel != null)
             {
@@ -544,9 +551,12 @@ public class UI_UnitSettingWindow : UI_Base
 
     public void MaskObjectOnOff(bool check)
     {
+
         if(unitMaskObj != null)
         {
+
             unitMaskObj.SetActive(check);
+            Debug.Log(unitMaskObj.activeSelf);
         }
     }
 

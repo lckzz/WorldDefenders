@@ -35,7 +35,7 @@ public abstract class Unit : MonoBehaviour,ISensor
 
  
     protected Collider2D[] enemyColls2D;
-    protected Collider2D tower;
+    protected Collider2D towerColl;
     protected Collider2D unitColl;
     protected Collider2D myColl;     //나 자신의 콜라이더를 받는 변수
 

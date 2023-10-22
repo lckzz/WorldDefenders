@@ -28,7 +28,7 @@ public enum UnitState
     Die
 }
 
-public class UnitController : Unit
+public class UnitController : Unit,ISubject
 {
 
     [SerializeField]
@@ -136,6 +136,7 @@ public class UnitController : Unit
             SetUnitState(UnitState.Run);
             sp.color = new Color32(255, 255, 255, 255);
             myColl.enabled = true;
+            monTarget = null;
         }
 
     }
@@ -175,12 +176,28 @@ public class UnitController : Unit
 
         #region 타겟구현
 
+        UnitSense();
+        UnitDistanceAsending();
+
+
+
+
+#endregion
+
+    }
+
+    //유닛들을 감지
+    void UnitSense()
+    {
+        //타겟리스트 초기화해줌
         monCtrls.Clear();
         enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Monster") | LayerMask.GetMask("EliteMonster"));
         if (enemyColls2D != null)
         {
             if (enemyColls2D.Length <= 0)
             {
+
+                TowerSensor();
                 //박스안 콜라이더가 아무것도 없으면
                 if (monTarget != null)  //이전에 몬스터 타겟팅이 잡혓더라면
                 {
@@ -188,10 +205,14 @@ public class UnitController : Unit
                     return;
                 }
             }
+            else
+            {
+                monsterPortal = null;
+            }
 
 
             //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
-            for(int ii = 0; ii < enemyColls2D.Length;ii++)
+            for (int ii = 0; ii < enemyColls2D.Length; ii++)
             {
                 if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("Monster"))
                 {
@@ -208,11 +229,14 @@ public class UnitController : Unit
 
                 }
             }
-            
-               
+
+
         }
+    }
 
-
+    //감지한 유닛들의 해당 캐릭터와의 거리 오름차순
+    void UnitDistanceAsending()
+    {
         if (monCtrls.Count > 0)
         {
             float disMin = 0;
@@ -263,73 +287,18 @@ public class UnitController : Unit
                 monTarget = monCtrls[min];
             }
 
-
-
-
-
-
         }
-
-
-#endregion
-
     }
+
 
     void TowerSensor()
     {
-        //타워의 정보를 가지고 있고 타워와의 거리를 계속해서 체크
-        if (monsterPortal == null)
-            return;
-
-        towerVec = monsterPortal.gameObject.transform.position - this.transform.position;
-        towerDist = towerVec.sqrMagnitude;
-        towerDir = towerVec.normalized;
-
-        if (towerDist < 15.0f * 15.0f)      //타워와의 추적거리에 들어오면 아무도 없으면 타워추적
-        {
-            if (!towerTrace)  //없으면 바로 타워추적함
-            {
-                towerTrace = true;
-                SetUnitState(UnitState.Trace);
-        
-
-            }
-
-            TowerAttackRange(towerAttackRange);
-
-        }
-        else
-        {
-            if (towerTrace)
-            {
-        
-                towerTrace = false;
-
-            }
-        }
+        towerColl = Physics2D.OverlapBox(pos.position, boxSize, 0, LayerMask.GetMask("MonsterPortal"));
+        if (towerColl != null)
+            towerColl.TryGetComponent(out monsterPortal);
     }
 
 
-    void TowerAttackRange(float distance)
-    {
-
-        if (towerDist < distance * distance)
-        {
-            if (!towerAttack)
-            {
-                towerAttack = true;
-                SetUnitState(UnitState.Attack);
-            }
-        }
-        else
-        {
-            
-            if (towerAttack)
-            {
-                towerAttack = false;
-            }
-        }
-    }
 
 
     void UnitStateCheck()
@@ -467,12 +436,8 @@ public class UnitController : Unit
 
     protected virtual void UnitMove()
     {
-        if (monTarget != null)
+        if (monTarget != null || monsterPortal != null)
             SetUnitState(UnitState.Trace);
-
-        if (monTarget == null)
-            if (towerTrace)
-                towerTrace = false;
 
         if (IsTargetOn())
             return;
@@ -494,11 +459,6 @@ public class UnitController : Unit
             return;
         }
 
-        if (towerDist < towerAttackRange * towerAttackRange)
-        {
-            SetUnitState(UnitState.Attack);
-            return;
-        }
 
         if (monTarget != null)
             Trace(monTarget);
@@ -509,7 +469,7 @@ public class UnitController : Unit
 
     protected virtual bool IsTargetOn()
     {
-        if (monTarget == null && towerTrace == false)
+        if (monTarget == null && monsterPortal == null)
             return false;
 
 
@@ -632,15 +592,7 @@ public class UnitController : Unit
                 float dist = (monTarget.transform.position - this.gameObject.transform.position).magnitude;
                 if (dist < unitStat.attackRange + 0.5f)
                     CriticalAttack(monTarget,warriorHitSound,warriorCriticalSound, warriorHitEff);
-                else
-                {
-                    if (towerDist < unitStat.attackRange * unitStat.attackRange) 
-                        CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound ,warriorHitEff);
-
-                }
             }
-
-            
             else
                 CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound ,warriorHitEff);
             
@@ -650,31 +602,30 @@ public class UnitController : Unit
         else if(unitClass == UnitClass.Archer)
         {
 
-            if(!towerAttack)
+
+            if(monTarget != null)
             {
-                if(monTarget != null)
+                GameObject obj = Managers.Resource.Load<GameObject>("Prefabs/Weapon/UnitArrow");
+
+                if (obj != null)
                 {
-                    GameObject obj = Managers.Resource.Load<GameObject>("Prefabs/Weapon/UnitArrow");
-
-                    if (obj != null)
+                    Managers.Sound.Play("Sounds/Effect/Bow");
+                    GameObject arrow = Managers.Resource.Instantiate(obj, posTr.position, Quaternion.identity, this.transform);
+                    arrow.TryGetComponent(out ArrowCtrl arrowCtrl);
+                    if(monTarget.gameObject.layer == LayerMask.NameToLayer("Monster") && monTarget is MonsterController monsterCtrl)
                     {
-                        Managers.Sound.Play("Sounds/Effect/Bow");
-                        GameObject arrow = Managers.Resource.Instantiate(obj, posTr.position, Quaternion.identity, this.transform);
-                        arrow.TryGetComponent(out ArrowCtrl arrowCtrl);
-                        if(monTarget.gameObject.layer == LayerMask.NameToLayer("Monster") && monTarget is MonsterController monsterCtrl)
-                        {
-                            arrowCtrl.SetType(monsterCtrl, null);
+                        arrowCtrl.SetType(monsterCtrl, null);
 
-                        }
-                        else if(monTarget.gameObject.layer == LayerMask.NameToLayer("EliteMonster") && monTarget is EliteMonsterController elite)
-                        {
-                            arrowCtrl.SetType(elite, null);
+                    }
+                    else if(monTarget.gameObject.layer == LayerMask.NameToLayer("EliteMonster") && monTarget is EliteMonsterController elite)
+                    {
+                        arrowCtrl.SetType(elite, null);
 
-                        }
                     }
                 }
             }
-            else
+            
+            else if(monsterPortal != null)
             {
                 GameObject obj = Resources.Load<GameObject>("Prefabs/Weapon/UnitArrow");
 
@@ -704,14 +655,7 @@ public class UnitController : Unit
 
                 if (dist < unitStat.attackRange + 0.5f)
                     CriticalAttack(monTarget, warriorHitSound, warriorCriticalSound, warriorHitEff);
-                else
-                {
-                    if (towerDist < unitStat.attackRange * unitStat.attackRange)
-                        CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound, warriorHitEff);
-
-                }
             }
-
 
             else
                 CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound, warriorHitEff);
@@ -770,22 +714,6 @@ public class UnitController : Unit
         }
     }
 
-
-    //protected void UnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
-    //{
-    //    Managers.Sound.Play($"Sounds/Effect/{soundPath}");
-    //    GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
-    //    Vector2 randomPos = RandomPosSetting(pos);
-
-    //    if (eff != null)
-    //    {
-    //        if(unitClass == UnitClass.Priest)
-    //            Instantiate(eff, pos, Quaternion.identity);
-    //        else
-    //            Instantiate(eff, randomPos, Quaternion.identity);
-
-    //    }
-    //}
 
 
     #region 넉백
@@ -909,18 +837,6 @@ public class UnitController : Unit
             attackCoolTime -= Time.deltaTime;
             if (attackCoolTime <= .0f)
             {
-
-                //if(monTarget != null)
-                //{
-                //    distance = (monTarget.transform.position - this.transform.position).sqrMagnitude;
-                //    if (distance < attackRange * attackRange)
-                //        SetUnitState(UnitState.Attack);
-                //    else
-                //        SetUnitState(UnitState.Run);
-                //}
-                //else
-                //    SetUnitState(UnitState.Run);
-
                 if (monTarget != null)
                 {
                     Vector3 vec = monTarget.gameObject.transform.position - this.transform.position;
@@ -930,20 +846,38 @@ public class UnitController : Unit
                     else
                         SetUnitState(UnitState.Run);
                 }
-                else
+                else if(monsterPortal != null)
                 {
-                    if (towerDist < attackRange * attackRange)
+                    Vector3 vec = monsterPortal.gameObject.transform.position - this.transform.position;
+                    traceDistance = vec.sqrMagnitude;
+
+                    if (traceDistance < attackRange * attackRange)
                         SetUnitState(UnitState.Attack);
                     else
                         SetUnitState(UnitState.Run);
                 }
-
-                if (towerAttack)
-                    towerAttack = false;
+                else
+                    SetUnitState(UnitState.Run);
 
             }
 
         }
+    }
+
+
+    public void AddObserver(IHpObserver observer)
+    {
+
+    }
+
+    public void RemoveObserver(IHpObserver observer)
+    {
+
+    }
+
+    public void NotifyToObserver(IHpObserver observer)
+    {
+
     }
 
 

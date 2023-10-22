@@ -52,7 +52,7 @@ public class MonsterController : Unit
     MonsterStat monStat;
 
 
-    public float Hp { get { return hp; } }
+    //public float Hp { get { return hp; } }
 
     public int KnockBackForce { get { return knockbackForce; } }
 
@@ -75,17 +75,12 @@ public class MonsterController : Unit
         spawnPosX = 18.0f;
 
         if (monsterClass == MonsterClass.Warrior)
-        {
             monStat = Managers.Data.monsterDict[GlobalData.g_NormalSkeletonID];
-            towerAttackRange = 2.0f;
 
-        }
         else if (monsterClass == MonsterClass.Archer)
-        {
             monStat = Managers.Data.monsterDict[GlobalData.g_BowSkeletonID];
-            towerAttackRange = 6.0f;
 
-        }
+        
 
         att = monStat.att;
         hp = monStat.hp;
@@ -94,7 +89,7 @@ public class MonsterController : Unit
         attackRange = monStat.attackRange;
         moveSpeed = 2.0f;
 
-        playerTowerCtrl = GameObject.FindObjectOfType<PlayerTower>();
+        //playerTowerCtrl = GameObject.FindObjectOfType<PlayerTower>();
 
         TryGetComponent<Collider2D>(out myColl);
 
@@ -119,6 +114,8 @@ public class MonsterController : Unit
             SetMonsterState(MonsterState.Run);
             sp.color = new Color32(255, 255, 255, 255);
             myColl.enabled = true;
+            unitTarget = null;
+            playerTowerCtrl = null;
         }
 
     }
@@ -137,12 +134,7 @@ public class MonsterController : Unit
             return;
 
         EnemySensor();
-        TowerSensor();
         MonsterStateCheck();
-
-        
-
-        //MonsterVictory();
 
     }
 
@@ -162,21 +154,39 @@ public class MonsterController : Unit
         //Debug.Log($"타겟팅{isTageting}");
         #region 타겟구현
 
+        UnitSense();
+        UnitDistanceAsending();
+
+        #endregion
+
+    }
+
+    //유닛들을 감지
+    void UnitSense()
+    {
         unitCtrls.Clear();
         enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Unit") | LayerMask.GetMask("SpecialUnit"));
 
-        
+
         if (enemyColls2D != null)
         {
 
             if (enemyColls2D.Length <= 0)
             {
+                TowerSensor();   //몬스터가 아무도 없다면 타워센서를 킨다.
+
+
                 //박스안 콜라이더가 아무것도 없으면
                 if (unitTarget != null)  //이전에 몬스터 타겟팅이 잡혓더라면
                 {
                     unitTarget = null;
                     return;
                 }
+            }
+            else
+            {
+                playerTowerCtrl = null;
+
             }
 
             //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
@@ -202,7 +212,10 @@ public class MonsterController : Unit
 
 
         }
-
+    }
+    //감지한 유닛들의 해당 캐릭터와의 거리 오름차순
+    void UnitDistanceAsending()
+    {
         if (unitCtrls.Count > 0)
         {
             float disMin = 0;
@@ -256,65 +269,20 @@ public class MonsterController : Unit
         }
 
 
-
-
-
-        #endregion
-
     }
+
 
     void TowerSensor()
     {
-        //타워를 최우선적으로 타격하고 거리를 계속해서 계산해서 일정거리안에 들어오면 타워 공격
+        //타워는 유닛이 없다면 그때 감지를하고 공격추격이나 공격을 할 수 있다.
 
-        towerVec = playerTowerCtrl.gameObject.transform.position - this.transform.position;
-        towerDist = towerVec.sqrMagnitude;
-        towerDir = towerVec.normalized;
-
-        if (towerDist < 15.0f * 15.0f)
-        {
-            if (!towerTrace)
-            {
-                towerTrace = true;
-                SetMonsterState(MonsterState.Trace);
-
-            }
-
-            TowerAttackRange(towerAttackRange);
-
-
-
-        }
-        else
-        {
-            if (towerTrace)
-            {
-                towerTrace = false;
-
-            }
-        }
+        towerColl = Physics2D.OverlapBox(pos.position, boxSize, 0, LayerMask.GetMask("Tower"));
+        if (towerColl != null)
+            towerColl.TryGetComponent(out playerTowerCtrl);
+        
     }
 
-    void TowerAttackRange(float distance)
-    {
-        if (towerDist < distance * distance)
-        { 
-
-            if (!towerAttack)
-            {
-                towerAttack = true;
-                SetMonsterState(MonsterState.Attack);
-            }
-        }
-        else
-        {
-
-            if (towerAttack)
-            {
-                towerAttack = false;
-            }
-        }
-    }
+   
 
 
     void MonsterStateCheck()
@@ -454,13 +422,8 @@ public class MonsterController : Unit
 
     void MonsterMove()
     {
-        if (unitTarget != null)
+        if (unitTarget != null || playerTowerCtrl != null)
             SetMonsterState(MonsterState.Trace);
-
-        if (unitTarget == null)
-            if (towerTrace)
-                towerTrace = false;
-
 
         if (IsTargetOn())
             return;
@@ -482,19 +445,17 @@ public class MonsterController : Unit
             return;
         }
 
+
         if (unitTarget != null)
             Trace(unitTarget);
 
-        else if (unitTarget == null)
+        else if (playerTowerCtrl != null)
             Trace(playerTowerCtrl);
     }
 
     bool IsTargetOn()
     {
-
-
-        
-        if (unitTarget == null && towerTrace == false)
+        if (unitTarget == null && playerTowerCtrl == null)
             return false;
 
 
@@ -611,16 +572,10 @@ public class MonsterController : Unit
                 float dist = (unitTarget.transform.position - this.gameObject.transform.position).sqrMagnitude;
                 if (dist < monStat.attackRange * monStat.attackRange)
                     CriticalAttack(unitTarget,warriorHitSound,warriorCriticalSound, warriorHitEff);
-                else
-                {
-                    if(towerDist < monStat.attackRange * monStat.attackRange)
-                        CriticalAttack(playerTowerCtrl,warriorHitSound,warriorCriticalSound, warriorHitEff);
-
-                }
             }
                 
             
-            else
+            else if(playerTowerCtrl != null)
                 CriticalAttack(playerTowerCtrl,warriorHitSound,warriorCriticalSound, warriorHitEff);
             
 
@@ -628,34 +583,33 @@ public class MonsterController : Unit
 
         else if (monsterClass == MonsterClass.Archer)
         {
-            if (!towerAttack)
+
+            if (unitTarget != null)
             {
-                if (unitTarget != null)
+                GameObject obj = Managers.Resource.Load<GameObject>("Prefabs/Weapon/MonsterArrow");
+
+                if (obj != null)
                 {
-                    GameObject obj = Managers.Resource.Load<GameObject>("Prefabs/Weapon/MonsterArrow");
+                    Managers.Sound.Play("Sounds/Effect/Bow");
+                    GameObject arrow = Managers.Resource.Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
+                    arrow.TryGetComponent(out MonsterArrowCtrl arrowCtrl);
 
-                    if (obj != null)
+                    if (unitTarget is UnitController unitCtrl)
                     {
-                        Managers.Sound.Play("Sounds/Effect/Bow");
-                        GameObject arrow = Managers.Resource.Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
-                        arrow.TryGetComponent(out MonsterArrowCtrl arrowCtrl);
+                        arrowCtrl.SetType(unitCtrl, null);
 
-                        if (unitTarget is UnitController unitCtrl)
-                        {
-                            arrowCtrl.SetType(unitCtrl, null);
+                    }
+                    if (unitTarget is SpecialUnitController specialUnit)
+                    {
+                        arrowCtrl.SetType(specialUnit, null);
 
-                        }
-                        if (unitTarget is SpecialUnitController specialUnit)
-                        {
-                            arrowCtrl.SetType(specialUnit, null);
-
-                        }
+                    }
 
                         
-                    }
                 }
             }
-            else
+            
+            else if(playerTowerCtrl != null)
             {
                 GameObject obj = Resources.Load<GameObject>("Prefabs/Weapon/MonsterArrow");
 
@@ -723,16 +677,6 @@ public class MonsterController : Unit
     }
 
 
-    //void MeleeUnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
-    //{
-    //    Managers.Sound.Play($"Sounds/Effect/{soundPath}");
-    //    GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
-    //    Vector2 randomPos = RandomPosSetting(pos);
-
-    //    if (eff != null)
-    //        Instantiate(eff, randomPos, Quaternion.identity);
-    //}
-
 
     void ApplyKnockBack(Vector2 dir, float force)
     {
@@ -777,7 +721,10 @@ public class MonsterController : Unit
         
         while(knockBackSpeed > 0.0f)   //속도 감소
         {
-            knockBackSpeed -= (knockBackAccleration * 0.25f) * Time.deltaTime;
+            if (this.transform.position.x >= playerTowerCtrl.transform.position.x)
+                knockBackSpeed = 0.0f;
+            else
+                knockBackSpeed -= (knockBackAccleration * 0.25f) * Time.deltaTime;
 
             Vector2 velo = new Vector2(knockBackSpeed, rigbody.velocity.y);
             rigbody.velocity = velo;
@@ -893,18 +840,23 @@ public class MonsterController : Unit
                     else
                         SetMonsterState(MonsterState.Run);
                 }
-                else
+                else if(playerTowerCtrl != null)
                 {
-                    if (towerDist < attackRange * attackRange)
+
+                    Vector3 vec = playerTowerCtrl.gameObject.transform.position - this.transform.position;
+                    traceDistance = vec.sqrMagnitude;
+
+                    if (traceDistance < attackRange * attackRange)
                         SetMonsterState(MonsterState.Attack);
                     else
                         SetMonsterState(MonsterState.Run);
                 }
+                else  //타워나 유닛타겟에 아무것도 잡히지 않았다면
+                {
+                    SetMonsterState(MonsterState.Run);
+                }
 
 
-
-                if (towerAttack)
-                    towerAttack = false;
             }
 
         }
