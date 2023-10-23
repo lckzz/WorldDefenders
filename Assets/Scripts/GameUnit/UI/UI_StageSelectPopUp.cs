@@ -20,6 +20,8 @@ public class UI_StageSelectPopUp : UI_Base
     private RectTransform paperRt;
     private Vector2 rtSizeDelta;
 
+    private float openSelectPaper = 1432.0f;
+
     private bool fadeCheck = false;
     private StageNode stagenode;
 
@@ -41,7 +43,7 @@ public class UI_StageSelectPopUp : UI_Base
         rtSizeDelta.x = 0.0f;
         paperRt.sizeDelta = rtSizeDelta;
 
-        StartCoroutine(StartPaperDeltaSizeDo(1810.0f,true));
+        StartCoroutine(StartPaperDeltaSizeDo(openSelectPaper, true));
         if (backBtn != null)
             backBtn.onClick.AddListener(ClosePopUp);
         if (startBtn != null)

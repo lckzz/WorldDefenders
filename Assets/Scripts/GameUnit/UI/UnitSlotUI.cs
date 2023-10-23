@@ -90,7 +90,7 @@ public class UnitSlotUI : UI_BaseSettingUnit
                 //Debug.Log($"아처 갱신! {e_UnitClass}");
                 rt.sizeDelta = defalutSizeDelta;
                 rt.transform.localPosition = defalutTr;
-                UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitArcherLv, "PriestLv1Img", "PriestLv2Img");
+                UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitPriestLv, "PriestLv1Img", "PriestLv2Img");
 
                 break;
 

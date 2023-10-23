@@ -138,20 +138,8 @@ public class MonsterController : Unit
 
     }
 
-
-
-
-
-
-
-
-
-
-
     public override void EnemySensor()      //적감지
     {
-        //Debug.Log(isTargeting);
-        //Debug.Log($"타겟팅{isTageting}");
         #region 타겟구현
 
         UnitSense();
@@ -282,7 +270,17 @@ public class MonsterController : Unit
         
     }
 
-   
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log("유닛이 감지되용");
+
+        if (collision.gameObject.layer == LayerMask.GetMask("Unit"))
+        {
+            Debug.Log("유닛이 감지되용");
+        }
+    }
+
+
 
 
     void MonsterStateCheck()
@@ -721,7 +719,7 @@ public class MonsterController : Unit
         
         while(knockBackSpeed > 0.0f)   //속도 감소
         {
-            if (this.transform.position.x >= playerTowerCtrl.transform.position.x)
+            if (this.transform.position.x >= playerTowerCtrl?.transform.position.x)
                 knockBackSpeed = 0.0f;
             else
                 knockBackSpeed -= (knockBackAccleration * 0.25f) * Time.deltaTime;
