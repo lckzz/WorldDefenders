@@ -530,6 +530,9 @@ public class MonsterController : Unit
         if (hp > 0)
         {
             hp -= att;
+            //넉백이 안통하는 존에 있다면 넉백수치를 0으로 만들어준다.
+            if (NoKnockBackValid())
+                knockBack = 0;
 
             if(att > 0)
             {

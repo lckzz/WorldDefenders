@@ -161,5 +161,11 @@ public class Define
         Defeat,
     }
 
+    public enum NoKnockBackType
+    {
+        Unit,
+        Monster
+    }
+
 
 }

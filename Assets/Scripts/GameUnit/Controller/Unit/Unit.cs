@@ -65,6 +65,7 @@ public abstract class Unit : MonoBehaviour,ISensor
     //넉백 관련 변수
     protected bool knockbackStart = false;
     protected float knockbackDuration = 0.25f;
+    protected bool isNoKnockBack = false;           //넉백이 안되는 구간에 있다면
 
     //HUDUI
     private Transform parentTr;
@@ -74,6 +75,7 @@ public abstract class Unit : MonoBehaviour,ISensor
     public int Att { get { return att; } }
     public float Hp { get { return hp; } }
     public float MaxHp { get { return maxHp; } }
+    public bool IsNoKnockBack { get { return isNoKnockBack; } set { isNoKnockBack = value; } }
 
 
 
@@ -110,6 +112,14 @@ public abstract class Unit : MonoBehaviour,ISensor
 
             }
         }
+    }
+
+    public bool NoKnockBackValid()
+    {
+        if(isNoKnockBack == false)
+            return false;
+
+        return true;
     }
 
 
