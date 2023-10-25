@@ -5,16 +5,17 @@ using UnityEngine;
 public class MonsterArrowCtrl : MonoBehaviour
 {
 
-    private Unit unitCtrl;
-    private MonsterController monsterCtrl;
+    [SerializeField] private Unit unitCtrl;
+    [SerializeField] private MonsterController monsterCtrl;
     private PlayerTower playerTower;
     private float arrowSpeed = 35.0f;
 
-    Vector3 shotDir;
+    [SerializeField] Vector3 shotDir;
 
 
-    void Init()
+    public void Init()
     {
+
         monsterCtrl = GetComponentInParent<MonsterController>();
         if(monsterCtrl.UnitCtrl != null)
             unitCtrl = monsterCtrl.UnitCtrl;
@@ -23,17 +24,26 @@ public class MonsterArrowCtrl : MonoBehaviour
 
     }
 
-    private void OnEnable()
+
+    private void OnDisable()
     {
-        if (monsterCtrl == null)
-            return;
-
-
-        if (monsterCtrl.UnitCtrl != null)
-            unitCtrl = monsterCtrl.UnitCtrl;
-        if (monsterCtrl.PlayerTowerCtrl != null)
-            playerTower = monsterCtrl.PlayerTowerCtrl;
+        //꺼지면 다 초기화
+        unitCtrl = null;
+        monsterCtrl = null;
+        playerTower = null;
+        shotDir = Vector3.zero;
     }
+    //private void OnEnable()
+    //{
+    //    if (monsterCtrl == null)
+    //        return;
+
+
+    //    if (monsterCtrl.UnitCtrl != null)
+    //        unitCtrl = monsterCtrl.UnitCtrl;
+    //    if (monsterCtrl.PlayerTowerCtrl != null)
+    //        playerTower = monsterCtrl.PlayerTowerCtrl;
+    //}
 
     // Start is called before the first frame update
     void Start()
@@ -92,24 +102,23 @@ public class MonsterArrowCtrl : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
-
+        if (unitCtrl == null && playerTower == null)
+            return;
 
         if (coll.tag == "Unit")
         {
+            if (unitCtrl == null)
+                return;
 
-            if(unitCtrl != null)
-            {
-                if (coll.gameObject == unitCtrl.gameObject)
-                {
-                    Managers.Sound.Play("Sounds/Effect/Arrowhit");
+            Managers.Sound.Play("Sounds/Effect/Arrowhit");
 
-                    Unit uniCtrl = null;
-                    coll.TryGetComponent<Unit>(out uniCtrl);
-                    if (uniCtrl != null)
-                        uniCtrl.OnDamage(monsterCtrl.Att);
+            Unit uniCtrl = null;
+            coll.TryGetComponent<Unit>(out uniCtrl);
+            if (uniCtrl != null)
+                uniCtrl.OnDamage(monsterCtrl.Att);
 
-                }
-            }
+                
+            
 
 
             StartCoroutine(Util.UnitDieTime(gameObject));
@@ -118,18 +127,17 @@ public class MonsterArrowCtrl : MonoBehaviour
         else if(coll.tag.Contains("Tower") && coll.name.Contains("Tower"))
         {
 
-            if (playerTower != null)
-            {
-                if (coll.gameObject == playerTower.gameObject)
-                {
-                    Managers.Sound.Play("Sounds/Effect/Arrowhit");
+            if (playerTower == null)
+                return;
 
-                    PlayerTower playTower = null;
-                    coll.TryGetComponent<PlayerTower>(out playTower);
-                    if (playTower != null)
-                        playTower.TowerDamage(monsterCtrl.Att);
-                }
-            }
+            Managers.Sound.Play("Sounds/Effect/Arrowhit");
+
+            PlayerTower playTower = null;
+            coll.TryGetComponent<PlayerTower>(out playTower);
+            if (playTower != null)
+                playTower.TowerDamage(monsterCtrl.Att);
+                
+            
 
             StartCoroutine(Util.UnitDieTime(gameObject));
 
@@ -139,9 +147,4 @@ public class MonsterArrowCtrl : MonoBehaviour
             return;
     }
 
-    public void SetType(Unit unitCtrl, PlayerTower tower)
-    {
-        this.unitCtrl = unitCtrl;
-        playerTower = tower;
-    }
 }

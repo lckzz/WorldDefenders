@@ -112,6 +112,7 @@ public class MonsterEvent
     {
         //일반 이벤트중일때
 
+        Debug.Log(monsterWaveTime);
         monsterWaveTime -= Time.deltaTime;
         if(monsterWaveTime <= 0.0f)
         {

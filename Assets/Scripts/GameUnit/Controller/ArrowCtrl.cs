@@ -6,42 +6,46 @@ using UnityEngine.UIElements;
 public class ArrowCtrl : MonoBehaviour
 {
     private Vector3 unitArrowScale = new Vector3(-5f, 5f, 5f);
-    private UnitController unitCtrl;
-    private Unit monsterCtrl;
+    [SerializeField] private UnitController unitCtrl;
+    [SerializeField] private Unit monsterCtrl;
     [SerializeField] private MonsterPortal monPortal;
 
     private float arrowSpeed = 35.0f;
 
     //화살은 쏘는 유닛의 정보 맞는 몬스터정보둘다 받아와야함
-    Vector3 shotDir;
-    float Distance;
-    Vector3 shotVec;
+    [SerializeField] Vector3 shotDir;
 
 
-    void Init()
+
+    public void Init()
     {
         transform.localScale = unitArrowScale;
-       
-        unitCtrl = GetComponentInParent<UnitController>();
-        if(unitCtrl.Monctrl != null)
-            monsterCtrl = unitCtrl.Monctrl;
-        if(unitCtrl.MonsterPortal != null)
-            monPortal = unitCtrl.MonsterPortal;
-        
-
-    }
-
-    private void OnEnable()
-    {
-        if (unitCtrl == null)
-            return;
 
         unitCtrl = GetComponentInParent<UnitController>();
         if (unitCtrl.Monctrl != null)
             monsterCtrl = unitCtrl.Monctrl;
         if (unitCtrl.MonsterPortal != null)
             monPortal = unitCtrl.MonsterPortal;
+
+
     }
+
+    private void OnDisable()
+    {
+        unitCtrl = null;
+        monsterCtrl = null;
+        monPortal = null;
+        shotDir = Vector3.zero;
+    }
+
+    //private void OnEnable()
+    //{
+    //    if (unitCtrl == null)
+    //        return;
+    //    Debug.Log("테스트");
+
+    //    Init();
+    //}
 
 
     // Start is called before the first frame update
@@ -95,42 +99,36 @@ public class ArrowCtrl : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
-        if (monsterCtrl == null)
+        if ((monsterCtrl == null && monPortal == null))
             return;
 
 
         if (coll.tag == "Monster")
         {
-            Debug.Log(coll.gameObject);
-            Debug.Log(monsterCtrl.gameObject);
 
-            if (coll.gameObject == monsterCtrl.gameObject)
-            {
-                Managers.Sound.Play("Sounds/Effect/Arrowhit");
+            Managers.Sound.Play("Sounds/Effect/Arrowhit");
 
-                Unit monctrl = null;
-                coll.TryGetComponent<Unit>(out monctrl);
-                if (monctrl != null)
-                    monctrl.OnDamage(unitCtrl.Att);
-            }
+            Unit monctrl = null;
+            coll.TryGetComponent<Unit>(out monctrl);
+            if (monctrl != null)
+                monctrl.OnDamage(unitCtrl.Att);
+            
 
 
             StartCoroutine(Util.UnitDieTime(gameObject));
 
         }
-        else if (coll.tag.Contains("Tower") && coll.name.Contains("MonsterPortal"))
+        else if (coll.name.Contains("MonsterPortal"))
         {
-            if (coll.gameObject == monPortal.gameObject)
-            {
-                Managers.Sound.Play("Sounds/Effect/Arrowhit");
-                MonsterPortal monPort = null;
-                coll.TryGetComponent<MonsterPortal>(out monPort);
-                if (monPort != null)
-                    monPort.TowerDamage(unitCtrl.Att);
+            Managers.Sound.Play("Sounds/Effect/Arrowhit");
+            MonsterPortal monPort = null;
+            coll.TryGetComponent<MonsterPortal>(out monPort);
+            if (monPort != null)
+                monPort.TowerDamage(unitCtrl.Att);
 
-                StartCoroutine(Util.UnitDieTime(gameObject));
+            StartCoroutine(Util.UnitDieTime(gameObject));
 
-            }
+            
         }
 
         else

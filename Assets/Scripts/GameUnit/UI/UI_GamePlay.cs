@@ -564,12 +564,10 @@ public class UI_GamePlay : UI_Base
     public void UpdateCoolTime(float speed)
     {
         float coolTime = player.PercentCoolTime();
-        //Debug.Log(coolTime);
-
         if (coolImg.fillAmount > coolTime)
             coolImg.fillAmount -= Time.deltaTime * speed;
 
-        if (coolTime >= 0.99f)
+        if (coolTime >= 0.9f)
             coolImg.fillAmount = 1;
     }
 

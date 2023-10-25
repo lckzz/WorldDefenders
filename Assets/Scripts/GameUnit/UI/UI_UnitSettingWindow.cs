@@ -336,7 +336,6 @@ public class UI_UnitSettingWindow : UI_Base
 
 
                 nodeUiClick = true;
-                unitMaskObj.SetActive(true);
                 curUnitNodeUI = unitNodeUI;     //현재 클릭한 유닛노드에 넣어주고
                 curUnitNodeUI.ClickImageOnOff(nodeUiClick);
                 Managers.UI.ShowPopUp<UI_UnitInfoSelectPopUp>().PopUpOpenUnitInfoSetting(curUnitNodeUI.E_UnitClass,curUnitNodeUI);

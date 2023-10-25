@@ -147,11 +147,10 @@ public class UnitController : Unit,ISubject
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (Managers.Game.GameEndResult())       //게임이 끝났으면 리턴
             return;
-
 
         //UnitVictory();
         TowerSensor();
@@ -399,9 +398,9 @@ public class UnitController : Unit,ISubject
                 }
             case UnitState.KnockBack:
                 {
-                    if (!isRun)
+                    if (isRun)
                     {
-                        isRun = true;
+                        isRun = false;
                         anim.SetBool("Run", isRun);
 
                     }
@@ -443,7 +442,7 @@ public class UnitController : Unit,ISubject
             return;
 
 
-        rigbody.transform.position += Vector3.right * moveSpeed * Time.deltaTime;
+        rigbody.transform.position += Vector3.right * moveSpeed * Time.fixedDeltaTime;
 
 
 
@@ -597,7 +596,7 @@ public class UnitController : Unit,ISubject
                 if (dist < unitStat.attackRange + 0.5f)
                     CriticalAttack(monTarget,warriorHitSound,warriorCriticalSound, warriorHitEff);
             }
-            else
+            else if(monsterPortal != null)
                 CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound ,warriorHitEff);
             
 
@@ -605,7 +604,6 @@ public class UnitController : Unit,ISubject
 
         else if(unitClass == UnitClass.Archer)
         {
-
 
             if(monTarget != null)
             {
@@ -616,16 +614,17 @@ public class UnitController : Unit,ISubject
                     Managers.Sound.Play("Sounds/Effect/Bow");
                     GameObject arrow = Managers.Resource.Instantiate(obj, posTr.position, Quaternion.identity, this.transform);
                     arrow.TryGetComponent(out ArrowCtrl arrowCtrl);
-                    if(monTarget.gameObject.layer == LayerMask.NameToLayer("Monster") && monTarget is MonsterController monsterCtrl)
-                    {
-                        arrowCtrl.SetType(monsterCtrl, null);
+                    arrowCtrl.Init();
+                    //if(monTarget is MonsterController monsterCtrl)
+                    //{
+                    //    arrowCtrl.SetType(monsterCtrl, null);
 
-                    }
-                    else if(monTarget.gameObject.layer == LayerMask.NameToLayer("EliteMonster") && monTarget is EliteMonsterController elite)
-                    {
-                        arrowCtrl.SetType(elite, null);
+                    //}
+                    //else if(monTarget is EliteMonsterController elite)
+                    //{
+                    //    arrowCtrl.SetType(elite, null);
 
-                    }
+                    //}
                 }
             }
             
@@ -638,7 +637,7 @@ public class UnitController : Unit,ISubject
                     Managers.Sound.Play("Sounds/Effect/Bow");
                     GameObject arrow = Managers.Resource.Instantiate(obj, posTr.position, Quaternion.identity, this.transform);
                     arrow.TryGetComponent(out ArrowCtrl arrowCtrl);
-                    arrowCtrl.SetType(null, monsterPortal);
+                    arrowCtrl.Init();
                 }
             }
 
@@ -661,7 +660,7 @@ public class UnitController : Unit,ISubject
                     CriticalAttack(monTarget, warriorHitSound, warriorCriticalSound, warriorHitEff);
             }
 
-            else
+            else if (monsterPortal != null)
                 CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound, warriorHitEff);
 
         }
@@ -748,16 +747,16 @@ public class UnitController : Unit,ISubject
     {
         WaitForSeconds wfs = new WaitForSeconds(knockbackDuration);
         float knockBackSpeed = 0.0f;
-        float knockBackAccleration = 25.0f;            //힘
+        float knockBackAccleration = 75.0f;            //힘
 
         float knockbackTime = 0.0f;
         float maxKnockBackTime = 0.3f;
 
         while (knockbackTime < maxKnockBackTime)  //속도 증가
         {
-            knockBackSpeed += knockBackAccleration * Time.deltaTime;
+            knockBackSpeed += knockBackAccleration * Time.fixedDeltaTime;
             rigbody.velocity = new Vector2(-1, 0) * knockBackSpeed;
-            knockbackTime += Time.deltaTime;
+            knockbackTime += Time.fixedDeltaTime;
             yield return null;
         }
 
@@ -765,7 +764,7 @@ public class UnitController : Unit,ISubject
 
         while (knockBackSpeed > 0.0f)   //속도 감소
         {
-            knockBackSpeed -= (knockBackAccleration * 0.5f) * Time.deltaTime;
+            knockBackSpeed -= (knockBackAccleration * 0.5f) * Time.fixedDeltaTime;
 
             Vector2 velo = new Vector2(-knockBackSpeed, rigbody.velocity.y);
             rigbody.velocity = velo;
@@ -775,7 +774,9 @@ public class UnitController : Unit,ISubject
 
         yield return wfs; // 넉백 지속 시간
 
-        SetUnitState(UnitState.Run);
+        SetUnitState(UnitState.Idle);
+        attackCoolTime = 0.5f;
+
         knockbackStart = false;
 
 
@@ -798,36 +799,13 @@ public class UnitController : Unit,ISubject
         }
         else
         {
-            rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
+            rigbody.transform.position += dir * moveSpeed * Time.fixedDeltaTime;
             SetUnitState(UnitState.Trace);
 
         }
 
 
     }
-
-    Vector2 RandomPosSetting(Vector3 pos)
-    {
-        randomX = UnityEngine.Random.Range(-0.5f, 0.5f);
-        randomY = UnityEngine.Random.Range(-0.5f, 0.5f);
-        Vector2 randomPos = pos;
-        randomPos.x += randomX;
-        randomPos.y += randomY;
-
-        return randomPos;
-    }
-
-    //void UnitVictory()
-    //{
-    //    if(GameManager.instance.State == GameState.GameVictory)
-    //    {
-    //        isRun = false;
-    //        anim.SetBool("Run", isRun);
-    //        isAtt = false;
-    //        anim.SetBool("Attack", isAtt);
-           
-    //    }
-    //}
 
 
 
@@ -838,7 +816,7 @@ public class UnitController : Unit,ISubject
 
         if (attackCoolTime > 0.0f)
         {
-            attackCoolTime -= Time.deltaTime;
+            attackCoolTime -= Time.fixedDeltaTime;
             if (attackCoolTime <= .0f)
             {
                 if (monTarget != null)

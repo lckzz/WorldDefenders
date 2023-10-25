@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
 
     private int att = 15;               //아직 플레이어 공격력은 아직아직
     private float attackTimer = .0f;
-    private float attackMaxTimer = 1.5f;
+    private float attackMaxTimer = 0.5f;
 
     private bool attack = true;
     private Vector3 startPlayerAimTr;
@@ -52,6 +52,11 @@ public class PlayerController : MonoBehaviour
     //FireArrowSKill
 
 
+    private readonly int hashAnimAttack = Animator.StringToHash("Attack");
+    private readonly int hashAnimIdle = Animator.StringToHash("Idle");
+    private readonly int hashAnimShot = Animator.StringToHash("Shot");
+
+
     public int Att { get { return att; } }
     public float AttackTimer { get { return attackTimer; } }
 
@@ -73,12 +78,13 @@ public class PlayerController : MonoBehaviour
         startPlayerAimTr = playerAimTr.position;
         lr.startWidth = .1f;
         lr.endWidth = .1f;
+        PlayerAimOnOff(false);
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        PlayerIdle();
         PlayerAimMove();
         AttackCoolTimer();
         AimLine();
@@ -94,16 +100,22 @@ public class PlayerController : MonoBehaviour
             return;
 
 
-        PlayerAimOnOff(true);
-        anim.SetBool("Idle", false);
-        anim.SetBool("Shot", false);
-        anim.SetBool("Attack", true);
+
+        anim.SetBool(hashAnimIdle, false);
+        anim.SetBool(hashAnimShot, false);
+        anim.SetBool(hashAnimAttack, false);
+        anim.Play(hashAnimAttack);
+
+
 
         ready1 = true;
         aimMove = true;
         lineSet = true;
         if (lineSet)
             lr.enabled = true;
+
+
+        PlayerAimOnOff(true);
 
 
     }
@@ -117,15 +129,18 @@ public class PlayerController : MonoBehaviour
 
         Managers.Resource.ResourceSound("Bow");
         aimMove = false;
-        anim.SetBool("Attack", false);
-        anim.SetBool("Idle", false);
-        anim.SetBool("Shot", true);
+        anim.SetBool(hashAnimAttack, false);
+        anim.SetBool(hashAnimIdle, false);
+        anim.SetBool(hashAnimShot, true);
 
         vecDir = playerAimTr.position - attackPosTr.position;
         dist = vecDir.magnitude;
         dir = vecDir.normalized;
 
         ArrowInstance();
+
+        playerAimTr.position = startPlayerAimTr;
+        PlayerAimOnOff(false);
 
         ready1 = false;
         lineSet = false;
@@ -152,36 +167,11 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    void PlayerIdle()
-    {
-
-        if(anim.GetCurrentAnimatorStateInfo(0).IsName("AimShoot"))
-        {
-            if(anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f)
-            {
-                attackCheck = true;
-                playerAimTr.position = startPlayerAimTr;
-            }
-;        }
-
-
-        if (attackCheck)
-        {
-            anim.SetBool("Attack", false);
-            anim.SetBool("Shot", false);
-            anim.SetBool("Idle",true);
-            attackCheck = false;
-            PlayerAimOnOff(false);
-
-        }
-
-    }
-
-
     void PlayerAimMove()
     {
         if (!attack)
             return;
+
 
 
         if (aimMove)
@@ -198,7 +188,7 @@ public class PlayerController : MonoBehaviour
     void ArrowInstance()
     {
         attack = false;
-        attackTimer = 1.5f;
+        attackTimer = 0.5f;
         GameObject go;
         if (playerArrow == Define.PlayerArrowType.Normal)
         {
@@ -246,16 +236,9 @@ public class PlayerController : MonoBehaviour
     void PlayerAimOnOff(bool sw)
     {
         GameObject go = playerAimTr.gameObject;
-        if (sw) //스위치가 켜지면 플레이어 에임이 켜짐
-        {
-            if (!go.activeSelf)
-                go.SetActive(sw);
-        }
-        else
-        {
-            if (go.activeSelf)
-                go.SetActive(sw);
-        }
+
+        go.SetActive(sw);
+        
     }
 
     void SkillDuration()

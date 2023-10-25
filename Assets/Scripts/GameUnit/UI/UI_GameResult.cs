@@ -54,6 +54,7 @@ public class UI_GameResult : UI_Base
         if (exitBtn != null)
             exitBtn.onClick.AddListener(()=>
             {
+                
                 exitFade = true;
 
             });

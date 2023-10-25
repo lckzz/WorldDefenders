@@ -28,6 +28,7 @@ public static class Util
         WaitForSeconds wfs = new WaitForSeconds(time);
         yield return wfs;  //초만큼 대기하고
 
+
         Managers.Resource.Destroy(go, time);
 
 

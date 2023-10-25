@@ -29,19 +29,29 @@ public class UI_Lobby : UI_Base
     {
         GameObject.Find("LobbyScene").TryGetComponent(out lobbyScene);
         //LobbySceneRefresh();
-        ButtonEvent(upgradeBtn.gameObject, UpgradeOn, UIEvent.PointerDown);
-        ButtonEvent(unitSettingBtn.gameObject, UnitSettingOn, UIEvent.PointerDown);
-        ButtonEvent(skillBtn.gameObject, PlayerSkillOn, UIEvent.PointerDown);
+        #region ¹öÆ°
+        if (upgradeBtn != null)
+            upgradeBtn.onClick.AddListener(UpgradeOn);
 
-        ButtonEvent(stageSelectBtn.gameObject, StageSelectOn, UIEvent.PointerDown);
+        if (unitSettingBtn != null)
+            unitSettingBtn.onClick.AddListener(UnitSettingOn);
+
+        if (skillBtn != null)
+            skillBtn.onClick.AddListener(PlayerSkillOn);
+
+        if (stageSelectBtn != null)
+            stageSelectBtn.onClick.AddListener(StageSelectOn);
+
+        if (settingBtn != null)
+            settingBtn.onClick.AddListener(OpenSettingPopUp);
+        #endregion
+
+
+
         RefreshSKillicon(GlobalData.g_CurPlayerEquipSkill);
         startFadeOut = true;
 
 
-        if (settingBtn != null)
-            settingBtn.onClick.AddListener(OpenSettingPopUp);
-        if (test != null)
-            test.onClick.AddListener(LobbySceneRefresh);
 
     }
 
@@ -59,26 +69,6 @@ public class UI_Lobby : UI_Base
     {
         Managers.UI.ShowSceneUI<UI_Lobby>();
 
-    }
-
-
-    void ButtonEvent(GameObject obj, Action action = null,UIEvent type = UIEvent.PointerDown)
-    {
-        UI_EventHandler evt = null;
-        obj.TryGetComponent(out evt);
-
-
-        if (evt != null)
-        {
-            switch(type)
-            {
-                case UIEvent.PointerDown:
-                    evt.OnPointerDownHandler -= action;
-                    evt.OnPointerDownHandler += action;
-
-                    break;
-            }
-        }
     }
 
 

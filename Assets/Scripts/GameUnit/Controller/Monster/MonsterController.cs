@@ -265,6 +265,8 @@ public class MonsterController : Unit
         //타워는 유닛이 없다면 그때 감지를하고 공격추격이나 공격을 할 수 있다.
 
         towerColl = Physics2D.OverlapBox(pos.position, boxSize, 0, LayerMask.GetMask("Tower"));
+
+
         if (towerColl != null)
             towerColl.TryGetComponent(out playerTowerCtrl);
         
@@ -272,12 +274,7 @@ public class MonsterController : Unit
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("유닛이 감지되용");
 
-        if (collision.gameObject.layer == LayerMask.GetMask("Unit"))
-        {
-            Debug.Log("유닛이 감지되용");
-        }
     }
 
 
@@ -594,19 +591,19 @@ public class MonsterController : Unit
                     Managers.Sound.Play("Sounds/Effect/Bow");
                     GameObject arrow = Managers.Resource.Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
                     arrow.TryGetComponent(out MonsterArrowCtrl arrowCtrl);
+                    arrowCtrl.Init();
+                    //if (unitTarget is UnitController unitCtrl)
+                    //{
+                    //    arrowCtrl.SetType(unitCtrl, null);
 
-                    if (unitTarget is UnitController unitCtrl)
-                    {
-                        arrowCtrl.SetType(unitCtrl, null);
+                    //}
+                    //if (unitTarget is SpecialUnitController specialUnit)
+                    //{
+                    //    arrowCtrl.SetType(specialUnit, null);
 
-                    }
-                    if (unitTarget is SpecialUnitController specialUnit)
-                    {
-                        arrowCtrl.SetType(specialUnit, null);
+                    //}
 
-                    }
 
-                        
                 }
             }
             
@@ -619,7 +616,9 @@ public class MonsterController : Unit
                     Managers.Sound.Play("Sounds/Effect/Bow");
                     GameObject arrow = Managers.Resource.Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
                     arrow.TryGetComponent(out MonsterArrowCtrl arrowCtrl);
-                    arrowCtrl.SetType(null, playerTowerCtrl);
+                    arrowCtrl.Init();
+                    //arrow.TryGetComponent(out MonsterArrowCtrl arrowCtrl);
+                    //arrowCtrl.SetType(null, playerTowerCtrl);
                 }
             }
 

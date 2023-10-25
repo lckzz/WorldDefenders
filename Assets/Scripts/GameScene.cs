@@ -16,7 +16,7 @@ public class GameScene : BaseScene
 
     private WarningNotice warningNotice;
     Define.MonsterSpawnType monSpawnType = Define.MonsterSpawnType.Normal;      //이벤트에서 관리한값을 받아서 적용
-    float speed = 1.0f;
+    float speed = 3.0f;
     int finalMonsterCount = 3;          //마지막이벤트에서 나올 엘리트몬스터의 숫자
 
     private readonly string warningWave = "게이트에서 몬스터가 대량으로 몰려옵니다!..";
@@ -44,6 +44,7 @@ public class GameScene : BaseScene
         }
 
         SceneType = Define.Scene.BattleStage_Field;
+        Managers.Game.EventInit();
         Managers.Game.MonsterSpawnInit(monsterParentTr);
         Managers.Game.SetMonSpawnType(Define.MonsterSpawnType.Normal);
         Managers.Game.SetStageStateType(Define.StageStageType.Playing);
@@ -99,12 +100,7 @@ public class GameScene : BaseScene
         {
             Managers.Game.FinalMonsterWave(warningNotice.WarningObjisOn,warningFinal,finalMonsterCount);
         }
-        //else if(monSpawnType == Define.MonsterSpawnType.Elite)
-        //    monSpawnType = Managers.Game.EliteMonsterEventSpawn(monSpawnType);
 
-
-
-        //Debug.Log(monSpawnType);
 
     }
 
