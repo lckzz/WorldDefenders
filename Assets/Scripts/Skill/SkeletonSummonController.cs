@@ -15,6 +15,10 @@ public class SkeletonSummonController : SkillBase
     int summonidx;
     bool firstSummon = false;
 
+    private List<string> monList = new List<string>();
+    private List<GameObject> spawnList = new List<GameObject>();
+
+
     public SkeletonSummonController() : base(Define.SkillType.Count)
     {
 
@@ -66,12 +70,22 @@ public class SkeletonSummonController : SkillBase
     WaitForSeconds wfs = new WaitForSeconds(1.0f);
     IEnumerator SkeletonSummon()
     {
-        GameObject go = Managers.Resource.Load<GameObject>("Prefabs/Monster/NormalSkele");
+
+        for(int ii = 0;  ii < GlobalData.g_MonsterTypeList.Count - 1;ii++)
+        {
+            monList.Add(System.Enum.GetName(typeof(Define.MonsterType), GlobalData.g_MonsterTypeList[ii]));
+            spawnList.Add(Managers.Resource.Load<GameObject>($"Prefabs/Monster/{monList[ii]}"));
+
+        }
+
+        Debug.Log(spawnList.Count);
+        //GameObject go = Managers.Resource.Load<GameObject>("Prefabs/Monster/NormalSkele");
         for(int ii = 0; ii < summonidx; ii++)
         {
             Debug.Log("евев");
             yield return wfs;
-            Managers.Resource.Instantiate(go,this.transform.position);
+            int randidx = Random.Range(0, 2);
+            Managers.Resource.Instantiate(spawnList[randidx], this.transform.position);
         }
 
         if (anim != null)
