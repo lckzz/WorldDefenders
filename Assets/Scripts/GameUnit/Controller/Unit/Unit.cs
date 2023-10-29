@@ -43,17 +43,6 @@ public abstract class Unit : MonoBehaviour,ISensor
     protected float traceDistance;
 
 
-
-    //타워 관련 변수
-    protected Vector2 towerVec;
-    protected Vector2 towerDir;
-    protected float towerDist;
-    protected bool towerTrace = false;
-    protected bool towerAttack = false;       //타워에 가까워지면 
-    protected float towerAttackRange = 0.0f;
-
-    //타워 관련 변수
-
     [SerializeField]
     protected Transform pos;
     [SerializeField]
@@ -94,6 +83,10 @@ public abstract class Unit : MonoBehaviour,ISensor
         parentTr = GameObject.Find("HUD_Canvas").transform;
         hudPrefab = Managers.Resource.Load<GameObject>("Prefabs/HUDDamage/DamageTxt");
         unitHUDHp.Init(parentTr, hudPrefab);
+
+        Vector3 vec = this.gameObject.transform.position;
+        vec.z = 0.0f;
+        gameObject.transform.position = vec;        //혹시라도 설정된 z축이 0이 아닐때를 대비해서 0으로 넣어줌
     }
 
     public float hpPercent()

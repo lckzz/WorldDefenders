@@ -42,7 +42,7 @@ public class EliteMonsterAppear : MonoBehaviour
         {
             if (coll.TryGetComponent(out Unit unit))
             {
-                unit.OnDamage(0, 100);
+                unit.OnDamage(0, 300);
             }
         }
 

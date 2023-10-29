@@ -18,7 +18,7 @@ public class EliteCavalryController : EliteMonsterController
         monStat = new MonsterStat();
 
 
-        monStat = Managers.Data.monsterDict[GlobalData.g_EliteWarriorID];
+        monStat = Managers.Data.monsterDict[GlobalData.g_EliteCavalryID];
 
 
         att = monStat.att;
@@ -59,20 +59,17 @@ public class EliteCavalryController : EliteMonsterController
     {
         Init();
 
-
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
 
         if (Managers.Game.GameEndResult())       //게임이 끝났으면 리턴
             return;
-        EnemySensor();
-        TowerSensor();
-        MonsterStateCheck();
-        //MonsterVictory();
 
+        EnemySensor();
+        MonsterStateCheck();
     }
 
     public override void MonsterSkill()
@@ -110,20 +107,4 @@ public class EliteCavalryController : EliteMonsterController
     }
 
 
-    //public void SpeechchBubbleOn()
-    //{
-
-    //    if (speechBubbleObj.activeSelf == false)
-    //        speechBubbleObj.SetActive(true);
-
-
-    //    if (speechBubbleObj.activeSelf == true && speechBBCtrl != null)
-    //    {
-    //        randomIdx = Random.Range(0, 2);
-
-
-    //        speechBBCtrl.GetSpeechString(skilldialogs[randomIdx]);
-    //    }
-
-    //}
 }

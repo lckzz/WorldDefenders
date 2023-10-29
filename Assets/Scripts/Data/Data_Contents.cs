@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 
@@ -170,49 +171,34 @@ public class MonsterData :ILoader<int, MonsterStat>
      
 }
 
-//public class BowSkeletonData : ILoader<string, MonsterStat>
-//{
-//    public List<MonsterStat> bowSkeleton = new List<MonsterStat>();
-//    public Dictionary<string, MonsterStat> MakeDict()
-//    {
-//        Dictionary<string, MonsterStat> dict = new Dictionary<string, MonsterStat>();
-//        foreach (MonsterStat stat in bowSkeleton)
-//            dict.Add(stat.id, stat);
-
-//        return dict;
-//    }
-
-//}
-
-//public class SpearSkeletonData : ILoader<string, MonsterStat>
-//{
-//    public List<MonsterStat> spearSkeleton = new List<MonsterStat>();
-//    public Dictionary<string, MonsterStat> MakeDict()
-//    {
-//        Dictionary<string, MonsterStat> dict = new Dictionary<string, MonsterStat>();
-//        foreach (MonsterStat stat in spearSkeleton)
-//            dict.Add(stat.id, stat);
-
-//        return dict;
-//    }
-
-//}
-
-//public class EliteWarriorData : ILoader<string, MonsterStat>
-//{
-//    public List<MonsterStat> eliteWarrior = new List<MonsterStat>();
-//    public Dictionary<string, MonsterStat> MakeDict()
-//    {
-//        Dictionary<string, MonsterStat> dict = new Dictionary<string, MonsterStat>();
-//        foreach (MonsterStat stat in eliteWarrior)
-//            dict.Add(stat.id, stat);
-
-//        return dict;
-//    }
-
-//}
 
 #endregion
+
+#region 몬스터 게이트
+[Serializable]
+public class MonsterGateStat
+{
+    public int level;
+    public int hp;
+}
+
+
+public class MonsterGateData : ILoader<int, MonsterGateStat>
+{
+    public List<MonsterGateStat> monsterGate = new List<MonsterGateStat>();
+    public Dictionary<int,MonsterGateStat> MakeDict()
+    {
+        Dictionary<int, MonsterGateStat> dict = new Dictionary<int, MonsterGateStat>();
+        foreach (MonsterGateStat stat in monsterGate)
+            dict.Add(stat.level, stat);
+
+        return dict;
+    }
+}
+
+#endregion
+
+
 
 
 #region 유닛스킬

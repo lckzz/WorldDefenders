@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -50,6 +51,10 @@ public class UI_UnitUpgradePopUp : UI_Base
     [SerializeField] private GameObject magicianObj;
     [SerializeField] private GameObject cavarlyObj;
 
+    [Space(10)]
+    [SerializeField] private GameObject upgradeObj;
+    private RectTransform rt;
+
 
 
     private int unitidx = 0;                //받아올 유닛의 클래스의정보
@@ -60,6 +65,10 @@ public class UI_UnitUpgradePopUp : UI_Base
     // Start is called before the first frame update
     public override void Start()
     {
+        upgradeObj.TryGetComponent(out rt);
+        rt.sizeDelta = new Vector2(rt.sizeDelta.x, 10.0f);
+        rt.DOSizeDelta(new Vector2(1100.0f, 580.0f), 0.25f).SetEase(Ease.OutQuad);
+
         UnitInit();
 
         if (closeBtn != null)

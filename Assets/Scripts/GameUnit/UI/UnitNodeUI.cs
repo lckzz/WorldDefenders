@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+
 public class UnitNodeUI : UI_BaseSettingUnit
 {
     //유닛배치에 붙어있는 유닛노드관한 스크립트
@@ -12,12 +13,16 @@ public class UnitNodeUI : UI_BaseSettingUnit
     private TextMeshProUGUI unitLvTxt;
     Vector2 spearSizeDelta = new Vector2(110.0f, 100.0f);
     Vector3 spearTr = new Vector3(-12.0f, 0.0f, 0.0f);
+    private Define.UnitNodeState unitNodeState = Define.UnitNodeState.None;
+
+
 
     public UnitClass E_UnitClass { get { return e_UnitClass; } set { e_UnitClass = value; } }
 
 
     protected override void Init()
     {
+       
         unitImg.TryGetComponent<RectTransform>(out rt);
         for(int ii = 0; ii < transform.childCount; ii++)
         {
@@ -101,6 +106,15 @@ public class UnitNodeUI : UI_BaseSettingUnit
     {
         e_UnitClass = uniclass;
         return e_UnitClass;
+    }
+
+
+    public void CheckNodeEquip(Define.UnitNodeState type)
+    {
+        unitNodeState = type;  
+
+        if (unitNodeState == Define.UnitNodeState.Equip)
+            Destroy(this.gameObject);
     }
 
 

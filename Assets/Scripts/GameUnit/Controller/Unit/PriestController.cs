@@ -78,12 +78,9 @@ public class PriestController : UnitController
 
     protected override void UnitMove()
     {
-        if (monTarget != null || unitTarget != null)
+        if (monTarget != null || unitTarget != null || monsterPortal != null)
             SetUnitState(UnitState.Trace);
 
-        if (monTarget == null && unitTarget == null)
-            if (towerTrace)
-                towerTrace = false;
 
         if (IsTargetOn())
             return;
@@ -99,7 +96,7 @@ public class PriestController : UnitController
 
     protected override bool IsTargetOn()
     {
-        if (unitTarget == null && monTarget == null && towerTrace == false)
+        if (unitTarget == null && monTarget == null && monsterPortal == null)
             return false;
 
 
@@ -135,12 +132,6 @@ public class PriestController : UnitController
         if (!IsTargetOn())
         {
             SetUnitState(UnitState.Run);
-            return;
-        }
-
-        if (towerDist < towerAttackRange * towerAttackRange)
-        {
-            SetUnitState(UnitState.Attack);
             return;
         }
 
@@ -222,18 +213,6 @@ public class PriestController : UnitController
             attackCoolTime -= Time.deltaTime;
             if (attackCoolTime <= .0f)
             {
-
-                //if(monTarget != null)
-                //{
-                //    distance = (monTarget.transform.position - this.transform.position).sqrMagnitude;
-                //    if (distance < attackRange * attackRange)
-                //        SetUnitState(UnitState.Attack);
-                //    else
-                //        SetUnitState(UnitState.Run);
-                //}
-                //else
-                //    SetUnitState(UnitState.Run);
-
                 if(unitTarget != null)
                 {
                     Vector3 vec = unitTarget.gameObject.transform.position - this.transform.position;
@@ -253,16 +232,18 @@ public class PriestController : UnitController
                     else
                         SetUnitState(UnitState.Run);
                 }
-                else
+                else if(monsterPortal != null)
                 {
-                    if (towerDist < attackRange * attackRange)
+                    Vector3 vec = monsterPortal.gameObject.transform.position - this.transform.position;
+                    traceDistance = vec.sqrMagnitude;
+                    if (traceDistance < attackRange * attackRange)
                         SetUnitState(UnitState.Attack);
                     else
                         SetUnitState(UnitState.Run);
                 }
+                else
+                    SetUnitState(UnitState.Run);
 
-                if (towerAttack)
-                    towerAttack = false;
 
             }
 

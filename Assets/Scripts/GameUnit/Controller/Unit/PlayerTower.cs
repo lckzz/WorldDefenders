@@ -7,13 +7,15 @@ public class PlayerTower : Tower
     [SerializeField]
     private TowerState twState = TowerState.Idle;
 
-    private float m_hp = 500;
     private int m_level = 1;
+
+    TowerStat towerStat = new TowerStat();
 
     // Start is called before the first frame update
     void Start()
     {
-        base.Init(m_hp ,m_level);       //나중에 JSon으로 받은 타워의 데이터에서 hp와 level을 넣어줌
+        towerStat = Managers.Data.towerDict[GlobalData.g_PlayerLevel];
+        base.Init(towerStat.hp ,towerStat.level);       //나중에 JSon으로 받은 타워의 데이터에서 hp와 level을 넣어줌
     }
 
     // Update is called once per frame
@@ -26,6 +28,8 @@ public class PlayerTower : Tower
 
     public float GetSetHp { get { return hp; } set { if (value > 0) hp = value; } }
     public float GetMaxHp { get { return maxHp; } }
+
+
 
     public override float hpPercent()
     {
@@ -47,6 +51,8 @@ public class PlayerTower : Tower
             }
         }
     }
+
+
 
     protected override void TowerDestroy()
     {

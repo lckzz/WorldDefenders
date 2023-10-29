@@ -41,6 +41,7 @@ public class UnitController : Unit,ISubject
     [SerializeField] protected Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
     [SerializeField] protected MonsterPortal monsterPortal;
 
+
     //아처 사제 전용
     protected Transform posTr;
 
@@ -77,24 +78,20 @@ public class UnitController : Unit,ISubject
         if (unitClass == UnitClass.Warrior)
         {
             unitStat = Managers.Data.warriorDict[GlobalData.g_UnitWarriorLv];
-            towerAttackRange = 2.0f;
         }
         else if (unitClass == UnitClass.Archer)
         {
             unitStat = Managers.Data.archerDict[GlobalData.g_UnitArcherLv];
-            towerAttackRange = 6.0f;
 
         }
         else if (unitClass == UnitClass.Spear)
         {
             unitStat = Managers.Data.spearDict[GlobalData.g_UnitSpearLv];
-            towerAttackRange = 2.0f;
 
         }
         else if (unitClass == UnitClass.Priest)
         {
             unitStat = Managers.Data.priestDict[GlobalData.g_UnitPriestLv];
-            towerAttackRange = 6.5f;
 
         }
 
@@ -111,7 +108,6 @@ public class UnitController : Unit,ISubject
 
         //rig = this.GetComponent<Rigidbody2D>();
         //anim = GetComponent<Animator>();
-        monsterPortal = GameObject.FindObjectOfType<MonsterPortal>();
 
 
         if (unitClass == UnitClass.Archer)
@@ -153,10 +149,10 @@ public class UnitController : Unit,ISubject
             return;
 
         //UnitVictory();
-        TowerSensor();
         EnemySensor();
         UnitStateCheck();
-        
+        if (monsterPortal != null)
+            Debug.Log((monsterPortal.transform.position - this.gameObject.transform.position).sqrMagnitude);
         //UnitVictory();
 
         //if (Input.GetKeyDown(KeyCode.Q))
@@ -534,6 +530,7 @@ public class UnitController : Unit,ISubject
     public override void OnDamage(int att,int knockBack = 0, bool criticalCheck = false)
     {
 
+
         if (hp > 0)
         {
             hp -= att;
@@ -575,7 +572,6 @@ public class UnitController : Unit,ISubject
         if(hp > 0)
         {
             unitHUDHp?.SpawnHUDText(heal.ToString(), (int)Define.UnitDamageType.Team);
-
             hp += heal;
 
         }
@@ -747,7 +743,7 @@ public class UnitController : Unit,ISubject
     {
         WaitForSeconds wfs = new WaitForSeconds(knockbackDuration);
         float knockBackSpeed = 0.0f;
-        float knockBackAccleration = 75.0f;            //힘
+        float knockBackAccleration = force;            //힘
 
         float knockbackTime = 0.0f;
         float maxKnockBackTime = 0.3f;
@@ -789,11 +785,10 @@ public class UnitController : Unit,ISubject
     {
 
         Vector3 vec = obj.gameObject.transform.position - this.transform.position;
-        traceDistance = vec.magnitude;
+        traceDistance = vec.sqrMagnitude;
         Vector3 dir = vec.normalized;
 
-
-        if (traceDistance < attackRange)
+        if (traceDistance < Mathf.Pow(attackRange,2))
         {
             SetUnitState(UnitState.Attack);
         }
@@ -823,17 +818,20 @@ public class UnitController : Unit,ISubject
                 {
                     Vector3 vec = monTarget.gameObject.transform.position - this.transform.position;
                     traceDistance = vec.sqrMagnitude;
-                    if (traceDistance < attackRange * attackRange)
+
+
+                    if (traceDistance < Mathf.Pow(attackRange, 2))
                         SetUnitState(UnitState.Attack);
                     else
                         SetUnitState(UnitState.Run);
                 }
                 else if(monsterPortal != null)
                 {
+
                     Vector3 vec = monsterPortal.gameObject.transform.position - this.transform.position;
                     traceDistance = vec.sqrMagnitude;
 
-                    if (traceDistance < attackRange * attackRange)
+                    if (traceDistance < Mathf.Pow(attackRange, 2))
                         SetUnitState(UnitState.Attack);
                     else
                         SetUnitState(UnitState.Run);

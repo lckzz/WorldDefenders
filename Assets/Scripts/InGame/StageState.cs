@@ -15,6 +15,8 @@ public class StageState
         set {  stageStateType = value; } 
     }
 
+
+
     public void ResultState(Define.StageStageType type)
     {
         stageStateType = type;

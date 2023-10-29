@@ -52,6 +52,10 @@ public class Define
         NormalSkeleton,
         BowSkeleton,
         SpearSkeleton,
+        MidSkeleton,
+        MidBowSkeleton,
+        HighSkeleton,
+        HighBowSkeleton,
         EliteWarrior,
         EliteShaman,
         EliteCavalry,
@@ -165,6 +169,18 @@ public class Define
     {
         Unit,
         Monster
+    }
+
+    public enum UnitNodeState
+    {
+        None,
+        Equip
+    }
+
+    public enum UnitInfoSelectType
+    {
+        Node,
+        Slot
     }
 
 

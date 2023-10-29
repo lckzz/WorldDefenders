@@ -74,9 +74,7 @@ public class SpecialUnitController : Unit
             speechBubbleObj = canvas.gameObject.transform.Find("SpeechBubble").gameObject;
             speechBubbleObj.TryGetComponent(out speechBBCtrl);
         }
-        //rig = this.GetComponent<Rigidbody2D>();
-        //anim = GetComponent<Animator>();
-        monsterPortal = GameObject.FindObjectOfType<MonsterPortal>();
+
         Skills = gameObject.GetComponent<SkillBook>();
 
 
@@ -89,18 +87,6 @@ public class SpecialUnitController : Unit
 
 
 
-    // Start is called before the first frame update
-    //void Start()
-    //{
-    //    Init();
-    //}
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
-
     public override void EnemySensor()      //적감지
     {
         //Debug.Log(isTargeting);
@@ -109,6 +95,20 @@ public class SpecialUnitController : Unit
         if (state == SpecialUnitState.Attack || state == SpecialUnitState.Skill)
             return;
 
+        UnitSense();
+        UnitDistanceAsending();
+
+
+
+
+
+
+        #endregion
+
+    }
+    //유닛들을 감지
+    void UnitSense()
+    {
         monCtrls.Clear();
         skillMonList.Clear();
         enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Monster") | LayerMask.GetMask("EliteMonster"));
@@ -116,6 +116,8 @@ public class SpecialUnitController : Unit
         {
             if (enemyColls2D.Length <= 0)
             {
+                TowerSensor();
+
                 //박스안 콜라이더가 아무것도 없으면
                 if (monTarget != null)  //이전에 몬스터 타겟팅이 잡혓더라면
                 {
@@ -145,11 +147,13 @@ public class SpecialUnitController : Unit
 
                 }
             }
-            
+
 
         }
+    }
 
-
+    void UnitDistanceAsending()
+    {
         if (monCtrls.Count > 0)
         {
             float disMin = 0;
@@ -161,8 +165,8 @@ public class SpecialUnitController : Unit
 
                 for (int i = 0; i < monCtrls.Count; i++)
                 {
-                    
-                    if(i < 3)
+
+                    if (i < 3)
                         skillMonList.Add(monCtrls[i]);
 
 
@@ -175,13 +179,13 @@ public class SpecialUnitController : Unit
                         {
                             disMin = distB * distB;
                             min = i + 1;
-                            
+
                         }
                         else
                         {
                             disMin = distA * distA;
                             min = i;
-                            
+
 
                         }
                     }
@@ -194,7 +198,7 @@ public class SpecialUnitController : Unit
                         {
                             disMin = distB * distB;
                             min = i + 1;
-                            
+
 
                         }
 
@@ -204,7 +208,7 @@ public class SpecialUnitController : Unit
                 }
             }
 
-            if(monCtrls.Count == 1)
+            if (monCtrls.Count == 1)
             {
                 skillMonList.Add(monCtrls[0]);
 
@@ -227,82 +231,17 @@ public class SpecialUnitController : Unit
 
         }
 
-
-
-
-
-        #endregion
-
     }
 
 
     public void TowerSensor()
     {
-        //타워를 최우선적으로 타격하고 거리를 계속해서 계산해서 일정거리안에 들어오면 타워 공격
-        if (monsterPortal == null)
-            return;
-
-        towerVec = monsterPortal.gameObject.transform.position - this.transform.position;
-        towerDist = towerVec.sqrMagnitude;
-        towerDir = towerVec.normalized;
-
-        if (towerDist < 15.0f * 15.0f)
-        {
-            if (!towerTrace)
-            {
-                towerTrace = true;
-                SetUnitState(SpecialUnitState.Trace);
-
-
-            }
-
-            if (unitClass == UnitClass.Magician)
-            {
-
-                TowerAttackRange(6.5f);
-            }
-
-            if (unitClass == UnitClass.Cavalry)
-            {
-
-                TowerAttackRange(2.0f);
-            }
-
-
-
-        }
-        else
-        {
-            if (towerTrace)
-            {
-
-                towerTrace = false;
-
-            }
-        }
+        towerColl = Physics2D.OverlapBox(pos.position, boxSize, 0, LayerMask.GetMask("MonsterPortal"));
+        if (towerColl != null)
+            towerColl.TryGetComponent(out monsterPortal);
     }
 
-    void TowerAttackRange(float distance)
-    {
-
-        if (towerDist < distance * distance)
-        {
-            if (!towerAttack)
-            {
-                towerAttack = true;
-                SetUnitState(SpecialUnitState.Attack);
-            }
-        }
-        else
-        {
-
-            if (towerAttack)
-            {
-                towerAttack = false;
-            }
-        }
-    }
-
+ 
     public void UnitStateCheck()
     {
         switch (state)
@@ -451,9 +390,9 @@ public class SpecialUnitController : Unit
                 }
             case SpecialUnitState.KnockBack:
                 {
-                    if (!isRun)
+                    if (isRun)
                     {
-                        isRun = true;
+                        isRun = false;
                         anim.SetBool("Run", isRun);
 
                     }
@@ -494,17 +433,15 @@ public class SpecialUnitController : Unit
     void UnitMove()
     {
 
-        if (monTarget != null)
+        if (monTarget != null || monsterPortal != null)
             SetUnitState(SpecialUnitState.Trace);
 
-        if (monTarget == null)
-            if (towerTrace)
-                towerTrace = false;
+
 
         if (IsTargetOn())
             return;
 
-        rigbody.transform.position += Vector3.right * moveSpeed * Time.deltaTime;
+        rigbody.transform.position += Vector3.right * moveSpeed * Time.fixedDeltaTime;
 
 
 
@@ -522,13 +459,13 @@ public class SpecialUnitController : Unit
         if (monTarget != null)
             Trace(monTarget);
 
-        else if (monTarget == null)
+        else if (monsterPortal != null)
             Trace(monsterPortal);
     }
 
     bool IsTargetOn()
     {
-        if (monTarget == null && towerTrace == false)
+        if (monTarget == null && monsterPortal == null)
             return false;
 
 
@@ -604,7 +541,11 @@ public class SpecialUnitController : Unit
     public override void OnHeal(int heal)
     {
         if (hp > 0)
+        {
+            unitHUDHp?.SpawnHUDText(heal.ToString(), (int)Define.UnitDamageType.Team);
             hp += heal;
+
+        }
 
 
         if (hp >= maxHp)
@@ -619,9 +560,11 @@ public class SpecialUnitController : Unit
         if (hp > 0)
         {
             hp -= att;
+            //넉백이 안통하는 존에 있다면 넉백수치를 0으로 만들어준다.
+            if (NoKnockBackValid())
+                knockBack = 0;
 
-
-            if(att > 0)   //받은 데미지가 0보다 클때만 데미지 표시
+            if (att > 0)   //받은 데미지가 0보다 클때만 데미지 표시
             {
                 if (criticalCheck)
                     unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Critical);
@@ -734,17 +677,16 @@ public class SpecialUnitController : Unit
     {
         WaitForSeconds wfs = new WaitForSeconds(knockbackDuration);
         float knockBackSpeed = 0.0f;
-        force = force * 0.5f;               //스페셜유닛은 넉백의 힘이 반감됨
-        float knockBackAccleration = 25.0f;            //힘
+        float knockBackAccleration = force * 0.5f;            //힘
 
         float knockbackTime = 0.0f;
         float maxKnockBackTime = 0.3f;
 
         while (knockbackTime < maxKnockBackTime)  //속도 증가
         {
-            knockBackSpeed += knockBackAccleration * Time.deltaTime;
+            knockBackSpeed += knockBackAccleration * Time.fixedDeltaTime;
             rigbody.velocity = new Vector2(-1, 0) * knockBackSpeed;
-            knockbackTime += Time.deltaTime;
+            knockbackTime += Time.fixedDeltaTime;
             yield return null;
         }
 
@@ -752,7 +694,7 @@ public class SpecialUnitController : Unit
 
         while (knockBackSpeed > 0.0f)   //속도 감소
         {
-            knockBackSpeed -= (knockBackAccleration * 0.5f) * Time.deltaTime;
+            knockBackSpeed -= (knockBackAccleration * 0.5f) * Time.fixedDeltaTime;
 
             Vector2 velo = new Vector2(-knockBackSpeed, rigbody.velocity.y);
             rigbody.velocity = velo;
@@ -762,7 +704,8 @@ public class SpecialUnitController : Unit
 
         yield return wfs; // 넉백 지속 시간
 
-        SetUnitState(SpecialUnitState.Run);
+        SetUnitState(SpecialUnitState.Idle);
+        attackCoolTime = 0.5f;
         knockbackStart = false;
 
 
@@ -774,20 +717,17 @@ public class SpecialUnitController : Unit
     void Trace<T>(T obj) where T : UnityEngine.Component
     {
         Vector3 vec = obj.gameObject.transform.position - this.transform.position;
-        traceDistance = vec.magnitude;
+        traceDistance = vec.sqrMagnitude;
         Vector3 dir = vec.normalized;
         if (unitClass == UnitClass.Magician)
         {
-            Debug.Log(traceDistance);
-            Debug.Log(attackRange);
-            if (traceDistance < attackRange)
+            if (traceDistance < attackRange * attackRange)
             {
-
                 SetUnitState(SpecialUnitState.Attack);
             }
             else
             {
-                rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
+                rigbody.transform.position += dir * moveSpeed * Time.fixedDeltaTime;
                 SetUnitState(SpecialUnitState.Trace);
             }
 
@@ -795,45 +735,20 @@ public class SpecialUnitController : Unit
 
         else if (unitClass == UnitClass.Cavalry)
         {
-            if (traceDistance < attackRange)
+            if (traceDistance < attackRange * attackRange)
             {
 
                 SetUnitState(SpecialUnitState.Attack);
             }
             else
             {
-                rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
+                rigbody.transform.position += dir * moveSpeed * Time.fixedDeltaTime;
                 SetUnitState(SpecialUnitState.Trace);
             }
 
         }
 
     }
-
-    Vector2 RandomPosSetting(Vector3 pos)
-    {
-        randomX = UnityEngine.Random.Range(-0.5f, 0.5f);
-        randomY = UnityEngine.Random.Range(-0.5f, 0.5f);
-        Vector2 randomPos = pos;
-        randomPos.x += randomX;
-        randomPos.y += randomY;
-
-        return randomPos;
-    }
-
-    void UnitVictory()
-    {
-        //if (GameManager.instance.State == GameState.GameVictory)
-        {
-            isRun = false;
-            anim.SetBool("Run", isRun);
-            isAtt = false;
-            anim.SetBool("Attack", isAtt);
-
-        }
-    }
-
-
 
     public override void AttackDelay()
     {
@@ -842,21 +757,9 @@ public class SpecialUnitController : Unit
 
         if (attackCoolTime > 0.0f)
         {
-            attackCoolTime -= Time.deltaTime;
+            attackCoolTime -= Time.fixedDeltaTime;
             if (attackCoolTime <= .0f)
             {
-
-                //if(monTarget != null)
-                //{
-                //    distance = (monTarget.transform.position - this.transform.position).sqrMagnitude;
-                //    if (distance < attackRange * attackRange)
-                //        SetUnitState(UnitState.Attack);
-                //    else
-                //        SetUnitState(UnitState.Run);
-                //}
-                //else
-                //    SetUnitState(UnitState.Run);
-
                 if(monTarget != null)
                 {
                     Vector3 vec = monTarget.gameObject.transform.position - this.transform.position;
@@ -868,17 +771,22 @@ public class SpecialUnitController : Unit
                     else
                         SetUnitState(SpecialUnitState.Run);
                 }
-                else
+                else if (monsterPortal != null)
                 {
-                    if (towerDist < attackRange * attackRange)
+                    Vector3 vec = monsterPortal.gameObject.transform.position - this.transform.position;
+                    traceDistance = vec.sqrMagnitude;
+
+                    if (traceDistance < attackRange * attackRange)
                         SetUnitState(SpecialUnitState.Attack);
                     else
                         SetUnitState(SpecialUnitState.Run);
                 }
+                else
+                    SetUnitState(SpecialUnitState.Run);
 
-   
-                if (towerAttack)
-                    towerAttack = false;
+
+
+
 
             }
 

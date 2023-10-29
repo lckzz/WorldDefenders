@@ -12,11 +12,10 @@ public class MagicAttackCtrl : MonoBehaviour
 
 
     Vector3 shotDir;
-    float Distance;
-    Vector3 shotVec;
 
 
-    void Init()
+
+    public void Init()
     {
 
         unitCtrl = GetComponentInParent<SpecialUnitController>();
@@ -27,6 +26,15 @@ public class MagicAttackCtrl : MonoBehaviour
 
 
     }
+
+    private void OnDisable()
+    {
+        unitCtrl = null;
+        monsterCtrl = null;
+        monPortal = null;
+        shotDir = Vector3.zero;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -78,51 +86,42 @@ public class MagicAttackCtrl : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
+        if ((monsterCtrl == null && monPortal == null))
+            return;
+
         if (coll.tag == "Monster")
         {
 
-            if(monsterCtrl != null)
+            Unit monctrl = null;
+            coll.TryGetComponent(out monctrl);
+            if (monctrl != null && monsterCtrl == monctrl)
             {
-                if (coll.gameObject == monsterCtrl.gameObject)
-                {
-                    Unit monctrl = null;
-                    coll.TryGetComponent(out monctrl);
-                    if (monctrl != null && monsterCtrl == monctrl)
-                        monctrl.OnDamage(unitCtrl.Att);
+                monctrl.OnDamage(unitCtrl.Att);
 
-                    Vector3 pos = coll.transform.position;
-                    pos.x -= 0.5f;
-                    MagicEffectAndSound(pos, "", "MagicHit");
-                }
+                Vector3 pos = coll.transform.position;
+                pos.x -= 0.5f;
+                MagicEffectAndSound(pos, "", "MagicHit");
+                StartCoroutine(Util.UnitDieTime(gameObject));
             }
 
 
 
-            Destroy(this.gameObject);
         }
         else if (coll.tag.Contains("Tower") && coll.name.Contains("Portal"))
         {
-            if(monPortal != null)
+
+            Tower monPort = null;
+            coll.TryGetComponent<Tower>(out monPort);
+            if (monPort != null)
             {
-                Debug.Log(LayerMask.GetMask("MonsterPortal"));
-                if (coll.gameObject == monPortal.gameObject)
-                {
-                    Tower monPort = null;
-                    coll.TryGetComponent<Tower>(out monPort);
-                    if (monPort != null)
-                        monPort.TowerDamage(unitCtrl.Att);
+                monPort.TowerDamage(unitCtrl.Att);
 
-                    Vector3 pos = coll.transform.position;
-                    pos.x -= 0.5f;
-                    MagicEffectAndSound(pos, "", "MagicHit");
-
-
-                }
+                Vector3 pos = coll.transform.position;
+                pos.x -= 0.5f;
+                MagicEffectAndSound(pos, "", "MagicHit");
+                StartCoroutine(Util.UnitDieTime(gameObject));
             }
 
- 
-
-            Destroy(this.gameObject);
 
         }
 
@@ -144,10 +143,5 @@ public class MagicAttackCtrl : MonoBehaviour
 
     }
 
-    public void SetType(Unit monCtrl, MonsterPortal monPort)
-    {
-        monsterCtrl = monCtrl;
-        monPortal = monPort;
-    }
 
 }

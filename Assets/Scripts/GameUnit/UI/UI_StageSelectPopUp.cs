@@ -17,6 +17,8 @@ public class UI_StageSelectPopUp : UI_Base
     [SerializeField] private Image fadeImg;
     [SerializeField] private GameObject uiObj;
     [SerializeField] private GameObject paperBg;
+    [SerializeField] private GameObject stageInfoObj;
+
     private RectTransform paperRt;
     private Vector2 rtSizeDelta;
 
@@ -31,6 +33,7 @@ public class UI_StageSelectPopUp : UI_Base
     Color btnImgAlphaOff = new Color32(255, 255, 255, 105);
 
     private UI_PlayerController ui_PlayerCtrl;
+    private StageInfo stageInfo;
     bool backFadeCheck = false;
 
 
@@ -56,7 +59,7 @@ public class UI_StageSelectPopUp : UI_Base
         player.TryGetComponent(out ui_PlayerCtrl);
         StartBtnInActive();
 
-        GetStageInfo((int)GlobalData.curStage);
+        //GetStageInfo((int)GlobalData.curStage);
         startFadeOut = true;
 
     }
@@ -113,7 +116,7 @@ public class UI_StageSelectPopUp : UI_Base
         //해당 스테이지를 누르면 지금 스테이지가 어떤 스테이지인지 확인하고 해당스테이지 몬스터의 정보를 받아온다
         onestageSels[ii].TryGetComponent(out stagenode);
         Managers.Game.CurStageType = stagenode.Stage;
-
+        
 
         if(stagenode.StState == Define.StageState.Open)
         {
@@ -125,8 +128,12 @@ public class UI_StageSelectPopUp : UI_Base
         }
 
         stagenode.ClickStageDoOn();
+        stageInfoObj.SetActive(true);
+        if (stageInfo == null)
+            stageInfoObj.TryGetComponent(out stageInfo);
 
-
+        stageInfo.SetStageInfoPosition(stagenode.GetNodePosition());
+        stageInfo.StageInfoInit();
 
     }
 

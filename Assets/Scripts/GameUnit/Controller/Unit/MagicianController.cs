@@ -18,9 +18,8 @@ public class MagicianController : SpecialUnitController
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        TowerSensor();
         EnemySensor();
         UnitStateCheck();
 
@@ -73,16 +72,7 @@ public class MagicianController : SpecialUnitController
             {
                 GameObject magicBall = Managers.Resource.Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
                 magicBall.TryGetComponent(out MagicAttackCtrl magicCtrl);
-                if (monTarget.gameObject.layer == LayerMask.NameToLayer("Monster") && monTarget is MonsterController monsterCtrl)
-                {
-                    magicCtrl.SetType(monsterCtrl, null);
-
-                }
-                else if (monTarget.gameObject.layer == LayerMask.NameToLayer("EliteMonster") && monTarget is EliteMonsterController elite)
-                {
-                    magicCtrl.SetType(elite, null);
-
-                }
+                magicCtrl.Init();
             }
         }
         else
@@ -92,7 +82,8 @@ public class MagicianController : SpecialUnitController
             {
                 GameObject magicBall = Managers.Resource.Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
                 magicBall.TryGetComponent(out MagicAttackCtrl magicCtrl);
-                magicCtrl.SetType(null, monsterPortal);
+                magicCtrl.Init();
+
             }
         }
     }

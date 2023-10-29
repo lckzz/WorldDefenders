@@ -13,7 +13,7 @@ public class MonsterEvent
 
 
 
-    private float monsterWaveTime = 30.0f;
+    private float monsterWaveTime = 40.0f;
 
     private float monsterWaveDuration = 15.0f; //지속 시간
 
@@ -64,8 +64,8 @@ public class MonsterEvent
     public void EventInit()
     {
         monSpawnType = Define.MonsterSpawnType.Normal;
-        monsterWaveTime = 30.0f;
-        monsterWaveDuration = 15.0f;
+        monsterWaveTime = 40.0f;
+        monsterWaveDuration = 10.0f;
         finalEliteMonsterTime = 1.0f;
         monsterWaveisOn = false;
         eliteMonsterisOn = false;
@@ -112,7 +112,7 @@ public class MonsterEvent
     {
         //일반 이벤트중일때
 
-        Debug.Log(monsterWaveTime);
+        //Debug.Log(monsterWaveTime);
         monsterWaveTime -= Time.deltaTime;
         if(monsterWaveTime <= 0.0f)
         {

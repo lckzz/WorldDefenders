@@ -51,6 +51,7 @@ public class PlayerController : MonoBehaviour
     public SkillData SkillData { get; set; }
     //FireArrowSKill
 
+    TowerStat tower = new TowerStat();
 
     private readonly int hashAnimAttack = Animator.StringToHash("Attack");
     private readonly int hashAnimIdle = Animator.StringToHash("Idle");
@@ -69,6 +70,9 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        tower = Managers.Data.towerDict[GlobalData.g_PlayerLevel];
+        att = tower.att;
+
         TryGetComponent<Animator>(out anim);
         TryGetComponent<LineRenderer>(out lr);
         playerAimTr = this.transform.GetChild(0).transform;

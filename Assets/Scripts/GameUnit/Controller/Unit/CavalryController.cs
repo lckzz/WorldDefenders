@@ -16,9 +16,8 @@ public class CavalryController : SpecialUnitController
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        TowerSensor();
         EnemySensor();
         UnitStateCheck();
     }
@@ -29,7 +28,7 @@ public class CavalryController : SpecialUnitController
         base.Init();
         unitStat = new UnitStat();
 
-        unitStat = Managers.Data.warriorDict[GlobalData.g_UnitWarriorLv];
+        unitStat = Managers.Data.cavarlyDict[GlobalData.g_UnitCarlvryLv];
 
 
 
@@ -67,16 +66,11 @@ public class CavalryController : SpecialUnitController
             float dist = (monTarget.transform.position - this.gameObject.transform.position).magnitude;
             if (dist < unitStat.attackRange + 0.5f)
                 CriticalAttack(monTarget, warriorHitSound, warriorCriticalSound, warriorHitEff);
-            else
-            {
-                if (towerDist < unitStat.attackRange * unitStat.attackRange)
-                    CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound, warriorHitEff);
 
-            }
         }
 
 
-        else
+        else if(monsterPortal != null)
             CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound, warriorHitEff);
     }
 

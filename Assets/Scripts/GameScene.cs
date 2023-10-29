@@ -29,7 +29,6 @@ public class GameScene : BaseScene
 
         Init();
         Managers.UI.CloseAllPopUpUI();
-        Dictionary<int,TowerStat> dict = Managers.Data.towerDict;
 
 
     }

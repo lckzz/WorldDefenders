@@ -19,7 +19,7 @@ public class EliteMonsterController : Unit
     protected List<Unit> skillenemyList = new List<Unit>();
     [SerializeField] protected GameObject speechBubbleObj;           //말풍선
     [SerializeField] protected SpeechBubbleCtrl speechBBCtrl;
-    [SerializeField]  protected string[] skilldialogs;
+    [SerializeField] protected string[] skilldialogs;
     protected int randomIdx;
     protected int dialogCount = 2;
     [SerializeField] protected GameObject appearDust;
@@ -48,12 +48,14 @@ public class EliteMonsterController : Unit
         {
             //오브젝트 풀에서 생성되면 초기화 시켜줘야함
             isDie = false;
+            isRun = false;
             hp = maxHp;
             SetMonsterState(EliteMonsterState.Run);
             sp.color = new Color32(255, 255, 255, 255);
             myColl.enabled = true;
             appearDust?.SetActive(true);
-
+            unitTarget = null;
+            playerTowerCtrl = null;
         }
 
     }
@@ -63,7 +65,7 @@ public class EliteMonsterController : Unit
         base.Init();
 
         GameObject canvas = this.gameObject.transform.Find("Canvas").gameObject;
-        if(canvas != null)
+        if (canvas != null)
         {
             speechBubbleObj = canvas.gameObject.transform.Find("SpeechBubble").gameObject;
             speechBubbleObj.TryGetComponent(out speechBBCtrl);
@@ -71,7 +73,6 @@ public class EliteMonsterController : Unit
 
         spawnPosX = 20.0f;
 
-        playerTowerCtrl = GameObject.FindObjectOfType<PlayerTower>();
         Skills = gameObject.GetComponent<SkillBook>();
 
         TryGetComponent<Collider2D>(out myColl);
@@ -84,24 +85,6 @@ public class EliteMonsterController : Unit
     }
 
 
-    // Start is called before the first frame update
-    //void Start()
-    //{
-    //    Debug.Log("asdas");
-    //    Init();
-
-    //}
-
-    // Update is called once per frame
-    //void Update()
-    //{
-
-
-    //}
-
-
-
-
 
     public override void EnemySensor()      //적감지
     {
@@ -109,6 +92,15 @@ public class EliteMonsterController : Unit
         //Debug.Log($"타겟팅{isTageting}");
         #region 타겟구현
 
+
+        UnitSense();
+        UnitDistanceAsending();
+        #endregion
+
+    }
+
+    void UnitSense()
+    {
 
         skillenemyList.Clear();
         unitCtrls.Clear();
@@ -120,6 +112,9 @@ public class EliteMonsterController : Unit
 
             if (enemyColls2D.Length <= 0)
             {
+                TowerSensor();   //몬스터가 아무도 없다면 타워센서를 킨다.
+
+
                 //박스안 콜라이더가 아무것도 없으면
                 if (unitTarget != null)  //이전에 몬스터 타겟팅이 잡혓더라면
                 {
@@ -153,11 +148,9 @@ public class EliteMonsterController : Unit
 
 
         }
-
-
-
-
-
+    }
+    void UnitDistanceAsending()
+    {
         if (unitCtrls.Count > 0)
         {
 
@@ -165,7 +158,7 @@ public class EliteMonsterController : Unit
             {
                 for (int i = 0; i < unitCtrls.Count; i++)
                 {
-                    for(int j = i + 1; j < unitCtrls.Count; j++)
+                    for (int j = i + 1; j < unitCtrls.Count; j++)
                     {
                         if (j == unitCtrls.Count)
                             break;
@@ -179,7 +172,7 @@ public class EliteMonsterController : Unit
                             unitCtrls[j] = unitTemp;
 
                         }
-     
+
                     }
 
 
@@ -205,74 +198,19 @@ public class EliteMonsterController : Unit
 
 
         }
-
-
-
-
-
-        #endregion
-
     }
 
     protected void TowerSensor()
     {
-        //타워를 최우선적으로 타격하고 거리를 계속해서 계산해서 일정거리안에 들어오면 타워 공격
+        //타워는 유닛이 없다면 그때 감지를하고 공격추격이나 공격을 할 수 있다.
 
-        towerVec = playerTowerCtrl.gameObject.transform.position - this.transform.position;
-        towerDist = towerVec.sqrMagnitude;
-        towerDir = towerVec.normalized;
+        towerColl = Physics2D.OverlapBox(pos.position, boxSize, 0, LayerMask.GetMask("Tower"));
+        //Debug.Log(towerColl?.name);
+        if (towerColl != null)
+            towerColl.TryGetComponent(out playerTowerCtrl);
 
-        if (towerDist < 15.0f * 15.0f)
-        {
-            if (!towerTrace)
-            {
-                towerTrace = true;
-                SetMonsterState(EliteMonsterState.Trace);
 
-            }
-
-            if (monsterClass == MonsterClass.EliteWarrior)
-            {
-                TowerAttackRange(monStat.attackRange);
-            }
-
-            if (monsterClass == MonsterClass.EliteCavalry)
-            {
-                TowerAttackRange(monStat.attackRange);
-            }
-
-        }
-        else
-        {
-            if (towerTrace)
-            {
-                towerTrace = false;
-
-            }
-        }
     }
-
-    void TowerAttackRange(float distance)
-    {
-        if (towerDist < distance * distance)
-        {
-
-            if (!towerAttack)
-            {
-                towerAttack = true;
-                SetMonsterState(EliteMonsterState.Attack);
-            }
-        }
-        else
-        {
-
-            if (towerAttack)
-            {
-                towerAttack = false;
-            }
-        }
-    }
-
 
     protected void MonsterStateCheck()
     {
@@ -319,8 +257,6 @@ public class EliteMonsterController : Unit
         }
 
     }
-
-
     protected void SetMonsterState(EliteMonsterState state)
     {
         if (isDie)
@@ -459,19 +395,14 @@ public class EliteMonsterController : Unit
 
     void MonsterMove()
     {
-        if (unitTarget != null)
+        if (unitTarget != null || playerTowerCtrl != null)
             SetMonsterState(EliteMonsterState.Trace);
-
-        if (unitTarget == null)
-            if (towerTrace)
-                towerTrace = false;
-
 
         if (IsTargetOn())
             return;
 
 
-        rigbody.transform.position += Vector3.left * moveSpeed * Time.deltaTime;
+        rigbody.transform.position += Vector3.left * moveSpeed * Time.fixedDeltaTime;
 
 
 
@@ -490,16 +421,13 @@ public class EliteMonsterController : Unit
         if (unitTarget != null)
             Trace(unitTarget);
 
-        else if (unitTarget == null)
+        else if (playerTowerCtrl != null)
             Trace(playerTowerCtrl);
     }
 
     bool IsTargetOn()
     {
-
-
-
-        if (unitTarget == null && towerTrace == false)
+        if (unitTarget == null && playerTowerCtrl == null)
             return false;
 
 
@@ -589,8 +517,12 @@ public class EliteMonsterController : Unit
         if (hp > 0)
         {
             hp -= att;
+            //넉백이 안통하는 존에 있다면 넉백수치를 0으로 만들어준다.
 
-            if(att > 0)
+            if (NoKnockBackValid())
+                knockBack = 0;
+
+            if (att > 0)
             {
                 if (criticalCheck)
                     unitHUDHp?.SpawnHUDText(att.ToString(), (int)Define.UnitDamageType.Critical);
@@ -625,16 +557,11 @@ public class EliteMonsterController : Unit
             float dist = (unitTarget.transform.position - this.gameObject.transform.position).sqrMagnitude;
             if (dist < monStat.attackRange * monStat.attackRange)
                 CriticalAttack(unitTarget,warriorHitSound,warriorCriticalSound, warriorHitEff);
-            else
-            {
-                if (towerDist < monStat.attackRange * monStat.attackRange)
-                    CriticalAttack(playerTowerCtrl,warriorHitSound,warriorCriticalSound, warriorHitEff);
-            }
 
         }
 
 
-        else
+        else if(playerTowerCtrl != null)
             CriticalAttack(playerTowerCtrl,warriorHitSound,warriorCriticalSound, warriorHitEff);
 
 
@@ -711,17 +638,6 @@ public class EliteMonsterController : Unit
     }
 
 
-    //void MeleeUnitEffectAndSound(Vector3 pos, string soundPath, string effPath)
-    //{
-    //    Managers.Sound.Play($"Sounds/Effect/{soundPath}");
-    //    GameObject eff = Managers.Resource.Load<GameObject>($"Prefabs/Effect/{effPath}");
-    //    Vector2 randomPos = RandomPosSetting(pos);
-
-    //    if (eff != null)
-    //        Instantiate(eff, randomPos, Quaternion.identity);
-    //}
-
-
     void ApplyKnockBack(Vector2 dir, float force)
     {
         if (transform.position.x >= spawnPosX)
@@ -748,16 +664,16 @@ public class EliteMonsterController : Unit
     {
         WaitForSeconds wfs = new WaitForSeconds(knockbackDuration);
         float knockBackSpeed = 0.0f;
-        float knockBackAccleration = 25.0f;            //힘
+        float knockBackAccleration = force * 0.5f;            //힘
 
         float knockbackTime = 0.0f;
         float maxKnockBackTime = 0.3f;
 
         while (knockbackTime < maxKnockBackTime)  //속도 증가
         {
-            knockBackSpeed += knockBackAccleration * Time.deltaTime;
+            knockBackSpeed += knockBackAccleration * Time.fixedDeltaTime;
             rigbody.velocity = new Vector2(1, 0) * knockBackSpeed;
-            knockbackTime += Time.deltaTime;
+            knockbackTime += Time.fixedDeltaTime;
             yield return null;
         }
 
@@ -765,7 +681,7 @@ public class EliteMonsterController : Unit
 
         while (knockBackSpeed > 0.0f)   //속도 감소
         {
-            knockBackSpeed -= (knockBackAccleration * 0.5f) * Time.deltaTime;
+            knockBackSpeed -= (knockBackAccleration * 0.5f) * Time.fixedDeltaTime;
 
             Vector2 velo = new Vector2(knockBackSpeed, rigbody.velocity.y);
             rigbody.velocity = velo;
@@ -775,7 +691,8 @@ public class EliteMonsterController : Unit
 
         yield return wfs; // 넉백 지속 시간
 
-        SetMonsterState(EliteMonsterState.Run);
+        SetMonsterState(EliteMonsterState.Idle);
+        attackCoolTime = 0.5f;
         knockbackStart = false;
 
 
@@ -787,61 +704,22 @@ public class EliteMonsterController : Unit
     void Trace<T>(T obj) where T : UnityEngine.Component
     {
         Vector3 vec = obj.gameObject.transform.position - this.transform.position;
-        float distance = vec.magnitude;
+        float distance = vec.sqrMagnitude;
         Vector3 dir = vec.normalized;
 
 
-        if (distance < attackRange)
+        if (distance < attackRange * attackRange)
         {
             SetMonsterState(EliteMonsterState.Attack);
         }
         else
         {
-            rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
+            rigbody.transform.position += dir * moveSpeed * Time.fixedDeltaTime;
             SetMonsterState(EliteMonsterState.Trace);
 
         }
-
-        
-
-
-
-
-
-
-
     }
 
-
-    Vector2 RandomPosSetting(Vector3 pos)
-    {
-        randomX = UnityEngine.Random.Range(-0.5f, 0.5f);
-        randomY = UnityEngine.Random.Range(-0.5f, 0.5f);
-        Vector2 randomPos = pos;
-        randomPos.x += randomX;
-        randomPos.y += randomY;
-
-        return randomPos;
-    }
-
-    protected void MonsterVictory()
-    {
-        //Managers.Game.state = GameState.GameFail;
-
-
-        //if (GameManager.instance.State == GameState.GameFail)
-        {
-            isRun = false;
-            anim.SetBool("Run", isRun);
-            isAtt = false;
-            anim.SetBool("Attack", isAtt);
-
-            state = EliteMonsterState.Idle;
-
-            transform.position = transform.position;
-
-        }
-    }
 
 
     public override void AttackDelay()
@@ -852,7 +730,7 @@ public class EliteMonsterController : Unit
 
         if (attackCoolTime > 0.0f)
         {
-            attackCoolTime -= Time.deltaTime;
+            attackCoolTime -= Time.fixedDeltaTime;
             if (attackCoolTime <= .0f)
             {
                 if (unitTarget != null)
@@ -865,9 +743,12 @@ public class EliteMonsterController : Unit
                     else
                         SetMonsterState(EliteMonsterState.Run);
                 }
-                else
+                else if(playerTowerCtrl != null)
                 {
-                    if (towerDist < attackRange * attackRange)
+                    Vector3 vec = playerTowerCtrl.gameObject.transform.position - this.transform.position;
+                    traceDistance = vec.sqrMagnitude;
+
+                    if (traceDistance < attackRange * attackRange)
                         SetMonsterState(EliteMonsterState.Attack);
                     else
                     {
@@ -875,11 +756,9 @@ public class EliteMonsterController : Unit
                         
                     }
                 }
+                else
+                    SetMonsterState(EliteMonsterState.Run);
 
-
-
-                if (towerAttack)
-                    towerAttack = false;
             }
 
         }

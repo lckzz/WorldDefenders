@@ -15,7 +15,7 @@ public class ShamanMagicAttackCtrl : MonoBehaviour
     Vector3 shotVec;
 
 
-    void Init()
+    public void Init()
     {
 
         monCtrl = GetComponentInParent<EliteMonsterController>();
@@ -26,6 +26,17 @@ public class ShamanMagicAttackCtrl : MonoBehaviour
 
 
     }
+
+
+    private void OnDisable()
+    {
+        //꺼지면 다 초기화
+        monCtrl = null;
+        unitCtrl = null;
+        tower = null;
+        shotDir = Vector3.zero;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -78,51 +89,37 @@ public class ShamanMagicAttackCtrl : MonoBehaviour
         if (coll.tag == "Unit")
         {
 
-            if (unitCtrl != null)
-            {
-                if (coll.gameObject == unitCtrl.gameObject)
-                {
-                    Unit ctrl = null;
-                    coll.TryGetComponent(out ctrl);
-                    if (ctrl != null && unitCtrl == ctrl)
-                        ctrl.OnDamage(monCtrl.Att);
 
-                    Vector3 pos = coll.transform.position;
-                    pos.x -= 0.5f;
-                    MagicEffectAndSound(pos, "", "ShamanMagicHit");
-                }
+            Unit ctrl = null;
+            coll.TryGetComponent(out ctrl);
+            if (ctrl != null && unitCtrl == ctrl)
+            {
+                ctrl.OnDamage(monCtrl.Att);
+
+                Vector3 pos = coll.transform.position;
+                pos.x -= 0.5f;
+                MagicEffectAndSound(pos, "", "ShamanMagicHit");
+                StartCoroutine(Util.UnitDieTime(gameObject));
             }
 
 
-
-            Destroy(this.gameObject);
         }
         else if (coll.tag.Contains("Tower") && coll.name.Contains("Tower"))
         {
-            Debug.Log("wqeqe");
-            
-            if (tower != null)
+
+            Tower playerTower = null;
+            coll.TryGetComponent<Tower>(out playerTower);
+            if (playerTower != null)
             {
+                playerTower.TowerDamage(monCtrl.Att);
 
-                Debug.Log(LayerMask.GetMask("MonsterPortal"));
-                if (coll.gameObject == tower.gameObject)
-                {
-                    Tower playerTower = null;
-                    coll.TryGetComponent<Tower>(out playerTower);
-                    if (playerTower != null)
-                        playerTower.TowerDamage(monCtrl.Att);
-
-                    Vector3 pos = coll.transform.position;
-                    pos.x -= 0.5f;
-                    MagicEffectAndSound(pos, "", "ShamanMagicHit");
-
-
-                }
+                Vector3 pos = coll.transform.position;
+                pos.x -= 0.5f;
+                MagicEffectAndSound(pos, "", "ShamanMagicHit");
+                StartCoroutine(Util.UnitDieTime(gameObject));
             }
 
 
-
-            Destroy(this.gameObject);
 
         }
 
@@ -143,9 +140,4 @@ public class ShamanMagicAttackCtrl : MonoBehaviour
             Managers.Resource.Instantiate(eff, pos, Quaternion.identity);
     }
 
-    public void SetType(Unit unit, PlayerTower playertower)
-    {
-        unitCtrl = unit;
-        tower = playertower;
-    }
 }

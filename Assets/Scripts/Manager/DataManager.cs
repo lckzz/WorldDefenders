@@ -29,6 +29,7 @@ public class DataManager
 
     #endregion
     public Dictionary<int, MonsterStat> monsterDict { get; private set; } = new Dictionary<int, MonsterStat>();
+    public Dictionary<int, MonsterGateStat> monsterGateDict { get; private set; } = new Dictionary<int, MonsterGateStat>();
 
 
     #region ½ºÅ³
@@ -54,6 +55,7 @@ public class DataManager
         magicDict = LoadJson<MagicianData, int, UnitStat>("UnitData").MakeDict();
         cavarlyDict = LoadJson<CavarlyData, int, UnitStat>("UnitData").MakeDict();
         monsterDict = LoadJson<MonsterData, int, MonsterStat>("MonsterData").MakeDict();
+        monsterGateDict = LoadJson<MonsterGateData, int, MonsterGateStat>("MonsterGateData").MakeDict();
 
         magicSkillDict = LoadJson<MagicianSkillData, int, SkillData>("SkillData").MakeDict();
         cavalrySkillDict = LoadJson<CavalrySKillData, int, SkillData>("SkillData").MakeDict();

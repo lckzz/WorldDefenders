@@ -50,7 +50,7 @@ public class NoKnockBackZone : MonoBehaviour
             if (coll != null && coll.tag.Contains("Monster"))
             {
                 coll.TryGetComponent(out unit);
-                unit.IsNoKnockBack = true;
+                unit.IsNoKnockBack = false;
             }
         }
     }

@@ -40,7 +40,7 @@ public class MonsterSpawn
             if(spawnType == Define.MonsterSpawnType.Wave)
                 spawnTime = UnityEngine.Random.Range(1.0f, 2.0f);
             else
-                spawnTime = UnityEngine.Random.Range(3.0f, 6.0f);
+                spawnTime = UnityEngine.Random.Range(6.0f, 9.0f);
 
             
         }
@@ -55,7 +55,7 @@ public class MonsterSpawn
                 int randPosidx = UnityEngine.Random.Range(0, 3);
                 GameObject go = Managers.Resource.Instantiate(spawnList[randidx], monsterSpawnPos[randPosidx].position);
                 monsterCount++;
-                if(monsterCount >= 20)
+                if(monsterCount >= 30)
                 {
                     monsterCount = 0;
                     Managers.Game.EliteMonsterEvent(action,warningTxt);

@@ -31,8 +31,10 @@ public class UI_UnitInfoSelectPopUp : UI_Base
     [Header("Button")]
     [SerializeField] private Button closeBtn;
     [SerializeField] private Button assignBtn;
+    [SerializeField] private Button clearBtn;   //슬롯에서 정보버튼클릭하면 생기는 배치해제버튼    
 
     private UnitClass unitClass;
+    private Define.UnitInfoSelectType unitInfoType = Define.UnitInfoSelectType.Node;
     private UnitNodeUI nodeUI;
     private UnitStat uniStat;
 
@@ -78,16 +80,38 @@ public class UI_UnitInfoSelectPopUp : UI_Base
                 //배치를 누르면 팝업이 꺼지고 선택할 수 있게
             });
 
+        if (clearBtn != null)
+            clearBtn.onClick.AddListener(() =>
+            {
+                Managers.UI.ClosePopUp(this);
+                Managers.UI.PeekPopupUI<UI_UnitSettingWindow>()?.SlotUnitCancel();
+                //배치를 누르면 팝업이 꺼지고 선택할 수 있게
+            });
+
 
 
 
     }
 
-    public void PopUpOpenUnitInfoSetting(UnitClass uniClass,UnitNodeUI nodeUI)
+    public void PopUpOpenUnitInfoSetting(UnitClass uniClass,Define.UnitInfoSelectType unitInfoType)
     {
+        this.unitInfoType = unitInfoType;
         unitClass = uniClass;
-        this.nodeUI = nodeUI;
         uniStat = new UnitStat();
+
+
+        if (unitInfoType == Define.UnitInfoSelectType.Node)
+        {
+            assignBtn.gameObject.SetActive(true);
+            clearBtn.gameObject.SetActive(false);
+        }
+        else
+        {
+            assignBtn.gameObject.SetActive(false);
+            clearBtn.gameObject.SetActive(true);
+        }
+
+
 
         normalSkillObj?.transform.GetChild(0).TryGetComponent(out normalImg);
         if (UnitClass.Magician <= unitClass)  //스페셜 유닛일때만 정보창에 스페셜스킬이 나오도록
@@ -96,7 +120,6 @@ public class UI_UnitInfoSelectPopUp : UI_Base
             specialSkillObj?.transform.GetChild(0).TryGetComponent(out specialImg);
         }
 
-        Debug.Log(skillStr[(int)Define.UnitWeaponType.Magic]);
         switch (unitClass)
         {
             case UnitClass.Warrior:

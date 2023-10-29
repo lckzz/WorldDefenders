@@ -7,8 +7,7 @@ public class EliteShamanController : EliteMonsterController
 {
     //매직포스
     Transform magicPos;
-    float distacne = 9999999;
-    float dis;
+
     //매직포스
 
 
@@ -19,7 +18,7 @@ public class EliteShamanController : EliteMonsterController
         monStat = new MonsterStat();
 
 
-        monStat = Managers.Data.monsterDict[GlobalData.g_BowSkeletonID];
+        monStat = Managers.Data.monsterDict[GlobalData.g_EliteShamanID];
 
 
         att = monStat.att;
@@ -54,14 +53,13 @@ public class EliteShamanController : EliteMonsterController
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (Managers.Game.GameEndResult())       //게임이 끝났으면 리턴
             return;
 
 
         EnemySensor();
-        TowerSensor();
         MonsterStateCheck();
 
 
@@ -118,16 +116,7 @@ public class EliteShamanController : EliteMonsterController
             {
                 GameObject magicBall = Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
                 magicBall.TryGetComponent(out ShamanMagicAttackCtrl magicCtrl);
-                if (unitTarget.gameObject.layer == LayerMask.NameToLayer("Unit") && unitTarget is UnitController ctrl)
-                {
-                    magicCtrl.SetType(ctrl, null);
-
-                }
-                else if (unitTarget.gameObject.layer == LayerMask.NameToLayer("SpecialUnit") && unitTarget is SpecialUnitController special)
-                {
-                    magicCtrl.SetType(special, null);
-
-                }
+                magicCtrl.Init();
             }
         }
         else
@@ -137,7 +126,8 @@ public class EliteShamanController : EliteMonsterController
             {
                 GameObject magicBall = Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
                 magicBall.TryGetComponent(out ShamanMagicAttackCtrl magicCtrl);
-                magicCtrl.SetType(null, playerTowerCtrl);
+                magicCtrl.Init();
+
             }
         }
 
@@ -145,34 +135,5 @@ public class EliteShamanController : EliteMonsterController
 
 
     }
-    //public void OnSkill()
-    //{
-    //    if (skillOn)  //스킬온이면
-    //    {
-    //        if (Skills.activeSkillList.Count > 0)
-    //        {
-    //            Debug.Log("발싸");
-    //            Skills.activeSkillList[0].UseSkill(this, skillenemyList);     //스킬 사용
-    //            SpeechchBubbleOn();
-    //        }
-    //    }
-    //}
-
-
-    //public void SpeechchBubbleOn()
-    //{
-
-    //    if (speechBubbleObj.activeSelf == false)
-    //        speechBubbleObj.SetActive(true);
-
-
-    //    if (speechBubbleObj.activeSelf == true && speechBBCtrl != null)
-    //    {
-    //        randomIdx = Random.Range(0, 2);
-
-
-    //        speechBBCtrl.GetSpeechString(skilldialogs[randomIdx]);
-    //    }
-
-    //}
+    
 }

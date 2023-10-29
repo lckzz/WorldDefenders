@@ -18,6 +18,7 @@ public class UI_Lobby : UI_Base
     public Image fadeImg;
     [SerializeField] Image skillImg;
     [SerializeField] TextMeshProUGUI skilltxt;
+    [SerializeField] TextMeshProUGUI profileLvTxt;
     [SerializeField] Sprite[] skilliconSptrites;
 
     [SerializeField] Button test;
@@ -47,7 +48,7 @@ public class UI_Lobby : UI_Base
         #endregion
 
 
-
+        profileLvTxt.text = $"<#FF9F13>Lv</color> {GlobalData.g_PlayerLevel}";
         RefreshSKillicon(GlobalData.g_CurPlayerEquipSkill);
         startFadeOut = true;
 
@@ -68,6 +69,7 @@ public class UI_Lobby : UI_Base
     private void OnEnable()
     {
         Managers.UI.ShowSceneUI<UI_Lobby>();
+        profileLvTxt.text = $"<#FF9F13>Lv</color> {GlobalData.g_PlayerLevel}";
 
     }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class UnitSlotUI : UI_BaseSettingUnit
 {
@@ -13,6 +14,16 @@ public class UnitSlotUI : UI_BaseSettingUnit
 
     [SerializeField] private GameObject slotTxtObj;
     [SerializeField] private GameObject selectImgObj;
+    [SerializeField] private Button slotUnitClearBtn;
+    [SerializeField] private Button slotUnitInfoBtn;
+    [SerializeField] private TextMeshProUGUI slotUnitLvTxt;
+
+    private RectTransform slotUnitClearRt;
+    private RectTransform slotUnitInfoRt;
+
+    private float clickOnPosY = -95.0f;
+    private float clickOffPosY = -160.0f;
+
 
     public UnitClass E_UnitClass { get { return e_UnitClass; } set { e_UnitClass = value; } }
     private int slotidx = 0;
@@ -24,6 +35,35 @@ public class UnitSlotUI : UI_BaseSettingUnit
     void Start()
     {
         Init();
+
+        if (slotUnitClearBtn != null)
+            slotUnitClearBtn.onClick.AddListener(() =>
+            {
+                if (Managers.UI.PeekPopupUI<UI_UnitSettingWindow>().SlotListCount() < 4)  //슬롯안의 비어있는개수가 4이상이면
+                {
+                    //슬롯의 배치해제
+                    e_UnitClass = UnitClass.Count;
+                    RefreshUnitImg();
+                    Managers.UI.PeekPopupUI<UI_UnitSettingWindow>().UnitUIInit();
+                }
+                else
+                {
+                    SlotClickUnitInfoBtnOnOff(false);       //슬롯클릭시 나오는  UI를 일단 꺼두기
+                    Managers.UI.PeekPopupUI<UI_UnitSettingWindow>().UnitUIInit();
+
+                }
+
+
+            });
+
+
+        if (slotUnitInfoBtn != null)
+            slotUnitInfoBtn.onClick.AddListener(() =>
+            {
+                Managers.UI.ShowPopUp<UI_UnitInfoSelectPopUp>().PopUpOpenUnitInfoSetting(E_UnitClass, Define.UnitInfoSelectType.Slot);
+            });
+
+
     }
 
     // Update is called once per frame
@@ -34,10 +74,17 @@ public class UnitSlotUI : UI_BaseSettingUnit
 
     protected override void Init()
     {
+
+        slotUnitClearBtn?.TryGetComponent(out slotUnitClearRt);
+        slotUnitInfoBtn?.TryGetComponent(out slotUnitInfoRt);
+
+        SlotUnitLvTxtObjOnOff(false);           //처음에 들어오면 레벨은 전부 꺼줌(슬롯안에 유닛이 배치되어야만 온)
         //처음에 생성되면 해당갱신해주기
         unitImg.TryGetComponent(out rt);
         if (selectImgObj != null)
             selectImgObj.SetActive(false);
+
+
 
 
         RefreshUnitImg();
@@ -48,7 +95,6 @@ public class UnitSlotUI : UI_BaseSettingUnit
 
     public void SetUnitClass(UnitClass uniClass)
     {
-        Debug.Log("여깅ㅁㄹ");
         this.e_UnitClass = uniClass;
     }
 
@@ -59,6 +105,9 @@ public class UnitSlotUI : UI_BaseSettingUnit
         if(rt == null)
             unitImg.TryGetComponent(out rt);
 
+        SlotUnitLvTxtObjOnOff(true);
+        SlotClickUnitInfoBtnOnOff(false);       //슬롯클릭시 나오는  UI를 일단 꺼두기
+
         switch (e_UnitClass)
         {
 
@@ -67,6 +116,7 @@ public class UnitSlotUI : UI_BaseSettingUnit
                 rt.sizeDelta = defalutSizeDelta;
                 rt.transform.localPosition = defalutTr;
                 UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitWarriorLv, "KnifeUnitLv1Img", "KnifeUnitLv2Img");
+                SlotUnitLvInit(GlobalData.g_UnitWarriorLv);
                 break;
 
             case UnitClass.Archer:
@@ -74,7 +124,7 @@ public class UnitSlotUI : UI_BaseSettingUnit
                 rt.sizeDelta = defalutSizeDelta;
                 rt.transform.localPosition = defalutTr;
                 UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitArcherLv, "BowUnitLv1Img", "BowUnitLv2Img");
-
+                SlotUnitLvInit(GlobalData.g_UnitArcherLv);
                 break;
 
             case UnitClass.Spear:
@@ -83,7 +133,7 @@ public class UnitSlotUI : UI_BaseSettingUnit
                 rt.sizeDelta = spearSizeDelta;
                 rt.transform.localPosition = spearTr;
                 UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitSpearLv, "SpearUnitLv1Img", "SpearUnitLv2Img");
-
+                SlotUnitLvInit(GlobalData.g_UnitSpearLv);
                 break;
 
             case UnitClass.Priest:
@@ -91,7 +141,7 @@ public class UnitSlotUI : UI_BaseSettingUnit
                 rt.sizeDelta = defalutSizeDelta;
                 rt.transform.localPosition = defalutTr;
                 UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitPriestLv, "PriestLv1Img", "PriestLv2Img");
-
+                SlotUnitLvInit(GlobalData.g_UnitPriestLv);
                 break;
 
             case UnitClass.Magician:
@@ -100,7 +150,7 @@ public class UnitSlotUI : UI_BaseSettingUnit
                 rt.sizeDelta = defalutSizeDelta;
                 rt.transform.localPosition = defalutTr;
                 UnitUISpriteInit(e_UnitClass, "Magician_Idle");
-
+                SlotUnitLvInit(GlobalData.g_UnitMagicianLv);
                 break;
             case UnitClass.Cavalry:
                 //Debug.Log($"창병 갱신! {e_UnitClass}");
@@ -108,12 +158,15 @@ public class UnitSlotUI : UI_BaseSettingUnit
                 rt.sizeDelta = defalutSizeDelta;
                 rt.transform.localPosition = defalutTr;
                 UnitUISpriteInit(e_UnitClass, "Cavalry_Idle");
-
+                SlotUnitLvInit(GlobalData.g_UnitCarlvryLv);
                 break;
 
             default:
                 if (unitImg != null)
                     unitImg.gameObject.SetActive(false);
+
+                SlotClickUnitInfoBtnOnOff(false);       //슬롯클릭시 나오는  UI를 일단 꺼두기
+                SlotUnitLvTxtObjOnOff(false);           //처음에 들어오면 레벨은 전부 꺼줌(슬롯안에 유닛이 배치되어야만 온)
                 //Debug.Log("유닛노드에 유닛클래스가 설정이 안됫어요;");
                 break;
 
@@ -132,5 +185,53 @@ public class UnitSlotUI : UI_BaseSettingUnit
     public void MousePointerOnClickImgOnOff(bool check)        //마우스 포인터가 슬롯을 가리키면 클릭이미지가 켜짐 안가리키면 꺼짐
     {
         clickImgObj.SetActive(check);
+    }
+
+    //슬롯의 레벨 게임오브젝트의 온오프
+    public void SlotUnitLvTxtObjOnOff(bool isOn)
+    {
+        slotUnitLvTxt?.gameObject.SetActive(isOn);
+        
+    }
+
+    //이 슬롯을 클릭하면 배치해제버튼과 유닛정보버튼이 나타난다.
+    public void SlotClickUnitInfoBtnOnOff(bool btnIsOn)
+    {
+
+
+        //만약 켜지면 
+        if(btnIsOn)
+        {
+            slotUnitClearBtn?.gameObject.SetActive(btnIsOn);
+            slotUnitInfoBtn?.gameObject.SetActive(btnIsOn);
+            slotUnitClearRt?.DOLocalMoveY(clickOnPosY, 0.2f).SetEase(Ease.Linear);
+            slotUnitInfoRt?.DOLocalMoveY(clickOnPosY, 0.2f).SetEase(Ease.Linear);
+
+        }
+        else
+        {
+
+            slotUnitClearRt?.DOLocalMoveY(clickOffPosY, 0.2f).SetEase(Ease.Linear).OnComplete(()=>
+            {
+                slotUnitClearBtn?.gameObject.SetActive(false);
+            });
+            slotUnitInfoRt?.DOLocalMoveY(clickOffPosY, 0.2f).SetEase(Ease.Linear).OnComplete(()=>
+            {
+                slotUnitInfoRt?.gameObject.SetActive(false);
+
+            });
+
+            
+
+        }
+    }
+
+    
+
+
+
+    void SlotUnitLvInit(int lv)
+    {
+        slotUnitLvTxt.text = $"<#FF9F13>Lv</color> {lv}";
     }
 }

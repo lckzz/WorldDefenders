@@ -76,8 +76,8 @@ public class StageNode : MonoBehaviour
                 stageState = Define.StageState.Open;
                 break;
             case Define.SubStage.East:
-                stageMonsterList.Add(Define.MonsterType.NormalSkeleton);
-                stageMonsterList.Add(Define.MonsterType.BowSkeleton);
+                stageMonsterList.Add(Define.MonsterType.MidSkeleton);
+                stageMonsterList.Add(Define.MonsterType.MidBowSkeleton);
                 stageMonsterList.Add(Define.MonsterType.EliteShaman);
 
 
@@ -85,8 +85,8 @@ public class StageNode : MonoBehaviour
 
                 break;
             case Define.SubStage.South:
-                stageMonsterList.Add(Define.MonsterType.NormalSkeleton);
-                stageMonsterList.Add(Define.MonsterType.BowSkeleton);
+                stageMonsterList.Add(Define.MonsterType.HighSkeleton);
+                stageMonsterList.Add(Define.MonsterType.HighBowSkeleton);
                 stageMonsterList.Add(Define.MonsterType.EliteCavalry);
 
                 stageState = Define.StageState.Open;
@@ -159,5 +159,10 @@ public class StageNode : MonoBehaviour
         stageSubImgRt?.DOSizeDelta(new Vector2(102.0f, 107.0f), 0.1f);
         stageObjectiveRt?.DOSizeDelta(new Vector2(0.0f, stageObjectiveRt.sizeDelta.y), 0.3f);
         stageImg.color = stageNonClickColor;
+    }
+
+    public Vector3 GetNodePosition()
+    {
+        return stageImgRt.localPosition;
     }
 }

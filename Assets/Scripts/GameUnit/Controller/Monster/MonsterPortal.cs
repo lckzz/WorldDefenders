@@ -7,19 +7,21 @@ public class MonsterPortal : Tower
     [SerializeField]
     private TowerState twState = TowerState.Idle;
 
-    private float m_hp = 500;
-
     private int m_level = 1;
 
     Animator anim;
 
     bool check = false;
 
+    MonsterGateStat monsterGate = new MonsterGateStat();
+
     // Start is called before the first frame update
     void Start()
     {
-        base.Init(m_hp, m_level);       //나중에 JSon으로 받은 타워의 데이터에서 hp와 level을 넣어줌
+        monsterGate = Managers.Data.monsterGateDict[(int)Managers.Game.CurStageType + 1];
+        base.Init(monsterGate.hp, monsterGate.level);       //나중에 JSon으로 받은 타워의 데이터에서 hp와 level을 넣어줌
         anim = this.GetComponentInChildren<Animator>();
+
     }
 
     // Update is called once per frame
@@ -71,15 +73,16 @@ public class MonsterPortal : Tower
 
     public override float hpPercent()
     {
-        return m_hp / maxHp;
+
+        return hp / maxHp;
     }
 
     public override void TowerDamage(int att)
     {
         
-        if (m_hp > 0)
+        if (hp > 0)
         {
-            m_hp -= att;
+            hp -= att;
             if(Managers.Game.FinalMonsterCheck() == false)          //마지막웨이브가 꺼진상태라면
             {
                 //엘리트몬스터스폰타입이 아니라면
@@ -89,11 +92,11 @@ public class MonsterPortal : Tower
                 }
             }
 
-            if (m_hp <= 0)
+            if (hp <= 0)
             {
                 twState = TowerState.Destroy;
                 TowerDestroy();
-                m_hp = 0;
+                hp = 0;
 
             }
         }

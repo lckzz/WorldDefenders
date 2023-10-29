@@ -164,7 +164,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 20
@@ -521,7 +521,7 @@ MonoBehaviour:
   attackCoolTime: 1.5
   pos: {fileID: 5396460814144871993}
   boxSize: {x: 5.78, y: 3.47}
-  unitClass: 3
+  unitClass: 4
   state: 1
   skillOn: 0
   speechBubbleObj: {fileID: 0}
@@ -529,7 +529,7 @@ MonoBehaviour:
   skilldialogs: []
   monTarget: {fileID: 0}
   monsterPortal: {fileID: 0}
-  appearDust: {fileID: 0}
+  appearDust: {fileID: 7696293543213079081}
 --- !u!114 &3492269439141238074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -626,6 +626,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5209121130139826344, guid: 4a4c4fd7cbc48b241bd4a0963a905814, type: 3}
   m_PrefabInstance: {fileID: 6128140126734904419}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7696293543213079081 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4595145830691829322, guid: 4a4c4fd7cbc48b241bd4a0963a905814, type: 3}
+  m_PrefabInstance: {fileID: 6128140126734904419}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8172021735046187016
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -667,6 +672,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1755439192098818085, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1755439192098818085, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -696,11 +705,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1755439192098818085, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.74
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1755439192098818085, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.42
+      value: 1.06
       objectReference: {fileID: 0}
     - target: {fileID: 1755439192098818085, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -714,9 +723,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2151998861283962547, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2151998861283962547, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -3241833861085421620, guid: 8581f370002b34a40afc77783ff445c1, type: 2}
     - target: {fileID: 7477367164316595298, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
       propertyPath: m_Name
       value: SpeechBubble
+      objectReference: {fileID: 0}
+    - target: {fileID: 7477367164316595298, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

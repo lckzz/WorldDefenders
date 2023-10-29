@@ -75,10 +75,37 @@ public class MonsterController : Unit
         spawnPosX = 18.0f;
 
         if (monsterClass == MonsterClass.Warrior)
-            monStat = Managers.Data.monsterDict[GlobalData.g_NormalSkeletonID];
+        {
+            switch(Managers.Game.CurStageType)
+            {
+                case SubStage.West:
+                    monStat = Managers.Data.monsterDict[GlobalData.g_NormalSkeletonID];
+                    break;
+                case SubStage.East:
+                    monStat = Managers.Data.monsterDict[GlobalData.g_MidSkeletonID];
+                    break;
+                case SubStage.South:
+                    monStat = Managers.Data.monsterDict[GlobalData.g_HighSkeletonID];
+                    break;
+            }
+        }
 
         else if (monsterClass == MonsterClass.Archer)
-            monStat = Managers.Data.monsterDict[GlobalData.g_BowSkeletonID];
+        {
+            switch (Managers.Game.CurStageType)
+            {
+                case SubStage.West:
+                    monStat = Managers.Data.monsterDict[GlobalData.g_BowSkeletonID];
+                    break;
+                case SubStage.East:
+                    monStat = Managers.Data.monsterDict[GlobalData.g_MidBowSkeletonID];
+                    break;
+                case SubStage.South:
+                    monStat = Managers.Data.monsterDict[GlobalData.g_HighBowSkeletonID];
+                    break;
+            }
+        }
+
 
         
 
@@ -128,7 +155,7 @@ public class MonsterController : Unit
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (Managers.Game.GameEndResult())       //게임이 끝났으면 리턴
             return;
@@ -272,10 +299,6 @@ public class MonsterController : Unit
         
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-
-    }
 
 
 
@@ -380,9 +403,9 @@ public class MonsterController : Unit
                 }
             case MonsterState.KnockBack:
                 {
-                    if (!isRun)
+                    if (isRun)
                     {
-                        isRun = true;
+                        isRun = false;
                         anim.SetBool("Run", isRun);
 
                     }
@@ -424,7 +447,7 @@ public class MonsterController : Unit
             return;
 
 
-        rigbody.transform.position += Vector3.left * moveSpeed * Time.deltaTime;
+        rigbody.transform.position += Vector3.left * moveSpeed * Time.fixedDeltaTime;
 
 
 
@@ -523,13 +546,16 @@ public class MonsterController : Unit
 
     public override void OnDamage(int att, int knockBack = 0, bool criticalCheck = false)
     {
+        Debug.Log(hp);
 
         if (hp > 0)
         {
             hp -= att;
+
             //넉백이 안통하는 존에 있다면 넉백수치를 0으로 만들어준다.
             if (NoKnockBackValid())
                 knockBack = 0;
+
 
             if(att > 0)
             {
@@ -592,17 +618,6 @@ public class MonsterController : Unit
                     GameObject arrow = Managers.Resource.Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
                     arrow.TryGetComponent(out MonsterArrowCtrl arrowCtrl);
                     arrowCtrl.Init();
-                    //if (unitTarget is UnitController unitCtrl)
-                    //{
-                    //    arrowCtrl.SetType(unitCtrl, null);
-
-                    //}
-                    //if (unitTarget is SpecialUnitController specialUnit)
-                    //{
-                    //    arrowCtrl.SetType(specialUnit, null);
-
-                    //}
-
 
                 }
             }
@@ -617,8 +632,7 @@ public class MonsterController : Unit
                     GameObject arrow = Managers.Resource.Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
                     arrow.TryGetComponent(out MonsterArrowCtrl arrowCtrl);
                     arrowCtrl.Init();
-                    //arrow.TryGetComponent(out MonsterArrowCtrl arrowCtrl);
-                    //arrowCtrl.SetType(null, playerTowerCtrl);
+
                 }
             }
 
@@ -704,16 +718,17 @@ public class MonsterController : Unit
     {
         WaitForSeconds wfs = new WaitForSeconds(knockbackDuration);
         float knockBackSpeed = 0.0f;
-        float knockBackAccleration = 25.0f;            //힘
+        Debug.Log(force);
+        float knockBackAccleration = force;            //힘
 
         float knockbackTime = 0.0f;
         float maxKnockBackTime = 0.3f;
 
         while (knockbackTime < maxKnockBackTime)  //속도 증가
         {
-            knockBackSpeed += knockBackAccleration * Time.deltaTime;
+            knockBackSpeed += knockBackAccleration * Time.fixedDeltaTime;
             rigbody.velocity = new Vector2(1, 0) * knockBackSpeed;
-            knockbackTime += Time.deltaTime;
+            knockbackTime += Time.fixedDeltaTime;
             yield return null;
         }
 
@@ -721,10 +736,8 @@ public class MonsterController : Unit
         
         while(knockBackSpeed > 0.0f)   //속도 감소
         {
-            if (this.transform.position.x >= playerTowerCtrl?.transform.position.x)
-                knockBackSpeed = 0.0f;
-            else
-                knockBackSpeed -= (knockBackAccleration * 0.25f) * Time.deltaTime;
+
+            knockBackSpeed -= (knockBackAccleration * 0.25f) * Time.fixedDeltaTime;
 
             Vector2 velo = new Vector2(knockBackSpeed, rigbody.velocity.y);
             rigbody.velocity = velo;
@@ -734,7 +747,9 @@ public class MonsterController : Unit
 
         yield return wfs; // 넉백 지속 시간
 
-        SetMonsterState(MonsterState.Run);
+        SetMonsterState(MonsterState.Idle);
+        attackCoolTime = 0.5f;
+
         knockbackStart = false;
 
 
@@ -746,77 +761,23 @@ public class MonsterController : Unit
     void Trace<T>(T obj) where T : UnityEngine.Component
     {
 
-        Vector3 vec = obj.gameObject.transform.position - this.transform.position;
-        float distance = vec.magnitude;
+        Vector2 vec = obj.gameObject.transform.position - this.transform.position;
+        float distance = vec.sqrMagnitude;
         Vector3 dir = vec.normalized;
-        if (monsterClass == MonsterClass.Archer)
+
+        if (distance < attackRange * attackRange)
         {
-
-            if (distance < attackRange)
-            {
-                SetMonsterState(MonsterState.Attack);
-            }
-            else
-            {
-                rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
-                SetMonsterState(MonsterState.Trace);
-            }
-
+            SetMonsterState(MonsterState.Attack);
         }
-        else if (monsterClass == MonsterClass.Warrior)
+        else
         {
-
-            if (distance < attackRange)
-            {
-                SetMonsterState(MonsterState.Attack);
-            }
-            else
-            {
-                rigbody.transform.position += dir * moveSpeed * Time.deltaTime;
-                SetMonsterState(MonsterState.Trace);
-
-            }
-
+            rigbody.transform.position += dir * moveSpeed * Time.fixedDeltaTime;
+            SetMonsterState(MonsterState.Trace);
         }
-
-
-
-
-
-
 
     }
 
 
-    Vector2 RandomPosSetting(Vector3 pos)
-    {
-        randomX = UnityEngine.Random.Range(-0.5f, 0.5f);
-        randomY = UnityEngine.Random.Range(-0.5f, 0.5f);
-        Vector2 randomPos = pos;
-        randomPos.x += randomX;
-        randomPos.y += randomY;
-
-        return randomPos;
-    }
-
-    void MonsterVictory()
-    {
-        //Managers.Game.state = GameState.GameFail;
-
-
-        //if(GameManager.instance.State == GameState.GameFail)
-        {
-            isRun = false;
-            anim.SetBool("Run", isRun);
-            isAtt = false;
-            anim.SetBool("Attack", isAtt);
-
-            state = MonsterState.Idle;
-
-            transform.position = transform.position;
-
-        }
-    }
 
 
     public override void AttackDelay()
@@ -827,12 +788,12 @@ public class MonsterController : Unit
 
         if (attackCoolTime > 0.0f)
         {
-            attackCoolTime -= Time.deltaTime;
+            attackCoolTime -= Time.fixedDeltaTime;
             if (attackCoolTime <= .0f)
             {
                 if (unitTarget != null)
                 {
-                    Vector3 vec = unitTarget.gameObject.transform.position - this.transform.position;
+                    Vector2 vec = unitTarget.gameObject.transform.position - this.transform.position;
                     traceDistance = vec.sqrMagnitude;
 
                     if (traceDistance < attackRange * attackRange)
@@ -843,7 +804,7 @@ public class MonsterController : Unit
                 else if(playerTowerCtrl != null)
                 {
 
-                    Vector3 vec = playerTowerCtrl.gameObject.transform.position - this.transform.position;
+                    Vector2 vec = playerTowerCtrl.gameObject.transform.position - this.transform.position;
                     traceDistance = vec.sqrMagnitude;
 
                     if (traceDistance < attackRange * attackRange)
@@ -852,9 +813,8 @@ public class MonsterController : Unit
                         SetMonsterState(MonsterState.Run);
                 }
                 else  //타워나 유닛타겟에 아무것도 잡히지 않았다면
-                {
                     SetMonsterState(MonsterState.Run);
-                }
+                
 
 
             }
