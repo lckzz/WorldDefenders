@@ -20,7 +20,7 @@ public class UI_PlayerUpgradePopUp : UI_Base
 
     TowerStat tower = new TowerStat();
 
-
+    [SerializeField] private GameObject noticePanel;
 
 
     void PlayerInit()
@@ -60,7 +60,7 @@ public class UI_PlayerUpgradePopUp : UI_Base
     {
         PlayerInit();
         if (upgradeBtn != null)
-            upgradeBtn.onClick.AddListener(UpgradeBtn);
+            upgradeBtn.onClick.AddListener(UpgradeNoticePanelOn);
 
         if (closeBtn != null)
             closeBtn.onClick.AddListener(() =>
@@ -75,7 +75,7 @@ public class UI_PlayerUpgradePopUp : UI_Base
         
     //}
 
-    void UpgradeBtn()
+    public void Upgrade()
     {
         Managers.Sound.Play("Effect/UI_Click");
 
@@ -110,4 +110,11 @@ public class UI_PlayerUpgradePopUp : UI_Base
             nextAttTxt.text = tower.att.ToString();
         }
     }
+
+
+    void UpgradeNoticePanelOn()
+    {
+        noticePanel.SetActive(true);
+    }
+
 }

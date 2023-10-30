@@ -67,6 +67,8 @@ public class UI_UnitInfoSelectPopUp : UI_Base
                 if (nodeUI != null)
                     nodeUI.ClickImageOnOff(false);
                 Managers.UI.ClosePopUp(this);
+                Managers.UI.PeekPopupUI<UI_UnitSettingWindow>()?.UnitUIInit();
+
             });
 
 
@@ -85,6 +87,7 @@ public class UI_UnitInfoSelectPopUp : UI_Base
             {
                 Managers.UI.ClosePopUp(this);
                 Managers.UI.PeekPopupUI<UI_UnitSettingWindow>()?.SlotUnitCancel();
+
                 //배치를 누르면 팝업이 꺼지고 선택할 수 있게
             });
 

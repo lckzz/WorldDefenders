@@ -140,7 +140,7 @@ public class UI_UpgradeWindow : UI_Base
     void RefreshTextUI()
     {
         tower = Managers.Data.towerDict[GlobalData.g_PlayerLevel];
-        playerLvTxt.text = $"Lv {tower.level}";
+        playerLvTxt.text = $"<#FF9F13>Lv</color> {tower.level}";
         playerHpTxt.text = tower.hp.ToString();
         playerAttTxt.text = tower.att.ToString();
     }

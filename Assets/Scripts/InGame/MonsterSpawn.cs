@@ -14,7 +14,11 @@ public class MonsterSpawn
     private bool isSpawn = false;
     private int monsterCount = 0;           //몬스터 카운트
 
-
+    public void Init()
+    {
+        isSpawn = false;
+        monsterCount = 0;
+    }
     public void MonsterSpawnInit(Transform parentTr)
     {
         monNameList.Clear();

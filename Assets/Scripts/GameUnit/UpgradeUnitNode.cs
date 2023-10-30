@@ -180,7 +180,7 @@ public class UpgradeUnitNode : MonoBehaviour
 
 
         
-        lvText.text = $"Lv{unitLv}";
+        lvText.text = $"<#FF9F13>Lv</color> {unitLv}";
     }
            
 

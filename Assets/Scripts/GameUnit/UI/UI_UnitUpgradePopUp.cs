@@ -53,6 +53,8 @@ public class UI_UnitUpgradePopUp : UI_Base
 
     [Space(10)]
     [SerializeField] private GameObject upgradeObj;
+    [SerializeField] private GameObject noticePanel;
+
     private RectTransform rt;
 
 
@@ -82,7 +84,7 @@ public class UI_UnitUpgradePopUp : UI_Base
             });
 
         if (upgradeBtn != null)
-            upgradeBtn.onClick.AddListener(UpgradeUnit);
+            upgradeBtn.onClick.AddListener(UpgradeNoticePanelOn);
 
 
 
@@ -331,7 +333,12 @@ public class UI_UnitUpgradePopUp : UI_Base
         }
     }
 
-    void UpgradeUnit()
+    void UpgradeNoticePanelOn()
+    {
+        noticePanel.SetActive(true);
+    }
+
+    public void UpgradeUnit()
     {
         Managers.Sound.Play("Effect/UI_Click");
 

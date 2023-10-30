@@ -11,8 +11,8 @@ public class UnitNodeUI : UI_BaseSettingUnit
     //[SerializeField] private Image unitImg;
     //[SerializeField] private UnitClass e_UnitClass = UnitClass.Count;
     private TextMeshProUGUI unitLvTxt;
-    Vector2 spearSizeDelta = new Vector2(110.0f, 100.0f);
-    Vector3 spearTr = new Vector3(-12.0f, 0.0f, 0.0f);
+    Vector2 spearSizeDelta = new Vector2(120.0f, 120.0f);
+    Vector3 spearTr = new Vector3(-9.0f, -9.0f, 0.0f);
     private Define.UnitNodeState unitNodeState = Define.UnitNodeState.None;
 
 

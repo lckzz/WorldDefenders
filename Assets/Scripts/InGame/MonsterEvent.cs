@@ -13,7 +13,7 @@ public class MonsterEvent
 
 
 
-    private float monsterWaveTime = 40.0f;
+    private float monsterWaveTime = 30.0f;
 
     private float monsterWaveDuration = 15.0f; //지속 시간
 
@@ -64,12 +64,13 @@ public class MonsterEvent
     public void EventInit()
     {
         monSpawnType = Define.MonsterSpawnType.Normal;
-        monsterWaveTime = 40.0f;
-        monsterWaveDuration = 10.0f;
+        monsterWaveTime = 30.0f;
+        monsterWaveDuration = 15.0f;
         finalEliteMonsterTime = 1.0f;
         monsterWaveisOn = false;
         eliteMonsterisOn = false;
         finalOneWarningUI = false;
+        finalMonsterisOn = false;
     }
 
 
