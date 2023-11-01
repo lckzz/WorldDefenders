@@ -51,6 +51,8 @@ public class MonsterController : Unit
 
     MonsterStat monStat;
 
+    DropItem dropItem;
+
 
     //public float Hp { get { return hp; } }
 
@@ -119,6 +121,7 @@ public class MonsterController : Unit
         //playerTowerCtrl = GameObject.FindObjectOfType<PlayerTower>();
 
         TryGetComponent<Collider2D>(out myColl);
+        TryGetComponent(out dropItem);
 
         if (monsterClass == MonsterClass.Archer)
             arrowPos = transform.Find("ArrowPos");
@@ -538,6 +541,7 @@ public class MonsterController : Unit
         {
             SetMonsterState(MonsterState.Die);
             myColl.enabled = false;
+            dropItem?.Drop(this.gameObject.transform.position);
             StartCoroutine(Util.UnitDieTime(gameObject, 3.0f));
 
 
