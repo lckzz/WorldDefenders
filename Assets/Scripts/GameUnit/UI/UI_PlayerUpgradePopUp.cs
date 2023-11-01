@@ -22,21 +22,29 @@ public class UI_PlayerUpgradePopUp : UI_Base
 
     [SerializeField] private GameObject noticePanel;
 
+    [SerializeField] private GameObject levelUpParticle;
 
+    private int towerLv = 0;
+    private int towerMaxLv = 10;
+
+    private LevelUpParticle levelUp;
     void PlayerInit()
     {
-        if (GlobalData.g_PlayerLevel > 10)
+        towerLv = GlobalData.g_PlayerLevel;
+
+
+        if (towerLv > 10)
             return;
 
-        tower = Managers.Data.towerDict[GlobalData.g_PlayerLevel];
+        tower = Managers.Data.towerDict[towerLv];
         curLvTxt.text = tower.level.ToString();
         curHpTxt.text = tower.hp.ToString();
         curAttTxt.text = tower.att.ToString();
 
 
-        if (GlobalData.g_PlayerLevel < 10)
+        if (towerLv < 10)
         {
-            int nextLv = GlobalData.g_PlayerLevel + 1;
+            int nextLv = towerLv + 1;
             tower = Managers.Data.towerDict[nextLv];
 
             
@@ -59,12 +67,16 @@ public class UI_PlayerUpgradePopUp : UI_Base
     void Start()
     {
         PlayerInit();
+
+        levelUpParticle.TryGetComponent(out levelUp);
+
         if (upgradeBtn != null)
             upgradeBtn.onClick.AddListener(UpgradeNoticePanelOn);
 
         if (closeBtn != null)
             closeBtn.onClick.AddListener(() =>
             {
+                levelUp.DoKill();
                 Managers.UI.ClosePopUp(this);
             });
     }
@@ -79,7 +91,7 @@ public class UI_PlayerUpgradePopUp : UI_Base
     {
         Managers.Sound.Play("Effect/UI_Click");
 
-        if (GlobalData.g_PlayerLevel < 10)
+        if (towerLv < 10)
             GlobalData.g_PlayerLevel++;
 
         RefreshTextUI();
@@ -88,15 +100,15 @@ public class UI_PlayerUpgradePopUp : UI_Base
 
     void RefreshTextUI()
     {
-
-        tower = Managers.Data.towerDict[GlobalData.g_PlayerLevel];
+        towerLv = GlobalData.g_PlayerLevel;
+        tower = Managers.Data.towerDict[towerLv];
         curLvTxt.text = tower.level.ToString();
         curHpTxt.text = tower.hp.ToString();
         curAttTxt.text = tower.att.ToString();
 
-        if (GlobalData.g_PlayerLevel < 10)
+        if (towerLv < 10)
         {
-            int nextLv = GlobalData.g_PlayerLevel + 1;
+            int nextLv = towerLv + 1;
             tower = Managers.Data.towerDict[nextLv];
             nextLvTxt.text = tower.level.ToString();
             nextHpTxt.text = tower.hp .ToString();
@@ -114,7 +126,18 @@ public class UI_PlayerUpgradePopUp : UI_Base
 
     void UpgradeNoticePanelOn()
     {
+        if (towerLv >= towerMaxLv)
+            return;
+
         noticePanel.SetActive(true);
+    }
+
+    public void LevelUpParticleOn()
+    {
+        if (levelUpParticle.activeSelf)
+            levelUpParticle.SetActive(false);           //켜져있다면 강제로 끄고 다시 갱신
+
+        levelUpParticle.SetActive(true);
     }
 
 }

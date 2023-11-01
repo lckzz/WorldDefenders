@@ -16,9 +16,18 @@ public class UpgradeNotice : MonoBehaviour
             yesBtn.onClick.AddListener(() =>
             {
                 if(Managers.UI.PeekPopupUI<UI_UnitUpgradePopUp>())
+                {
                     Managers.UI.PeekPopupUI<UI_UnitUpgradePopUp>().UpgradeUnit();
+                    Managers.UI.PeekPopupUI<UI_UnitUpgradePopUp>().LevelUpParticleOn();
+
+                }
                 else if(Managers.UI.PeekPopupUI<UI_PlayerUpgradePopUp>())
+                {
                     Managers.UI.PeekPopupUI<UI_PlayerUpgradePopUp>().Upgrade();
+                    Managers.UI.PeekPopupUI<UI_PlayerUpgradePopUp>().LevelUpParticleOn();
+
+
+                }
 
                 ParentGameObjectOff();
 

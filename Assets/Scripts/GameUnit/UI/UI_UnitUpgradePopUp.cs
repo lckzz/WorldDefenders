@@ -51,12 +51,16 @@ public class UI_UnitUpgradePopUp : UI_Base
     [SerializeField] private GameObject magicianObj;
     [SerializeField] private GameObject cavarlyObj;
 
-    [Space(10)]
+    [Space(50)]
     [SerializeField] private GameObject upgradeObj;
     [SerializeField] private GameObject noticePanel;
+    [SerializeField] private GameObject levelUpParticle;
+
+    private LevelUpParticle levelUp;
 
     private RectTransform rt;
-
+    private int unitLv = 0;
+    private int unitMaxLv = 10;
 
 
     private int unitidx = 0;                //받아올 유닛의 클래스의정보
@@ -67,6 +71,7 @@ public class UI_UnitUpgradePopUp : UI_Base
     // Start is called before the first frame update
     public override void Start()
     {
+        levelUpParticle.TryGetComponent(out levelUp);
         upgradeObj.TryGetComponent(out rt);
         rt.sizeDelta = new Vector2(rt.sizeDelta.x, 10.0f);
         rt.DOSizeDelta(new Vector2(1100.0f, 580.0f), 0.25f).SetEase(Ease.OutQuad);
@@ -78,7 +83,7 @@ public class UI_UnitUpgradePopUp : UI_Base
             {
                 
                 Managers.Sound.Play("Effect/UI_Click");
-
+                levelUp.DoKill();           //남아있는 파티클의 두트윈을 전부 삭제한다.
                 Managers.UI.ClosePopUp(this);
                 Managers.UI.PeekPopupUI<UI_UpgradeWindow>().UpgradeUnitRefresh(unitidx);
             });
@@ -104,11 +109,10 @@ public class UI_UnitUpgradePopUp : UI_Base
         switch (unitidx)     // .버튼을 통해서 선택된 유닛
         {
             case (int)UnitClass.Warrior:
-                RefreshUnitStatUI(GlobalData.g_UnitWarriorLv,Managers.Data.warriorDict);
+                RefreshUnitStatUI(GlobalData.g_UnitWarriorLv, Managers.Data.warriorDict);
                 RefreshUnitImgAnim(GlobalData.g_UnitWarriorLv, warriorPrefabs);
                 break;
             case (int)UnitClass.Archer:
-                
                 RefreshUnitStatUI(GlobalData.g_UnitArcherLv, Managers.Data.archerDict);
                 RefreshUnitImgAnim(GlobalData.g_UnitArcherLv,archerPrefabs);
                 break;
@@ -130,6 +134,8 @@ public class UI_UnitUpgradePopUp : UI_Base
                 break;
         }
 
+
+
     }
 
 
@@ -139,6 +145,7 @@ public class UI_UnitUpgradePopUp : UI_Base
 
         unit = unitDict[unitLv];
 
+        this.unitLv = unitLv;
 
         curLvTxt.text = $"Level {unit.level}";
         curHpTxt.text = unit.hp.ToString();
@@ -146,7 +153,7 @@ public class UI_UnitUpgradePopUp : UI_Base
         curCostTxt.text = unit.cost.ToString();
 
 
-        if(unitLv < 10)
+        if(unitLv < unitMaxLv)
         {
             int nextLv = unitLv + 1;
             unit = unitDict[nextLv];
@@ -335,6 +342,9 @@ public class UI_UnitUpgradePopUp : UI_Base
 
     void UpgradeNoticePanelOn()
     {
+        if (unitLv >= unitMaxLv)
+            return;
+
         noticePanel.SetActive(true);
     }
 
@@ -383,6 +393,14 @@ public class UI_UnitUpgradePopUp : UI_Base
                 break;
 
         }
+    }
+
+    public void LevelUpParticleOn()
+    {
+        if (levelUpParticle.activeSelf)
+            levelUpParticle.SetActive(false);           //켜져있다면 강제로 끄고 다시 갱신
+
+        levelUpParticle.SetActive(true);
     }
 
 
