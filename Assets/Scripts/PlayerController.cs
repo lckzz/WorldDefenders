@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     private Transform attackPosTr;
     private PlayerState playerState = PlayerState.idle;
     private Animator anim;
+    private SpriteRenderer spRend;
     private bool attackCheck = false;
     private bool aimMove = false;
     private float speed = 10.0f;
@@ -75,6 +76,7 @@ public class PlayerController : MonoBehaviour
 
         TryGetComponent<Animator>(out anim);
         TryGetComponent<LineRenderer>(out lr);
+        TryGetComponent(out spRend);
         playerAimTr = this.transform.GetChild(0).transform;
         attackPosTr = this.transform.GetChild(1).transform;
         playerSkillFeverObj = this.transform.Find("PlayerSkillFever").gameObject;
@@ -168,6 +170,20 @@ public class PlayerController : MonoBehaviour
     {
         if (playerSkillFeverObj != null)
             playerSkillFeverObj.SetActive(check);
+    }
+
+    public void PlayerDeath()
+    {
+        spRend.flipX = true;
+        anim.SetTrigger("Die");
+    }
+
+    public void PlayerDeathDown()
+    {
+        //¶¥¹Ù´Ú¿¡ ´êÀ¸¸é ÅÐ½â ¾Ö´Ï¸ÞÀÌ¼Ç
+        //Å¸ÀÓ¶óÀÎ ½Ã±×³Î ÇÔ¼ö
+        anim.SetTrigger("DieDown");
+
     }
 
 

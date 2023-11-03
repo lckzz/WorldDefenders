@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,10 @@ public class PlayerTower : Tower
         //if(Managers.Game.State != GameState.GameFail)
         //    Managers.Game.State = GameState.GameFail;
 
+        if (Input.GetKeyDown(KeyCode.W))
+            this.transform.DOLocalMoveX(-10.0f,0.07f).SetLoops(-1,LoopType.Yoyo);
+        if (Input.GetKeyDown(KeyCode.E))
+            DOTween.Kill(this.transform);
     }
 
     public float GetSetHp { get { return hp; } set { if (value > 0) hp = value; } }
@@ -64,4 +69,32 @@ public class PlayerTower : Tower
         }
     }
 
+
+
+    public void TowerCameraShakeOn()
+    {
+        //타임라인 시그널 함수
+        Camera.main.TryGetComponent(out CameraCtrl cameraCtrl);
+        cameraCtrl?.Shake.VirtulCameraShake(1, 1,true);
+    }
+
+    public void TowerCameraShakeOff()
+    {
+        //타임라인 시그널 함수
+        Camera.main.TryGetComponent(out CameraCtrl cameraCtrl);
+        cameraCtrl?.Shake.VirtulCameraShake(0, 0, true);
+    }
+
+    public void TowerTrShakeOn()
+    {
+        //타임라인 시그널 함수
+        this.transform.DOLocalMoveX(-10.0f, 0.07f).SetLoops(-1, LoopType.Yoyo);
+    }
+
+    public void TowerTrShakeOff()
+    {
+        //타임라인 시그널 함수
+
+        DOTween.Kill(this.transform);
+    }
 }

@@ -11,13 +11,13 @@ public class DropItemController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        transform.DOLocalMoveY(2.5f, 0.75f).OnComplete(() =>
-        {
-            transform.DOLocalMoveY(0.0f, 0.75f).SetEase(Ease.InSine);
-        }).SetEase(Ease.OutSine);
+        //transform.DOLocalMoveY(2.5f, 0.75f).OnComplete(() =>
+        //{
+        //    transform.DOLocalMoveY(0.0f, 0.75f).SetEase(Ease.InSine);
+        //}).SetEase(Ease.OutSine);
         transform.DOLocalRotate(new Vector3(0, 0, 2160.0f), 1.45f,RotateMode.FastBeyond360).SetEase(Ease.Linear).OnComplete(()=>
         {
-            StartCoroutine(SinDropItemMove());
+            //StartCoroutine(SinDropItemMove());
         });
     }
 

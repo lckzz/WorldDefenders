@@ -48,7 +48,7 @@ public class CameraCtrl : MonoBehaviour
         moveObj = GameObject.Find("CameraMoveObj");
         GameObject Groundobj = GameObject.Find("GroundObj");
         Groundobj.TryGetComponent<GroundCheck>(out groundCheck);
-        TryGetComponent(out shake);
+        Debug.Log(TryGetComponent(out shake));
         Vector3 a_GrdHalfSize = Vector3.zero;
         a_GrdHalfSize.x = Groundobj.transform.localScale.x / 2.0f;
         a_GrdHalfSize.y = Groundobj.transform.localScale.y / 2.0f;
@@ -178,6 +178,6 @@ public class CameraCtrl : MonoBehaviour
 
     public void ShakeCamera(float shakeTime, float shakeIntensity)
     {
-        Shake.OnShakeCamera(shakeTime, shakeIntensity);
+        //Shake.OnShakeCamera(shakeTime, shakeIntensity);
     }
 }
