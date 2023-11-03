@@ -108,8 +108,8 @@ public class MonsterPortal : Tower
         {   
 
             //게이트가 파괴상태라면 승리 애니메이션과 결과팝업을 킨다.
-            anim.SetTrigger("Destroy");
-            Managers.Game.ResultState(Define.StageStageType.Victory);   
+            //anim.SetTrigger("Destroy");
+            Managers.Game.SetStageStateType(Define.StageStageType.Victory); //스테이지 상태를 바꿔준다.
         }
     }
 }

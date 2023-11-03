@@ -183,5 +183,12 @@ public class Define
         Slot
     }
 
+    public enum GameStageDirector
+    {
+        Entrance,
+        Victory,
+        Defeat
+    }
+
 
 }

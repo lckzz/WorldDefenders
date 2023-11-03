@@ -24,11 +24,6 @@ public class PlayerTower : Tower
     {
         //if(Managers.Game.State != GameState.GameFail)
         //    Managers.Game.State = GameState.GameFail;
-
-        if (Input.GetKeyDown(KeyCode.W))
-            this.transform.DOLocalMoveX(-10.0f,0.07f).SetLoops(-1,LoopType.Yoyo);
-        if (Input.GetKeyDown(KeyCode.E))
-            DOTween.Kill(this.transform);
     }
 
     public float GetSetHp { get { return hp; } set { if (value > 0) hp = value; } }
