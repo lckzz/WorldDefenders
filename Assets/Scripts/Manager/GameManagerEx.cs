@@ -18,25 +18,30 @@ public class GameData
     public int unitMagicianLv;
     public int unitCarlvryLv;
 
-    public bool lobbyToGameScene;
     public Define.PlayerSkill curPlayerEquipSkill;
-
-    public Define.SubStage curStage;
     public bool firstInit;
+
+    public bool westStageClear;
+    public bool eastStageClear;
+    public bool southStageClear;
+
+    public float bgmValue;
+    public float effValue;
+    public bool bgmisOn;
+    public bool effisOn;
 }
 
 [Serializable]
 public class GameArrayData
 {
     public List<UnitClass> slotUnitClass = new List<UnitClass>();
-    public List<Define.MonsterType> monsterTypeList = new List<Define.MonsterType>();
 }
 
 [Serializable]
-public class ArrayData
+public class SumData
 {
     public UnitClass[] unitClasses;
-    public Define.MonsterType[] monsterTypes;
+    public GameData gameData;
 }
 
 
@@ -44,8 +49,9 @@ public class GameManagerEx
 {
     //인게임내의 데이터 관리
 
+    GameData gameData = new GameData();
     GameArrayData gameSaveArrayData = new GameArrayData();
-    ArrayData arrayData = new ArrayData();
+    SumData sumData = new SumData();
 
 
     private MoneyCost moneyCost = new MoneyCost();
@@ -54,16 +60,167 @@ public class GameManagerEx
     private MonsterEvent monsterEvent = new MonsterEvent();
     private StageState stageState = new StageState();
 
+    private List<Define.MonsterType> monsterTypeList = new List<Define.MonsterType>();
+    private bool lobbyToGameScene = false;
+
+
+
+
     public List<UnitClass> SlotUnitClass { 
         get { return gameSaveArrayData.slotUnitClass; } 
         set { gameSaveArrayData.slotUnitClass = value; } 
     }
     public List<Define.MonsterType> MonsterTypeList {
-        get { return gameSaveArrayData.monsterTypeList; }
-        set { gameSaveArrayData.monsterTypeList = value; }
+        get { return monsterTypeList; }
+        set { monsterTypeList = value; }
+    }
+
+    public bool LobbyToGameScene
+    {
+        get { return lobbyToGameScene; }
+        set { lobbyToGameScene = value; }
     }
 
 
+    #region 게임 데이터
+    public int Gold
+    {
+        get { return gameData.gold; }
+        set { gameData.gold = value; }
+    }
+
+    public int PlayerLevel
+    {
+        get { return gameData.playerLevel; }
+        set { gameData.playerLevel = value; }
+    }
+
+    public int UnitWarriorLv
+    {
+        get { return gameData.unitWarrorLv; }
+        set { gameData.unitWarrorLv = value; }
+    }
+    public int UnitArcherLv
+    {
+        get { return gameData.unitArcherLv; }
+        set { gameData.unitArcherLv = value; }
+    }
+    public int UnitSpearLv
+    {
+        get { return gameData.unitSpearLv; }
+        set { gameData.unitSpearLv = value; }
+    }
+    public int UnitPriestLv
+    {
+        get { return gameData.unitPriestLv; }
+        set { gameData.unitPriestLv = value; }
+    }
+
+    public int UnitMagicianLv
+    {
+        get { return gameData.unitMagicianLv; }
+        set { gameData.unitMagicianLv = value; }
+    }
+
+    public int UnitCarlvlry
+    {
+        get { return gameData.unitCarlvryLv; }
+        set { gameData.unitCarlvryLv = value; }
+    }
+
+    public Define.PlayerSkill CurPlayerEquipSkill
+    {
+        get { return gameData.curPlayerEquipSkill; }
+        set { gameData.curPlayerEquipSkill = value; }
+    }
+
+    public bool FirstInit
+    {
+        get { return gameData.firstInit; }
+        set { gameData.firstInit = value; }
+    }
+
+    public bool WestStageClear
+    {
+        get { return gameData.westStageClear; }
+        set { gameData.westStageClear = value; }
+    }
+
+    public bool EastStageClear
+    {
+        get { return gameData.eastStageClear; }
+        set { gameData.eastStageClear = value; }
+    }
+
+    public bool SouthStageClear
+    {
+        get { return gameData.southStageClear; }
+        set { gameData.southStageClear = value; }
+    }
+
+    public float BgmValue
+    {
+        get { return gameData.bgmValue; }
+        set { gameData.bgmValue = value; }
+    }
+
+    public float EffValue
+    {
+        get { return gameData.effValue; }
+        set { gameData.effValue = value; }
+    }
+
+    public bool BgmisOn
+    {
+        get { return gameData.bgmisOn; }
+        set { gameData.bgmisOn = value; }
+    }
+
+    public bool EffisOn
+    {
+        get { return gameData.effisOn; }
+        set { gameData.effisOn = value; }
+    }
+
+
+
+    #endregion
+
+
+    public void GameDataInit()
+    {
+
+        Gold = 0;
+        PlayerLevel = 1;
+        UnitWarriorLv = 1;
+        UnitArcherLv = 1;
+        UnitSpearLv = 1;
+        UnitPriestLv = 1;
+        UnitMagicianLv = 1;
+        UnitCarlvlry = 1;
+        CurPlayerEquipSkill = Define.PlayerSkill.Count;
+        FirstInit = false;
+        WestStageClear = false;
+        EastStageClear = false;
+        SouthStageClear = false;
+        BgmValue = 0.5f;
+        EffValue = 0.5f;
+        BgmisOn = false;
+        EffisOn = false;
+
+
+        Debug.Log("zdasd" + Managers.Game.UnitArcherLv);
+    }
+
+
+
+    public void SetMonsterList(List<Define.MonsterType> monTypeList)
+    {
+        //스테이지선택창에서 시작을 하면 넘겨받아서 인게임에 적용
+        Managers.Game.MonsterTypeList.Clear();
+        for (int ii = 0; ii < monTypeList.Count; ii++)
+            Managers.Game.MonsterTypeList.Add(monTypeList[ii]);
+    }
 
 
     //코스트 관리
@@ -240,20 +397,50 @@ public class GameManagerEx
 
     #region 저장 & 로드
 
-    public string path = Application.persistentDataPath + "/SaveData.json";
+    //public string path => Path.Combine(Application.persistentDataPath,"/SaveData.json");
+
+
 
     public void FileSave()
     {
-        ArrayData arrayData = new ArrayData
+        SumData arrayData = new SumData
         {
+            //리스트를 json으로 변환이 안되기때문에 배열로 감싸줘서 json으로 저장
             unitClasses = gameSaveArrayData.slotUnitClass.ToArray(),
-            monsterTypes = gameSaveArrayData.monsterTypeList.ToArray()
+            gameData = Managers.Game.gameData
         };
 
+        string path = Application.persistentDataPath + "/SaveData.json";
         string jsonStr = JsonUtility.ToJson(arrayData);
-        File.WriteAllText(path, jsonStr);
-        Debug.Log($"Save Game Completed : {path}");
 
+        File.WriteAllText(path, jsonStr);
+        Debug.Log($"게임 세이브됨: {path}");
+
+    }
+
+    public bool FileLoad()
+    {
+
+        string path = Application.persistentDataPath + "/SaveData.json";
+
+        if (File.Exists(path) == false)
+            return false;
+
+
+        string fileStr = File.ReadAllText(path);
+        SumData data = JsonUtility.FromJson<SumData>(fileStr);
+        
+        for(int ii = 0;  ii < data.unitClasses.Length; ii++)
+        {
+            gameSaveArrayData.slotUnitClass.Add(data.unitClasses[ii]);
+        }
+
+        if (data != null)
+            gameData = data.gameData;
+
+        Debug.Log($"게임 로드 : {path}");
+
+        return true;
     }
 
     #endregion

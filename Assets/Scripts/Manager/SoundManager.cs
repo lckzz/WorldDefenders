@@ -63,7 +63,8 @@ public class SoundManager
 
             audioSource.pitch = pitch;
             audioSource.clip = audioClip;
-            audioSource.volume = GlobalData.g_BgmValue;
+            audioSource.volume = Managers.Game.BgmValue;
+            audioSource.mute = Managers.Game.BgmisOn;
             audioSource.Play();
 
         }
@@ -80,7 +81,8 @@ public class SoundManager
 
             AudioSource audioSource = _audioSources[(int)Define.Sound.Effect];
             audioSource.pitch = pitch;
-            audioSource.volume = GlobalData.g_EffValue;
+            audioSource.volume = Managers.Game.EffValue;
+            audioSource.mute = Managers.Game.EffisOn;
             audioSource.PlayOneShot(audioClip);
         }
 

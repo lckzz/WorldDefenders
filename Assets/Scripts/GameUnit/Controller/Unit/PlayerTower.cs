@@ -15,7 +15,7 @@ public class PlayerTower : Tower
     // Start is called before the first frame update
     void Start()
     {
-        towerStat = Managers.Data.towerDict[GlobalData.g_PlayerLevel];
+        towerStat = Managers.Data.towerDict[Managers.Game.PlayerLevel];
         base.Init(towerStat.hp ,towerStat.level);       //나중에 JSon으로 받은 타워의 데이터에서 hp와 level을 넣어줌
     }
 

@@ -77,21 +77,21 @@ public class UnitController : Unit,ISubject
 
         if (unitClass == UnitClass.Warrior)
         {
-            unitStat = Managers.Data.warriorDict[GlobalData.g_UnitWarriorLv];
+            unitStat = Managers.Data.warriorDict[Managers.Game.UnitWarriorLv];
         }
         else if (unitClass == UnitClass.Archer)
         {
-            unitStat = Managers.Data.archerDict[GlobalData.g_UnitArcherLv];
+            unitStat = Managers.Data.archerDict[Managers.Game.UnitArcherLv];
 
         }
         else if (unitClass == UnitClass.Spear)
         {
-            unitStat = Managers.Data.spearDict[GlobalData.g_UnitSpearLv];
+            unitStat = Managers.Data.spearDict[Managers.Game.UnitSpearLv];
 
         }
         else if (unitClass == UnitClass.Priest)
         {
-            unitStat = Managers.Data.priestDict[GlobalData.g_UnitPriestLv];
+            unitStat = Managers.Data.priestDict[Managers.Game.UnitPriestLv];
 
         }
 

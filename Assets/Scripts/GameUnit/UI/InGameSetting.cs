@@ -12,7 +12,7 @@ public class InGameSetting : Setting
     // Start is called before the first frame update
     void Start()
     {
-        InitValue(GlobalData.g_BgmValue, GlobalData.g_EffValue, GlobalData.g_BgmisOn, GlobalData.g_EffisOn);
+        InitValue(Managers.Game.BgmValue, Managers.Game.EffValue, Managers.Game.BgmisOn, Managers.Game.EffisOn);
 
         if (retryBtn != null)
             retryBtn.onClick.AddListener(InGameRetry);

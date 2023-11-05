@@ -126,28 +126,28 @@ public class UI_UnitInfoSelectPopUp : UI_Base
         switch (unitClass)
         {
             case UnitClass.Warrior:
-                uniStat = Managers.Data.warriorDict[GlobalData.g_UnitWarriorLv];
+                uniStat = Managers.Data.warriorDict[Managers.Game.UnitWarriorLv];
                 normalImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.Sword]}");
                 break;
             case UnitClass.Archer:
-                uniStat = Managers.Data.archerDict[GlobalData.g_UnitArcherLv];
+                uniStat = Managers.Data.archerDict[Managers.Game.UnitArcherLv];
                 normalImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.Bow]}");
                 break;
             case UnitClass.Spear:
-                uniStat = Managers.Data.spearDict[GlobalData.g_UnitSpearLv];
+                uniStat = Managers.Data.spearDict[Managers.Game.UnitSpearLv];
                 normalImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.Spear]}");
                 break;
             case UnitClass.Priest:
-                uniStat = Managers.Data.priestDict[GlobalData.g_UnitPriestLv];
+                uniStat = Managers.Data.priestDict[Managers.Game.UnitPriestLv];
                 normalImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.Magic]}");
                 break;
             case UnitClass.Magician:
-                uniStat = Managers.Data.magicDict[GlobalData.g_UnitMagicianLv];
+                uniStat = Managers.Data.magicDict[Managers.Game.UnitMagicianLv];
                 normalImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.Magic]}");
                 specialImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.MagicianSkill]}");
                 break;
             case UnitClass.Cavalry:
-                uniStat = Managers.Data.cavarlyDict[GlobalData.g_UnitCarlvryLv];
+                uniStat = Managers.Data.cavarlyDict[Managers.Game.UnitCarlvlry];
                 normalImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.Spear]}");
                 specialImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{skillStr[(int)Define.UnitWeaponType.CavalrySkill]}");
                 break;
@@ -180,7 +180,7 @@ public class UI_UnitInfoSelectPopUp : UI_Base
         switch (unitClass)
         {
             case UnitClass.Warrior:
-                if (GlobalData.g_UnitWarriorLv < 5)
+                if (Managers.Game.UnitWarriorLv < 5)
                     UnitInstantiate($"UI/UIUnit/Warrior/{warriorStr[0]}");
                 else
                     UnitInstantiate($"UI/UIUnit/Warrior/{warriorStr[1]}");
@@ -188,7 +188,7 @@ public class UI_UnitInfoSelectPopUp : UI_Base
 
                 break;
             case UnitClass.Archer:
-                if (GlobalData.g_UnitArcherLv < 5)
+                if (Managers.Game.UnitArcherLv < 5)
                     UnitInstantiate($"UI/UIUnit/Archer/{archerStr[0]}");
 
                 else
@@ -196,7 +196,7 @@ public class UI_UnitInfoSelectPopUp : UI_Base
 
                 break;
             case UnitClass.Spear:
-                if (GlobalData.g_UnitSpearLv < 5)
+                if (Managers.Game.UnitSpearLv < 5)
                     UnitInstantiate($"UI/UIUnit/Spear/{spearStr[0]}");
 
                 else
@@ -204,7 +204,7 @@ public class UI_UnitInfoSelectPopUp : UI_Base
 
                 break;
             case UnitClass.Priest:
-                if (GlobalData.g_UnitPriestLv < 5)
+                if (Managers.Game.UnitPriestLv < 5)
                     UnitInstantiate($"UI/UIUnit/Priest/{priestStr[0]}");
 
                 else

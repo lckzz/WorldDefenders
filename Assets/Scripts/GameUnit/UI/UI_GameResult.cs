@@ -46,13 +46,13 @@ public class UI_GameResult : UI_Base
             switch (Managers.Game.CurStageType)
             {
                 case Define.SubStage.West:
-                    GlobalData.g_WestStageClear = true;
+                    Managers.Game.WestStageClear = true;
                     break;
                 case Define.SubStage.East:
-                    GlobalData.g_EastStageClear = true;
+                    Managers.Game.EastStageClear = true;
                     break;
                 case Define.SubStage.South:
-                    GlobalData.g_SouthStageClear = true;
+                    Managers.Game.SouthStageClear = true;
                     break;
             }
 

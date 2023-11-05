@@ -92,14 +92,14 @@ public class UnitNode : MonoBehaviour
         switch (unit)
         {
             case UnitClass.Warrior:
-                if (GlobalData.g_UnitWarriorLv < 5)
+                if (Managers.Game.UnitWarriorLv < 5)
                     unitImg.sprite = unitWarriorimgs[0];
                 else
                     unitImg.sprite = unitWarriorimgs[1];
 
                 if (unitStat != null)
                 {
-                    unitStat = Managers.Data.warriorDict[GlobalData.g_UnitWarriorLv];
+                    unitStat = Managers.Data.warriorDict[Managers.Game.UnitWarriorLv];
                     unitCost = unitStat.cost;
                 }
 
@@ -107,42 +107,42 @@ public class UnitNode : MonoBehaviour
                 break;
 
             case UnitClass.Archer:
-                if (GlobalData.g_UnitArcherLv < 5)
+                if (Managers.Game.UnitArcherLv < 5)
                     unitImg.sprite = unitArcherimgs[0];
                 else
                     unitImg.sprite = unitArcherimgs[1];
 
                 if (unitStat != null)
                 {
-                    unitStat = Managers.Data.archerDict[GlobalData.g_UnitArcherLv];
+                    unitStat = Managers.Data.archerDict[Managers.Game.UnitArcherLv];
                     unitCost = unitStat.cost;
 
                 }
                 break;
 
             case UnitClass.Spear:
-                if (GlobalData.g_UnitSpearLv < 5)
+                if (Managers.Game.UnitSpearLv < 5)
                     unitImg.sprite = unitSpearimgs[0];
                 else
                     unitImg.sprite = unitSpearimgs[1];
 
                 if (unitStat != null)
                 {
-                    unitStat = Managers.Data.spearDict[GlobalData.g_UnitSpearLv];
+                    unitStat = Managers.Data.spearDict[Managers.Game.UnitSpearLv];
                     unitCost = unitStat.cost;
 
                 }
                 break;
 
             case UnitClass.Priest:
-                if (GlobalData.g_UnitPriestLv < 5)
+                if (Managers.Game.UnitPriestLv < 5)
                     unitImg.sprite = unitPriestimgs[0];
                 else
                     unitImg.sprite = unitPriestimgs[1];
 
                 if (unitStat != null)
                 {
-                    unitStat = Managers.Data.priestDict[GlobalData.g_UnitPriestLv];
+                    unitStat = Managers.Data.priestDict[Managers.Game.UnitPriestLv];
                     unitCost = unitStat.cost;
 
                 }
@@ -151,7 +151,7 @@ public class UnitNode : MonoBehaviour
                     unitImg.sprite = unitMagicianimg;
                 if (unitStat != null)
                 {
-                    unitStat = Managers.Data.magicDict[GlobalData.g_UnitMagicianLv];
+                    unitStat = Managers.Data.magicDict[Managers.Game.UnitMagicianLv];
                     unitCost = unitStat.cost;
 
                 }
@@ -161,7 +161,7 @@ public class UnitNode : MonoBehaviour
                 unitImg.sprite = unitCavalryimg;
                 if (unitStat != null)
                 {
-                    unitStat = Managers.Data.cavarlyDict[GlobalData.g_UnitCarlvryLv];
+                    unitStat = Managers.Data.cavarlyDict[Managers.Game.UnitCarlvlry];
                     unitCost = unitStat.cost;
 
                 }

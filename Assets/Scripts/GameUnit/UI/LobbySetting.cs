@@ -12,7 +12,7 @@ public class LobbySetting : Setting
     void Start()
     {
         //저장된 음량의 값과 음소거값을 받아서 로비셋팅이 켜질때마다 셋팅해줌
-        InitValue(GlobalData.g_BgmValue, GlobalData.g_EffValue, GlobalData.g_BgmisOn, GlobalData.g_EffisOn);
+        InitValue(Managers.Game.BgmValue, Managers.Game.EffValue, Managers.Game.BgmisOn, Managers.Game.EffisOn);
 
         if (settingDefalutBtn != null)
             settingDefalutBtn.onClick.AddListener(DefalutSoundSet);

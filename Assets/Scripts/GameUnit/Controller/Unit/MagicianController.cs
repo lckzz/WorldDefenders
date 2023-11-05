@@ -31,7 +31,7 @@ public class MagicianController : SpecialUnitController
         base.Init();
         unitStat = new UnitStat();
 
-        unitStat = Managers.Data.magicDict[GlobalData.g_UnitMagicianLv];
+        unitStat = Managers.Data.magicDict[Managers.Game.UnitMagicianLv];
 
 
 

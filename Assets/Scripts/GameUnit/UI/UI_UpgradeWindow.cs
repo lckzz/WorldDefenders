@@ -39,8 +39,8 @@ public class UI_UpgradeWindow : UI_Base
     // Start is called before the first frame update
     public override void Start()
     {
-        if (GlobalData.g_PlayerLevel == 0)
-            GlobalData.g_PlayerLevel = 1;
+        if (Managers.Game.PlayerLevel == 0)
+            Managers.Game.PlayerLevel = 1;
 
         Debug.Log((int)UnitClass.Count);
 
@@ -139,7 +139,7 @@ public class UI_UpgradeWindow : UI_Base
 
     void RefreshTextUI()
     {
-        tower = Managers.Data.towerDict[GlobalData.g_PlayerLevel];
+        tower = Managers.Data.towerDict[Managers.Game.PlayerLevel];
         playerLvTxt.text = $"<#FF9F13>Lv</color> {tower.level}";
         playerHpTxt.text = tower.hp.ToString();
         playerAttTxt.text = tower.att.ToString();
@@ -174,22 +174,22 @@ public class UI_UpgradeWindow : UI_Base
             switch (idx)
             {
                 case (int)UnitClass.Warrior:
-                    unitUpgradeNode.RefreshUnitImg(GlobalData.g_UnitWarriorLv);
+                    unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitWarriorLv);
                     break;
                 case (int)UnitClass.Archer:
-                    unitUpgradeNode.RefreshUnitImg(GlobalData.g_UnitArcherLv);
+                    unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitArcherLv);
                     break;
                 case (int)UnitClass.Spear:
-                    unitUpgradeNode.RefreshUnitImg(GlobalData.g_UnitSpearLv);
+                    unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitSpearLv);
                     break;
                 case (int)UnitClass.Priest:
-                    unitUpgradeNode.RefreshUnitImg(GlobalData.g_UnitPriestLv);
+                    unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitPriestLv);
                     break;
                 case (int)UnitClass.Magician:
-                    unitUpgradeNode.RefreshUnitImg(GlobalData.g_UnitMagicianLv);
+                    unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitMagicianLv);
                     break;
                 case (int)UnitClass.Cavalry:
-                    unitUpgradeNode.RefreshUnitImg(GlobalData.g_UnitCarlvryLv);
+                    unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitCarlvlry);
                     break;
             }
         }

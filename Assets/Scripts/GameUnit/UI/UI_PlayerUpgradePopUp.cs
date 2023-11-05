@@ -30,7 +30,7 @@ public class UI_PlayerUpgradePopUp : UI_Base
     private LevelUpParticle levelUp;
     void PlayerInit()
     {
-        towerLv = GlobalData.g_PlayerLevel;
+        towerLv = Managers.Game.PlayerLevel;
 
 
         if (towerLv > 10)
@@ -92,7 +92,7 @@ public class UI_PlayerUpgradePopUp : UI_Base
         Managers.Sound.Play("Effect/UI_Click");
 
         if (towerLv < 10)
-            GlobalData.g_PlayerLevel++;
+            Managers.Game.PlayerLevel++;
 
         RefreshTextUI();
     }
@@ -100,7 +100,7 @@ public class UI_PlayerUpgradePopUp : UI_Base
 
     void RefreshTextUI()
     {
-        towerLv = GlobalData.g_PlayerLevel;
+        towerLv = Managers.Game.PlayerLevel;
         tower = Managers.Data.towerDict[towerLv];
         curLvTxt.text = tower.level.ToString();
         curHpTxt.text = tower.hp.ToString();

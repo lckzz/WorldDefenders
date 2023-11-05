@@ -49,6 +49,21 @@ public class TitleScene : MonoBehaviour
             titleTouch = UiRaycastGetFirstComponent<TitleTouch>(gr);
             touchTxt.gameObject.SetActive(false);
             titleTouch.TouchOnPanel();
+
+            if(Managers.Game.FileLoad())
+            {
+                //저장파일이 있다면
+                Managers.Game.GameDataInit();
+                Managers.Game.FileLoad();
+                //초기화후 저장파일을 불러옴
+            }
+            else
+            {
+                //저장파일이 없다면
+                Managers.Game.GameDataInit(); //초기화만
+            }
+
+            
         }
     }
 

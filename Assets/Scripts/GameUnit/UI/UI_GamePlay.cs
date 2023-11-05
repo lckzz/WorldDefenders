@@ -191,14 +191,14 @@ public class UI_GamePlay : UI_Base
             switch (node.Unit)
             {
                 case UnitClass.Warrior:
-                    if(GlobalData.g_UnitWarriorLv < 5)
+                    if(Managers.Game.UnitWarriorLv < 5)
                         UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Warrior/WarriorUnitLv1");
-                    else if(GlobalData.g_UnitWarriorLv >= 5)
+                    else if(Managers.Game.UnitWarriorLv >= 5)
                         UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Warrior/WarriorUnitLv2");
                     break;
 
                 case UnitClass.Archer:
-                    if(GlobalData.g_UnitArcherLv < 5)
+                    if(Managers.Game.UnitArcherLv < 5)
                         UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Archer/ArcherUnitLv1");
                     else
                         UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Archer/ArcherUnitLv2");
@@ -206,7 +206,7 @@ public class UI_GamePlay : UI_Base
                     break;
 
                 case UnitClass.Spear:
-                    if(GlobalData.g_UnitSpearLv < 5)
+                    if(Managers.Game.UnitSpearLv < 5)
                         UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Spear/SpearUnitLv1");
                     else
                         UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Spear/SpearUnitLv2");
@@ -214,7 +214,7 @@ public class UI_GamePlay : UI_Base
                     break;
 
                 case UnitClass.Priest:
-                    if (GlobalData.g_UnitPriestLv < 5)
+                    if (Managers.Game.UnitPriestLv < 5)
                         UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Priest/PriestUnitLv1");
                     else
                         UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Priest/PriestUnitLv2");

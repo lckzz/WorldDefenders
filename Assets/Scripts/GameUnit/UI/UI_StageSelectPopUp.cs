@@ -129,7 +129,7 @@ public class UI_StageSelectPopUp : UI_Base
 
         if(stagenode.StState == Define.StageState.Open)
         {
-            GlobalData.SetMonsterList(stagenode.StageMonsterList);  //정적변수에 몬스터의 정보들을 받아둔다.
+            Managers.Game.SetMonsterList(stagenode.StageMonsterList);  //정적변수에 몬스터의 정보들을 받아둔다.
             if (ui_PlayerCtrl.IsGo == false)
                 SelectStageTextRefresh(Define.MainStage.One, Managers.Game.CurStageType);
             ui_PlayerCtrl.SetTarget(Managers.Game.CurStageType, true);
@@ -246,7 +246,7 @@ public class UI_StageSelectPopUp : UI_Base
     void StartInGame()
     {
         Managers.Sound.Play("Effect/UI_Click");
-        GlobalData.g_LobbyToGameScene = true;           //게임을 시작하면 다음에 로비로 돌아올시 스테이지 선택창이 뜨게끔
+        Managers.Game.LobbyToGameScene = true;           //게임을 시작하면 다음에 로비로 돌아올시 스테이지 선택창이 뜨게끔
         stageUIObj.SetActive(false);
         fadeCheck = true;
         

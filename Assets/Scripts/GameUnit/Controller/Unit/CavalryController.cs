@@ -28,7 +28,7 @@ public class CavalryController : SpecialUnitController
         base.Init();
         unitStat = new UnitStat();
 
-        unitStat = Managers.Data.cavarlyDict[GlobalData.g_UnitCarlvryLv];
+        unitStat = Managers.Data.cavarlyDict[Managers.Game.UnitCarlvlry];
 
 
 

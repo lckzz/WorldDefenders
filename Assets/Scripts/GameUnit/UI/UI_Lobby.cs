@@ -48,17 +48,17 @@ public class UI_Lobby : UI_Base
         #endregion
 
 
-        profileLvTxt.text = $"<#FF9F13>Lv</color> {GlobalData.g_PlayerLevel}";
-        RefreshSKillicon(GlobalData.g_CurPlayerEquipSkill);
+        profileLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.PlayerLevel}";
+        RefreshSKillicon(Managers.Game.CurPlayerEquipSkill);
         startFadeOut = true;
 
 
 
-        if (GlobalData.g_LobbyToGameScene)
+        if (Managers.Game.LobbyToGameScene)
         {
             //게임씬에서 로비로 돌아왔다면
             StageSelectOn();        //스테이지 팝업씬을 켜주고
-            GlobalData.g_LobbyToGameScene = false;      //false로 바꿔주기
+            Managers.Game.LobbyToGameScene = false;      //false로 바꿔주기
 
         }
 
@@ -78,7 +78,7 @@ public class UI_Lobby : UI_Base
     private void OnEnable()
     {
         Managers.UI.ShowSceneUI<UI_Lobby>();
-        profileLvTxt.text = $"<#FF9F13>Lv</color> {GlobalData.g_PlayerLevel}";
+        profileLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.PlayerLevel}";
 
     }
 

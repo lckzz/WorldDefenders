@@ -17,7 +17,7 @@ public class SkillBook : MonoBehaviour
         {
             skillPrefab.TryGetComponent(out MeteroSkill mk);
             activeSkillList.Add(mk);
-            activeSkillList[0].SkillDataSetting(GlobalData.g_UnitMagicianLv);
+            activeSkillList[0].SkillDataSetting(Managers.Game.UnitMagicianLv);
 
             return mk as T;
         }
@@ -25,7 +25,7 @@ public class SkillBook : MonoBehaviour
         {
             skillPrefab.TryGetComponent(out SwordSummonSkill ssk);
             activeSkillList.Add(ssk);
-            activeSkillList[0].SkillDataSetting(GlobalData.g_UnitCarlvrySkillLv);
+            activeSkillList[0].SkillDataSetting(1);
 
 
             return ssk as T;

@@ -79,7 +79,7 @@ public class StageNode : MonoBehaviour
 
                 stageState = Define.StageState.Open;
                 
-                if(GlobalData.g_WestStageClear)
+                if(Managers.Game.WestStageClear)
                 {
                     fireEffObj.SetActive(false);
                     stageClearTxt.gameObject.SetActive(true);
@@ -92,7 +92,7 @@ public class StageNode : MonoBehaviour
                 stageMonsterList.Add(Define.MonsterType.EliteShaman);
 
                 stageState = Define.StageState.Open;
-                if (GlobalData.g_EastStageClear)
+                if (Managers.Game.EastStageClear)
                 {
                     fireEffObj.SetActive(false);
                     stageClearTxt.gameObject.SetActive(true);
@@ -105,7 +105,7 @@ public class StageNode : MonoBehaviour
                 stageMonsterList.Add(Define.MonsterType.EliteCavalry);
 
                 stageState = Define.StageState.Open;
-                if (GlobalData.g_SouthStageClear)
+                if (Managers.Game.SouthStageClear)
                 {
                     fireEffObj.SetActive(false);
                     stageClearTxt.gameObject.SetActive(true);

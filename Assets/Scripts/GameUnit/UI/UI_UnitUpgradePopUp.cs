@@ -109,27 +109,27 @@ public class UI_UnitUpgradePopUp : UI_Base
         switch (unitidx)     // .버튼을 통해서 선택된 유닛
         {
             case (int)UnitClass.Warrior:
-                RefreshUnitStatUI(GlobalData.g_UnitWarriorLv, Managers.Data.warriorDict);
-                RefreshUnitImgAnim(GlobalData.g_UnitWarriorLv, warriorPrefabs);
+                RefreshUnitStatUI(Managers.Game.UnitWarriorLv, Managers.Data.warriorDict);
+                RefreshUnitImgAnim(Managers.Game.UnitWarriorLv, warriorPrefabs);
                 break;
             case (int)UnitClass.Archer:
-                RefreshUnitStatUI(GlobalData.g_UnitArcherLv, Managers.Data.archerDict);
-                RefreshUnitImgAnim(GlobalData.g_UnitArcherLv,archerPrefabs);
+                RefreshUnitStatUI(Managers.Game.UnitArcherLv, Managers.Data.archerDict);
+                RefreshUnitImgAnim(Managers.Game.UnitArcherLv,archerPrefabs);
                 break;
             case (int)UnitClass.Spear:
-                RefreshUnitStatUI(GlobalData.g_UnitSpearLv, Managers.Data.spearDict);
-                RefreshUnitImgAnim(GlobalData.g_UnitSpearLv, spearPrefabs);
+                RefreshUnitStatUI(Managers.Game.UnitSpearLv, Managers.Data.spearDict);
+                RefreshUnitImgAnim(Managers.Game.UnitSpearLv, spearPrefabs);
                 break;
             case (int)UnitClass.Priest:
-                RefreshUnitStatUI(GlobalData.g_UnitPriestLv, Managers.Data.priestDict);
-                RefreshUnitImgAnim(GlobalData.g_UnitPriestLv, priestPrefabs);
+                RefreshUnitStatUI(Managers.Game.UnitPriestLv, Managers.Data.priestDict);
+                RefreshUnitImgAnim(Managers.Game.UnitPriestLv, priestPrefabs);
                 break;
             case (int)UnitClass.Magician:
-                RefreshUnitStatUI(GlobalData.g_UnitMagicianLv, Managers.Data.magicDict);
+                RefreshUnitStatUI(Managers.Game.UnitMagicianLv, Managers.Data.magicDict);
                 RefreshUnitImgAnim(magicianObj);
                 break;
             case (int)UnitClass.Cavalry:
-                RefreshUnitStatUI(GlobalData.g_UnitCarlvryLv, Managers.Data.cavarlyDict);
+                RefreshUnitStatUI(Managers.Game.UnitCarlvlry, Managers.Data.cavarlyDict);
                 RefreshUnitImgAnim(cavarlyObj);
                 break;
         }
@@ -355,40 +355,40 @@ public class UI_UnitUpgradePopUp : UI_Base
         switch (unitidx)     // .버튼을 통해서 선택된 유닛
         {
             case (int)UnitClass.Warrior:
-                if(GlobalData.g_UnitWarriorLv < 10)
-                    GlobalData.g_UnitWarriorLv++;
-                RefreshUnitStatUI(GlobalData.g_UnitWarriorLv, Managers.Data.warriorDict);
-                RefreshUnitImgAnim(GlobalData.g_UnitWarriorLv, warriorPrefabs);
+                if(Managers.Game.UnitWarriorLv < 10)
+                    Managers.Game.UnitWarriorLv++;
+                RefreshUnitStatUI(Managers.Game.UnitWarriorLv, Managers.Data.warriorDict);
+                RefreshUnitImgAnim(Managers.Game.UnitWarriorLv, warriorPrefabs);
                 break;
             case (int)UnitClass.Archer:
-                if (GlobalData.g_UnitArcherLv < 10)
-                    GlobalData.g_UnitArcherLv++;
-                RefreshUnitStatUI(GlobalData.g_UnitArcherLv, Managers.Data.archerDict);
-                RefreshUnitImgAnim(GlobalData.g_UnitArcherLv, archerPrefabs);
+                if (Managers.Game.UnitArcherLv < 10)
+                    Managers.Game.UnitArcherLv++;
+                RefreshUnitStatUI(Managers.Game.UnitArcherLv, Managers.Data.archerDict);
+                RefreshUnitImgAnim(Managers.Game.UnitArcherLv, archerPrefabs);
                 break;
             case (int)UnitClass.Spear:
-                if (GlobalData.g_UnitSpearLv < 10)
-                    GlobalData.g_UnitSpearLv++;
-                RefreshUnitStatUI(GlobalData.g_UnitSpearLv, Managers.Data.spearDict);
-                RefreshUnitImgAnim(GlobalData.g_UnitSpearLv, spearPrefabs);
+                if (Managers.Game.UnitSpearLv < 10)
+                    Managers.Game.UnitSpearLv++;
+                RefreshUnitStatUI(Managers.Game.UnitSpearLv, Managers.Data.spearDict);
+                RefreshUnitImgAnim(Managers.Game.UnitSpearLv, spearPrefabs);
                 break;
             case (int)UnitClass.Priest:
-                if (GlobalData.g_UnitPriestLv < 10)
-                    GlobalData.g_UnitPriestLv++;
-                RefreshUnitStatUI(GlobalData.g_UnitPriestLv, Managers.Data.priestDict);
-                RefreshUnitImgAnim(GlobalData.g_UnitPriestLv, priestPrefabs);
+                if (Managers.Game.UnitPriestLv < 10)
+                    Managers.Game.UnitPriestLv++;
+                RefreshUnitStatUI(Managers.Game.UnitPriestLv, Managers.Data.priestDict);
+                RefreshUnitImgAnim(Managers.Game.UnitPriestLv, priestPrefabs);
                 break;
 
             case (int)UnitClass.Magician:
-                if (GlobalData.g_UnitMagicianLv < 10)
-                    GlobalData.g_UnitMagicianLv++;
-                RefreshUnitStatUI(GlobalData.g_UnitMagicianLv, Managers.Data.magicDict);
+                if (Managers.Game.UnitMagicianLv < 10)
+                    Managers.Game.UnitMagicianLv++;
+                RefreshUnitStatUI(Managers.Game.UnitMagicianLv, Managers.Data.magicDict);
                 RefreshUnitImgAnim(magicianObj);
                 break;
             case (int)UnitClass.Cavalry:
-                if (GlobalData.g_UnitCarlvryLv < 10)
-                    GlobalData.g_UnitCarlvryLv++;
-                RefreshUnitStatUI(GlobalData.g_UnitCarlvryLv, Managers.Data.cavarlyDict);
+                if (Managers.Game.UnitCarlvlry < 10)
+                    Managers.Game.UnitCarlvlry++;
+                RefreshUnitStatUI(Managers.Game.UnitCarlvlry, Managers.Data.cavarlyDict);
                 RefreshUnitImgAnim(cavarlyObj);
                 break;
 

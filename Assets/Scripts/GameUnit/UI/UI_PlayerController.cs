@@ -25,7 +25,7 @@ public class UI_PlayerController : MonoBehaviour
     void Start()
     {
         this.TryGetComponent(out anim);
-        curStage = GlobalData.curStage;
+        //curStage = GlobalData.curStage;
         for(int i = 0; i < isDistance.Length; i++)
         {
             isDistance[i] = false;
@@ -44,7 +44,7 @@ public class UI_PlayerController : MonoBehaviour
 
     void Init()
     {
-        this.transform.position = rtTrs[(int)GlobalData.curStage].transform.position;
+        //this.transform.position = rtTrs[(int)GlobalData.curStage].transform.position;
     }
 
 
@@ -164,7 +164,7 @@ public class UI_PlayerController : MonoBehaviour
                 {
                     isGo = false;
                     anim.SetBool("Run", false);
-                    GlobalData.curStage = targetStage;
+                    //GlobalData.curStage = targetStage;
                     for(int ii = 0; ii < isDistance.Length; ii++)
                     {
                         isDistance[ii] = false;

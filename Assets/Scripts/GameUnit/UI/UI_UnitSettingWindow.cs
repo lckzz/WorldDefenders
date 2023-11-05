@@ -119,34 +119,34 @@ public class UI_UnitSettingWindow : UI_Base
             {
                 if (ii == (int)UnitClass.Warrior)
                 {
-                    if(GlobalData.g_UnitWarriorLv > 0)                          //해당 유닛의 레벨이 0보다 커야 유닛셋팅에 생성
+                    if(Managers.Game.UnitWarriorLv > 0)                          //해당 유닛의 레벨이 0보다 커야 유닛셋팅에 생성
                         UnitNodeUiInstantiate(UnitClass.Warrior);
                 }
 
                 else if (ii == (int)UnitClass.Archer)
                 {
-                    if (GlobalData.g_UnitArcherLv > 0)
+                    if (Managers.Game.UnitArcherLv > 0)
                         UnitNodeUiInstantiate(UnitClass.Archer);
                 }
 
                 else if (ii == (int)UnitClass.Spear)
                 { 
-                    if (GlobalData.g_UnitSpearLv > 0)
+                    if (Managers.Game.UnitSpearLv > 0)
                         UnitNodeUiInstantiate(UnitClass.Spear);
                 }
                 else if (ii == (int)UnitClass.Priest)
                 {
-                    if (GlobalData.g_UnitPriestLv > 0)
+                    if (Managers.Game.UnitPriestLv > 0)
                         UnitNodeUiInstantiate(UnitClass.Priest);
                 }
                 else if (ii == (int)UnitClass.Magician)
                 {
-                    if (GlobalData.g_UnitMagicianLv > 0)
+                    if (Managers.Game.UnitMagicianLv > 0)
                         UnitNodeUiInstantiate(UnitClass.Magician);
                 }
                 else if (ii == (int)UnitClass.Cavalry)
                 {
-                    if (GlobalData.g_UnitCarlvryLv > 0)
+                    if (Managers.Game.UnitCarlvlry > 0)
                         UnitNodeUiInstantiate(UnitClass.Cavalry);
                 }
 

@@ -17,7 +17,7 @@ public class MeteroSkill : ActiveSkill
             Vector3 pos = unit.transform.position;
             pos.y += 2.0f;
 
-            GenerateMeteor(GlobalData.g_UnitMagicianLv, unit, enemys[ii], pos);
+            GenerateMeteor(Managers.Game.UnitMagicianLv, unit, enemys[ii], pos);
         }
 
     }

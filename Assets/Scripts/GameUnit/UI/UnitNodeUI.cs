@@ -37,38 +37,38 @@ public class UnitNodeUI : UI_BaseSettingUnit
         {
             case UnitClass.Warrior:
                 Debug.Log($"워리어 갱신! {e_UnitClass}");
-                UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitWarriorLv, "KnifeUnitLv1Img", "KnifeUnitLv2Img");
-                unitLvTxt.text = $"<#FF9F13>Lv</color> {GlobalData.g_UnitWarriorLv}";
+                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitWarriorLv, "KnifeUnitLv1Img", "KnifeUnitLv2Img");
+                unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitWarriorLv}";
                 break;
 
             case UnitClass.Archer:
                 Debug.Log($"아처 갱신! {e_UnitClass}");
-                UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitArcherLv, "BowUnitLv1Img", "BowUnitLv2Img");
-                unitLvTxt.text = $"<#FF9F13>Lv</color> {GlobalData.g_UnitArcherLv}";
+                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitArcherLv, "BowUnitLv1Img", "BowUnitLv2Img");
+                unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitArcherLv}";
                 break;
 
             case UnitClass.Spear:
                 Debug.Log($"창병 갱신! {e_UnitClass}");
                 rt.sizeDelta = spearSizeDelta;
                 rt.transform.localPosition = spearTr;
-                UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitSpearLv, "SpearUnitLv1Img", "SpearUnitLv2Img");
-                unitLvTxt.text = $"<#FF9F13>Lv</color> {GlobalData.g_UnitSpearLv}";
+                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitSpearLv, "SpearUnitLv1Img", "SpearUnitLv2Img");
+                unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitSpearLv}";
                 break;
             case UnitClass.Priest:
                 Debug.Log($"사제 갱신! {e_UnitClass}");
-                UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitPriestLv, "PriestLv1Img", "PriestLv2Img");
-                unitLvTxt.text = $"<#FF9F13>Lv</color> {GlobalData.g_UnitPriestLv}";
+                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitPriestLv, "PriestLv1Img", "PriestLv2Img");
+                unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitPriestLv}";
                 break;
 
             case UnitClass.Magician:
                 Debug.Log($"마법사 갱신! {e_UnitClass}");
                 UnitUISpriteInit(e_UnitClass, "Magician_Idle");
-                unitLvTxt.text = $"<#FF9F13>Lv</color> {GlobalData.g_UnitMagicianLv}";
+                unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitMagicianLv}";
                 break;
             case UnitClass.Cavalry:
                 Debug.Log($"마법사 갱신! {e_UnitClass}");
                 UnitUISpriteInit(e_UnitClass, "Cavalry_Idle");
-                unitLvTxt.text = $"<#FF9F13>Lv</color> {GlobalData.g_UnitCarlvryLv}";
+                unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitCarlvlry}";
                 break;
 
             default:

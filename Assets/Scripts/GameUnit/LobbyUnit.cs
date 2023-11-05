@@ -36,22 +36,22 @@ public class LobbyUnit : MonoBehaviour
         {
             case UnitClass.Warrior:
 
-                UnitSpriteRender(e_UnitClass, GlobalData.g_UnitWarriorLv, warriorStr[0], warriorStr[1]);
+                UnitSpriteRender(e_UnitClass, Managers.Game.UnitWarriorLv, warriorStr[0], warriorStr[1]);
                 break;
 
             case UnitClass.Archer:
                 Debug.Log($"아처 갱신! {e_UnitClass}");
-                UnitSpriteRender(e_UnitClass, GlobalData.g_UnitArcherLv, archerStr[0], archerStr[1]);
+                UnitSpriteRender(e_UnitClass, Managers.Game.UnitArcherLv, archerStr[0], archerStr[1]);
                 break;
 
             case UnitClass.Spear:
                 Debug.Log($"창병 갱신! {e_UnitClass}");
-                UnitSpriteRender(e_UnitClass, GlobalData.g_UnitSpearLv, spearStr[0], spearStr[1]);
+                UnitSpriteRender(e_UnitClass, Managers.Game.UnitSpearLv, spearStr[0], spearStr[1]);
                 break;
 
             case UnitClass.Priest:
                 Debug.Log($"사제 갱신! {e_UnitClass}");
-                UnitSpriteRender(e_UnitClass, GlobalData.g_UnitPriestLv, priestStr[0], priestStr[1]);
+                UnitSpriteRender(e_UnitClass, Managers.Game.UnitPriestLv, priestStr[0], priestStr[1]);
                 break;
 
 

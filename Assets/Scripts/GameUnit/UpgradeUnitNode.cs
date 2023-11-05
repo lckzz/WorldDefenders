@@ -46,35 +46,35 @@ public class UpgradeUnitNode : MonoBehaviour
         if (this.gameObject.name.Contains("Warrior"))
         {
             upgradeUnit = UnitClass.Warrior;
-            unitLv = GlobalData.g_UnitWarriorLv;
+            unitLv = Managers.Game.UnitWarriorLv;
         }
         else if (gameObject.name.Contains("Archer"))
         {
             upgradeUnit = UnitClass.Archer;
-            unitLv = GlobalData.g_UnitArcherLv;
+            unitLv = Managers.Game.UnitArcherLv;
 
         }
         else if (gameObject.name.Contains("Spear"))
         {
             upgradeUnit = UnitClass.Spear;
-            unitLv = GlobalData.g_UnitSpearLv;
+            unitLv = Managers.Game.UnitSpearLv;
         }
         else if (gameObject.name.Contains("Priest"))
         {
             upgradeUnit = UnitClass.Priest;
-            unitLv = GlobalData.g_UnitPriestLv;
+            unitLv = Managers.Game.UnitPriestLv;
 
         }
         else if (gameObject.name.Contains("Magician"))
         {
             upgradeUnit = UnitClass.Magician;
-            unitLv = GlobalData.g_UnitMagicianLv;
+            unitLv = Managers.Game.UnitMagicianLv;
 
         }
         else if (gameObject.name.Contains("Cavalry"))
         {
             upgradeUnit = UnitClass.Cavalry;
-            unitLv = GlobalData.g_UnitCarlvryLv;
+            unitLv = Managers.Game.UnitCarlvlry;
 
         }
 

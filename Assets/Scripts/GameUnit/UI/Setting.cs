@@ -33,26 +33,26 @@ public abstract class Setting : MonoBehaviour
 
     public void DefalutSoundSet()                       //디폴트셋팅
     {
-        GlobalData.g_BgmValue = defalutBgmValue;
-        GlobalData.g_EffValue = defalutEffValue;
-        GlobalData.g_BgmisOn = defalutBgmisOn;
-        GlobalData.g_EffisOn = defalutEffisOn;
+        Managers.Game.BgmValue = defalutBgmValue;
+        Managers.Game.EffValue = defalutEffValue;
+        Managers.Game.BgmisOn = defalutBgmisOn;
+        Managers.Game.EffisOn = defalutEffisOn;
 
 
-        bgmSoundSlider.value = GlobalData.g_BgmValue;
-        effSoundSlider.value = GlobalData.g_EffValue;
-        bgmMuteToggle.isOn = GlobalData.g_BgmisOn;
-        effMuteToggle.isOn = GlobalData.g_EffisOn;
+        bgmSoundSlider.value = Managers.Game.BgmValue;
+        effSoundSlider.value = Managers.Game.EffValue;
+        bgmMuteToggle.isOn = Managers.Game.BgmisOn;
+        effMuteToggle.isOn = Managers.Game.EffisOn;
     }
 
 
     public void ToggleSoundMute(Define.Sound bgmType,Define.Sound effType)
     {
-        GlobalData.g_BgmisOn = bgmMuteToggle.isOn;
-        GlobalData.g_EffisOn = effMuteToggle.isOn;
+        Managers.Game.BgmisOn = bgmMuteToggle.isOn;
+        Managers.Game.EffisOn = effMuteToggle.isOn;
 
-        Managers.Sound.SoundMute(bgmType, GlobalData.g_BgmisOn);
-        Managers.Sound.SoundMute(effType, GlobalData.g_EffisOn);
+        Managers.Sound.SoundMute(bgmType, Managers.Game.BgmisOn);
+        Managers.Sound.SoundMute(effType, Managers.Game.EffisOn);
 
     }
 
@@ -63,12 +63,12 @@ public abstract class Setting : MonoBehaviour
 
     public void SliderSound(Define.Sound bgmType, Define.Sound effType)
     {
-        GlobalData.g_BgmValue = bgmSoundSlider.value;
-        GlobalData.g_EffValue = effSoundSlider.value;
+        Managers.Game.BgmValue = bgmSoundSlider.value;
+        Managers.Game.EffValue = effSoundSlider.value;
 
 
-        Managers.Sound.SoundValue(bgmType, GlobalData.g_BgmValue);
-        Managers.Sound.SoundValue(effType, GlobalData.g_EffValue);
+        Managers.Sound.SoundValue(bgmType, Managers.Game.BgmValue);
+        Managers.Sound.SoundValue(effType, Managers.Game.EffValue);
 
     }
 

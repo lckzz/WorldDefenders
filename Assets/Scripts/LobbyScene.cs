@@ -154,7 +154,7 @@ public class LobbyScene : BaseScene
     public void RefreshUnit()
     {
 
-
+        Debug.Log($"여기에요{Managers.Game.UnitArcherLv}");
 
         for (int ii = 0; ii < lobbyUnits.Length; ii++)
         {
@@ -162,7 +162,7 @@ public class LobbyScene : BaseScene
             //    GlobalData.InitUnitClass();  //이건 로비에서 적용할것 로비에서 유닛클래스를 초기화해준다.
 
             //GlobalData.g_SlotUnitClass
-            lobbyUnits[ii].E_UniClass = GlobalData.g_SlotUnitClass[ii];
+            lobbyUnits[ii].E_UniClass = Managers.Game.SlotUnitClass[ii];
             lobbyUnits[ii].RefreshUnitSet();
             if ((int)lobbyUnits[ii].E_UniClass >= (int)UnitClass.Magician)
                 lobbyUnits[ii].transform.localScale = new Vector3(-1.3f, 1.3f, 1.3f);

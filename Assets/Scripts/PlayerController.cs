@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        tower = Managers.Data.towerDict[GlobalData.g_PlayerLevel];
+        tower = Managers.Data.towerDict[Managers.Game.PlayerLevel];
         att = tower.att;
 
         TryGetComponent<Animator>(out anim);

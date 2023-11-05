@@ -4,33 +4,33 @@ using UnityEngine;
 
 public class GlobalData 
 {
-    public static int g_Gold = 0;
-    public static int g_PlayerLevel = 1;
+    //public static int g_Gold = 0;
+    //public static int g_PlayerLevel = 1;
 
-    //----------저장할 음량의 값-----------
-    public static float g_BgmValue = 0.5f;                  //지금 설정된값이 디폴트값
-    public static float g_EffValue = 0.5f;
-    public static bool g_BgmisOn = false;
-    public static bool g_EffisOn = false;
+    ////----------저장할 음량의 값-----------
+    //public static float g_BgmValue = 0.5f;                  //지금 설정된값이 디폴트값
+    //public static float g_EffValue = 0.5f;
+    //public static bool g_BgmisOn = false;
+    //public static bool g_EffisOn = false;
 
     //----------저장할 음량의 값-----------
 
     //----------스테이지 진행값-----------
-    public static bool g_WestStageClear = false;
-    public static bool g_EastStageClear = false;
-    public static bool g_SouthStageClear = false;
+    //public static bool g_WestStageClear = false;
+    //public static bool g_EastStageClear = false;
+    //public static bool g_SouthStageClear = false;
 
     //----------스테이지 진행값-----------
 
 
 
     //-----------유닛 레벨-----------------
-    public static int g_UnitWarriorLv = 1;
-    public static int g_UnitArcherLv = 1;
-    public static int g_UnitSpearLv = 1;
-    public static int g_UnitPriestLv = 1;
-    public static int g_UnitMagicianLv = 1;
-    public static int g_UnitCarlvryLv = 1;
+    //public static int g_UnitWarriorLv = 1;
+    //public static int g_UnitArcherLv = 1;
+    //public static int g_UnitSpearLv = 1;
+    //public static int g_UnitPriestLv = 1;
+    //public static int g_UnitMagicianLv = 1;
+    //public static int g_UnitCarlvryLv = 1;
     //-----------유닛 레벨-----------------
 
     ////-----------유닛 스킬-----------------         //유닛스킬은 유닛들의 레벨이 1,5,10일때 레벨이 자동으로 오름
@@ -60,15 +60,11 @@ public class GlobalData
     public static int g_EliteShamanID = 00010;
     //-------------몬스터 아이디-----------
 
-    //-----------게임 진행시 로비로 돌아왔을떄 스테이지 팝업 켜주는 변수--
-    public static bool g_LobbyToGameScene = false;
-    //-----------게임 진행시 로비로 돌아왔을떄 스테이지 팝업 켜주는 변수--
-
 
     public static Define.PlayerSkill g_CurPlayerEquipSkill = Define.PlayerSkill.Count;      //현재 장착한 스킬
     public static List<UnitClass> g_SlotUnitClass = new List<UnitClass>();
     public static List<Define.MonsterType> g_MonsterTypeList = new List<Define.MonsterType>();
-    public static Define.SubStage curStage = Define.SubStage.West;
+    //public static Define.SubStage curStage = Define.SubStage.West;  //이것도 게임 싱글톤에서 
     public static bool firstInit = false;  //진짜 처음 접속했거나 불러온 데이터가 없다면
 
     public const int g_unitSlotMax = 5;
@@ -77,7 +73,7 @@ public class GlobalData
 
     public static void InitUnitClass()
     {
-        if(!firstInit)
+        if(!Managers.Game.FirstInit)
         {
             for (int ii = 0; ii < g_unitSlotMax; ii++)
             {
@@ -89,7 +85,7 @@ public class GlobalData
                     Managers.Game.SlotUnitClass.Add(UnitClass.Count);
             }
 
-            firstInit = true;  //진짜 1회한정 슬롯초기화해줌
+            Managers.Game.FirstInit = true;  //진짜 1회한정 슬롯초기화해줌
         }
         else
         {
@@ -107,11 +103,11 @@ public class GlobalData
         }
     }
 
-    public static void SetMonsterList(List<Define.MonsterType> monTypeList)
-    {
-        //스테이지선택창에서 시작을 하면 넘겨받아서 인게임에 적용
-        Managers.Game.MonsterTypeList.Clear();
-        for (int ii = 0; ii < monTypeList.Count; ii++)
-            Managers.Game.MonsterTypeList.Add(monTypeList[ii]);
-    }
+    //public static void SetMonsterList(List<Define.MonsterType> monTypeList)
+    //{
+    //    //스테이지선택창에서 시작을 하면 넘겨받아서 인게임에 적용
+    //    Managers.Game.MonsterTypeList.Clear();
+    //    for (int ii = 0; ii < monTypeList.Count; ii++)
+    //        Managers.Game.MonsterTypeList.Add(monTypeList[ii]);
+    //}
 }

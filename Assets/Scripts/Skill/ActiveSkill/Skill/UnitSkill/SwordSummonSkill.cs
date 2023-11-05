@@ -15,7 +15,7 @@ public class SwordSummonSkill : ActiveSkill
             Vector3 pos = enemys[ii].transform.position;
             pos.y += 1.5f;
 
-            GenerateSword(GlobalData.g_UnitCarlvrySkillLv, unit, enemys[ii], pos);
+            GenerateSword(1, unit, enemys[ii], pos);
         }
     }
 

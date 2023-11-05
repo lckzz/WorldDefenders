@@ -115,16 +115,16 @@ public class UnitSlotUI : UI_BaseSettingUnit
                 //Debug.Log($"워리어 갱신! {e_UnitClass}");
                 rt.sizeDelta = defalutSizeDelta;
                 rt.transform.localPosition = defalutTr;
-                UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitWarriorLv, "KnifeUnitLv1Img", "KnifeUnitLv2Img");
-                SlotUnitLvInit(GlobalData.g_UnitWarriorLv);
+                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitWarriorLv, "KnifeUnitLv1Img", "KnifeUnitLv2Img");
+                SlotUnitLvInit(Managers.Game.UnitWarriorLv);
                 break;
 
             case UnitClass.Archer:
                 //Debug.Log($"아처 갱신! {e_UnitClass}");
                 rt.sizeDelta = defalutSizeDelta;
                 rt.transform.localPosition = defalutTr;
-                UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitArcherLv, "BowUnitLv1Img", "BowUnitLv2Img");
-                SlotUnitLvInit(GlobalData.g_UnitArcherLv);
+                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitArcherLv, "BowUnitLv1Img", "BowUnitLv2Img");
+                SlotUnitLvInit(Managers.Game.UnitArcherLv);
                 break;
 
             case UnitClass.Spear:
@@ -132,16 +132,16 @@ public class UnitSlotUI : UI_BaseSettingUnit
 
                 rt.sizeDelta = spearSizeDelta;
                 rt.transform.localPosition = spearTr;
-                UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitSpearLv, "SpearUnitLv1Img", "SpearUnitLv2Img");
-                SlotUnitLvInit(GlobalData.g_UnitSpearLv);
+                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitSpearLv, "SpearUnitLv1Img", "SpearUnitLv2Img");
+                SlotUnitLvInit(Managers.Game.UnitSpearLv);
                 break;
 
             case UnitClass.Priest:
                 //Debug.Log($"아처 갱신! {e_UnitClass}");
                 rt.sizeDelta = defalutSizeDelta;
                 rt.transform.localPosition = defalutTr;
-                UnitUISpriteInit(e_UnitClass, GlobalData.g_UnitPriestLv, "PriestLv1Img", "PriestLv2Img");
-                SlotUnitLvInit(GlobalData.g_UnitPriestLv);
+                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitPriestLv, "PriestLv1Img", "PriestLv2Img");
+                SlotUnitLvInit(Managers.Game.UnitPriestLv);
                 break;
 
             case UnitClass.Magician:
@@ -150,7 +150,7 @@ public class UnitSlotUI : UI_BaseSettingUnit
                 rt.sizeDelta = defalutSizeDelta;
                 rt.transform.localPosition = defalutTr;
                 UnitUISpriteInit(e_UnitClass, "Magician_Idle");
-                SlotUnitLvInit(GlobalData.g_UnitMagicianLv);
+                SlotUnitLvInit(Managers.Game.UnitMagicianLv);
                 break;
             case UnitClass.Cavalry:
                 //Debug.Log($"창병 갱신! {e_UnitClass}");
@@ -158,7 +158,7 @@ public class UnitSlotUI : UI_BaseSettingUnit
                 rt.sizeDelta = defalutSizeDelta;
                 rt.transform.localPosition = defalutTr;
                 UnitUISpriteInit(e_UnitClass, "Cavalry_Idle");
-                SlotUnitLvInit(GlobalData.g_UnitCarlvryLv);
+                SlotUnitLvInit(Managers.Game.UnitCarlvlry);
                 break;
 
             default:
