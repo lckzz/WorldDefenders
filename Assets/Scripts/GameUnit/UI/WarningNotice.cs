@@ -52,7 +52,6 @@ public class WarningNotice : MonoBehaviour
 
         Debug.Log("여기 코루틴들어감");
         rt.localPosition = new Vector3(1300.0f, rt.localPosition.y, rt.localPosition.z);
-        rt.DOKill();
 
         Define.MonsterSpawnType type = Managers.Game.GetMonSpawnType();
         Managers.Game.SetMonSpawnType(type);

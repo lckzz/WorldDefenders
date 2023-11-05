@@ -56,6 +56,8 @@ public class UI_GameResult : UI_Base
                     break;
             }
 
+            Managers.Game.FileSave();
+
         }
 
         else if (Managers.Game.GetStageStateType() == Define.StageStageType.Defeat)

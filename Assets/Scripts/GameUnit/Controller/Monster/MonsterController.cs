@@ -54,7 +54,12 @@ public class MonsterController : Unit
     DropItem dropItem;
 
 
+
+
     //public float Hp { get { return hp; } }
+
+    public int DropGold { get ; private set; }
+    public int DropCost { get; private set; }
 
     public int KnockBackForce { get { return knockbackForce; } }
 
@@ -117,6 +122,8 @@ public class MonsterController : Unit
         knockbackForce = monStat.knockBackForce;
         attackRange = monStat.attackRange;
         moveSpeed = 2.0f;
+        DropGold = monStat.dropGold;
+        DropCost = monStat.dropCost;
 
         //playerTowerCtrl = GameObject.FindObjectOfType<PlayerTower>();
 
@@ -543,7 +550,7 @@ public class MonsterController : Unit
             myColl.enabled = false;
             dropItem?.Drop(this.gameObject.transform.position);
             StartCoroutine(Util.UnitDieTime(gameObject, 3.0f));
-
+            StartCoroutine(MonsterDieDropText());
 
         }
     }
@@ -757,6 +764,33 @@ public class MonsterController : Unit
         knockbackStart = false;
 
 
+
+    }
+
+
+    WaitForSeconds wfs = new WaitForSeconds(1.5f);
+    IEnumerator MonsterDieDropText()
+    {
+        yield return wfs;           //시간 대기후 텍스트
+        int randIdx = Random.Range(0, 101);
+        if (randIdx < 100)       //20퍼확률로 코스트나 골드를 드랍
+        {
+            int randItem = Random.Range(0, 2);
+            unitHUDHp?.ItemHudInit(randItem);
+            if (randItem == 0)       //골드라면
+            {
+                unitHUDHp?.SpawnHUDText(DropGold.ToString(), (int)UnitDamageType.Item);
+                Managers.Game.InGameGold += DropGold;
+                Managers.UI.GetSceneUI<UI_GamePlay>().UpdateGold(Managers.Game.InGameGold);
+            }
+            else
+            {
+                unitHUDHp?.SpawnHUDText(DropCost.ToString(), (int)UnitDamageType.Item);
+                Managers.Game.Cost += DropCost;
+                Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCost(Managers.Game.Cost);
+
+            }
+        }
 
     }
 

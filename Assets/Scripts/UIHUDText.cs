@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+
 using DG.Tweening;
 
 public class UIHUDText : MonoBehaviour
@@ -12,12 +14,17 @@ public class UIHUDText : MonoBehaviour
 
     [SerializeField] private RectTransform rt;
     [SerializeField] private TextMeshProUGUI textHUD;
+    [SerializeField] private Image itemImg;
+    [SerializeField] private Sprite[] itemSprite;
 
 
     private float scalePunchValue = 0.025f;
     private float scalePunchDuration = 0.5f;
     private int scalePunchVibrato = 1;
     private Vector3 rtScalePunch = Vector3.zero;
+
+    private int itemIdx;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,9 +32,10 @@ public class UIHUDText : MonoBehaviour
         TryGetComponent(out textHUD);
     }
 
-    public void Play(string text, Color color, Vector3 pos,bool critical = false)
+    public void Play(string text, Color color, Vector3 pos,bool critical = false, bool item = false)
     {
-        if(textHUD == null)
+
+        if (textHUD == null)
         {
             TryGetComponent(out rt);
             TryGetComponent(out textHUD);
@@ -35,10 +43,27 @@ public class UIHUDText : MonoBehaviour
 
         }
 
-        textHUD.text = text;
+        if(item)
+        {
+            Debug.Log("여기 아이템 " + itemIdx);
+            itemImg.gameObject.SetActive(true);
+            itemImg.sprite = itemSprite[itemIdx];
+
+
+            textHUD.text = $"+ {text}";
+        }
+        else
+            textHUD.text = text;
+
+
         textHUD.color = color;
 
         StartCoroutine(OnHUDText(pos, critical));
+    }
+
+    public void ItemIdx(int idx)
+    {
+        itemIdx = idx;
     }
 
 
@@ -52,7 +77,7 @@ public class UIHUDText : MonoBehaviour
 
         if (critical)
             rt.DOPunchScale(rtScalePunch, scalePunchDuration, scalePunchVibrato);
-        
+
 
         while(percent < 1)
         {

@@ -153,6 +153,8 @@ public class MonsterStat
     public int knockBackForce;
     public int criticalRate;
     public float attackRange;
+    public int dropGold;
+    public int dropCost;
 
 }
 

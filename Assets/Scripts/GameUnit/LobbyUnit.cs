@@ -98,7 +98,11 @@ public class LobbyUnit : MonoBehaviour
                 if (unitLv < 5)
                     unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Spear/{pathLv1}", this.gameObject.transform);
                 else
+                {
+                    Debug.Log(pathLv2);
                     unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Spear/{pathLv2}", this.gameObject.transform);
+                }
+                    
                 break;
 
             case UnitClass.Priest:

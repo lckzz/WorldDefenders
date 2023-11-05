@@ -29,6 +29,7 @@ public class UpgradeNotice : MonoBehaviour
 
                 }
 
+                Managers.Game.FileSave();       //업그레이드시 저장
                 ParentGameObjectOff();
 
             });

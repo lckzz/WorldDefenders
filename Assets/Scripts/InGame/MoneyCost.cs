@@ -18,12 +18,13 @@ public class MoneyCost
     float timesec = 0.0f;
     //시간체크
 
-
+    public int GameMoney { get; set; }
     public float CurCost { get { return curCost; } set { curCost = value; } }
     public float MaxCost { get { return maxCost; } set { maxCost = value; } }
 
     public void MoneyCostInit()
     {
+        GameMoney = 0;
         curCost = .0f;
         maxCost = 500.0f;
         costCoolTime = 4.5f;

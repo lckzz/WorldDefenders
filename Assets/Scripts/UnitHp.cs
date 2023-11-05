@@ -7,6 +7,9 @@ public class UnitHp : MonoBehaviour
     [SerializeField] private Transform parentTr;
     [SerializeField] private GameObject hudTextPrefab;
 
+    private int itemIdx = -1;
+
+
     Color orange = new Color32(255, 110, 110, 255);
     public void Init(Transform parentTr, GameObject prefab)
     {
@@ -28,6 +31,9 @@ public class UnitHp : MonoBehaviour
             case (int)Define.UnitDamageType.Critical:
                 color = Color.red;
                 break;
+            case (int)Define.UnitDamageType.Item:
+                color = Color.blue;
+                break;
         }
 
 
@@ -38,10 +44,21 @@ public class UnitHp : MonoBehaviour
 
         if(type == (int)Define.UnitDamageType.Critical)
             clone.GetComponent<UIHUDText>().Play(text, color, transform.position,true);
+        else if(type == (int)Define.UnitDamageType.Item)
+        {
+            clone.GetComponent<UIHUDText>().ItemIdx(itemIdx);
+            clone.GetComponent<UIHUDText>().Play(text, color, transform.position, false, true);
+
+        }
         else
             clone.GetComponent<UIHUDText>().Play(text, color, transform.position);
 
+
     }
 
+    public void ItemHudInit(int idx)
+    {
+        itemIdx = idx;
+    }
 
 }

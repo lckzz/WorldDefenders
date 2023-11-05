@@ -34,6 +34,7 @@ public class UI_GamePlay : UI_Base
     Tower playerTower;
     [SerializeField]
     Image coolImg;
+    [SerializeField] TextMeshProUGUI gameGoldTxt;
     [SerializeField] Image fadeImg;
 
     [SerializeField] Button settingBtn;
@@ -41,6 +42,8 @@ public class UI_GamePlay : UI_Base
     [SerializeField] TextMeshProUGUI timerTxt;
 
     [SerializeField] GameObject warningTxtObj;
+
+
 
 
 
@@ -128,7 +131,7 @@ public class UI_GamePlay : UI_Base
             unitNodeStartPos.x += 175.0f;
         }
 
-
+        Debug.Log(Managers.Game.SlotUnitClass.Count);
 
 
         for (int ii = 0; ii < Managers.Game.SlotUnitClass.Count; ii++)
@@ -582,6 +585,11 @@ public class UI_GamePlay : UI_Base
     {
         unitCostTxt.text = curCost.ToString();
 
+    }
+
+    public void UpdateGold(float curGold)
+    {
+        gameGoldTxt.text = curGold.ToString();
     }
 
     public void InGameTimer()

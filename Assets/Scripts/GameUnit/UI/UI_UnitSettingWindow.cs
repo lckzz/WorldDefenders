@@ -59,8 +59,10 @@ public class UI_UnitSettingWindow : UI_Base
 
         if (backLobbyBtn != null)
             backLobbyBtn.onClick.AddListener(() =>
-            {
+            {   
+                //뒤로가면 
                 Managers.Sound.Play("Effect/UI_Click");
+                Managers.Game.FileSave();
 
                 Managers.UI.ClosePopUp(this);
                 GlobalData.SetUnitClass(unitSlotUiList);
@@ -69,6 +71,8 @@ public class UI_UnitSettingWindow : UI_Base
                     lobby.LobbyUIOnOff(true);
                     lobby.LobbyTouchUnitInit();
                 }
+
+
             });
 
 

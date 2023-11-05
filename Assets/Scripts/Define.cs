@@ -122,6 +122,7 @@ public class Define
         Enemy,
         Team,
         Critical,
+        Item,
         Count
     }
 

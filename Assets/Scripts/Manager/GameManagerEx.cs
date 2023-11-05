@@ -225,7 +225,10 @@ public class GameManagerEx
 
     //코스트 관리
     #region 코스트 및 재화 관리
-    public float Cost { get { return moneyCost.CurCost; } }
+    public float Cost { get { return moneyCost.CurCost; } set { moneyCost.CurCost = value; } }
+
+
+    public int InGameGold { get { return moneyCost.GameMoney; } set { moneyCost.GameMoney = value; } }
 
     public void MoneyCostInit()
     {
@@ -429,7 +432,9 @@ public class GameManagerEx
 
         string fileStr = File.ReadAllText(path);
         SumData data = JsonUtility.FromJson<SumData>(fileStr);
-        
+
+        gameSaveArrayData.slotUnitClass.Clear();
+
         for(int ii = 0;  ii < data.unitClasses.Length; ii++)
         {
             gameSaveArrayData.slotUnitClass.Add(data.unitClasses[ii]);
