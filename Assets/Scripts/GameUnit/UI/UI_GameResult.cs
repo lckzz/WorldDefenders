@@ -39,7 +39,24 @@ public class UI_GameResult : UI_Base
     public override void Start()
     {
         if (Managers.Game.GetStageStateType() == Define.StageStageType.Victory)
+        {
+            //게임의 상태가 승리라면
             failOrVictoryImg.sprite = resultsprite[(int)Managers.Game.GetStageStateType() - 1];
+
+            switch (Managers.Game.CurStageType)
+            {
+                case Define.SubStage.West:
+                    GlobalData.g_WestStageClear = true;
+                    break;
+                case Define.SubStage.East:
+                    GlobalData.g_EastStageClear = true;
+                    break;
+                case Define.SubStage.South:
+                    GlobalData.g_SouthStageClear = true;
+                    break;
+            }
+
+        }
 
         else if (Managers.Game.GetStageStateType() == Define.StageStageType.Defeat)
             failOrVictoryImg.sprite = resultsprite[(int)Managers.Game.GetStageStateType() - 1];

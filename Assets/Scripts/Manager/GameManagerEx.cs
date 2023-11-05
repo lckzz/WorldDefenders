@@ -2,16 +2,69 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+
+
+
+[Serializable]
+public class GameData
+{
+    public int gold;
+    public int playerLevel;
+    public int unitWarrorLv;
+    public int unitArcherLv;
+    public int unitSpearLv;
+    public int unitPriestLv;
+    public int unitMagicianLv;
+    public int unitCarlvryLv;
+
+    public bool lobbyToGameScene;
+    public Define.PlayerSkill curPlayerEquipSkill;
+
+    public Define.SubStage curStage;
+    public bool firstInit;
+}
+
+[Serializable]
+public class GameArrayData
+{
+    public List<UnitClass> slotUnitClass = new List<UnitClass>();
+    public List<Define.MonsterType> monsterTypeList = new List<Define.MonsterType>();
+}
+
+[Serializable]
+public class ArrayData
+{
+    public UnitClass[] unitClasses;
+    public Define.MonsterType[] monsterTypes;
+}
+
 
 public class GameManagerEx 
 {
     //인게임내의 데이터 관리
+
+    GameArrayData gameSaveArrayData = new GameArrayData();
+    ArrayData arrayData = new ArrayData();
+
 
     private MoneyCost moneyCost = new MoneyCost();
     private UnitSpawn unitSpawn = new UnitSpawn();
     private MonsterSpawn monsterSpawn = new MonsterSpawn();
     private MonsterEvent monsterEvent = new MonsterEvent();
     private StageState stageState = new StageState();
+
+    public List<UnitClass> SlotUnitClass { 
+        get { return gameSaveArrayData.slotUnitClass; } 
+        set { gameSaveArrayData.slotUnitClass = value; } 
+    }
+    public List<Define.MonsterType> MonsterTypeList {
+        get { return gameSaveArrayData.monsterTypeList; }
+        set { gameSaveArrayData.monsterTypeList = value; }
+    }
+
+
+
 
     //코스트 관리
     #region 코스트 및 재화 관리
@@ -179,6 +232,29 @@ public class GameManagerEx
         return stageState.GameEndResult();
     }
 
+
+    #endregion
+
+
+
+
+    #region 저장 & 로드
+
+    public string path = Application.persistentDataPath + "/SaveData.json";
+
+    public void FileSave()
+    {
+        ArrayData arrayData = new ArrayData
+        {
+            unitClasses = gameSaveArrayData.slotUnitClass.ToArray(),
+            monsterTypes = gameSaveArrayData.monsterTypeList.ToArray()
+        };
+
+        string jsonStr = JsonUtility.ToJson(arrayData);
+        File.WriteAllText(path, jsonStr);
+        Debug.Log($"Save Game Completed : {path}");
+
+    }
 
     #endregion
 }

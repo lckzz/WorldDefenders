@@ -33,10 +33,10 @@ public class GlobalData
     public static int g_UnitCarlvryLv = 1;
     //-----------유닛 레벨-----------------
 
-    //-----------유닛 스킬-----------------         //유닛스킬은 유닛들의 레벨이 1,5,10일때 레벨이 자동으로 오름
-    public static int g_UnitMagicianSkillLv = 1;
-    public static int g_UnitCarlvrySkillLv = 1;
-    //-----------유닛 스킬-----------------
+    ////-----------유닛 스킬-----------------         //유닛스킬은 유닛들의 레벨이 1,5,10일때 레벨이 자동으로 오름
+    //public static int g_UnitMagicianSkillLv = 1;
+    //public static int g_UnitCarlvrySkillLv = 1;
+    ////-----------유닛 스킬-----------------
 
 
     //----------플레이어의 스킬 레벨-------------
@@ -58,10 +58,11 @@ public class GlobalData
     public static int g_EliteWarriorID = 0008;
     public static int g_EliteCavalryID = 0009;
     public static int g_EliteShamanID = 00010;
-
-
-
     //-------------몬스터 아이디-----------
+
+    //-----------게임 진행시 로비로 돌아왔을떄 스테이지 팝업 켜주는 변수--
+    public static bool g_LobbyToGameScene = false;
+    //-----------게임 진행시 로비로 돌아왔을떄 스테이지 팝업 켜주는 변수--
 
 
     public static Define.PlayerSkill g_CurPlayerEquipSkill = Define.PlayerSkill.Count;      //현재 장착한 스킬
@@ -83,9 +84,9 @@ public class GlobalData
                 Debug.Log("여기");
 
                 if (ii == 0)
-                    g_SlotUnitClass.Add(UnitClass.Warrior);
+                    Managers.Game.SlotUnitClass.Add(UnitClass.Warrior);
                 else
-                    g_SlotUnitClass.Add(UnitClass.Count);
+                    Managers.Game.SlotUnitClass.Add(UnitClass.Count);
             }
 
             firstInit = true;  //진짜 1회한정 슬롯초기화해줌
@@ -99,18 +100,18 @@ public class GlobalData
 
     public static void SetUnitClass(List<UnitSlotUI> unitSlotUIList)
     {
-        g_SlotUnitClass.Clear();        //클리어해주고 다시셋팅
+        Managers.Game.SlotUnitClass.Clear();        //클리어해주고 다시셋팅
         for(int ii = 0; ii < unitSlotUIList.Count;ii++)
         {
-            g_SlotUnitClass.Add(unitSlotUIList[ii].E_UnitClass);
+            Managers.Game.SlotUnitClass.Add(unitSlotUIList[ii].E_UnitClass);
         }
     }
 
     public static void SetMonsterList(List<Define.MonsterType> monTypeList)
     {
         //스테이지선택창에서 시작을 하면 넘겨받아서 인게임에 적용
-        g_MonsterTypeList.Clear();
+        Managers.Game.MonsterTypeList.Clear();
         for (int ii = 0; ii < monTypeList.Count; ii++)
-            g_MonsterTypeList.Add(monTypeList[ii]);
+            Managers.Game.MonsterTypeList.Add(monTypeList[ii]);
     }
 }

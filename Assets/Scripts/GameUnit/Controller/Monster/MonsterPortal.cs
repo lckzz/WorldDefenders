@@ -105,11 +105,19 @@ public class MonsterPortal : Tower
     protected override void TowerDestroy()
     {
         if (twState == TowerState.Destroy)
-        {   
+        {
 
             //게이트가 파괴상태라면 승리 애니메이션과 결과팝업을 킨다.
             //anim.SetTrigger("Destroy");
-            Managers.Game.SetStageStateType(Define.StageStageType.Victory); //스테이지 상태를 바꿔준다.
+
+            if(Managers.Scene.CurrentScene as GameScene)
+            {
+                GameScene gameScene = (GameScene)Managers.Scene.CurrentScene;
+                gameScene.GameDirector(Define.GameStageDirector.Victory);
+                Managers.Game.SetStageStateType(Define.StageStageType.Victory);
+
+            }
+
         }
     }
 }

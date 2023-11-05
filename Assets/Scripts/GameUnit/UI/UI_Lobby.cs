@@ -54,6 +54,15 @@ public class UI_Lobby : UI_Base
 
 
 
+        if (GlobalData.g_LobbyToGameScene)
+        {
+            //게임씬에서 로비로 돌아왔다면
+            StageSelectOn();        //스테이지 팝업씬을 켜주고
+            GlobalData.g_LobbyToGameScene = false;      //false로 바꿔주기
+
+        }
+
+
     }
 
     // Update is called once per frame

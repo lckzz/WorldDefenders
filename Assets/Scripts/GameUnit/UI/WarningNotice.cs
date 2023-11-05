@@ -24,6 +24,15 @@ public class WarningNotice : MonoBehaviour
 
     }
 
+    private void OnDisable()
+    {
+        if (co != null)
+        {
+            Debug.Log("여기 코루틴 꺼저용");
+            StopCoroutine(co);
+
+        }
+    }
 
 
     public void WarningObjisOn(string warningTxt)
@@ -32,12 +41,16 @@ public class WarningNotice : MonoBehaviour
         //경고창의 체크가 꺼져있을때
         if (co != null)
             StopCoroutine(co);
-        co = StartCoroutine(WarningObject(warningTxt)); //경고창을 켜준다
+        else
+            co = StartCoroutine(WarningObject(warningTxt)); //경고창을 켜준다
+
 
     }
 
     IEnumerator WarningObject(string warningTxt)
     {
+
+        Debug.Log("여기 코루틴들어감");
         rt.localPosition = new Vector3(1300.0f, rt.localPosition.y, rt.localPosition.z);
         rt.DOKill();
 

@@ -59,60 +59,58 @@ public class GameScene : BaseScene
     // Update is called once per frame
     void Update()
     {
-        if (playable.state == PlayState.Playing)  //타임라인이 작동중이면 리턴
+        if (playable.state == PlayState.Playing || Managers.Game.GameEndResult())  //타임라인이 작동중이면 리턴
             return;
-        if (Managers.Game.GameEndResult())
-            return;
-
-
-        if (playable.playableAsset == timeLines[(int)Define.GameStageDirector.Victory])
-            Managers.Game.ResultState(Define.StageStageType.Victory);
-        if (playable.playableAsset == timeLines[(int)Define.GameStageDirector.Defeat])
-            Managers.Game.ResultState(Define.StageStageType.Defeat);
-
         if (Managers.UI.GetSceneUI<UI_GamePlay>() == null)
             return;
-
-
-
-        if(Input.GetKeyDown(KeyCode.W))
-            GameDirector(Define.GameStageDirector.Victory);
-
-
         if (warningNotice == null)
             Managers.UI.GetSceneUI<UI_GamePlay>().TryGetComponent(out warningNotice);
 
 
 
-        Managers.Game.InGameTimer();
+        if (playable.playableAsset == timeLines[(int)Define.GameStageDirector.Victory])
+            Managers.Game.ResultState(Define.StageStageType.Victory);
+        //if (playable.playableAsset == timeLines[(int)Define.GameStageDirector.Defeat])
+        //    Managers.Game.ResultState(Define.StageStageType.Defeat);
+
+
+
+
+
+
+        if(!Managers.Game.GameEndResult())
+        {
+            Managers.Game.InGameTimer();
+
+            //Debug.Log(Managers.Game.GetMonSpawnType());
+            Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCoolTime(speed);
+            Managers.UI.GetSceneUI<UI_GamePlay>().InGameTimer();
+
+            Managers.Game.unitSummonDequeue(obj, unitSpawnTr);
+            Managers.Game.CostIncreaseTime();
+            Managers.Game.NormalMonsterSpawn(Managers.Game.GetMonSpawnType(), warningNotice.WarningObjisOn, warningElite);
+
+            //Debug.Log(Managers.Game.GetMonSpawnType());
+            if (Managers.Game.GetMonSpawnType() == Define.MonsterSpawnType.Normal)
+            {
+                //웨이브를 기다리는 타이머함수
+
+                Managers.Game.MonsterWaveEvent(warningNotice.WarningObjisOn, warningWave);
+                //경고창을 띄우는 함수를 보내서 Wave이벤트일때 사용
+            }
+            else if (Managers.Game.GetMonSpawnType() == Define.MonsterSpawnType.Wave)
+            {
+                //웨이브 지속시간 타이머함수
+                Managers.Game.MonsterWave();
+                //경고창을 띄우는 함수를 보내서 Wave이벤트일때 사용
+
+            }
+            else if (Managers.Game.GetMonSpawnType() == Define.MonsterSpawnType.Final)
+            {
+                Managers.Game.FinalMonsterWave(warningNotice.WarningObjisOn, warningFinal, finalMonsterCount);
+            }
+        }
         
-        //Debug.Log(Managers.Game.GetMonSpawnType());
-        Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCoolTime(speed);
-        Managers.UI.GetSceneUI<UI_GamePlay>().InGameTimer();
-
-        Managers.Game.unitSummonDequeue(obj,unitSpawnTr);
-        Managers.Game.CostIncreaseTime();
-        Managers.Game.NormalMonsterSpawn(Managers.Game.GetMonSpawnType(), warningNotice.WarningObjisOn, warningElite);
-
-        //Debug.Log(Managers.Game.GetMonSpawnType());
-        if (Managers.Game.GetMonSpawnType() == Define.MonsterSpawnType.Normal)
-        {
-            //웨이브를 기다리는 타이머함수
-
-            Managers.Game.MonsterWaveEvent(warningNotice.WarningObjisOn, warningWave);
-            //경고창을 띄우는 함수를 보내서 Wave이벤트일때 사용
-        }
-        else if (Managers.Game.GetMonSpawnType() == Define.MonsterSpawnType.Wave)
-        {
-            //웨이브 지속시간 타이머함수
-            Managers.Game.MonsterWave();
-            //경고창을 띄우는 함수를 보내서 Wave이벤트일때 사용
-
-        }
-        else if(Managers.Game.GetMonSpawnType() == Define.MonsterSpawnType.Final)
-        {
-            Managers.Game.FinalMonsterWave(warningNotice.WarningObjisOn,warningFinal,finalMonsterCount);
-        }
 
 
     }

@@ -151,8 +151,6 @@ public class UnitController : Unit,ISubject
         //UnitVictory();
         EnemySensor();
         UnitStateCheck();
-        if (monsterPortal != null)
-            Debug.Log((monsterPortal.transform.position - this.gameObject.transform.position).sqrMagnitude);
         //UnitVictory();
 
         //if (Input.GetKeyDown(KeyCode.Q))

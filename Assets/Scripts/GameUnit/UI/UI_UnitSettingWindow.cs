@@ -183,7 +183,7 @@ public class UI_UnitSettingWindow : UI_Base
 
         for (int ii = 0; ii< unitSlotUiList.Count;ii++)
         {
-            unitSlotUiList[ii].SetUnitClass(GlobalData.g_SlotUnitClass[ii]);        //각각의 슬롯에 초기화된 유닛클래슬르 넣어준다.
+            unitSlotUiList[ii].SetUnitClass(Managers.Game.SlotUnitClass[ii]);        //각각의 슬롯에 초기화된 유닛클래슬르 넣어준다.
             unitSlotUiList[ii].RefreshUnitImg();  //유닛클래스와 해당 레벨에 맞는 이미지가 갱신된다.
             unitSlotUiList[ii].SlotIdx = ii;     // 슬롯별 순서인덱스 정해주기
         }

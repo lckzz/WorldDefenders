@@ -71,9 +71,9 @@ public class SkeletonSummonController : SkillBase
     IEnumerator SkeletonSummon()
     {
 
-        for(int ii = 0;  ii < GlobalData.g_MonsterTypeList.Count - 1;ii++)
+        for(int ii = 0;  ii < Managers.Game.MonsterTypeList.Count - 1;ii++)
         {
-            monList.Add(System.Enum.GetName(typeof(Define.MonsterType), GlobalData.g_MonsterTypeList[ii]));
+            monList.Add(System.Enum.GetName(typeof(Define.MonsterType), Managers.Game.MonsterTypeList[ii]));
             spawnList.Add(Managers.Resource.Load<GameObject>($"Prefabs/Monster/{monList[ii]}"));
 
         }

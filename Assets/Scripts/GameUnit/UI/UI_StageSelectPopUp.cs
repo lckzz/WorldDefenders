@@ -18,6 +18,8 @@ public class UI_StageSelectPopUp : UI_Base
     [SerializeField] private GameObject uiObj;
     [SerializeField] private GameObject paperBg;
     [SerializeField] private GameObject stageInfoObj;
+    [SerializeField] private GameObject stageUIObj;
+
 
     private RectTransform paperRt;
     private Vector2 rtSizeDelta;
@@ -41,10 +43,17 @@ public class UI_StageSelectPopUp : UI_Base
     // Start is called before the first frame update
     public override void Start()
     {
+        Managers.Game.FileSave();
         paperBg?.TryGetComponent(out paperRt);
         rtSizeDelta = paperRt.sizeDelta;
         rtSizeDelta.x = 0.0f;
         paperRt.sizeDelta = rtSizeDelta;
+        if(stageUIObj != null)
+        {
+            if (stageUIObj.activeSelf)
+                stageUIObj.SetActive(false);
+        }
+
 
         StartCoroutine(StartPaperDeltaSizeDo(openSelectPaper, true));
         if (backBtn != null)
@@ -237,8 +246,10 @@ public class UI_StageSelectPopUp : UI_Base
     void StartInGame()
     {
         Managers.Sound.Play("Effect/UI_Click");
-
+        GlobalData.g_LobbyToGameScene = true;           //게임을 시작하면 다음에 로비로 돌아올시 스테이지 선택창이 뜨게끔
+        stageUIObj.SetActive(false);
         fadeCheck = true;
+        
         //Managers.Scene.LoadScene(Define.Scene.BattleStage_Field);
     }
 

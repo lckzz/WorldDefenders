@@ -40,6 +40,8 @@ public class UI_GamePlay : UI_Base
 
     [SerializeField] TextMeshProUGUI timerTxt;
 
+    [SerializeField] GameObject warningTxtObj;
+
 
 
     //---------Camera Move Btn-----------------------------
@@ -129,13 +131,13 @@ public class UI_GamePlay : UI_Base
 
 
 
-        for (int ii = 0; ii < GlobalData.g_SlotUnitClass.Count; ii++)
+        for (int ii = 0; ii < Managers.Game.SlotUnitClass.Count; ii++)
         {
-            if (GlobalData.g_SlotUnitClass[ii] != UnitClass.Count)
+            if (Managers.Game.SlotUnitClass[ii] != UnitClass.Count)
             {
                 GameObject nodeObj = Managers.Resource.Instantiate("Unit/UnitSpawnBtn", contents.transform);
                 nodeObj.TryGetComponent(out UnitNode unitNode);
-                unitNode.UnitInit(GlobalData.g_SlotUnitClass[ii]);
+                unitNode.UnitInit(Managers.Game.SlotUnitClass[ii]);
                 
 
             }    
@@ -239,6 +241,11 @@ public class UI_GamePlay : UI_Base
     {
         //Managers.UI.SceneUIClear();
         Managers.UI.ShowSceneUI<UI_GamePlay>();
+    }
+
+    private void OnDisable()
+    {
+        warningTxtObj?.SetActive(false);
     }
 
 
@@ -405,32 +412,6 @@ public class UI_GamePlay : UI_Base
     }
 
 
-
-    void FadeOut()
-    {
-        if (fadeCheck)
-        {
-            if (!fadeImg.gameObject.activeSelf)
-                fadeImg.gameObject.SetActive(true);
-
-            if (fadeImg.gameObject.activeSelf && fadeImg.color.a > 0)
-            {
-                Color col = fadeImg.color;
-                if (col.a > 0)
-                    col.a -= (Time.deltaTime * 1.0f);
-
-                fadeImg.color = col;
-
-                if (fadeImg.color.a <= 0.01f)
-                {
-                    fadeImg.gameObject.SetActive(false);
-                    fadeCheck = false;
-
-                }
-
-            }
-        }
-    }
 
     void LeftBtnOn()
     {

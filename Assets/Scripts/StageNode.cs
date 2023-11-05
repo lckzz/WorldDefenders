@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,10 @@ public class StageNode : MonoBehaviour
     [SerializeField] private Image stageTxtImg;
     [SerializeField] private Image lockImg;
     [SerializeField] private Image stageObjectiveImg;
+    [SerializeField] private TextMeshProUGUI stageClearTxt;
+    [SerializeField] private GameObject fireEffObj;
+
+
     private RectTransform stageImgRt;
     private RectTransform stageSubImgRt;
     private RectTransform stageObjectiveRt;
@@ -62,7 +67,7 @@ public class StageNode : MonoBehaviour
             this.gameObject.TryGetComponent(out stageAnim);
 
 
-       
+
 
         //해당 스테이지에 따라서 몬스터리스트를 갱신해주고 현재 스테이지의 상태를 보여줌
         switch (stage)
@@ -72,16 +77,26 @@ public class StageNode : MonoBehaviour
                 stageMonsterList.Add(Define.MonsterType.BowSkeleton);
                 stageMonsterList.Add(Define.MonsterType.EliteWarrior);
 
-
                 stageState = Define.StageState.Open;
+                
+                if(GlobalData.g_WestStageClear)
+                {
+                    fireEffObj.SetActive(false);
+                    stageClearTxt.gameObject.SetActive(true);
+                }
+
                 break;
             case Define.SubStage.East:
                 stageMonsterList.Add(Define.MonsterType.MidSkeleton);
                 stageMonsterList.Add(Define.MonsterType.MidBowSkeleton);
                 stageMonsterList.Add(Define.MonsterType.EliteShaman);
 
-
                 stageState = Define.StageState.Open;
+                if (GlobalData.g_EastStageClear)
+                {
+                    fireEffObj.SetActive(false);
+                    stageClearTxt.gameObject.SetActive(true);
+                }
 
                 break;
             case Define.SubStage.South:
@@ -90,6 +105,11 @@ public class StageNode : MonoBehaviour
                 stageMonsterList.Add(Define.MonsterType.EliteCavalry);
 
                 stageState = Define.StageState.Open;
+                if (GlobalData.g_SouthStageClear)
+                {
+                    fireEffObj.SetActive(false);
+                    stageClearTxt.gameObject.SetActive(true);
+                }
 
                 break;
 
@@ -149,6 +169,13 @@ public class StageNode : MonoBehaviour
         stageObjectiveRt?.gameObject.SetActive(true);
         stageObjectiveRt?.DOSizeDelta(new Vector2(230.0f, stageObjectiveRt.sizeDelta.y), 0.3f);
         stageImg.color = stageClickColor;
+
+        if(stageClearTxt != null)
+        {
+            if (stageClearTxt.gameObject.activeSelf)
+                stageClearTxt.DOFontSize(47.0f, 0.1f);
+        }
+
     }
 
     public void ClickStageDoOff()
@@ -159,6 +186,12 @@ public class StageNode : MonoBehaviour
         stageSubImgRt?.DOSizeDelta(new Vector2(102.0f, 107.0f), 0.1f);
         stageObjectiveRt?.DOSizeDelta(new Vector2(0.0f, stageObjectiveRt.sizeDelta.y), 0.3f);
         stageImg.color = stageNonClickColor;
+        if (stageClearTxt != null)
+        {
+            if (stageClearTxt.gameObject.activeSelf)
+                stageClearTxt.DOFontSize(37.0f, 0.1f);
+        }
+
     }
 
     public Vector3 GetNodePosition()
