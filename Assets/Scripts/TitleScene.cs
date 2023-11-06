@@ -54,7 +54,13 @@ public class TitleScene : MonoBehaviour
             {
                 //저장파일이 있다면
                 Managers.Game.GameDataInit();
-                Managers.Game.FileLoad();
+                Managers.Game.FileLoad();   //파일을 불러온다
+                if(Managers.Game.UnitWarriorLv == 0)        //파일을 불러왔는데 기본캐릭터인 전사가 레벨이 0이라면
+                {
+                    Managers.Game.GameDataInit();       //이상하게 저장된 게임파일로 초기화 시켜준다.
+                    Managers.Game.SlotUnitClass.Clear();        //배열도 초기화 시켜줘야한다.
+                }
+
                 //초기화후 저장파일을 불러옴
             }
             else

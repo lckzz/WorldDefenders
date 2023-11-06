@@ -29,8 +29,6 @@ public class StageInfo : MonoBehaviour
 
     private void OnEnable()
     {
-
-
         StageInfoInit();
 
     }

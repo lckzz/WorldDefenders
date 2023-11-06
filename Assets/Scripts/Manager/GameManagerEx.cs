@@ -209,7 +209,6 @@ public class GameManagerEx
         EffisOn = false;
 
 
-        Debug.Log("zdasd" + Managers.Game.UnitArcherLv);
     }
 
 

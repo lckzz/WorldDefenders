@@ -118,31 +118,40 @@ public class UI_StageSelectPopUp : UI_Base
         for(int i = 0; i < onestageSels.Length; i++)
         {
             onestageSels[i].TryGetComponent(out stagenode);
-            stagenode.ClickStageDoOff();
+            if(stagenode.StState == Define.StageState.Open)
+                stagenode.ClickStageDoOff();
 
         }
 
         //해당 스테이지를 누르면 지금 스테이지가 어떤 스테이지인지 확인하고 해당스테이지 몬스터의 정보를 받아온다
         onestageSels[ii].TryGetComponent(out stagenode);
         Managers.Game.CurStageType = stagenode.Stage;
-        
 
-        if(stagenode.StState == Define.StageState.Open)
+
+        if (stagenode.StState == Define.StageState.Open)
         {
             Managers.Game.SetMonsterList(stagenode.StageMonsterList);  //정적변수에 몬스터의 정보들을 받아둔다.
             if (ui_PlayerCtrl.IsGo == false)
                 SelectStageTextRefresh(Define.MainStage.One, Managers.Game.CurStageType);
             ui_PlayerCtrl.SetTarget(Managers.Game.CurStageType, true);
             StartBtnActive();
+            stagenode.ClickStageDoOn();
+            stageInfoObj.SetActive(true);
+            if (stageInfo == null)
+                stageInfoObj.TryGetComponent(out stageInfo);
+
+            stageInfo.SetStageInfoPosition(stagenode.GetNodePosition());
+            stageInfo.StageInfoInit();
+        }
+        else
+        {
+            //락걸린 스테이지를 눌럿을때
+            StartBtnInActive();     //버튼 비활성화 
+            stageInfo?.gameObject.SetActive(false);  //열린 스테이지정보 오브젝틀르 꺼준다.
+
         }
 
-        stagenode.ClickStageDoOn();
-        stageInfoObj.SetActive(true);
-        if (stageInfo == null)
-            stageInfoObj.TryGetComponent(out stageInfo);
 
-        stageInfo.SetStageInfoPosition(stagenode.GetNodePosition());
-        stageInfo.StageInfoInit();
 
     }
 

@@ -79,24 +79,27 @@ public class StageNode : MonoBehaviour
 
                 stageState = Define.StageState.Open;
                 
-                if(Managers.Game.WestStageClear)
-                {
-                    fireEffObj.SetActive(false);
-                    stageClearTxt.gameObject.SetActive(true);
-                }
+                //if(Managers.Game.WestStageClear)
+                //{
+                //    fireEffObj.SetActive(false);
+                //    stageClearTxt.gameObject.SetActive(true);
+                //}
 
                 break;
             case Define.SubStage.East:
                 stageMonsterList.Add(Define.MonsterType.MidSkeleton);
                 stageMonsterList.Add(Define.MonsterType.MidBowSkeleton);
                 stageMonsterList.Add(Define.MonsterType.EliteShaman);
-
-                stageState = Define.StageState.Open;
-                if (Managers.Game.EastStageClear)
-                {
-                    fireEffObj.SetActive(false);
-                    stageClearTxt.gameObject.SetActive(true);
-                }
+                
+                if(Managers.Game.WestStageClear)
+                    stageState = Define.StageState.Open;
+                else
+                    stageState = Define.StageState.Lock;
+                //if (Managers.Game.EastStageClear)
+                //{
+                //    fireEffObj.SetActive(false);
+                //    stageClearTxt.gameObject.SetActive(true);
+                //}
 
                 break;
             case Define.SubStage.South:
@@ -104,18 +107,17 @@ public class StageNode : MonoBehaviour
                 stageMonsterList.Add(Define.MonsterType.HighBowSkeleton);
                 stageMonsterList.Add(Define.MonsterType.EliteCavalry);
 
-                stageState = Define.StageState.Open;
-                if (Managers.Game.SouthStageClear)
-                {
-                    fireEffObj.SetActive(false);
-                    stageClearTxt.gameObject.SetActive(true);
-                }
+                if (Managers.Game.EastStageClear)
+                    stageState = Define.StageState.Open;
+                else
+                    stageState = Define.StageState.Lock;
+                //if (Managers.Game.SouthStageClear)
+                //{
+                //    fireEffObj.SetActive(false);
+                //    stageClearTxt.gameObject.SetActive(true);
+                //}
 
                 break;
-
-
-               
-
         }
 
 
@@ -132,6 +134,9 @@ public class StageNode : MonoBehaviour
                 stageSubImg.color = stageLockColor;
                 stageTxtImg.color = stageLockColor;
             }
+
+            if (fireEffObj != null)
+                fireEffObj.SetActive(false);
         }
 
         else if(stageState == Define.StageState.Open)

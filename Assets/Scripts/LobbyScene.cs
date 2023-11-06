@@ -30,7 +30,7 @@ public class LobbyScene : BaseScene
     {
         //Managers.UI.ShowSceneUI<UI_Lobby>();
         Init();
-
+        Debug.Log(Managers.Game.SlotUnitClass.Count);
     }
 
     // Update is called once per frame
