@@ -749,7 +749,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -359.2, y: 69.2}
-  m_SizeDelta: {x: 200, y: 248.1}
+  m_SizeDelta: {x: 191.61, y: 248.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &152358830
 Animator:
@@ -1167,7 +1167,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1099174599
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1307,6 +1307,7 @@ GameObject:
   - component: {fileID: 1174315532}
   - component: {fileID: 1174315531}
   - component: {fileID: 1174315530}
+  - component: {fileID: 1174315534}
   m_Layer: 5
   m_Name: DialogueCanvas
   m_TagString: Untagged
@@ -1397,6 +1398,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1174315534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1174315529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5d1181f1d3997e4da0c88ba09529781, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogPanelObj: {fileID: 1099174598}
+  dialogtxt: {fileID: 1874833337}
 --- !u!1 &1202335611
 GameObject:
   m_ObjectHideFlags: 0
@@ -2006,10 +2021,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC548\uB155\uD558\uC138\uC694! \uB2E8\uC7A5\uB2D8.\n\uB2E8\uC7A5\uB2D8\uAED8\uC120
-    \uC6A9\uBCD1\uB2E8\uC744 \uC774\uB04C\uACE0 \uC138\uACC4\uC5D0 \uB098\uD0C0\uB09C
-    \uBAAC\uC2A4\uD130\uB97C \n\uC5C6\uC560\uACE0 \uADFC\uC6D0\uC778 \uBAAC\uC2A4\uD130
-    \uAC8C\uC774\uD2B8\uB97C \uC5C6\uC560\uC57C \uD569\uB2C8\uB2E4!"
+  m_text: "\r\n\uC548\uB155\uD558\uC138\uC694! 00\uB2D8 \uC800\uD76C \uC6A9\uBCD1\uB4E4\uC744
+    \uC774\uB04C\uC5B4\uC8FC\uC154\uC11C \uAC10\uC0AC\uD569\uB2C8\uB2E4.\n \uC9C0\uAE08
+    \uC0C1\uD669\uC774 \uC815\uB9D0 \uAE09\uD569\uB2C8\uB2E4.."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8581f370002b34a40afc77783ff445c1, type: 2}
   m_sharedMaterial: {fileID: -3241833861085421620, guid: 8581f370002b34a40afc77783ff445c1, type: 2}

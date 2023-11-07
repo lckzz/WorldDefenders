@@ -1,3 +1,4 @@
+using SimpleJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -45,6 +46,11 @@ public class DataManager
     public Dictionary<int, SkillData> weaknessSkillDict { get; private set; } = new Dictionary<int, SkillData>();
     #endregion
 
+    #region 튜토리얼 다이얼로그
+    public Dictionary<string,TextAsset> tutorialDialogue { get; private set; } = new Dictionary<string,TextAsset>();
+    #endregion 
+
+
     public void Init()
     {
         towerDict = LoadJson<TowerData, int, TowerStat>("TowerData").MakeDict();
@@ -66,6 +72,11 @@ public class DataManager
         healSkillDict = LoadJson<HealSkillData, int, SkillData>("SkillData").MakeDict();
         fireArrowSkillDict = LoadJson<FireArrowSkillData, int, SkillData>("SkillData").MakeDict();
         weaknessSkillDict = LoadJson<WeaknessSkillData, int, SkillData>("SkillData").MakeDict();
+
+        tutorialDialogue = new Dictionary<string, TextAsset>
+        {
+            { "tutorial", Managers.Resource.Load<TextAsset>("Data/DialogueData") }
+        };
 
     }
     Loader LoadJson<Loader,Key,Value>(string path) where Loader : ILoader<Key,Value>

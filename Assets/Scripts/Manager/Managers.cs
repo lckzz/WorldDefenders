@@ -15,7 +15,7 @@ public class Managers : MonoBehaviour
     SoundManager _sound = new SoundManager();
     LoadingSceneManager _loading = new LoadingSceneManager();
     GameManagerEx _game = new GameManagerEx();
-
+    DialogueManager _dialog = new DialogueManager();
 
     public static PoolManager Pool { get { return Instance?._pool; } }
     public static SceneManagerEx Scene { get { return Instance?._scene; } }
@@ -25,6 +25,8 @@ public class Managers : MonoBehaviour
     public static SoundManager Sound { get { return Instance?._sound; } }
     public static DataManager Data { get { return Instance?._data; } }
     public static LoadingSceneManager Loading { get { return Instance?._loading; } }
+
+    public static DialogueManager Dialog { get { return Instance?._dialog; } }
 
     static void Init()
     {

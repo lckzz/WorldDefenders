@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SimpleJSON;
+
 
 public class GlobalData 
 {
@@ -91,6 +93,7 @@ public class GlobalData
         {
             //나중에는 저장된 슬롯의 유닛상태를 가져와서 g_SlotUnitClass에서 다시 넣어줘야함
         }
+       
 
     }
 
