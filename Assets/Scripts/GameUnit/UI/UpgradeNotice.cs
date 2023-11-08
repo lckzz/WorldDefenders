@@ -5,9 +5,15 @@ using UnityEngine.UI;
 using TMPro;
 public class UpgradeNotice : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI goldTxt;
     [SerializeField] private Button yesBtn;
     [SerializeField] private Button noBtn;
+    [SerializeField] private Button checkBtn;
+
+
+    [SerializeField] private GameObject selectObj;
+    [SerializeField] private GameObject buyFailObj;
+
+    int upgradeGold = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -15,27 +21,47 @@ public class UpgradeNotice : MonoBehaviour
         if (yesBtn != null)
             yesBtn.onClick.AddListener(() =>
             {
-                if(Managers.UI.PeekPopupUI<UI_UnitUpgradePopUp>())
+                if (upgradeGold > Managers.Game.Gold)
                 {
-                    Managers.UI.PeekPopupUI<UI_UnitUpgradePopUp>().UpgradeUnit();
-                    Managers.UI.PeekPopupUI<UI_UnitUpgradePopUp>().LevelUpParticleOn();
-
-                }
-                else if(Managers.UI.PeekPopupUI<UI_PlayerUpgradePopUp>())
-                {
-                    Managers.UI.PeekPopupUI<UI_PlayerUpgradePopUp>().Upgrade();
-                    Managers.UI.PeekPopupUI<UI_PlayerUpgradePopUp>().LevelUpParticleOn();
-
-
+                    buyFailObj.SetActive(true);
+                    selectObj.SetActive(false);
                 }
 
-                Managers.Game.FileSave();       //업그레이드시 저장
-                ParentGameObjectOff();
+                else
+                {
+                    if (Managers.UI.PeekPopupUI<UI_UnitUpgradePopUp>())
+                    {
+                        Managers.UI.PeekPopupUI<UI_UnitUpgradePopUp>().UpgradeUnit();
+                        Managers.UI.PeekPopupUI<UI_UnitUpgradePopUp>().LevelUpParticleOn();
+
+                    }
+                    else if (Managers.UI.PeekPopupUI<UI_PlayerUpgradePopUp>())
+                    {
+                        Managers.UI.PeekPopupUI<UI_PlayerUpgradePopUp>().Upgrade();
+                        Managers.UI.PeekPopupUI<UI_PlayerUpgradePopUp>().LevelUpParticleOn();
+
+
+                    }
+
+                    Managers.Game.Gold -= upgradeGold;
+                    Managers.UI.FindPopup<UI_UpgradeWindow>().RefreshTextUI();
+                    Managers.Game.FileSave();       //업그레이드시 저장
+                    ParentGameObjectOff();
+                }
+
+
 
             });
 
         if (noBtn != null)
             noBtn.onClick.AddListener(() =>
+            {
+                ParentGameObjectOff();
+            });
+
+        
+        if (checkBtn != null)
+            checkBtn.onClick.AddListener(() =>
             {
                 ParentGameObjectOff();
             });
@@ -46,5 +72,10 @@ public class UpgradeNotice : MonoBehaviour
     void ParentGameObjectOff()
     {
         transform.parent.gameObject.SetActive(false);
+    }
+
+    public void SetUpgradeGold(int upgradeGold)
+    {
+        this.upgradeGold = upgradeGold;
     }
 }

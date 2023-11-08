@@ -54,7 +54,6 @@ public class DialogueCtrl : MonoBehaviour
 
             float duration = text.Length * timePerChar;
 
-            Debug.Log(text.Length);
             dialogtxt.DOText(text, duration).SetEase(Ease.Linear);
            
             
@@ -63,6 +62,7 @@ public class DialogueCtrl : MonoBehaviour
                 if (click)
                 {
                     click = false;
+                    dialogtxt.DOKill();
                     yield break;
                 }
 

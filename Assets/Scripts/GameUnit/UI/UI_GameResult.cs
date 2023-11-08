@@ -18,16 +18,27 @@ public class UI_GameResult : UI_Base
     private TextMeshProUGUI timer;
     [SerializeField]
     private Image fadeImg;
+    [SerializeField]
+    private TextMeshProUGUI goldTxt;
+    [SerializeField]
+    private GameObject bestScoreObj;
 
-    [SerializeField] private Sprite[] resultsprite;
-    bool exitFade = false;
-    bool retryFade = false;
 
-    bool timecheck = false;
-    int min = 0;
-    int sec = 0;
-    int curmin = 0;
-    int cursec = 0;
+    [SerializeField] private Sprite[] resultSprite;
+    private bool exitFade = false;
+    private bool retryFade = false;
+
+    private int min = 0;
+    private int sec = 0;
+    private int curmin = 0;
+    private int cursec = 0;
+
+    private int stageGold = 0;          //스테이지 클리어 골드
+    private float stageBestTime = .0f;      //현재 스테이지 베스트타임
+    private float stageClearTime = .0f;     //스테이지 클리어 타임
+    private float speed = 0.0f;
+
+    private Coroutine coroutine = null;
 
     Define.StageStageType stageType;
 
@@ -41,27 +52,60 @@ public class UI_GameResult : UI_Base
         if (Managers.Game.GetStageStateType() == Define.StageStageType.Victory)
         {
             //게임의 상태가 승리라면
-            failOrVictoryImg.sprite = resultsprite[(int)Managers.Game.GetStageStateType() - 1];
+            failOrVictoryImg.sprite = resultSprite[(int)Managers.Game.GetStageStateType() - 1];
 
             switch (Managers.Game.CurStageType)
             {
                 case Define.SubStage.West:
                     Managers.Game.WestStageClear = true;
+                    stageGold = Managers.Game.WestStageGold;
+                    stageBestTime = Managers.Game.WestStageBestTime;
+                    Managers.Game.WestStageBestTime = RefreshBestClearTime();
                     break;
                 case Define.SubStage.East:
                     Managers.Game.EastStageClear = true;
+                    stageGold = Managers.Game.EastStageGold;
+                    stageBestTime = Managers.Game.EastStageBestTime;
+                    Managers.Game.EastStageBestTime = RefreshBestClearTime();
                     break;
                 case Define.SubStage.South:
                     Managers.Game.SouthStageClear = true;
+                    stageGold = Managers.Game.SouthStageGold;
+                    stageBestTime = Managers.Game.SouthStageBestTime;
+                    Managers.Game.SouthStageBestTime = RefreshBestClearTime();
                     break;
             }
 
+            Managers.Game.Gold += stageGold;
             Managers.Game.FileSave();
 
+
+
+                speed = 350.0f;
         }
 
         else if (Managers.Game.GetStageStateType() == Define.StageStageType.Defeat)
-            failOrVictoryImg.sprite = resultsprite[(int)Managers.Game.GetStageStateType() - 1];
+        {
+            failOrVictoryImg.sprite = resultSprite[(int)Managers.Game.GetStageStateType() - 1];
+            switch (Managers.Game.CurStageType)
+            {
+                case Define.SubStage.West:
+                    stageGold = Managers.Game.WestStageGold / 10;     //실패시 기본골드의 1/10획득
+                    break;
+                case Define.SubStage.East:
+                    stageGold = Managers.Game.EastStageGold / 10;
+                    break;
+                case Define.SubStage.South:
+                    stageGold = Managers.Game.SouthStageGold / 10;
+                    break;
+            }
+            Managers.Game.Gold += stageGold;
+            Managers.Game.FileSave();
+            speed = 35.0f;
+
+        }
+
+
 
 
         if (retryBtn != null)
@@ -78,16 +122,15 @@ public class UI_GameResult : UI_Base
 
             });
 
+        coroutine = StartCoroutine(ResultGoldCo(speed));
+
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(timecheck)
-        {
-            timecheck = false;
-            StartCoroutine(Timer());
-        }
 
         RetryFadeIn();
         ExitFadeIn();
@@ -107,12 +150,26 @@ public class UI_GameResult : UI_Base
     }
 
 
+    float RefreshBestClearTime()
+    {
+        if (stageClearTime < stageBestTime || stageBestTime <= 0.0f) //아직 베스트타임이 정해지지 않았거나 만약 승리시 현재 클리어타임이 저장되어있는 베스트 클리어타임보다 빠르다면
+        {
+            bestScoreObj.SetActive(true);
+            return stageClearTime;
+        }
+
+
+        return stageBestTime;       //베스트타임이 더 빠르다면 베스트 타임 그대로 리턴
+
+    }
+
+
     void TimerSetting()
     {
-
-        min = (int)Managers.Game.GetInGameTimer() / 60;
-        sec = (int)Managers.Game.GetInGameTimer() % 60;
-        timecheck = true;
+        stageClearTime = Managers.Game.GetInGameTimer();
+        min = (int)stageClearTime / 60;
+        sec = (int)stageClearTime % 60;
+        StartCoroutine(Timer());
     }
 
 
@@ -165,6 +222,23 @@ public class UI_GameResult : UI_Base
 
 
             yield return timewfs;
+        }
+    }
+
+    IEnumerator ResultGoldCo(float speed)
+    {
+        float count = 0;
+        while(true)
+        {
+            Debug.Log(count);
+            count += Time.deltaTime * speed;
+            if ((int)count > stageGold)
+            {
+                yield break;
+            }
+            goldTxt.text = ((int)count).ToString();
+
+            yield return null;
         }
     }
 

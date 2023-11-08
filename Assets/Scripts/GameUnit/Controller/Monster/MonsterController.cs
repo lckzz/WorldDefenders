@@ -780,8 +780,8 @@ public class MonsterController : Unit
             if (randItem == 0)       //°ñµå¶ó¸é
             {
                 unitHUDHp?.SpawnHUDText(DropGold.ToString(), (int)UnitDamageType.Item);
-                Managers.Game.InGameGold += DropGold;
-                Managers.UI.GetSceneUI<UI_GamePlay>().UpdateGold(Managers.Game.InGameGold);
+                Managers.Game.GameGold += DropGold;
+                Managers.UI.GetSceneUI<UI_GamePlay>().UpdateGold(Managers.Game.GameGold);
             }
             else
             {

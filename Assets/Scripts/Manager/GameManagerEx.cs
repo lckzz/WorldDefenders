@@ -29,6 +29,11 @@ public class GameData
     public float effValue;
     public bool bgmisOn;
     public bool effisOn;
+
+    public float westStageBestTime;
+    public float eastStageBestTime;
+    public float southStageBestTime;
+
 }
 
 [Serializable]
@@ -38,7 +43,7 @@ public class GameArrayData
 }
 
 [Serializable]
-public class SumData
+public class GameTotalData
 {
     public UnitClass[] unitClasses;
     public GameData gameData;
@@ -51,7 +56,7 @@ public class GameManagerEx
 
     GameData gameData = new GameData();
     GameArrayData gameSaveArrayData = new GameArrayData();
-    SumData sumData = new SumData();
+    GameTotalData gameTotalData = new GameTotalData();
 
 
     private MoneyCost moneyCost = new MoneyCost();
@@ -182,6 +187,24 @@ public class GameManagerEx
         set { gameData.effisOn = value; }
     }
 
+    public float WestStageBestTime
+    {
+        get { return gameData.westStageBestTime; }
+        set { gameData.westStageBestTime = value; }
+    }
+
+    public float EastStageBestTime
+    {
+        get { return gameData.eastStageBestTime; }
+        set { gameData.eastStageBestTime = value; }
+    }
+
+    public float SouthStageBestTime
+    {
+        get { return gameData.southStageBestTime; }
+        set { gameData.southStageBestTime = value; }
+    }
+
 
 
     #endregion
@@ -227,7 +250,12 @@ public class GameManagerEx
     public float Cost { get { return moneyCost.CurCost; } set { moneyCost.CurCost = value; } }
 
 
-    public int InGameGold { get { return moneyCost.GameMoney; } set { moneyCost.GameMoney = value; } }
+    public int GameGold { get { return moneyCost.GameMoney; } set { moneyCost.GameMoney = value; } }
+
+    public int WestStageGold { get { return moneyCost.WestStageGold; } }
+    public int EastStageGold { get { return moneyCost.EastStageGold; }  }
+    public int SouthStageGold { get { return moneyCost.SouthStageGold; } }
+
 
     public void MoneyCostInit()
     {
@@ -405,7 +433,7 @@ public class GameManagerEx
 
     public void FileSave()
     {
-        SumData arrayData = new SumData
+        GameTotalData arrayData = new GameTotalData
         {
             //리스트를 json으로 변환이 안되기때문에 배열로 감싸줘서 json으로 저장
             unitClasses = gameSaveArrayData.slotUnitClass.ToArray(),
@@ -430,7 +458,7 @@ public class GameManagerEx
 
 
         string fileStr = File.ReadAllText(path);
-        SumData data = JsonUtility.FromJson<SumData>(fileStr);
+        GameTotalData data = JsonUtility.FromJson<GameTotalData>(fileStr);
 
         gameSaveArrayData.slotUnitClass.Clear();
 

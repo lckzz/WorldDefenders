@@ -57,6 +57,7 @@ public class UI_UnitUpgradePopUp : UI_Base
     [SerializeField] private GameObject levelUpParticle;
 
     private LevelUpParticle levelUp;
+    private UpgradeNotice upgradeNotice;
 
     private RectTransform rt;
     private int unitLv = 0;
@@ -65,6 +66,7 @@ public class UI_UnitUpgradePopUp : UI_Base
 
     private int unitidx = 0;                //받아올 유닛의 클래스의정보
     
+    private UnitStat unit = new UnitStat();
 
 
 
@@ -73,6 +75,7 @@ public class UI_UnitUpgradePopUp : UI_Base
     {
         levelUpParticle.TryGetComponent(out levelUp);
         upgradeObj.TryGetComponent(out rt);
+        noticePanel.transform.Find("Notice").TryGetComponent(out upgradeNotice);
         rt.sizeDelta = new Vector2(rt.sizeDelta.x, 10.0f);
         rt.DOSizeDelta(new Vector2(1100.0f, 580.0f), 0.25f).SetEase(Ease.OutQuad);
 
@@ -141,7 +144,6 @@ public class UI_UnitUpgradePopUp : UI_Base
 
     void RefreshUnitStatUI(int unitLv, Dictionary<int,UnitStat> unitDict)
     {
-        UnitStat unit = new UnitStat();
 
         unit = unitDict[unitLv];
 
@@ -346,6 +348,7 @@ public class UI_UnitUpgradePopUp : UI_Base
             return;
 
         noticePanel.SetActive(true);
+        upgradeNotice.SetUpgradeGold(unit.price);
     }
 
     public void UpgradeUnit()

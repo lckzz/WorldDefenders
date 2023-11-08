@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.UI.CanvasScaler;
 
 public class UI_PlayerUpgradePopUp : UI_Base
 {
@@ -28,6 +29,8 @@ public class UI_PlayerUpgradePopUp : UI_Base
     private int towerMaxLv = 10;
 
     private LevelUpParticle levelUp;
+    private UpgradeNotice upgradeNotice;
+
     void PlayerInit()
     {
         towerLv = Managers.Game.PlayerLevel;
@@ -69,7 +72,7 @@ public class UI_PlayerUpgradePopUp : UI_Base
         PlayerInit();
 
         levelUpParticle.TryGetComponent(out levelUp);
-
+        noticePanel.transform.Find("Notice").TryGetComponent(out upgradeNotice);
         if (upgradeBtn != null)
             upgradeBtn.onClick.AddListener(UpgradeNoticePanelOn);
 
@@ -130,6 +133,7 @@ public class UI_PlayerUpgradePopUp : UI_Base
             return;
 
         noticePanel.SetActive(true);
+        upgradeNotice.SetUpgradeGold(tower.price);
     }
 
     public void LevelUpParticleOn()

@@ -12,6 +12,7 @@ public class UI_UpgradeWindow : UI_Base
     [SerializeField] private TextMeshProUGUI playerLvTxt;
     [SerializeField] private TextMeshProUGUI playerHpTxt;
     [SerializeField] private TextMeshProUGUI playerAttTxt;
+    [SerializeField] private TextMeshProUGUI goldTxt;
     [SerializeField] private Button upgradeBtn;
     [SerializeField] private GameObject upgradeContent;
 
@@ -42,7 +43,6 @@ public class UI_UpgradeWindow : UI_Base
         if (Managers.Game.PlayerLevel == 0)
             Managers.Game.PlayerLevel = 1;
 
-        Debug.Log((int)UnitClass.Count);
 
         unitUpgradePrefabs =  new GameObject[(int)UnitClass.Count];
         unitUpgradeObjs =  new GameObject[(int)UnitClass.Count];
@@ -66,6 +66,7 @@ public class UI_UpgradeWindow : UI_Base
             });
 
         startFadeOut = true;
+        goldTxt.text = Managers.Game.Gold.ToString();
 
         UnitInit();
 
@@ -137,12 +138,13 @@ public class UI_UpgradeWindow : UI_Base
 
 
 
-    void RefreshTextUI()
+    public void RefreshTextUI()
     {
         tower = Managers.Data.towerDict[Managers.Game.PlayerLevel];
         playerLvTxt.text = $"<#FF9F13>Lv</color> {tower.level}";
         playerHpTxt.text = tower.hp.ToString();
         playerAttTxt.text = tower.att.ToString();
+        goldTxt.text = Managers.Game.Gold.ToString();
     }
 
 
