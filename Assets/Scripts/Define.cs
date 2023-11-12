@@ -191,5 +191,11 @@ public class Define
         Defeat
     }
 
+    public enum DropItemType
+    {
+        Gold,
+        Cost
+    }
+
 
 }

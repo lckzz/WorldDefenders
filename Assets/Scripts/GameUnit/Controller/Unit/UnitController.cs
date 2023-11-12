@@ -518,7 +518,7 @@ public class UnitController : Unit,ISubject
         {
             SetUnitState(UnitState.Die);
             myColl.enabled = false;
-            StartCoroutine(Util.UnitDieTime(gameObject,5.0f));
+            StartCoroutine(Util.DestroyTime(gameObject,5.0f));
         }
     }
 

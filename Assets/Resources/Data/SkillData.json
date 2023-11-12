@@ -177,40 +177,40 @@
       "id": "1000",
       "level": "1",
       "name": "성문 수리",
-      "skillValue": "100",
+      "skillValue": "30",
       "skillTargetCount": "0",
       "skillCoolTime": "10",
       "skillPrefab": "Skill/TowerHealSkill",
       "skillDialog1": "성문을 고쳤어요",
       "skillDialog2": "성문 수리!",
       "skillImg": "Sprite/SKill/Heal",
-      "desc": "현재 타워의 체력을 100 회복시켜준다."
+      "desc": "현재 타워의 체력을 최대체력의 50%를 회복시켜준다."
     },
     {
       "id": "1000",
       "level": "2",
       "name": "성문 수리",
-      "skillValue": "350",
+      "skillValue": "45",
       "skillTargetCount": "0",
       "skillCoolTime": "10",
       "skillPrefab": "Skill/TowerHealSkill",
       "skillDialog1": "성문을 고쳤어요",
       "skillDialog2": "성문 수리!",
       "skillImg": "Sprite/SKill/Heal",
-      "desc": "현재 타워의 체력을 350 회복시켜준다."
+      "desc": "현재 타워의 체력을 최대체력의 45%를 회복시켜준다."
     },
     {
       "id": "1000",
       "level": "3",
       "name": "성문 수리",
-      "skillValue": "500",
+      "skillValue": "50",
       "skillTargetCount": "0",
       "skillCoolTime": "0",
       "skillPrefab": "Skill/TowerHealSkill",
       "skillDialog1": "성문을 고쳤어요",
       "skillDialog2": "성문 수리!",
       "skillImg": "Sprite/SKill/Heal",
-      "desc": "현재 타워의 체력을 500 회복시켜준다."
+      "desc": "현재 타워의 체력을 최대체력의 50%를 회복시켜준다."
     }
 
   ],
@@ -220,14 +220,14 @@
       "id": "1001",
       "level": "0",
       "name": "불화살",
-      "skillValue": "0",
+      "skillValue": "10",
       "skillTargetCount": "0",
-      "skillCoolTime": "0",
+      "skillCoolTime": "30",
       "skillPrefab": "Skill/FireArrowSkill",
       "skillDialog1": "화염 화살 장전",
       "skillDialog2": "불타라",
       "skillImg": "Sprite/SKill/FireArrow",
-      "desc": "플레이어의 화살이 0초 동안 불화살로 바뀐다.\n *일반 화살의 2배의 데미지를 갖는다."
+      "desc": "플레이어의 화살이 10초 동안 적을 넉백시키는 폭발화살로 바뀐다.\n 폭발에 휘말린 적들은 화상을 입는다."
     },
     {
       "id": "1001",
@@ -240,33 +240,33 @@
       "skillDialog1": "화염 화살 장전",
       "skillDialog2": "불타라",
       "skillImg": "Sprite/SKill/FireArrow",
-      "desc": "플레이어의 화살이 10초 동안 불화살로 바뀐다.\n *일반 화살의 2배의 데미지를 갖는다."
+      "desc": "플레이어의 화살이 10초 동안 적을 넉백시키는 폭발화살로 바뀐다.\n 폭발에 휘말린 적들은 화상을 입는다."
     },
     {
       "id": "1001",
       "level": "2",
       "name": "불화살",
-      "skillValue": "13",
+      "skillValue": "7",
       "skillTargetCount": "0",
       "skillCoolTime": "30",
       "skillPrefab": "Skill/FireArrowSkill",
       "skillDialog1": "화염 화살 장전",
       "skillDialog2": "불타라",
       "skillImg": "Sprite/SKill/FireArrow",
-      "desc": "플레이어의 화살이 13초 동안 불화살로 바뀐다.\n *일반 화살의 2배의 데미지를 갖는다."
+      "desc": "플레이어의 화살이 7초 동안 적을 넉백시키는 폭발화살로 바뀐다.\n 폭발에 휘말린 적들은 화상을 입는다."
     },
     {
       "id": "1001",
       "level": "3",
       "name": "불화살",
-      "skillValue": "15",
+      "skillValue": "10",
       "skillTargetCount": "0",
       "skillCoolTime": "30",
       "skillPrefab": "Skill/FireArrowSkill",
       "skillDialog1": "화염 화살 장전",
       "skillDialog2": "불타라",
       "skillImg": "Sprite/SKill/FireArrow",
-      "desc": "플레이어의 화살이 15초 동안 불화살로 바뀐다.\n *일반 화살의 2배의 데미지를 갖는다."
+      "desc": "플레이어의 화살이 10초 동안 적을 넉백시키는 폭발화살로 바뀐다.\n 폭발에 휘말린 적들은 화상을 입는다."
     }
 
 
@@ -279,53 +279,53 @@
       "id": "1002",
       "level": "0",
       "name": "약화",
-      "skillValue": "0",
+      "skillValue": "75",
       "skillTargetCount": "0",
-      "skillCoolTime": "0",
+      "skillCoolTime": "30",
       "skillPrefab": "Skill/Meteor",
       "skillDialog1": "약화!",
       "skillDialog2": "몬스터들이 약해졌어요",
       "skillImg": "Sprite/SKill/Weakness",
-      "desc": "필드에 있는 모든 몬스터들의 공격력을 낯춘다."
+      "desc": "필드에 있는 모든 몬스터들의 공격력 및 이동속도를 75% 낯춘다."
     },
     {
       "id": "1002",
       "level": "1",
       "name": "약화",
-      "skillValue": "20",
+      "skillValue": "75",
       "skillTargetCount": "0",
       "skillCoolTime": "30",
       "skillPrefab": "Skill/Meteor",
       "skillDialog1": "약화!",
       "skillDialog2": "몬스터들이 약해졌어요",
       "skillImg": "Sprite/SKill/Weakness",
-      "desc": "필드에 있는 모든 몬스터들의 공격력을 낯춘다."
+      "desc": "필드에 있는 모든 몬스터들의 공격력 및 이동속도를 75% 낯춘다."
     },
     {
       "id": "1002",
       "level": "2",
       "name": "약화",
-      "skillValue": "7",
-      "skillTargetCount": "0",
-      "skillCoolTime": "50",
-      "skillPrefab": "Skill/Meteor",
-      "skillDialog1": "약화!",
-      "skillDialog2": "몬스터들이 약해졌어요",
-      "skillImg": "Sprite/SKill/Weakness",
-      "desc": "필드에 있는 모든 몬스터들의 공격력을 낯춘다."
-    },
-    {
-      "id": "1002",
-      "level": "3",
-      "name": "약화",
-      "skillValue": "70",
+      "skillValue": "50",
       "skillTargetCount": "0",
       "skillCoolTime": "30",
       "skillPrefab": "Skill/Meteor",
       "skillDialog1": "약화!",
       "skillDialog2": "몬스터들이 약해졌어요",
       "skillImg": "Sprite/SKill/Weakness",
-      "desc": "필드에 있는 모든 몬스터들의 공격력을 낯춘다."
+      "desc": "필드에 있는 모든 몬스터들의 공격력 및 이동속도를 50% 낯춘다."
+    },
+    {
+      "id": "1002",
+      "level": "3",
+      "name": "약화",
+      "skillValue": "75",
+      "skillTargetCount": "0",
+      "skillCoolTime": "30",
+      "skillPrefab": "Skill/Meteor",
+      "skillDialog1": "약화!",
+      "skillDialog2": "몬스터들이 약해졌어요",
+      "skillImg": "Sprite/SKill/Weakness",
+      "desc": "필드에 있는 모든 몬스터들의 공격력 및 이동속도를 75% 낯춘다."
     }
 
 

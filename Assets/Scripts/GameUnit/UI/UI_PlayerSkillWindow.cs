@@ -82,7 +82,7 @@ public class UI_PlayerSkillWindow : UI_Base
         }
 
         skillInfoObj.SetActive(true);
-        skillInfo.SkillInfoInit(clickNode.SkillData.name, (clickNode.SkillData.level).ToString(), clickNode.SkillData.desc, clickNode.SkillData.skillImg);
+        skillInfo.SkillInfoInit(clickNode.SkillData.name, (clickNode.SkillData.skillValue).ToString(), (clickNode.SkillData.skillCoolTime).ToString(), clickNode.SkillData.desc, clickNode.SkillData.skillImg, clickNode.PlayerSkillType);
         clickNode.ClickNodeSelectImgOnOff(true);
         if (backLobbyBtn != null)
             backLobbyBtn.onClick.AddListener(() =>
@@ -141,7 +141,7 @@ public class UI_PlayerSkillWindow : UI_Base
 
                 clickNode = curClickNode;
                 skillInfoObj.SetActive(true);
-                skillInfo.SkillInfoInit(clickNode.SkillData.name, (clickNode.SkillData.level).ToString(), clickNode.SkillData.desc, clickNode.SkillData.skillImg);
+                skillInfo.SkillInfoInit(clickNode.SkillData.name, (clickNode.SkillData.skillValue).ToString(), (clickNode.SkillData.skillCoolTime).ToString(), clickNode.SkillData.desc, clickNode.SkillData.skillImg,clickNode.PlayerSkillType);
             }
 
 

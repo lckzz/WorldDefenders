@@ -23,7 +23,7 @@ public class ParticleEffect : MonoBehaviour
 
             if (particle.time >= durationTime)
             {
-                StartCoroutine(Util.UnitDieTime(gameObject,0.5f));
+                StartCoroutine(Util.DestroyTime(gameObject,0.5f));
 
             }
         }

@@ -531,7 +531,7 @@ public class SpecialUnitController : Unit
         if (myColl.enabled)
         {
             myColl.enabled = false;
-            StartCoroutine(Util.UnitDieTime(gameObject, 5.0f));
+            StartCoroutine(Util.DestroyTime(gameObject, 5.0f));
 
             SetUnitState(SpecialUnitState.Die);
 

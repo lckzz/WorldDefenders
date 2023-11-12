@@ -21,7 +21,7 @@ public abstract class ActiveSkill : SkillBase
     public abstract void SkillDataSetting(int id);
 
 
-
+    public virtual void UseSkill(List<Unit> enemys) { }
     public virtual void UseSkill(Unit unit, List<Unit> enemys) { }     //액티브 스킬 사용
     public virtual void UseSkill(Unit unit, Tower tower) { }
     public virtual void UseSkill(Tower tower) { }

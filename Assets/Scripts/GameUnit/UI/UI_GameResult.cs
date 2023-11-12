@@ -61,18 +61,24 @@ public class UI_GameResult : UI_Base
                     stageGold = Managers.Game.WestStageGold;
                     stageBestTime = Managers.Game.WestStageBestTime;
                     Managers.Game.WestStageBestTime = RefreshBestClearTime();
+                    speed = 500.0f;
+
                     break;
                 case Define.SubStage.East:
                     Managers.Game.EastStageClear = true;
                     stageGold = Managers.Game.EastStageGold;
                     stageBestTime = Managers.Game.EastStageBestTime;
                     Managers.Game.EastStageBestTime = RefreshBestClearTime();
+                    speed = 850.0f;
+
                     break;
                 case Define.SubStage.South:
                     Managers.Game.SouthStageClear = true;
                     stageGold = Managers.Game.SouthStageGold;
                     stageBestTime = Managers.Game.SouthStageBestTime;
                     Managers.Game.SouthStageBestTime = RefreshBestClearTime();
+                    speed = 1100.0f;
+
                     break;
             }
 
@@ -81,7 +87,6 @@ public class UI_GameResult : UI_Base
 
 
 
-                speed = 350.0f;
         }
 
         else if (Managers.Game.GetStageStateType() == Define.StageStageType.Defeat)
@@ -150,7 +155,7 @@ public class UI_GameResult : UI_Base
     }
 
 
-    float RefreshBestClearTime()
+    private float RefreshBestClearTime()
     {
         if (stageClearTime < stageBestTime || stageBestTime <= 0.0f) //아직 베스트타임이 정해지지 않았거나 만약 승리시 현재 클리어타임이 저장되어있는 베스트 클리어타임보다 빠르다면
         {
@@ -164,7 +169,7 @@ public class UI_GameResult : UI_Base
     }
 
 
-    void TimerSetting()
+    private void TimerSetting()
     {
         stageClearTime = Managers.Game.GetInGameTimer();
         min = (int)stageClearTime / 60;
@@ -173,7 +178,7 @@ public class UI_GameResult : UI_Base
     }
 
 
-    private void timeSet(int min, int sec)
+    private void TimeSet(int min, int sec)
     {
         if (min < 10 && sec < 10)
             timer.text =  "0" + min.ToString() + " : " + "0" + sec.ToString();
@@ -212,7 +217,7 @@ public class UI_GameResult : UI_Base
             if (cursec < sec)
                 cursec++;
 
-            timeSet(curmin, cursec);
+            TimeSet(curmin, cursec);
             
 
             int curTimer = (curmin * 60) + cursec;
@@ -232,11 +237,17 @@ public class UI_GameResult : UI_Base
         {
             Debug.Log(count);
             count += Time.deltaTime * speed;
-            if ((int)count > stageGold)
+            if (((int)count > stageGold))
             {
+                goldTxt.text = stageGold.ToString();
+
                 yield break;
             }
+
             goldTxt.text = ((int)count).ToString();
+
+
+
 
             yield return null;
         }

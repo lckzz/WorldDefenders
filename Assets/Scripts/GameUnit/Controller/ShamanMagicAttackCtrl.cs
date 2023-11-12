@@ -99,7 +99,7 @@ public class ShamanMagicAttackCtrl : MonoBehaviour
                 Vector3 pos = coll.transform.position;
                 pos.x -= 0.5f;
                 MagicEffectAndSound(pos, "", "ShamanMagicHit");
-                StartCoroutine(Util.UnitDieTime(gameObject));
+                StartCoroutine(Util.DestroyTime(gameObject));
             }
 
 
@@ -116,7 +116,7 @@ public class ShamanMagicAttackCtrl : MonoBehaviour
                 Vector3 pos = coll.transform.position;
                 pos.x -= 0.5f;
                 MagicEffectAndSound(pos, "", "ShamanMagicHit");
-                StartCoroutine(Util.UnitDieTime(gameObject));
+                StartCoroutine(Util.DestroyTime(gameObject));
             }
 
 

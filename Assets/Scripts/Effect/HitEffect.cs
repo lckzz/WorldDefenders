@@ -20,7 +20,7 @@ public class HitEffect : MonoBehaviour
     {
         if(anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
-            StartCoroutine(Util.UnitDieTime(gameObject, 0.2f));
+            StartCoroutine(Util.DestroyTime(gameObject, 0.2f));
         }
     }
 

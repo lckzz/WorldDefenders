@@ -34,6 +34,10 @@ public class EliteMonsterController : Unit
     readonly string warriorHitEff = "HitEff";
 
 
+    private Debuff debuff;
+
+    public Debuff Debuff { get { return debuff; } }
+
     public SkillBook Skills { get; protected set; }
 
     public Unit UnitCtrl { get { return unitTarget; } }
@@ -76,6 +80,7 @@ public class EliteMonsterController : Unit
         Skills = gameObject.GetComponent<SkillBook>();
 
         TryGetComponent<Collider2D>(out myColl);
+        TryGetComponent<Debuff>(out debuff);
 
         SetMonsterState(EliteMonsterState.Run);
         startCoolTime = StartCoroutine(UnitSKillCoolTime(coolTime));
@@ -505,7 +510,7 @@ public class EliteMonsterController : Unit
         {
             SetMonsterState(EliteMonsterState.Die);
             myColl.enabled = false;
-            StartCoroutine(Util.UnitDieTime(gameObject, 3.0f));
+            StartCoroutine(Util.DestroyTime(gameObject, 3.0f));
 
 
         }
@@ -780,6 +785,8 @@ public class EliteMonsterController : Unit
         }
 
     }
+
+
 
     IEnumerator UnitSKillCoolTime(float coolTime)
     {

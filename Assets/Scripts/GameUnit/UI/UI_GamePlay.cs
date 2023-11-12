@@ -339,7 +339,7 @@ public class UI_GamePlay : UI_Base
 
             case Define.PlayerSkill.Weakness:
                 skillData = Managers.Data.weaknessSkillDict[(int)GlobalData.g_SkillWeaknessLv];
-                Skills.AddSkill<TowerHealSkill>();
+                Skills.AddSkill<WeaknessSkill>();
 
                 break;
 
@@ -474,7 +474,7 @@ public class UI_GamePlay : UI_Base
                     break;
 
                 case Define.PlayerSkill.Weakness:
-
+                    Skills.activeSkillList[0].UseSkill(player.SkillMonsterExplore());     //스킬 사용
                     break;
             }
             
@@ -501,7 +501,6 @@ public class UI_GamePlay : UI_Base
         {
             skillDurationTimeTxt.text = ((int)player.DurationTime).ToString();
             duration = durationTime / skillData.skillValue;
-            Debug.Log(duration);
             durationTime += Time.deltaTime;
 
             if (skillDurationTimeImg?.fillAmount < duration)

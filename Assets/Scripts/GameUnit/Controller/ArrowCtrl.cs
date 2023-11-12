@@ -115,7 +115,7 @@ public class ArrowCtrl : MonoBehaviour
             
 
 
-            StartCoroutine(Util.UnitDieTime(gameObject));
+            StartCoroutine(Util.DestroyTime(gameObject));
 
         }
         else if (coll.name.Contains("MonsterPortal"))
@@ -126,7 +126,7 @@ public class ArrowCtrl : MonoBehaviour
             if (monPort != null)
                 monPort.TowerDamage(unitCtrl.Att);
 
-            StartCoroutine(Util.UnitDieTime(gameObject));
+            StartCoroutine(Util.DestroyTime(gameObject));
 
             
         }

@@ -81,6 +81,7 @@ public class UI_Lobby : UI_Base
     {
         Managers.UI.ShowSceneUI<UI_Lobby>();
         profileLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.PlayerLevel}";
+        goldTxt.text = Managers.Game.Gold.ToString();
 
     }
 

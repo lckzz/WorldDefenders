@@ -52,7 +52,7 @@ public class MonsterController : Unit
     MonsterStat monStat;
 
     DropItem dropItem;
-
+    Debuff debuff;
 
 
 
@@ -64,7 +64,7 @@ public class MonsterController : Unit
     public int KnockBackForce { get { return knockbackForce; } }
 
 
-
+    public Debuff Debuff { get { return debuff; } }
     public Unit UnitCtrl { get { return unitTarget; } }
     public PlayerTower PlayerTowerCtrl { get { return playerTowerCtrl; } }
     public MonsterState MonState { get { return state; } }
@@ -129,6 +129,7 @@ public class MonsterController : Unit
 
         TryGetComponent<Collider2D>(out myColl);
         TryGetComponent(out dropItem);
+        TryGetComponent(out debuff);
 
         if (monsterClass == MonsterClass.Archer)
             arrowPos = transform.Find("ArrowPos");
@@ -548,8 +549,9 @@ public class MonsterController : Unit
         {
             SetMonsterState(MonsterState.Die);
             myColl.enabled = false;
+            Debuff.FireDebuffOnOff(false);
             dropItem?.Drop(this.gameObject.transform.position);
-            StartCoroutine(Util.UnitDieTime(gameObject, 3.0f));
+            StartCoroutine(Util.DestroyTime(gameObject, 3.0f));
             StartCoroutine(MonsterDieDropText());
 
         }
@@ -557,7 +559,6 @@ public class MonsterController : Unit
 
     public override void OnDamage(int att, int knockBack = 0, bool criticalCheck = false)
     {
-        Debug.Log(hp);
 
         if (hp > 0)
         {
@@ -772,25 +773,17 @@ public class MonsterController : Unit
     IEnumerator MonsterDieDropText()
     {
         yield return wfs;           //시간 대기후 텍스트
-        int randIdx = Random.Range(0, 101);
-        if (randIdx < 100)       //20퍼확률로 코스트나 골드를 드랍
-        {
-            int randItem = Random.Range(0, 2);
-            unitHUDHp?.ItemHudInit(randItem);
-            if (randItem == 0)       //골드라면
-            {
-                unitHUDHp?.SpawnHUDText(DropGold.ToString(), (int)UnitDamageType.Item);
-                Managers.Game.GameGold += DropGold;
-                Managers.UI.GetSceneUI<UI_GamePlay>().UpdateGold(Managers.Game.GameGold);
-            }
-            else
-            {
-                unitHUDHp?.SpawnHUDText(DropCost.ToString(), (int)UnitDamageType.Item);
-                Managers.Game.Cost += DropCost;
-                Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCost(Managers.Game.Cost);
 
-            }
-        }
+        //일반 몬스터는 죽으면 코스트를 뱉는다.
+        int randItem = Random.Range(0, 2);
+        unitHUDHp?.ItemHudInit((int)DropItemType.Cost);
+
+        unitHUDHp?.SpawnHUDText(DropCost.ToString(), (int)UnitDamageType.Item);
+        Managers.Game.Cost += DropCost;
+        Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCost(Managers.Game.Cost);
+
+        
+        
 
     }
 
@@ -859,6 +852,10 @@ public class MonsterController : Unit
 
         }
     }
+
+
+ 
+
 
     private void OnDrawGizmos()
     {

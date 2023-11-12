@@ -121,7 +121,7 @@ public class MonsterArrowCtrl : MonoBehaviour
             
 
 
-            StartCoroutine(Util.UnitDieTime(gameObject));
+            StartCoroutine(Util.DestroyTime(gameObject));
 
         }
         else if(coll.tag.Contains("Tower") && coll.name.Contains("Tower"))
@@ -139,7 +139,7 @@ public class MonsterArrowCtrl : MonoBehaviour
                 
             
 
-            StartCoroutine(Util.UnitDieTime(gameObject));
+            StartCoroutine(Util.DestroyTime(gameObject));
 
         }
 

@@ -78,6 +78,14 @@ public class SkillBook : MonoBehaviour
             activeSkillList[0].SkillDataSetting(GlobalData.g_SkillFireArrowLv);
 
         }
+        else if (type == typeof(WeaknessSkill))
+        {
+            skillPrefab = Managers.Resource.Load<GameObject>("Prefabs/Skill/WeaknessSkill");
+            skillPrefab.TryGetComponent(out WeaknessSkill wsk);
+            activeSkillList.Add(wsk);
+            activeSkillList[0].SkillDataSetting(GlobalData.g_SkillWeaknessLv);
+
+        }
 
         return null;
     }

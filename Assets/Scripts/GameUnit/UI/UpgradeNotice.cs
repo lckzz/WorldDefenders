@@ -64,6 +64,8 @@ public class UpgradeNotice : MonoBehaviour
             checkBtn.onClick.AddListener(() =>
             {
                 ParentGameObjectOff();
+                buyFailObj.SetActive(false);
+                selectObj.SetActive(true);
             });
     }
 

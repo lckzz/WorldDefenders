@@ -77,14 +77,25 @@ public class PlayerArrowCtrl : MonoBehaviour
             if(!arrowHit)
             {
 
-                anim.SetTrigger("Hit");
-                arrowHit = true;
+
                 col.enabled = false;
                 if (arrowType == Define.PlayerArrowType.Fire)
+                {
                     fire.SetActive(false);
+                    GameObject go = Managers.Resource.Load<GameObject>("Prefabs/Effect/FireArrowExplosion");
+                    Managers.Resource.Instantiate(go,transform.position);
+                    StartCoroutine(Util.DestroyTime(gameObject));
+
+                }
+                else
+                {
+                    anim.SetTrigger("Hit");
+                    arrowHit = true;
+                    StartCoroutine(Util.DestroyTime(gameObject, 2.0f));
+
+                }
 
 
-                StartCoroutine(Util.UnitDieTime(gameObject,2.0f));
             }
 
         }

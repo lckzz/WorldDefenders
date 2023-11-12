@@ -178,6 +178,6 @@ public class CameraCtrl : MonoBehaviour
 
     public void ShakeCamera(float shakeTime, float shakeIntensity)
     {
-        //Shake.OnShakeCamera(shakeTime, shakeIntensity);
+        Shake.OnShakeCamera(shakeTime, shakeIntensity);
     }
 }

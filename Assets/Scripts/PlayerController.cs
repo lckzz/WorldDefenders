@@ -172,18 +172,19 @@ public class PlayerController : MonoBehaviour
             playerSkillFeverObj.SetActive(check);
     }
 
-    public void PlayerDeath()
-    {
-        spRend.flipX = true;
-        anim.SetTrigger("Die");
-    }
 
-    public void PlayerDeathDown()
+    public List<Unit> SkillMonsterExplore()    //Àû Å½»ö
     {
-        //¶¥¹Ù´Ú¿¡ ´êÀ¸¸é ÅÐ½â ¾Ö´Ï¸ÞÀÌ¼Ç
-        //Å¸ÀÓ¶óÀÎ ½Ã±×³Î ÇÔ¼ö
-        anim.SetTrigger("DieDown");
+        List<Unit> enemys = new List<Unit>();
+        GameObject[] go = GameObject.FindGameObjectsWithTag("Monster");
 
+        for(int ii = 0; ii < go.Length; ii++)
+        {
+            go[ii].TryGetComponent(out Unit enemy);
+            enemys.Add(enemy);
+        }
+
+        return enemys;
     }
 
 

@@ -101,7 +101,7 @@ public class MagicAttackCtrl : MonoBehaviour
                 Vector3 pos = coll.transform.position;
                 pos.x -= 0.5f;
                 MagicEffectAndSound(pos, "", "MagicHit");
-                StartCoroutine(Util.UnitDieTime(gameObject));
+                StartCoroutine(Util.DestroyTime(gameObject));
             }
 
 
@@ -119,7 +119,7 @@ public class MagicAttackCtrl : MonoBehaviour
                 Vector3 pos = coll.transform.position;
                 pos.x -= 0.5f;
                 MagicEffectAndSound(pos, "", "MagicHit");
-                StartCoroutine(Util.UnitDieTime(gameObject));
+                StartCoroutine(Util.DestroyTime(gameObject));
             }
 
 

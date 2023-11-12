@@ -47,35 +47,35 @@ public class CameraShake : MonoBehaviour
 
     }
 
-    //public void OnShakeCamera(float shakeTime = 1.0f, float shakeIntensity = 0.1f)
-    //{
-        
-    //    this.shakeTime = shakeTime;
-    //    this.shakeIntensity = shakeIntensity;
+    public void OnShakeCamera(float shakeTime = 1.0f, float shakeIntensity = 0.1f)
+    {
 
-    //    StopCoroutine("ShakeByPosition");
-    //    StartCoroutine("ShakeByPosition");
-    //}
+        this.shakeTime = shakeTime;
+        this.shakeIntensity = shakeIntensity;
 
-    //private IEnumerator ShakeByPosition()
-    //{
-    //    cameraPos = Camera.main.transform.position;
-    //    Vector3 startPos = transform.position;
+        StopCoroutine("ShakeByPosition");
+        StartCoroutine("ShakeByPosition");
+    }
 
-    //    while( shakeTime > 0.0f)
-    //    {
-    //        transform.position = startPos + Random.insideUnitSphere * shakeIntensity;
+    private IEnumerator ShakeByPosition()
+    {
+        cameraPos = Camera.main.transform.position;
+        Vector3 startPos = transform.position;
 
-    //        shakeTime -= Time.deltaTime;
+        while (shakeTime > 0.0f)
+        {
+            transform.position = startPos + Random.insideUnitSphere * shakeIntensity;
 
-    //        yield return null;
-    //    }
+            shakeTime -= Time.deltaTime;
 
-    //    transform.position = cameraPos;
-    //}
+            yield return null;
+        }
+
+        transform.position = cameraPos;
+    }
 
 
-  
+
 
 
 

@@ -22,7 +22,7 @@ public static class Util
             return null;
     }
 
-    public static IEnumerator UnitDieTime(GameObject go, float time = 0.0f)
+    public static IEnumerator DestroyTime(GameObject go, float time = 0.0f)
     {
 
         WaitForSeconds wfs = new WaitForSeconds(time);
