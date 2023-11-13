@@ -67,7 +67,7 @@ public class SkillBook : MonoBehaviour
             skillPrefab = Managers.Resource.Load<GameObject>("Prefabs/Skill/TowerHealSkill");
             skillPrefab.TryGetComponent(out TowerHealSkill thk);
             activeSkillList.Add(thk);
-            activeSkillList[0].SkillDataSetting(GlobalData.g_SkillHealLv);
+            activeSkillList[0].SkillDataSetting(Managers.Game.TowerHealSkillLv);
 
         }
         else if (type == typeof(FireArrowSkill))
@@ -75,7 +75,7 @@ public class SkillBook : MonoBehaviour
             skillPrefab = Managers.Resource.Load<GameObject>("Prefabs/Skill/FireArrowSkill");
             skillPrefab.TryGetComponent(out FireArrowSkill fak);
             activeSkillList.Add(fak);
-            activeSkillList[0].SkillDataSetting(GlobalData.g_SkillFireArrowLv);
+            activeSkillList[0].SkillDataSetting(Managers.Game.FireArrowSkillLv);
 
         }
         else if (type == typeof(WeaknessSkill))
@@ -83,7 +83,7 @@ public class SkillBook : MonoBehaviour
             skillPrefab = Managers.Resource.Load<GameObject>("Prefabs/Skill/WeaknessSkill");
             skillPrefab.TryGetComponent(out WeaknessSkill wsk);
             activeSkillList.Add(wsk);
-            activeSkillList[0].SkillDataSetting(GlobalData.g_SkillWeaknessLv);
+            activeSkillList[0].SkillDataSetting(Managers.Game.WeaknessSkillLv);
 
         }
 

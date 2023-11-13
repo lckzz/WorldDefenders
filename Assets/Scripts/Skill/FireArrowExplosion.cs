@@ -13,7 +13,7 @@ public class FireArrowExplosion : MonoBehaviour
     {
         GameObject.Find("Leader").transform.GetChild(1).TryGetComponent(out player);
         skillData = new SkillData();
-        skillData = Managers.Data.fireArrowSkillDict[GlobalData.g_SkillFireArrowLv];
+        skillData = Managers.Data.fireArrowSkillDict[Managers.Game.FireArrowSkillLv];
         TryGetComponent(out coll2d);
         Camera.main.TryGetComponent(out CameraCtrl camCtrl);
         camCtrl.ShakeCamera(0.2f, 0.25f);

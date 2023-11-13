@@ -77,7 +77,7 @@ public class UI_UnitUpgradePopUp : UI_Base
         upgradeObj.TryGetComponent(out rt);
         noticePanel.transform.Find("Notice").TryGetComponent(out upgradeNotice);
         rt.sizeDelta = new Vector2(rt.sizeDelta.x, 10.0f);
-        rt.DOSizeDelta(new Vector2(1100.0f, 580.0f), 0.25f).SetEase(Ease.OutQuad);
+        rt.DOSizeDelta(new Vector2(907f, 500f), 0.25f).SetEase(Ease.OutQuad);
 
         UnitInit();
 

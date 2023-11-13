@@ -18,6 +18,10 @@ public class GameData
     public int unitMagicianLv;
     public int unitCarlvryLv;
 
+    public int towerHealSkillLv;
+    public int fireArrowSkillLv;
+    public int weaknessSkillLv;
+
     public Define.PlayerSkill curPlayerEquipSkill;
     public bool firstInit;
 
@@ -133,6 +137,24 @@ public class GameManagerEx
         set { gameData.unitCarlvryLv = value; }
     }
 
+    public int TowerHealSkillLv
+    {
+        get { return gameData.towerHealSkillLv; }
+        set { gameData.towerHealSkillLv = value; }
+    }
+
+    public int FireArrowSkillLv
+    {
+        get { return gameData.fireArrowSkillLv; }
+        set { gameData.fireArrowSkillLv = value; }
+    }
+
+    public int WeaknessSkillLv
+    {
+        get { return gameData.weaknessSkillLv; }
+        set { gameData.weaknessSkillLv = value; }
+    }
+
     public Define.PlayerSkill CurPlayerEquipSkill
     {
         get { return gameData.curPlayerEquipSkill; }
@@ -221,6 +243,9 @@ public class GameManagerEx
         UnitPriestLv = 1;
         UnitMagicianLv = 1;
         UnitCarlvlry = 1;
+        TowerHealSkillLv = 1;
+        FireArrowSkillLv = 0;
+        WeaknessSkillLv = 0;
         CurPlayerEquipSkill = Define.PlayerSkill.Count;
         FirstInit = false;
         WestStageClear = false;

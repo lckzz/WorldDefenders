@@ -68,13 +68,13 @@ public class SkillNode : MonoBehaviour
         switch(type)
         {
             case Define.PlayerSkill.Heal:
-                skillData = Managers.Data.healSkillDict[GlobalData.g_SkillHealLv];
+                skillData = Managers.Data.healSkillDict[Managers.Game.TowerHealSkillLv];
                 break;
             case Define.PlayerSkill.FireArrow:
-                skillData = Managers.Data.fireArrowSkillDict[GlobalData.g_SkillFireArrowLv];
+                skillData = Managers.Data.fireArrowSkillDict[Managers.Game.FireArrowSkillLv];
                 break;
             case Define.PlayerSkill.Weakness:
-                skillData = Managers.Data.weaknessSkillDict[GlobalData.g_SkillWeaknessLv];
+                skillData = Managers.Data.weaknessSkillDict[Managers.Game.WeaknessSkillLv];
                 break;
         }
 

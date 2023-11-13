@@ -6,7 +6,14 @@ public class Debuff : MonoBehaviour
 {
     [SerializeField] private GameObject debuffObj;
     [SerializeField] private GameObject fireDebuffObj;
+    [SerializeField] private GameObject debuffIconPrefabs;
     private Coroutine fireCoroutine = null;
+
+
+    private void Start()
+    {
+        
+    }
 
 
 

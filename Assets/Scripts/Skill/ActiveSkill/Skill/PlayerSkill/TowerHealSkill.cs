@@ -22,15 +22,15 @@ public class TowerHealSkill : ActiveSkill
             return;
 
         PlayerTower tower = playertower as PlayerTower;
-        float hp = tower.GetSetHp;
+        float hp = tower.Hp;
         if(SkillData != null)
         {
             if (hp > 0)
-                hp += SkillData.skillValue;
+                hp += tower.MaxHp * (SkillData.skillValue / 100);       //타워의 최대체력의 스킬퍼센트만큼 회복해준다.
 
-            if(hp >= tower.GetMaxHp)
-                hp = tower.GetMaxHp;
-            tower.GetSetHp = hp;
+            if(hp >= tower.MaxHp)
+                hp = tower.MaxHp;
+            tower.Hp = hp;
 
 
         }

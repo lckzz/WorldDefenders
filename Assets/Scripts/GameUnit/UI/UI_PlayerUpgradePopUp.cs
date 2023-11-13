@@ -97,12 +97,6 @@ public class UI_PlayerUpgradePopUp : UI_Base
         if (towerLv < 10)
             Managers.Game.PlayerLevel++;
 
-        if (towerLv == 3)
-            GlobalData.g_SkillFireArrowLv = 1;
-
-        if (towerLv == 7)
-            GlobalData.g_SkillWeaknessLv = 1;
-
         RefreshTextUI();
     }
 
@@ -130,6 +124,13 @@ public class UI_PlayerUpgradePopUp : UI_Base
             nextHpTxt.text = tower.hp.ToString();
             nextAttTxt.text = tower.att.ToString();
         }
+
+        if (towerLv == 3)
+            Managers.Game.FireArrowSkillLv = 1;
+
+        if (towerLv == 7)
+            Managers.Game.WeaknessSkillLv = 1;
+
     }
 
 

@@ -183,7 +183,7 @@ public class UI_PlayerSkillWindow : UI_Base
             if (clickNode.SkillData.level <= 0)
                 return;
 
-            GlobalData.g_CurPlayerEquipSkill = clickNode.PlayerSkillType;
+            Managers.Game.CurPlayerEquipSkill = clickNode.PlayerSkillType;
         }
     }
 

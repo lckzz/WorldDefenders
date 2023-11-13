@@ -197,5 +197,12 @@ public class Define
         Cost
     }
 
+    public enum DebuffType
+    {
+        Fire,
+        Weakness,
+        Count
+    }
+
 
 }

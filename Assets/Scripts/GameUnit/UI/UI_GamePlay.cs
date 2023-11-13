@@ -176,7 +176,7 @@ public class UI_GamePlay : UI_Base
         Skills = player.GetComponent<SkillBook>();
 
 
-        if (GlobalData.g_CurPlayerEquipSkill == Define.PlayerSkill.Count)   //스킬이 장착되어있지않다면 스킬을 꺼주고
+        if (Managers.Game.CurPlayerEquipSkill == Define.PlayerSkill.Count)   //스킬이 장착되어있지않다면 스킬을 꺼주고
             skillBtn.gameObject.SetActive(false);
         
         else
@@ -320,25 +320,25 @@ public class UI_GamePlay : UI_Base
                     break;
             }
         }
-        skillImg.sprite = skillsprites[(int)GlobalData.g_CurPlayerEquipSkill];
+        skillImg.sprite = skillsprites[(int)Managers.Game.CurPlayerEquipSkill];
 
         skillData = new SkillData();
 
-        switch(GlobalData.g_CurPlayerEquipSkill)
+        switch(Managers.Game.CurPlayerEquipSkill)
         {
             case Define.PlayerSkill.Heal:
-                skillData = Managers.Data.healSkillDict[(int)GlobalData.g_SkillHealLv];
+                skillData = Managers.Data.healSkillDict[(int)Managers.Game.TowerHealSkillLv];
                 Skills.AddSkill<TowerHealSkill>();
                 break;
 
             case Define.PlayerSkill.FireArrow:
-                skillData = Managers.Data.fireArrowSkillDict[(int)GlobalData.g_SkillFireArrowLv];
+                skillData = Managers.Data.fireArrowSkillDict[(int)Managers.Game.FireArrowSkillLv];
                 Skills.AddSkill<FireArrowSkill>();
 
                 break;
 
             case Define.PlayerSkill.Weakness:
-                skillData = Managers.Data.weaknessSkillDict[(int)GlobalData.g_SkillWeaknessLv];
+                skillData = Managers.Data.weaknessSkillDict[(int)Managers.Game.WeaknessSkillLv];
                 Skills.AddSkill<WeaknessSkill>();
 
                 break;
@@ -462,7 +462,7 @@ public class UI_GamePlay : UI_Base
         if (Skills.activeSkillList.Count > 0)
         {
             Debug.Log("플레이어 스킬");
-            switch(GlobalData.g_CurPlayerEquipSkill)
+            switch(Managers.Game.CurPlayerEquipSkill)
             {
                 case Define.PlayerSkill.Heal:
                     Skills.activeSkillList[0].UseSkill(playerTower);     //스킬 사용
@@ -484,10 +484,10 @@ public class UI_GamePlay : UI_Base
         skillOnOff = true; //스킬이 나가서 쿨타임 시작
         skillCoolImg.gameObject.SetActive(skillOnOff);
 
-        if(GlobalData.g_CurPlayerEquipSkill == Define.PlayerSkill.FireArrow || GlobalData.g_CurPlayerEquipSkill == Define.PlayerSkill.Weakness)
+        if(Managers.Game.CurPlayerEquipSkill == Define.PlayerSkill.FireArrow || Managers.Game.CurPlayerEquipSkill == Define.PlayerSkill.Weakness)
         {
             skillDurationObj.SetActive(true);
-            skillDurationImg.sprite = skillsprites[(int)GlobalData.g_CurPlayerEquipSkill];
+            skillDurationImg.sprite = skillsprites[(int)Managers.Game.CurPlayerEquipSkill];
             StartCoroutine(SkillDurationTime());
         }
 

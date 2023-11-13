@@ -37,8 +37,8 @@ public class SkillInfo : MonoBehaviour
                 break;
 
             case Define.PlayerSkill.FireArrow:
-                skillInfoTxt.text = $"지속시간 : {skillvalue}%\n쿨타임 : {skillCoolTime}초";
-                if (GlobalData.g_SkillFireArrowLv != 1)
+                skillInfoTxt.text = $"지속시간 : {skillvalue}초\n쿨타임 : {skillCoolTime}초";
+                if (Managers.Game.FireArrowSkillLv != 1)
                 {
                     skillLockObj.SetActive(true);
                     skillLock.lockTextRefresh(playerSkillType);
@@ -48,7 +48,7 @@ public class SkillInfo : MonoBehaviour
 
             case Define.PlayerSkill.Weakness:
                 skillInfoTxt.text = $"디버프 : {skillvalue}%\n쿨타임 : {skillCoolTime}초";
-                if (GlobalData.g_SkillWeaknessLv != 1)
+                if (Managers.Game.WeaknessSkillLv != 1)
                 {
                     skillLockObj.SetActive(true);
                     skillLock.lockTextRefresh(playerSkillType);

@@ -26,8 +26,8 @@ public class PlayerTower : Tower
         //    Managers.Game.State = GameState.GameFail;
     }
 
-    public float GetSetHp { get { return hp; } set { if (value > 0) hp = value; } }
-    public float GetMaxHp { get { return maxHp; } }
+    public float Hp { get { return hp; } set { if (value > 0) hp = value; } }
+    public float MaxHp { get { return maxHp; } }
 
 
 
