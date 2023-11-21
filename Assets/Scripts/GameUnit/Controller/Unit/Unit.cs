@@ -1,3 +1,4 @@
+using SimpleJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -58,9 +59,17 @@ public abstract class Unit : MonoBehaviour,ISensor
     protected float knockbackDuration = 0.25f;
     protected bool isNoKnockBack = false;           //넉백이 안되는 구간에 있다면
 
+    //말풍선 
+    [SerializeField] protected GameObject speechBubbleObj;
+    [SerializeField] protected SpeechBubbleCtrl speechBBCtrl;
+    protected JSONNode appearDialogNode;
+    protected JSONNode dieDialogNode;
+
+
     //HUDUI
     private Transform parentTr;
     private GameObject hudPrefab;
+
 
     public bool IsDie { get { return isDie; } }
     public int Att { get { return att; } }
@@ -81,7 +90,12 @@ public abstract class Unit : MonoBehaviour,ISensor
         if (unitHUDHp == null)
             this.gameObject.AddComponent<UnitHp>().TryGetComponent(out unitHUDHp);
 
-
+        GameObject canvas = this.gameObject.transform.Find("Canvas").gameObject;
+        if (canvas != null)
+        {
+            speechBubbleObj = canvas.gameObject.transform.Find("SpeechBubble").gameObject;
+            speechBubbleObj.TryGetComponent(out speechBBCtrl);
+        }
         parentTr = GameObject.Find("HUD_Canvas").transform;
         hudPrefab = Managers.Resource.Load<GameObject>("Prefabs/HUDDamage/DamageTxt");
         unitHUDHp.Init(parentTr, hudPrefab);

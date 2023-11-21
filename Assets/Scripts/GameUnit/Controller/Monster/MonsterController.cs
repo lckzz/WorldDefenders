@@ -70,9 +70,11 @@ public class MonsterController : Unit
     public MonsterState MonState { get { return state; } }
 
 
-    string warriorHitSound = "WarriorAttack";
-    string warriorCriticalSound = "CriticalSound";
-    string warriorHitEff = "HitEff";
+    private readonly string warriorHitSound = "WarriorAttack";
+    private readonly string warriorCriticalSound = "CriticalSound";
+    private readonly string warriorHitEff = "HitEff";
+    private readonly string appearDialog = "monsterAppearDialog";
+
 
     public override void Init()
     {
@@ -130,6 +132,10 @@ public class MonsterController : Unit
         TryGetComponent<Collider2D>(out myColl);
         TryGetComponent(out dropItem);
         TryGetComponent(out debuff);
+
+        appearDialogNode = Managers.Dialog.DialogJsonParsing("speech", Define.DialogType.Speech);
+        speechBBCtrl?.SetSpeechString(appearDialogNode[appearDialog][$"eliteShamanAppear1"]);
+        speechBubbleObj.SetActive(true);
 
         if (monsterClass == MonsterClass.Archer)
             arrowPos = transform.Find("ArrowPos");

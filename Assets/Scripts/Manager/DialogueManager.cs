@@ -8,9 +8,18 @@ public class DialogueManager
 
     public Queue<string> DialogQueue { get; private set; } = new Queue<string>();
 
-    public JSONNode DialogJsonParsing(string key)
+    public JSONNode DialogJsonParsing(string key, Define.DialogType dialogType)
     {
-        TextAsset txt = Managers.Data.tutorialDialogue[key];
+        TextAsset txt = null;
+        if (dialogType == Define.DialogType.Tutorial)
+        {
+            txt = Managers.Data.tutorialDialogue[key];
+        }
+        else if(dialogType == Define.DialogType.Speech)
+        {
+            txt = Managers.Data.speechDialogue[key];
+        }
+
         JSONNode node = JSON.Parse(txt.text);
 
         return node;

@@ -24,12 +24,13 @@ public class UI_PlayerUpgradePopUp : UI_Base
     [SerializeField] private GameObject noticePanel;
 
     [SerializeField] private GameObject levelUpParticle;
-
+    [SerializeField] private GameObject skillOpen;
     private int towerLv = 0;
     private int towerMaxLv = 10;
 
     private LevelUpParticle levelUp;
     private UpgradeNotice upgradeNotice;
+    private SkillOpenNotice skillOpenNotice;
 
     void PlayerInit()
     {
@@ -73,6 +74,8 @@ public class UI_PlayerUpgradePopUp : UI_Base
 
         levelUpParticle.TryGetComponent(out levelUp);
         noticePanel.transform.Find("Notice").TryGetComponent(out upgradeNotice);
+        skillOpen.TryGetComponent(out skillOpenNotice);
+
         if (upgradeBtn != null)
             upgradeBtn.onClick.AddListener(UpgradeNoticePanelOn);
 
@@ -125,11 +128,20 @@ public class UI_PlayerUpgradePopUp : UI_Base
             nextAttTxt.text = tower.att.ToString();
         }
 
-        if (towerLv == 3)
+        if (towerLv == 3)  //3레벨 달성시 폭발화살 레벨업!해서 개방
+        {
             Managers.Game.FireArrowSkillLv = 1;
+            skillOpen.SetActive(true);
+            skillOpenNotice.SetPlayerSkillInfo(Define.PlayerSkill.FireArrow);
+        }
 
-        if (towerLv == 7)
+        if (towerLv == 7) //7레벨 달성시 약화 레벨업해서 개방
+        {
             Managers.Game.WeaknessSkillLv = 1;
+            skillOpen.SetActive(true);
+            skillOpenNotice.SetPlayerSkillInfo(Define.PlayerSkill.Weakness);
+
+        }
 
     }
 

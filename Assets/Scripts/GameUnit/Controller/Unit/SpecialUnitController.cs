@@ -14,8 +14,6 @@ public class SpecialUnitController : Unit
     protected bool isSkil = false;
     protected bool isAttacking = false;
     [SerializeField] protected bool skillOn = false;     //스킬 발동판단
-    [SerializeField] protected GameObject speechBubbleObj;           //말풍선
-    [SerializeField] protected SpeechBubbleCtrl speechBBCtrl;
     [SerializeField] protected string[] skilldialogs;
     protected int randomIdx;
     protected int dialogCount = 2;
@@ -66,14 +64,6 @@ public class SpecialUnitController : Unit
     {
         base.Init();
         spawnPosX = -9.2f;
-
-
-        GameObject canvas = this.gameObject.transform.Find("Canvas").gameObject;
-        if (canvas != null)
-        {
-            speechBubbleObj = canvas.gameObject.transform.Find("SpeechBubble").gameObject;
-            speechBubbleObj.TryGetComponent(out speechBBCtrl);
-        }
 
         Skills = gameObject.GetComponent<SkillBook>();
 
@@ -134,14 +124,14 @@ public class SpecialUnitController : Unit
                 if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("Monster"))
                 {
                     MonsterController monctrl;
-                    enemyColls2D[ii].TryGetComponent<MonsterController>(out monctrl);
+                    enemyColls2D[ii].TryGetComponent(out monctrl);
                     monCtrls.Add(monctrl);
 
                 }
                 else if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("EliteMonster"))
                 {
                     EliteMonsterController elite;
-                    enemyColls2D[ii].TryGetComponent<EliteMonsterController>(out elite);
+                    enemyColls2D[ii].TryGetComponent(out elite);
                     monCtrls.Add(elite);
 
 

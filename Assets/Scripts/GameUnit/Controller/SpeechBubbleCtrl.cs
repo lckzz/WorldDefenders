@@ -43,7 +43,7 @@ public class SpeechBubbleCtrl : MonoBehaviour
         rt.anchoredPosition = pos;
     }
 
-    public void GetSpeechString(string str)
+    public void SetSpeechString(string str)
     {
         speechStr = str;
         TextSetting(speechStr);

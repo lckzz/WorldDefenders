@@ -46,8 +46,9 @@ public class DataManager
     public Dictionary<int, SkillData> weaknessSkillDict { get; private set; } = new Dictionary<int, SkillData>();
     #endregion
 
-    #region 튜토리얼 다이얼로그
+    #region  다이얼로그
     public Dictionary<string,TextAsset> tutorialDialogue { get; private set; } = new Dictionary<string,TextAsset>();
+    public Dictionary<string, TextAsset> speechDialogue { get; private set; } = new Dictionary<string, TextAsset>();
     #endregion 
 
 
@@ -76,6 +77,10 @@ public class DataManager
         tutorialDialogue = new Dictionary<string, TextAsset>
         {
             { "tutorial", Managers.Resource.Load<TextAsset>("Data/DialogueData") }
+        };
+        speechDialogue = new Dictionary<string, TextAsset>
+        {
+            { "speech", Managers.Resource.Load<TextAsset>("Data/InGameSpeechData") }
         };
 
     }

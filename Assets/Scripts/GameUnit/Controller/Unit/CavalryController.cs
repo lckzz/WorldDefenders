@@ -122,7 +122,7 @@ public class CavalryController : SpecialUnitController
             randomIdx = Random.Range(0, 2);
 
 
-            speechBBCtrl.GetSpeechString(skilldialogs[randomIdx]);
+            speechBBCtrl.SetSpeechString(skilldialogs[randomIdx]);
         }
 
     }

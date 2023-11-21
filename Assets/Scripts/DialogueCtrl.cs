@@ -19,7 +19,7 @@ public class DialogueCtrl : MonoBehaviour
 
     private void Start()
     {
-        node = Managers.Dialog.DialogJsonParsing(tutorialKey);
+        node = Managers.Dialog.DialogJsonParsing(tutorialKey,Define.DialogType.Tutorial);
         Managers.Dialog.DialogSetting(tutorialKey, node);
 
         StartCoroutine(StartDialog());

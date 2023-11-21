@@ -17,8 +17,8 @@ public class EliteMonsterController : Unit
     [SerializeField] protected Unit unitTarget;
     [SerializeField] protected PlayerTower playerTowerCtrl;
     protected List<Unit> skillenemyList = new List<Unit>();
-    [SerializeField] protected GameObject speechBubbleObj;           //¸»Ç³¼±
-    [SerializeField] protected SpeechBubbleCtrl speechBBCtrl;
+
+
     [SerializeField] protected string[] skilldialogs;
     protected int randomIdx;
     protected int dialogCount = 2;
@@ -68,12 +68,7 @@ public class EliteMonsterController : Unit
     {
         base.Init();
 
-        GameObject canvas = this.gameObject.transform.Find("Canvas").gameObject;
-        if (canvas != null)
-        {
-            speechBubbleObj = canvas.gameObject.transform.Find("SpeechBubble").gameObject;
-            speechBubbleObj.TryGetComponent(out speechBBCtrl);
-        }
+
 
         spawnPosX = 20.0f;
 
@@ -781,7 +776,7 @@ public class EliteMonsterController : Unit
             randomIdx = Random.Range(0, 2);
 
 
-            speechBBCtrl.GetSpeechString(skilldialogs[randomIdx]);
+            speechBBCtrl.SetSpeechString(skilldialogs[randomIdx]);
         }
 
     }

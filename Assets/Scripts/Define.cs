@@ -204,5 +204,11 @@ public class Define
         Count
     }
 
+    public enum DialogType
+    {
+        Tutorial,
+        Speech,
+        Count
+    }
 
 }
