@@ -25,6 +25,11 @@ public class UI_GameResult : UI_Base
 
 
     [SerializeField] private Sprite[] resultSprite;
+    [SerializeField] private GameObject victoryParticleObj;
+    [SerializeField] private GameObject resultObj;
+
+    private RectTransform resultRt;
+
     private bool exitFade = false;
     private bool retryFade = false;
 
@@ -53,7 +58,7 @@ public class UI_GameResult : UI_Base
         {
             //게임의 상태가 승리라면
             failOrVictoryImg.sprite = resultSprite[(int)Managers.Game.GetStageStateType() - 1];
-
+            victoryParticleObj.SetActive(true);
             switch (Managers.Game.CurStageType)
             {
                 case Define.SubStage.West:
@@ -110,7 +115,7 @@ public class UI_GameResult : UI_Base
 
         }
 
-
+        resultObj.TryGetComponent(out resultRt);
 
 
         if (retryBtn != null)
@@ -251,12 +256,6 @@ public class UI_GameResult : UI_Base
 
             yield return null;
         }
-    }
-
-
-    Sprite ImageSetting(string path)
-    {
-        return Resources.Load<Sprite>(path);
     }
 
 
