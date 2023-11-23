@@ -22,13 +22,15 @@ public class WeaknessSkill : ActiveSkill
         {
             if (enemys[ii] is MonsterController monCtrl)
             {
-                enemys[ii].UnitDebuff(SkillData.skillValue, 10.0f, monCtrl.Debuff.DebuffOnOff);
+                monCtrl.Debuff.WeaknessSkillInfo(monCtrl.MoveSpeed, monCtrl.Att);
+                monCtrl.Debuff.UnitDebuff(SkillData.skillValue, 10.0f, monCtrl.Debuff.DebuffOnOff);
                 monCtrl.Debuff.DebuffOnOff(true);
 
             }
             else if (enemys[ii] is EliteMonsterController eliteMonCtrl)
             {
-                enemys[ii].UnitDebuff(SkillData.skillValue, 10.0f, eliteMonCtrl.Debuff.DebuffOnOff);
+                eliteMonCtrl.Debuff.WeaknessSkillInfo(eliteMonCtrl.MoveSpeed, eliteMonCtrl.Att);
+                eliteMonCtrl.Debuff.UnitDebuff(SkillData.skillValue, 10.0f, eliteMonCtrl.Debuff.DebuffOnOff);
                 eliteMonCtrl.Debuff.DebuffOnOff(true);
 
             }

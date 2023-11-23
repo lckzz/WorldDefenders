@@ -75,6 +75,8 @@ public abstract class Unit : MonoBehaviour,ISensor
     public int Att { get { return att; } }
     public float Hp { get { return hp; } }
     public float MaxHp { get { return maxHp; } }
+    public float MoveSpeed { get { return moveSpeed; } }
+
     public bool IsNoKnockBack { get { return isNoKnockBack; } set { isNoKnockBack = value; } }
 
 
@@ -131,33 +133,9 @@ public abstract class Unit : MonoBehaviour,ISensor
         return true;
     }
 
-    public void UnitDebuff(float debuffIdx, float durationTime, Action<bool> debuffOnOffAction)
-    {
-        StartCoroutine(StartDebuff(debuffIdx, durationTime, debuffOnOffAction));
-    }
 
-    protected IEnumerator StartDebuff(float debuffIdx,float durationTime,Action<bool> debuffOnOffAction)
-    {
-        WaitForSeconds wfs = new WaitForSeconds(durationTime);
 
-        //기본 속도랑 공격력을 저장하고
-        float defalutMoveSpeed = moveSpeed;
-        int defalutAtt = att;   
 
-        //디버프당하면 속도랑 공격력이 낮아짐
-        moveSpeed -= moveSpeed *(debuffIdx / 100);
-        att -= (int)(att * (debuffIdx / 100));
-
-        yield return wfs;       //시간초만큼 대기하고 다시 원래대로 돌려줌
-
-        moveSpeed = defalutMoveSpeed;
-        att = defalutAtt;
-
-        debuffOnOffAction(false);
-
-        yield return null;
-        
-    }
 
 
     public virtual void OnHeal(int heal) { }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -781,7 +782,7 @@ public class MonsterController : Unit
         yield return wfs;           //시간 대기후 텍스트
 
         //일반 몬스터는 죽으면 코스트를 뱉는다.
-        int randItem = Random.Range(0, 2);
+        int randItem = UnityEngine.Random.Range(0, 2);
         unitHUDHp?.ItemHudInit((int)DropItemType.Cost);
 
         unitHUDHp?.SpawnHUDText(DropCost.ToString(), (int)UnitDamageType.Item);
@@ -860,7 +861,7 @@ public class MonsterController : Unit
     }
 
 
- 
+
 
 
     private void OnDrawGizmos()
