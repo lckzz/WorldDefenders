@@ -27,7 +27,7 @@ public enum MonsterState
     Die
 }
 
-public class MonsterController : Unit
+public class MonsterController : Unit,IObserver
 {
 
     [SerializeField]
@@ -53,6 +53,8 @@ public class MonsterController : Unit
     MonsterStat monStat;
 
     DropItem dropItem;
+
+    [SerializeField] DebuffCreator debuffCreator;
     Debuff debuff;
 
 
@@ -132,11 +134,16 @@ public class MonsterController : Unit
 
         TryGetComponent<Collider2D>(out myColl);
         TryGetComponent(out dropItem);
-        TryGetComponent(out debuff);
+        TryGetComponent(out debuffCreator);
 
+        debuff = debuffCreator.AddDebuffComponent(Managers.Game.CurPlayerEquipSkill);
         appearDialogNode = Managers.Dialog.DialogJsonParsing("speech", Define.DialogType.Speech);
         speechBBCtrl?.SetSpeechString(appearDialogNode[appearDialog][$"eliteShamanAppear1"]);
         speechBubbleObj.SetActive(true);
+
+        if(Debuff is WeaknessDebuff weaknessDebuff)
+            weaknessDebuff.AddObserver(this);           //디버프의 능력치변화값을 받아오기위한 구독
+
 
         if (monsterClass == MonsterClass.Archer)
             arrowPos = transform.Find("ArrowPos");
@@ -556,7 +563,10 @@ public class MonsterController : Unit
         {
             SetMonsterState(MonsterState.Die);
             myColl.enabled = false;
-            Debuff.FireDebuffOnOff(false);
+            if(Debuff is FireDebuff fireDebuff)
+                fireDebuff.DebuffOnOff(false);
+
+
             dropItem?.Drop(this.gameObject.transform.position);
             StartCoroutine(Util.DestroyTime(gameObject, 3.0f));
             StartCoroutine(MonsterDieDropText());
@@ -861,7 +871,12 @@ public class MonsterController : Unit
     }
 
 
+    public void Notified(int att, float speed)
+    {
+        this.att = att;
+        this.moveSpeed = speed;
 
+    }
 
 
     private void OnDrawGizmos()
@@ -869,4 +884,6 @@ public class MonsterController : Unit
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(pos.position, boxSize);
     }
+
+
 }

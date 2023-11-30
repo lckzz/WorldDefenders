@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-
-
+using System.Linq;
 
 [Serializable]
 public class GameData
@@ -72,8 +71,9 @@ public class GameManagerEx
     private List<Define.MonsterType> monsterTypeList = new List<Define.MonsterType>();
     private bool lobbyToGameScene = false;
 
+    private Dictionary<int, int> upgradeUnitLvDict;
 
-
+    public Dictionary<int,int> UpgradeUnitLvDict { get { return upgradeUnitLvDict; } }
 
     public List<UnitClass> SlotUnitClass { 
         get { return gameSaveArrayData.slotUnitClass; } 
@@ -90,7 +90,52 @@ public class GameManagerEx
         set { lobbyToGameScene = value; }
     }
 
+    #region 유닛 레벨
+    public void UnitLvDictInit()
+    {
+        upgradeUnitLvDict = new Dictionary<int, int>
+        {
+            { (int)UnitClass.Warrior, Managers.Game.UnitWarriorLv },
+            { (int)UnitClass.Archer, Managers.Game.UnitArcherLv },
+            { (int)UnitClass.Spear, Managers.Game.UnitSpearLv },
+            { (int)UnitClass.Priest, Managers.Game.UnitPriestLv },
+            { (int)UnitClass.Magician, Managers.Game.UnitMagicianLv },
+            { (int)UnitClass.Cavalry, Managers.Game.UnitCarlvlry },
+        };
 
+    }
+
+    public void UnitLvDictRefresh()
+    {
+        foreach(var unitClass in Enum.GetValues(typeof(UnitClass)).Cast<UnitClass>())
+        {
+            upgradeUnitLvDict[(int)unitClass] = GetUnitLevel(unitClass);
+        }
+    }
+
+    private int GetUnitLevel(UnitClass unitClass)
+    {
+        switch (unitClass)
+        { 
+            case UnitClass.Warrior:
+                return Managers.Game.UnitWarriorLv;
+            case UnitClass.Archer:
+                return Managers.Game.UnitArcherLv;
+            case UnitClass.Spear:
+                return Managers.Game.UnitSpearLv;
+            case UnitClass.Priest:
+                return Managers.Game.UnitPriestLv;
+            case UnitClass.Magician:
+                return Managers.Game.UnitMagicianLv;
+            case UnitClass.Cavalry:
+                return Managers.Game.UnitCarlvlry;
+            default:
+                return 0;
+        }
+
+    }
+
+    #endregion
     #region 게임 데이터
     public int Gold
     {

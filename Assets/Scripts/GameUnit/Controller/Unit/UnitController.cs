@@ -28,7 +28,7 @@ public enum UnitState
     Die
 }
 
-public class UnitController : Unit,ISubject
+public class UnitController : Unit
 {
 
     [SerializeField]

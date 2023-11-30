@@ -158,6 +158,7 @@ public class UpgradeUnitNode : MonoBehaviour
 
     public void RefreshUnitImg(int unitLv)
     {
+        Debug.Log("Å×½ºÆ®");
         if(upgradeUnit < UnitClass.Magician)
         {
             if (unitLv < 5)

@@ -37,11 +37,18 @@ public class UI_UpgradeWindow : UI_Base
 
     UpgradeUnitNode unitUpgradeNode;
 
+
+    private Dictionary<int, Action<int>> upgradeUnitRefreshDict = new Dictionary<int, Action<int>>();
+
+    private Action<int> upgradeActionInt;
+
     // Start is called before the first frame update
     public override void Start()
     {
         if (Managers.Game.PlayerLevel == 0)
             Managers.Game.PlayerLevel = 1;
+
+        
 
 
         unitUpgradePrefabs =  new GameObject[(int)UnitClass.Count];
@@ -164,36 +171,54 @@ public class UI_UpgradeWindow : UI_Base
     }
 
 
+
+
     public void UpgradeUnitRefresh(int idx)
     {
-        
+
+        Managers.Game.UnitLvDictRefresh();      //딕셔너리에 넣어논 모든 유닛레벨을 갱신해준다.
+        int unitLv = 0;
 
         if (unitUpgradeObjs[idx] != null)
         {
-
+            unitLv = Managers.Game.UpgradeUnitLvDict[idx];      //현재 인덱스의 유닛레벨을 받아온다.
+            Debug.Log(unitLv);
             unitUpgradeObjs[idx].TryGetComponent(out unitUpgradeNode);
-
-            switch (idx)
+            
+            if(upgradeUnitRefreshDict.TryGetValue(idx,out upgradeActionInt) == false)
             {
-                case (int)UnitClass.Warrior:
-                    unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitWarriorLv);
-                    break;
-                case (int)UnitClass.Archer:
-                    unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitArcherLv);
-                    break;
-                case (int)UnitClass.Spear:
-                    unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitSpearLv);
-                    break;
-                case (int)UnitClass.Priest:
-                    unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitPriestLv);
-                    break;
-                case (int)UnitClass.Magician:
-                    unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitMagicianLv);
-                    break;
-                case (int)UnitClass.Cavalry:
-                    unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitCarlvlry);
-                    break;
+                //만약에 딕셔너리에 값이 검색이 안된다면 그값을 넣어주기
+                upgradeActionInt = unitUpgradeNode.RefreshUnitImg;
+                upgradeActionInt(unitLv);
+                upgradeUnitRefreshDict.Add(idx, upgradeActionInt);
             }
+
+            if (upgradeUnitRefreshDict.TryGetValue(idx, out upgradeActionInt))
+                upgradeActionInt(unitLv);
+
+
+            //switch (idx)
+            //{
+
+            //    case (int)UnitClass.Warrior:
+            //        unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitWarriorLv);
+            //        break;
+            //    case (int)UnitClass.Archer:
+            //        unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitArcherLv);
+            //        break;
+            //    case (int)UnitClass.Spear:
+            //        unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitSpearLv);
+            //        break;
+            //    case (int)UnitClass.Priest:
+            //        unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitPriestLv);
+            //        break;
+            //    case (int)UnitClass.Magician:
+            //        unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitMagicianLv);
+            //        break;
+            //    case (int)UnitClass.Cavalry:
+            //        unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitCarlvlry);
+            //        break;
+            //}
         }
         
     }

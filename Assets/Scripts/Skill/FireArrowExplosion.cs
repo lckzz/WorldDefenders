@@ -30,14 +30,22 @@ public class FireArrowExplosion : MonoBehaviour
             coll.TryGetComponent(out Unit enemy);
             if (enemy is MonsterController monCtrl)
             {
-                monCtrl.OnDamage(skillData.skillValue, explosionKnockBack); //폭발데미지를 입고
-                monCtrl.Debuff.FireDebuffOnOff(true,monCtrl);   //그 후엔 초마다 데미지를 받는 화상 오브젝트를 켜준다.
+                if (monCtrl.Debuff is FireDebuff fireDebuff)
+                {
+                    monCtrl.OnDamage(skillData.skillValue, explosionKnockBack); //폭발데미지를 입고
+                    fireDebuff.DebuffOnOff(true, monCtrl);   //그 후엔 초마다 데미지를 받는 화상 오브젝트를 켜준다.
+                }
+
 
             }
             else if(enemy is EliteMonsterController eliteMonCtrl)
             {
-                eliteMonCtrl.OnDamage(skillData.skillValue, explosionKnockBack); //폭발데미지를 입고
-                eliteMonCtrl.Debuff.FireDebuffOnOff(true,eliteMonCtrl);   //그 후엔 초마다 데미지를 받는 화상 오브젝트를 켜준다.
+                if (eliteMonCtrl.Debuff is FireDebuff fireDebuff)
+                {
+                    eliteMonCtrl.OnDamage(skillData.skillValue, explosionKnockBack); //폭발데미지를 입고
+                    fireDebuff.DebuffOnOff(true, eliteMonCtrl);   //그 후엔 초마다 데미지를 받는 화상 오브젝트를 켜준다.
+                }
+          
             }
 
         }

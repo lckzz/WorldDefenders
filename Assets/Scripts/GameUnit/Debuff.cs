@@ -2,103 +2,59 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Define;
 
 public class Debuff : MonoBehaviour
 {
-    [SerializeField] private GameObject debuffObj;
-    [SerializeField] private GameObject fireDebuffObj;
-    [SerializeField] private GameObject debuffIconPrefabs;
-    private Coroutine fireCoroutine = null;
+    [SerializeField] private GameObject content;    //몬스터가 맞으면 디버프UI를 생성할 위치
+    [SerializeField] private GameObject debuffIconUIPrefabs;      //몬스터가 맞으면 생기는 디버프UI 프리팹
+    protected GameObject debuffIconUIgo;          //몬스터 디버프 UI 게임오브젝트
 
-    private float unitSpeed = 0.0f;
-    private int unitAtt = 0;
+    private GameObject canvas;
+    private GameObject buffScrollViewObj;
+    protected GameObject debuffObj;
+    protected bool debuffInstantiateisOn = false;
+    protected bool debuffUIInstantiateisOn = false;
+
+    protected DebuffUI debuffUI;
 
 
-    private void Start()
+    protected virtual void Start()
     {
-        if (debuffIconPrefabs == null)
-            debuffIconPrefabs = Managers.Resource.Load<GameObject>("Prefabs/DebuffIcon");
-    }
 
-    public void WeaknessSkillInfo(float speed, int att)
-    {
-        //약화스킬을 위한 유닛 정보셋팅
-        unitSpeed = speed;
-        unitAtt = att;
-    }
+        if (debuffIconUIPrefabs == null)
+            debuffIconUIPrefabs = Managers.Resource.Load<GameObject>("Prefabs/DebuffIcon");
 
-    public IEnumerator StartDebuff(float debuffIdx, float durationTime, Action<bool> debuffOnOffAction)
-    {
-        WaitForSeconds wfs = new WaitForSeconds(durationTime);
+        canvas = this.gameObject.transform.Find("Canvas").gameObject;
+        buffScrollViewObj = canvas.transform.Find("BuffScrollView").gameObject;
+        content = buffScrollViewObj.transform.Find("Viewport").transform.Find("Content").gameObject;
 
-        //기본 속도랑 공격력을 저장하고
-        float defalutMoveSpeed = unitSpeed;
-        int defalutAtt = unitAtt;
-
-        //디버프당하면 속도랑 공격력이 낮아짐
-        unitSpeed -= unitSpeed * (debuffIdx / 100);
-        unitAtt -= (int)(unitAtt * (debuffIdx / 100));
-
-        yield return wfs;       //시간초만큼 대기하고 다시 원래대로 돌려줌
-
-        unitSpeed = defalutMoveSpeed;
-        unitAtt = defalutAtt;
-
-        debuffOnOffAction(false);
-
-        yield return null;
+        debuffObj = transform.Find("Debuff").gameObject;
 
     }
 
-    public void UnitDebuff(float debuffIdx, float durationTime, Action<bool> debuffOnOffAction)
+
+    public virtual void DebuffOnOff(bool isOn, Unit unit = null) { }
+
+    public virtual void DebuffInstantiate() { }
+
+    public virtual void DebuffIconUIInstantiate(DebuffType debuffType) 
     {
-        StartCoroutine(StartDebuff(debuffIdx, durationTime, debuffOnOffAction));
-    }
-
-    public void DebuffOnOff(bool isOn)
-    {
-        debuffObj.SetActive(isOn);
-
-   
-    }
-
-    public void FireDebuffOnOff(bool isOn, Unit unit = null)
-    {
-        fireDebuffObj.SetActive(isOn);
-        if (fireDebuffObj.activeSelf)    //화상디버프가 켜진다면
-            FireDebuff(unit);       //지속데미지 디버프 시작
-    }
-
-    public void FireDebuff(Unit unit)
-    {
-        if (fireCoroutine != null)
-            StopCoroutine(fireCoroutine);
-
-        fireCoroutine = StartCoroutine(FireDebuffCo(unit));
-    }
-
-    IEnumerator FireDebuffCo(Unit unit)  //화상디버프 지속데미지
-    {
-        int damageCount = 0;  //초당 늘어남
-        int maxTime = 10;
-
-        float durationTime = 1.0f;
-
-        WaitForSeconds wfs = new WaitForSeconds(durationTime);      //초당 지속데미지줄것
-        while (true)
+        if(debuffUIInstantiateisOn == false)
         {
-            yield return wfs;
+            //이미 생성되어있다면 생성못하게
+            debuffUIInstantiateisOn = true;
+            debuffIconUIgo = Managers.Resource.Instantiate(debuffIconUIPrefabs, content.transform);
+            Debug.Log(debuffIconUIgo);
+            debuffIconUIgo.TryGetComponent(out debuffUI);
+            debuffUI.UIInit(debuffType);
 
-            Debug.Log(unit);
-            unit.OnDamage(10);
-            damageCount++;
-
-            if (damageCount >= maxTime)
-            {
-                FireDebuffOnOff(false);
-                yield break;
-
-            }
         }
+        //디버프 아이콘 생성하고 여기서 초기화해준다.
     }
+
+
+
+
+
 }

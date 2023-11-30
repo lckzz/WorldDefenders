@@ -61,15 +61,18 @@ public class TitleScene : MonoBehaviour
                     Managers.Game.SlotUnitClass.Clear();        //배열도 초기화 시켜줘야한다.
                 }
 
+
                 //초기화후 저장파일을 불러옴
             }
             else
             {
                 //저장파일이 없다면
                 Managers.Game.GameDataInit(); //초기화만
-            }
 
-            
+            }
+            Managers.Game.UnitLvDictRefresh();
+
+
         }
     }
 
