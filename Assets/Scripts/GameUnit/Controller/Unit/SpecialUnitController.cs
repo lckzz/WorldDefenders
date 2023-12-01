@@ -14,9 +14,6 @@ public class SpecialUnitController : Unit
     protected bool isSkil = false;
     protected bool isAttacking = false;
     [SerializeField] protected bool skillOn = false;     //스킬 발동판단
-    [SerializeField] protected string[] skilldialogs;
-    protected int randomIdx;
-    protected int dialogCount = 2;
 
     protected List<Unit> monCtrls = new List<Unit>();  //범위안에 들어온 몬스터의 정보들을 모아둠
     [SerializeField] protected Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
@@ -30,6 +27,20 @@ public class SpecialUnitController : Unit
     protected readonly string warriorHitSound = "WarriorAttack";
     protected readonly string warriorCriticalSound = "CriticalSound";
     protected readonly string warriorHitEff = "HitEff";
+
+    protected readonly string appearTitleKey = "unitAppearDialog";
+    protected readonly string dieTitleKey = "unitDieDialog";
+    protected readonly string skillTitleKey = "skillDialog";
+
+    protected readonly string dieDialogSubKey = "specialUnitDie";
+
+    protected readonly int appearProbability = 50;
+    protected readonly int dieProbaility = 70;
+    protected readonly int skillProbaility = 100;
+
+
+
+
 
     [SerializeField] protected GameObject appearDust;
 
@@ -72,6 +83,8 @@ public class SpecialUnitController : Unit
 
         startCoolTime = StartCoroutine(UnitSKillCoolTime(coolTime));
         appearDust?.SetActive(true);
+
+
 
     }
 
@@ -520,6 +533,7 @@ public class SpecialUnitController : Unit
     {
         if (myColl.enabled)
         {
+            speechBubble.SpeechBubbuleOn(dieTitleKey, dieDialogSubKey, dieProbaility);
             myColl.enabled = false;
             StartCoroutine(Util.DestroyTime(gameObject, 5.0f));
 
@@ -808,6 +822,12 @@ public class SpecialUnitController : Unit
 
     }
 
+    public void SpeechchBubbleOn(string speechTitleKey, string speechSubKey, int probaility)
+    {
+        speechBubble.SpeechBubbuleOn(speechTitleKey, speechSubKey, probaility);
+
+
+    }
 
     private void OnDrawGizmos()
     {

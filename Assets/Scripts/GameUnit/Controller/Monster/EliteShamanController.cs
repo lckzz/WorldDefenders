@@ -6,10 +6,19 @@ using static Define;
 public class EliteShamanController : EliteMonsterController
 {
     //매직포스
-    Transform magicPos;
+    private Transform magicPos;
+    private readonly string skillDialogSubKey = "eliteShamanSkillDialog";
+    private readonly string appearDialogSubKey = "eliteShamanAppear";
 
     //매직포스
 
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        if (sp != null && myColl != null)
+            speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
+
+    }
 
     public override void Init()
     {
@@ -30,16 +39,8 @@ public class EliteShamanController : EliteMonsterController
 
         magicPos = transform.Find("MagicPos");
         Skills.AddSkill<DarkPowerSkill>();
-        skilldialogs = new string[dialogCount];
-        for (int ii = 0; ii < dialogCount; ii++)
-        {
-            if (ii == 0)
-                skilldialogs[ii] = Skills.GetSkill<DarkPowerSkill>().SkillData.skillDialog1;
-            else if (ii == 1)
-                skilldialogs[ii] = Skills.GetSkill<DarkPowerSkill>().SkillData.skillDialog2;
+        speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
 
-
-        }
 
     }
 
@@ -135,5 +136,18 @@ public class EliteShamanController : EliteMonsterController
 
 
     }
-    
+
+    public override void OnSkill()
+    {
+        if (skillOn)  //스킬온이면
+        {
+            if (Skills.activeSkillList.Count > 0)
+            {
+                Debug.Log("발싸");
+                Skills.activeSkillList[0].UseSkill(this);     //스킬 사용
+                SpeechchBubbleOn(skillTitleKey, skillDialogSubKey,skillProbability);
+            }
+        }
+    }
+
 }

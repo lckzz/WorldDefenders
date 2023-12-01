@@ -6,8 +6,16 @@ using static Define;
 public class CavalryController : SpecialUnitController
 {
 
+    private readonly string skillDialogSubKey = "cavalrySkillDialog";
+    private readonly string appearDialogSubkey = "cavalryAppear";
 
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        if (sp != null && myColl != null)
+            speechBubble.SpeechBubbuleOn(appearDialogSubkey, appearDialogSubkey, appearProbability);
 
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -44,16 +52,7 @@ public class CavalryController : SpecialUnitController
 
 
         Skills.AddSkill<SwordSummonSkill>();
-        skilldialogs = new string[dialogCount];
-        for (int ii = 0; ii < dialogCount; ii++)
-        {
-            if (ii == 0)
-                skilldialogs[ii] = Skills.GetSkill<SwordSummonSkill>().SkillData.skillDialog1;
-            else if (ii == 1)
-                skilldialogs[ii] = Skills.GetSkill<SwordSummonSkill>().SkillData.skillDialog2;
-
-
-        }
+        speechBubble.SpeechBubbuleOn(appearDialogSubkey, appearDialogSubkey, appearProbability);
 
     }
 
@@ -104,26 +103,11 @@ public class CavalryController : SpecialUnitController
             {
                 Debug.Log("스킬사용");
                 Skills.activeSkillList[0].UseSkill(this, skillMonList);     //스킬 사용
-                SpeechchBubbleOn();
+                SpeechchBubbleOn(skillTitleKey,skillDialogSubKey,skillProbaility);
             }
         }
     }
 
 
-    public void SpeechchBubbleOn()
-    {
 
-        if (speechBubbleObj.activeSelf == false)
-            speechBubbleObj.SetActive(true);
-
-
-        if (speechBubbleObj.activeSelf == true && speechBBCtrl != null)
-        {
-            randomIdx = Random.Range(0, 2);
-
-
-            speechBBCtrl.SetSpeechString(skilldialogs[randomIdx]);
-        }
-
-    }
 }

@@ -5,11 +5,24 @@ using static Define;
 
 public class EliteCavalryController : EliteMonsterController
 {
-    GameObject miniPortal1;
-    GameObject miniPortal2;
+    private GameObject miniPortal1;
+    private GameObject miniPortal2;
+
+    private readonly string skillDialogSubKey = "eliteCavalrySkillDialog";
+    private readonly string appearDialogSubKey = "eliteCavalryAppear";
+
 
     public GameObject MiniPortal1 { get { return miniPortal1; } }
     public GameObject MiniPortal2 { get { return miniPortal2; } }
+
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        if (sp != null && myColl != null)
+            speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
+
+    }
 
     public override void Init()
     {
@@ -29,16 +42,7 @@ public class EliteCavalryController : EliteMonsterController
         moveSpeed = 2.0f;
 
         Skills.AddSkill<SkeletonSummonSkill>();
-        skilldialogs = new string[dialogCount];
-        for (int ii = 0; ii < dialogCount; ii++)
-        {
-            if (ii == 0)
-                skilldialogs[ii] = Skills.GetSkill<SkeletonSummonSkill>().SkillData.skillDialog1;
-            else if (ii == 1)
-                skilldialogs[ii] = Skills.GetSkill<SkeletonSummonSkill>().SkillData.skillDialog2;
 
-
-        }
 
 
         for (int ii = 0;ii < this.transform.childCount;ii++)
@@ -50,6 +54,9 @@ public class EliteCavalryController : EliteMonsterController
                 miniPortal2 = transform.GetChild(ii).gameObject;
 
         }
+
+
+        speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey,appearProbability);
 
     }
 
@@ -94,14 +101,13 @@ public class EliteCavalryController : EliteMonsterController
 
     public override void OnSkill()
     {
-        Debug.Log("테스트");
         if (skillOn)  //스킬온이면
         {
             if (Skills.activeSkillList.Count > 0)
             {
                 Debug.Log("발싸");
                 Skills.activeSkillList[0].UseSkill(this);     //스킬 사용
-                SpeechchBubbleOn();
+                SpeechchBubbleOn(skillTitleKey,skillDialogSubKey,skillProbability);
             }
         }
     }

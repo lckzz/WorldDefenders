@@ -9,7 +9,22 @@ public class MagicianController : SpecialUnitController
     //마법사 전용
     Transform magicPos;
     Vector3 normalMagicPos = new Vector3(-0.9f, 0.16f, 0.0f);
+
+    private readonly string skillDialogSubKey = "magicianSkillDialog";
+    private readonly string appearDialogSubkey = "magicianAppear";
+
+
+
     //마법사 전용
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        if (sp != null && myColl != null)
+            speechBubble.SpeechBubbuleOn(appearDialogSubkey, appearDialogSubkey, appearProbability);
+
+    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -48,16 +63,7 @@ public class MagicianController : SpecialUnitController
 
         magicPos = transform.Find("MagicPos");
         Skills.AddSkill<MeteroSkill>();
-        skilldialogs = new string[dialogCount];
-        for (int ii = 0; ii < dialogCount; ii++)
-        {
-            if (ii == 0)
-                skilldialogs[ii] = Skills.GetSkill<MeteroSkill>().SkillData.skillDialog1;
-            else if (ii == 1)
-                skilldialogs[ii] = Skills.GetSkill<MeteroSkill>().SkillData.skillDialog2;
-
-
-        }
+        speechBubble.SpeechBubbuleOn(appearTitleKey, appearDialogSubkey, appearProbability);
 
     }
 
@@ -118,26 +124,11 @@ public class MagicianController : SpecialUnitController
             {
                 Debug.Log("발싸");
                 Skills.activeSkillList[0].UseSkill(this, skillMonList);     //스킬 사용
-                SpeechchBubbleOn();
+                SpeechchBubbleOn(skillTitleKey,skillDialogSubKey,skillProbaility);
             }
         }
     }
 
 
-    public void SpeechchBubbleOn()
-    {
 
-        if (speechBubbleObj.activeSelf == false)
-            speechBubbleObj.SetActive(true);
-
-
-        if (speechBubbleObj.activeSelf == true && speechBBCtrl != null)
-        {
-            randomIdx = Random.Range(0, 2);
-
-
-            speechBBCtrl.SetSpeechString(skilldialogs[randomIdx]);
-        }
-
-    }
 }

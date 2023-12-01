@@ -76,7 +76,8 @@ public class MonsterController : Unit,IObserver
     private readonly string warriorHitSound = "WarriorAttack";
     private readonly string warriorCriticalSound = "CriticalSound";
     private readonly string warriorHitEff = "HitEff";
-    private readonly string appearDialog = "monsterAppearDialog";
+    private readonly string appearTitleKey = "monsterAppearDialog";
+    private readonly string dieTitleKey = "unitDieDialog";
 
 
     public override void Init()
@@ -132,14 +133,12 @@ public class MonsterController : Unit,IObserver
 
         //playerTowerCtrl = GameObject.FindObjectOfType<PlayerTower>();
 
-        TryGetComponent<Collider2D>(out myColl);
+        TryGetComponent(out myColl);
         TryGetComponent(out dropItem);
         TryGetComponent(out debuffCreator);
 
         debuff = debuffCreator.AddDebuffComponent(Managers.Game.CurPlayerEquipSkill);
-        appearDialogNode = Managers.Dialog.DialogJsonParsing("speech", Define.DialogType.Speech);
-        speechBBCtrl?.SetSpeechString(appearDialogNode[appearDialog][$"eliteShamanAppear1"]);
-        speechBubbleObj.SetActive(true);
+
 
         if(Debuff is WeaknessDebuff weaknessDebuff)
             weaknessDebuff.AddObserver(this);           //디버프의 능력치변화값을 받아오기위한 구독

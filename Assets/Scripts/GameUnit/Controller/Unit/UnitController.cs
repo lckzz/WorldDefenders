@@ -61,10 +61,11 @@ public class UnitController : Unit
 
 
 
-    string warriorHitSound = "WarriorAttack";
-    string warriorCriticalSound = "CriticalSound";
-    string warriorHitEff = "HitEff";
-
+    private readonly string warriorHitSound = "WarriorAttack";
+    private readonly string warriorCriticalSound = "CriticalSound";
+    private readonly string warriorHitEff = "HitEff";
+    private readonly string appearTitleKey = "unitAppearDialog";
+    private readonly string dieTitleKey = "unitDieDialog";
 
 
     public override void Init()

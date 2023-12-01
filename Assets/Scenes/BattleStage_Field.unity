@@ -5095,8 +5095,6 @@ MonoBehaviour:
   attackCoolTime: 1.5
   pos: {fileID: 1341343775}
   boxSize: {x: 5.97, y: 3.59}
-  speechBubbleObj: {fileID: 0}
-  speechBBCtrl: {fileID: 0}
   monsterClass: 0
   state: 1
   unitTarget: {fileID: 0}
@@ -9866,7 +9864,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3884331439598046159, guid: 8b794425867459c469f2d45fbaefccbf, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4903387429951361752, guid: 8b794425867459c469f2d45fbaefccbf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9911,7 +9909,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3884331439598046159, guid: 8b794425867459c469f2d45fbaefccbf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2019357961}
   m_SourcePrefab: {fileID: 100100000, guid: 8b794425867459c469f2d45fbaefccbf, type: 3}
 --- !u!1001 &1649112421
 PrefabInstance:
@@ -9927,7 +9928,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6243391127948420735, guid: a2f4f27267cf16e41b54d24e24036d1b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8398093333276122876, guid: a2f4f27267cf16e41b54d24e24036d1b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12524,6 +12525,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &2019357950 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3884331439598046159, guid: 8b794425867459c469f2d45fbaefccbf, type: 3}
+  m_PrefabInstance: {fileID: 1647589633}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2019357961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019357950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 315733e5fd9fac147a4b1757fadf6030, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speechBubbleObj: {fileID: 0}
+  speechBBCtrl: {fileID: 0}
 --- !u!1 &2041299630
 GameObject:
   m_ObjectHideFlags: 0
@@ -13115,8 +13135,6 @@ MonoBehaviour:
   attackCoolTime: 1.5
   pos: {fileID: 3739096016967546858}
   boxSize: {x: 5.97, y: 3.59}
-  speechBubbleObj: {fileID: 0}
-  speechBBCtrl: {fileID: 0}
   monsterClass: 0
   state: 1
   unitTarget: {fileID: 0}
@@ -14215,8 +14233,8 @@ GameObject:
   - component: {fileID: 6413069652115028963}
   - component: {fileID: 2088729810776713635}
   - component: {fileID: 904250383959972877}
-  - component: {fileID: 8728724481646573187}
   - component: {fileID: 8728724481646573188}
+  - component: {fileID: 8728724481646573189}
   m_Layer: 7
   m_Name: HighSkeleton
   m_TagString: Monster
@@ -17749,20 +17767,6 @@ Transform:
   - {fileID: 1610549783}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8728724481646573187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2784195195859195321}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a13b83d6806bc20428bbfbb94b2bcf43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  content: {fileID: 810850146666842759}
-  debuffIconUIPrefabs: {fileID: 0}
 --- !u!114 &8728724481646573188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17775,6 +17779,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecb9a0c284d943345a60b74747e35bfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8728724481646573189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2784195195859195321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 315733e5fd9fac147a4b1757fadf6030, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speechBubbleObj: {fileID: 0}
+  speechBBCtrl: {fileID: 0}
 --- !u!224 &8804555143063883281
 RectTransform:
   m_ObjectHideFlags: 0

@@ -8,10 +8,20 @@ public class EliteWarriorController : EliteMonsterController
 {
 
     //엘리트워리어 검기
-    Transform swordPos;
+    private Transform swordPos;
 
     //엘리트워리어 검기
+    private readonly string skillDialogSubKey = "eliteWarriorSkillDialog";
+    private readonly string appearDialogSubKey = "eliteWarriorAppear";
 
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        if (sp != null && myColl != null)
+            speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
+
+    }
 
     public override void Init()
     {
@@ -32,17 +42,9 @@ public class EliteWarriorController : EliteMonsterController
 
         swordPos = transform.Find("SwordPos");
         Skills.AddSkill<SwordDanceSkill>();
-        skilldialogs = new string[dialogCount];
-        for (int ii = 0; ii < dialogCount; ii++)
-        {
-            if (ii == 0)
-                skilldialogs[ii] = Skills.GetSkill<SwordDanceSkill>().SkillData.skillDialog1;
-            else if (ii == 1)
-                skilldialogs[ii] = Skills.GetSkill<SwordDanceSkill>().SkillData.skillDialog2;
+        speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
 
 
-        }
-      
     }
 
 
@@ -86,5 +88,16 @@ public class EliteWarriorController : EliteMonsterController
     }
 
 
-
+    public override void OnSkill()
+    {
+        if (skillOn)  //스킬온이면
+        {
+            if (Skills.activeSkillList.Count > 0)
+            {
+                Debug.Log("발싸");
+                Skills.activeSkillList[0].UseSkill(this);     //스킬 사용
+                SpeechchBubbleOn(skillTitleKey, skillDialogSubKey,skillProbability);
+            }
+        }
+    }
 }

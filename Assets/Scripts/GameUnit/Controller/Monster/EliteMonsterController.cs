@@ -19,9 +19,6 @@ public class EliteMonsterController : Unit
     protected List<Unit> skillenemyList = new List<Unit>();
 
 
-    [SerializeField] protected string[] skilldialogs;
-    protected int randomIdx;
-    protected int dialogCount = 2;
     [SerializeField] protected GameObject appearDust;
 
 
@@ -32,6 +29,18 @@ public class EliteMonsterController : Unit
     readonly string warriorHitSound = "WarriorAttack";
     readonly string warriorCriticalSound = "CriticalSound";
     readonly string warriorHitEff = "HitEff";
+
+    protected readonly string monsterAppearTitleKey = "monsterAppearDialog";
+    protected readonly string monsterDieTitleKey = "monsterDieDialog";
+    protected readonly string skillTitleKey = "skillDialog";
+
+    protected readonly string monsterDieSubKey = "eliteMonsterDie";
+
+    protected readonly int appearProbability = 50;       //30프로확률로 등장하면서 말풍선
+    protected readonly int dieProbability = 70;
+    protected readonly int skillProbability = 100;
+
+
 
 
     private Debuff debuff;
@@ -81,7 +90,7 @@ public class EliteMonsterController : Unit
         startCoolTime = StartCoroutine(UnitSKillCoolTime(coolTime));
         appearDust?.SetActive(true);
 
-
+        
     }
 
 
@@ -494,15 +503,16 @@ public class EliteMonsterController : Unit
     }
 
 
-    public virtual void MonsterSkill()
-    {
+    public virtual void MonsterSkill() { }
 
-    }
 
     void MonsterDie()
     {
         if (myColl.enabled)
         {
+
+            speechBubble.SpeechBubbuleOn(monsterDieTitleKey, monsterDieSubKey,dieProbability);
+
             SetMonsterState(EliteMonsterState.Die);
             myColl.enabled = false;
             StartCoroutine(Util.DestroyTime(gameObject, 3.0f));
@@ -624,18 +634,8 @@ public class EliteMonsterController : Unit
         }
     }
 
-    public virtual void OnSkill()
-    {
-        if (skillOn)  //스킬온이면
-        {
-            if (Skills.activeSkillList.Count > 0)
-            {
-                Debug.Log("발싸");
-                Skills.activeSkillList[0].UseSkill(this, skillenemyList);     //스킬 사용
-                SpeechchBubbleOn();
-            }
-        }
-    }
+    public virtual void OnSkill() { }
+
 
 
     void ApplyKnockBack(Vector2 dir, float force)
@@ -764,20 +764,10 @@ public class EliteMonsterController : Unit
         }
     }
 
-    public void SpeechchBubbleOn()
+    public void SpeechchBubbleOn(string speechTitleKey , string speechSubKey,int probaility)
     {
+        speechBubble.SpeechBubbuleOn(speechTitleKey,speechSubKey, probaility);
 
-        if (speechBubbleObj.activeSelf == false)
-            speechBubbleObj.SetActive(true);
-
-
-        if (speechBubbleObj.activeSelf == true && speechBBCtrl != null)
-        {
-            randomIdx = Random.Range(0, 2);
-
-
-            speechBBCtrl.SetSpeechString(skilldialogs[randomIdx]);
-        }
 
     }
 

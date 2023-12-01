@@ -217,8 +217,6 @@ public class SkillData
     public int skillTargetCount;
     public int skillCoolTime;
     public string skillPrefab;
-    public string skillDialog1;
-    public string skillDialog2;
 }
 
 public class MagicianSkillData : ILoader<int, SkillData>
