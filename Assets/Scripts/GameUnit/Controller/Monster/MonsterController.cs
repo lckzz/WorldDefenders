@@ -31,26 +31,15 @@ public class MonsterController : Unit,IObserver
 {
 
     [SerializeField]
-    private MonsterClass monsterClass;
-    [SerializeField]
     private MonsterState state = MonsterState.Run;        //테스트용이라 런 
 
 
 
     List<Unit> unitCtrls = new List<Unit>();
-    [SerializeField]
-    Unit unitTarget;
-    [SerializeField]
-    PlayerTower playerTowerCtrl;
+    [SerializeField] protected Unit unitTarget;
+    [SerializeField] protected PlayerTower playerTowerCtrl;
 
-
-
-    //아처 전용
-    Transform arrowPos;
-
-    //아처 전용
-
-    MonsterStat monStat;
+    protected MonsterStat monStat;
 
     DropItem dropItem;
 
@@ -61,8 +50,8 @@ public class MonsterController : Unit,IObserver
 
     //public float Hp { get { return hp; } }
 
-    public int DropGold { get ; private set; }
-    public int DropCost { get; private set; }
+    public int DropGold { get ; protected set; }
+    public int DropCost { get; protected set; }
 
     public int KnockBackForce { get { return knockbackForce; } }
 
@@ -73,11 +62,13 @@ public class MonsterController : Unit,IObserver
     public MonsterState MonState { get { return state; } }
 
 
-    private readonly string warriorHitSound = "WarriorAttack";
-    private readonly string warriorCriticalSound = "CriticalSound";
-    private readonly string warriorHitEff = "HitEff";
-    private readonly string appearTitleKey = "monsterAppearDialog";
-    private readonly string dieTitleKey = "unitDieDialog";
+
+    protected readonly string appearTitleKey = "monsterAppearDialog";
+    protected readonly string dieTitleKey = "unitDieDialog";
+    private readonly string dieDialogSubKey = "monsterDie";
+
+    protected readonly int appearProbability = 25;       //25프로확률로 등장하면서 말풍선
+    protected readonly int dieProbability = 25;
 
 
     public override void Init()
@@ -86,52 +77,6 @@ public class MonsterController : Unit,IObserver
 
         monStat = new MonsterStat();
         spawnPosX = 18.0f;
-
-        if (monsterClass == MonsterClass.Warrior)
-        {
-            switch(Managers.Game.CurStageType)
-            {
-                case SubStage.West:
-                    monStat = Managers.Data.monsterDict[GlobalData.g_NormalSkeletonID];
-                    break;
-                case SubStage.East:
-                    monStat = Managers.Data.monsterDict[GlobalData.g_MidSkeletonID];
-                    break;
-                case SubStage.South:
-                    monStat = Managers.Data.monsterDict[GlobalData.g_HighSkeletonID];
-                    break;
-            }
-        }
-
-        else if (monsterClass == MonsterClass.Archer)
-        {
-            switch (Managers.Game.CurStageType)
-            {
-                case SubStage.West:
-                    monStat = Managers.Data.monsterDict[GlobalData.g_BowSkeletonID];
-                    break;
-                case SubStage.East:
-                    monStat = Managers.Data.monsterDict[GlobalData.g_MidBowSkeletonID];
-                    break;
-                case SubStage.South:
-                    monStat = Managers.Data.monsterDict[GlobalData.g_HighBowSkeletonID];
-                    break;
-            }
-        }
-
-
-        
-
-        att = monStat.att;
-        hp = monStat.hp;
-        maxHp = hp;
-        knockbackForce = monStat.knockBackForce;
-        attackRange = monStat.attackRange;
-        moveSpeed = 2.0f;
-        DropGold = monStat.dropGold;
-        DropCost = monStat.dropCost;
-
-        //playerTowerCtrl = GameObject.FindObjectOfType<PlayerTower>();
 
         TryGetComponent(out myColl);
         TryGetComponent(out dropItem);
@@ -142,15 +87,6 @@ public class MonsterController : Unit,IObserver
 
         if(Debuff is WeaknessDebuff weaknessDebuff)
             weaknessDebuff.AddObserver(this);           //디버프의 능력치변화값을 받아오기위한 구독
-
-
-        if (monsterClass == MonsterClass.Archer)
-            arrowPos = transform.Find("ArrowPos");
-        else
-            arrowPos = null;
-
-
-        SetMonsterState(MonsterState.Run);
 
     }
 
@@ -171,12 +107,6 @@ public class MonsterController : Unit,IObserver
 
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        Init();
-
-    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -369,7 +299,7 @@ public class MonsterController : Unit,IObserver
     }
 
 
-    void SetMonsterState(MonsterState state)
+    protected void SetMonsterState(MonsterState state)
     {
         if (isDie)
             return;
@@ -560,6 +490,8 @@ public class MonsterController : Unit,IObserver
     {
         if (myColl.enabled)
         {
+            speechBubble.SpeechBubbuleOn(dieTitleKey, dieDialogSubKey, dieProbability);
+
             SetMonsterState(MonsterState.Die);
             myColl.enabled = false;
             if(Debuff is FireDebuff fireDebuff)
@@ -612,60 +544,8 @@ public class MonsterController : Unit,IObserver
     }
 
 
-    public override void OnAttack()
-    {
+    public override void OnAttack() { }
 
-        if (monsterClass == MonsterClass.Warrior)
-        {
-
-
-            if (unitTarget != null)
-            {
-                float dist = (unitTarget.transform.position - this.gameObject.transform.position).sqrMagnitude;
-                if (dist < monStat.attackRange * monStat.attackRange)
-                    CriticalAttack(unitTarget,warriorHitSound,warriorCriticalSound, warriorHitEff);
-            }
-                
-            
-            else if(playerTowerCtrl != null)
-                CriticalAttack(playerTowerCtrl,warriorHitSound,warriorCriticalSound, warriorHitEff);
-            
-
-        }
-
-        else if (monsterClass == MonsterClass.Archer)
-        {
-
-            if (unitTarget != null)
-            {
-                GameObject obj = Managers.Resource.Load<GameObject>("Prefabs/Weapon/MonsterArrow");
-
-                if (obj != null)
-                {
-                    Managers.Sound.Play("Sounds/Effect/Bow");
-                    GameObject arrow = Managers.Resource.Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
-                    arrow.TryGetComponent(out MonsterArrowCtrl arrowCtrl);
-                    arrowCtrl.Init();
-
-                }
-            }
-            
-            else if(playerTowerCtrl != null)
-            {
-                GameObject obj = Resources.Load<GameObject>("Prefabs/Weapon/MonsterArrow");
-
-                if (obj != null)
-                {
-                    Managers.Sound.Play("Sounds/Effect/Bow");
-                    GameObject arrow = Managers.Resource.Instantiate(obj, arrowPos.position, Quaternion.identity, this.transform);
-                    arrow.TryGetComponent(out MonsterArrowCtrl arrowCtrl);
-                    arrowCtrl.Init();
-
-                }
-            }
-
-        }
-    }
 
     public override bool CriticalCheck()
     {

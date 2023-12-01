@@ -346,9 +346,6 @@ MonoBehaviour:
   unitClass: 5
   state: 1
   skillOn: 0
-  speechBubbleObj: {fileID: 0}
-  speechBBCtrl: {fileID: 0}
-  skilldialogs: []
   monTarget: {fileID: 0}
   monsterPortal: {fileID: 0}
   appearDust: {fileID: 8648387666188216635}
@@ -528,7 +525,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 20
@@ -907,6 +904,14 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2151998861283962547, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2151998861283962547, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -3241833861085421620, guid: 8581f370002b34a40afc77783ff445c1, type: 2}
     - target: {fileID: 7477367164316595298, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
       propertyPath: m_Name
       value: SpeechBubble

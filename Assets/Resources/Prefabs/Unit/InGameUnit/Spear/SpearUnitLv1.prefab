@@ -118,11 +118,12 @@ GameObject:
   - component: {fileID: 8398093333276122876}
   - component: {fileID: 1979486050810357985}
   - component: {fileID: 7040867749676117097}
-  - component: {fileID: 5911636729732697187}
   - component: {fileID: 256589240056525657}
   - component: {fileID: 3393874936773754789}
   - component: {fileID: 5316840494800197309}
   - component: {fileID: -3620746235922894373}
+  - component: {fileID: 849789639696655414}
+  - component: {fileID: 3543245863016298238}
   m_Layer: 6
   m_Name: SpearUnitLv1
   m_TagString: Unit
@@ -220,30 +221,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &5911636729732697187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6243391127948420735}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa1d6cd426bcb464dbf942dfde966298, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hp: 0
-  att: 0
-  anim: {fileID: 7040867749676117097}
-  attackCoolTime: 1.5
-  pos: {fileID: 833850393569632794}
-  boxSize: {x: 5.97, y: 3.59}
-  speechBubbleObj: {fileID: 0}
-  speechBBCtrl: {fileID: 0}
-  unitClass: 2
-  state: 1
-  monTarget: {fileID: 0}
-  monsterPortal: {fileID: 0}
 --- !u!50 &256589240056525657
 Rigidbody2D:
   serializedVersion: 4
@@ -344,6 +321,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsUsing: 0
+--- !u!114 &849789639696655414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6243391127948420735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d7bcbf4b9b8c0245bdf600a0ff516f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 0
+  att: 0
+  anim: {fileID: 0}
+  attackCoolTime: 1.5
+  pos: {fileID: 833850393569632794}
+  boxSize: {x: 5.3, y: 4.67}
+  state: 1
+  monTarget: {fileID: 0}
+  monsterPortal: {fileID: 0}
+--- !u!114 &3543245863016298238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6243391127948420735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 315733e5fd9fac147a4b1757fadf6030, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speechBubbleObj: {fileID: 0}
+  speechBBCtrl: {fileID: 0}
 --- !u!1 &6612753820545959207
 GameObject:
   m_ObjectHideFlags: 0
@@ -609,6 +621,10 @@ PrefabInstance:
     - target: {fileID: 1755439192098818085, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1784436101910887307, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7477367164316595298, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
       propertyPath: m_Name

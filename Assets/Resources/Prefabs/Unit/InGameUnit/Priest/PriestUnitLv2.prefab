@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 6089705612693859708}
   - component: {fileID: 4803188364004413385}
   - component: {fileID: -480128224999935123}
+  - component: {fileID: 5253940805519784043}
   m_Layer: 6
   m_Name: PriestUnitLv2
   m_TagString: Unit
@@ -163,9 +164,6 @@ MonoBehaviour:
   attackCoolTime: 1.5
   pos: {fileID: 143658876262989664}
   boxSize: {x: 9.36, y: 3.55}
-  speechBubbleObj: {fileID: 0}
-  speechBBCtrl: {fileID: 0}
-  unitClass: 3
   state: 1
   monTarget: {fileID: 0}
   monsterPortal: {fileID: 0}
@@ -271,6 +269,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsUsing: 0
+--- !u!114 &5253940805519784043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2293215773682665455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 315733e5fd9fac147a4b1757fadf6030, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speechBubbleObj: {fileID: 0}
+  speechBBCtrl: {fileID: 0}
 --- !u!1 &5890603734546685905
 GameObject:
   m_ObjectHideFlags: 0
@@ -643,6 +655,10 @@ PrefabInstance:
     - target: {fileID: 1755439192098818085, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1784436101910887307, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7477367164316595298, guid: 2f19376097505f94b87be1c1fb276d98, type: 3}
       propertyPath: m_Name

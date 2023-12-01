@@ -28,11 +28,10 @@ public enum UnitState
     Die
 }
 
-public class UnitController : Unit
+public abstract class UnitController : Unit
 {
 
-    [SerializeField]
-    private UnitClass unitClass;
+
     [SerializeField]
     protected UnitState state = UnitState.Run;        //테스트용이라 런 
 
@@ -42,8 +41,9 @@ public class UnitController : Unit
     [SerializeField] protected MonsterPortal monsterPortal;
 
 
+
+
     //아처 사제 전용
-    protected Transform posTr;
 
     //아처 사제 전용
 
@@ -57,68 +57,20 @@ public class UnitController : Unit
 
     public UnitState UniState { get { return state; } }
 
-    public UnitClass UniClass { get { return unitClass; } }
+    protected readonly string appearTitleKey = "unitAppearDialog";
+    protected readonly string dieTitleKey = "unitDieDialog";
+    private readonly string dieDialogSubKey = "unitDie";
 
-
-
-    private readonly string warriorHitSound = "WarriorAttack";
-    private readonly string warriorCriticalSound = "CriticalSound";
-    private readonly string warriorHitEff = "HitEff";
-    private readonly string appearTitleKey = "unitAppearDialog";
-    private readonly string dieTitleKey = "unitDieDialog";
-
+    protected readonly int appearProbability = 25;       //25프로확률로 등장하면서 말풍선
+    protected readonly int dieProbability = 25;
 
     public override void Init()
     {
-
+        Debug.Log("여기 들어옴");
         base.Init();
         spawnPosX = -9.2f;
 
         unitStat = new UnitStat();
-
-        if (unitClass == UnitClass.Warrior)
-        {
-            unitStat = Managers.Data.warriorDict[Managers.Game.UnitWarriorLv];
-        }
-        else if (unitClass == UnitClass.Archer)
-        {
-            unitStat = Managers.Data.archerDict[Managers.Game.UnitArcherLv];
-
-        }
-        else if (unitClass == UnitClass.Spear)
-        {
-            unitStat = Managers.Data.spearDict[Managers.Game.UnitSpearLv];
-
-        }
-        else if (unitClass == UnitClass.Priest)
-        {
-            unitStat = Managers.Data.priestDict[Managers.Game.UnitPriestLv];
-
-        }
-
-
-
-        hp = unitStat.hp;
-        att = unitStat.att;
-        knockbackForce = unitStat.knockBackForce;
-        attackRange = unitStat.attackRange;
-
-        moveSpeed = 2.5f;
-        maxHp = hp;
-
-
-        //rig = this.GetComponent<Rigidbody2D>();
-        //anim = GetComponent<Animator>();
-
-
-        if (unitClass == UnitClass.Archer)
-            posTr = transform.Find("ArrowPos");
-        else if(unitClass == UnitClass.Priest)
-            posTr = transform.Find("MagicPos");
-        else
-            posTr = null;
-
-        SetUnitState(UnitState.Run);
 
     }
 
@@ -137,28 +89,16 @@ public class UnitController : Unit
         }
 
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        Init();
-    }
+
 
     // Update is called once per frame
     void FixedUpdate()
     {
         if (Managers.Game.GameEndResult())       //게임이 끝났으면 리턴
             return;
-
-        //UnitVictory();
         EnemySensor();
         UnitStateCheck();
-        //UnitVictory();
 
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //{
-        //    state = UnitState.KnockBack;
-
-        //}
 
     }
 
@@ -517,6 +457,7 @@ public class UnitController : Unit
     {
         if (myColl.enabled)
         {
+            speechBubble.SpeechBubbuleOn(dieTitleKey, dieDialogSubKey, dieProbability);
             SetUnitState(UnitState.Die);
             myColl.enabled = false;
             StartCoroutine(Util.DestroyTime(gameObject,5.0f));
@@ -582,83 +523,7 @@ public class UnitController : Unit
 
     public override void OnAttack()    //애니메이션 이벤트 함수
     {
-        if(unitClass == UnitClass.Warrior)
-        {
 
-            if (monTarget != null)
-            {
-                float dist = (monTarget.transform.position - this.gameObject.transform.position).magnitude;
-                if (dist < unitStat.attackRange + 0.5f)
-                    CriticalAttack(monTarget,warriorHitSound,warriorCriticalSound, warriorHitEff);
-            }
-            else if(monsterPortal != null)
-                CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound ,warriorHitEff);
-            
-
-        }
-
-        else if(unitClass == UnitClass.Archer)
-        {
-
-            if(monTarget != null)
-            {
-                GameObject obj = Managers.Resource.Load<GameObject>("Prefabs/Weapon/UnitArrow");
-
-                if (obj != null)
-                {
-                    Managers.Sound.Play("Sounds/Effect/Bow");
-                    GameObject arrow = Managers.Resource.Instantiate(obj, posTr.position, Quaternion.identity, this.transform);
-                    arrow.TryGetComponent(out ArrowCtrl arrowCtrl);
-                    arrowCtrl.Init();
-                    //if(monTarget is MonsterController monsterCtrl)
-                    //{
-                    //    arrowCtrl.SetType(monsterCtrl, null);
-
-                    //}
-                    //else if(monTarget is EliteMonsterController elite)
-                    //{
-                    //    arrowCtrl.SetType(elite, null);
-
-                    //}
-                }
-            }
-            
-            else if(monsterPortal != null)
-            {
-                GameObject obj = Resources.Load<GameObject>("Prefabs/Weapon/UnitArrow");
-
-                if (obj != null)
-                {
-                    Managers.Sound.Play("Sounds/Effect/Bow");
-                    GameObject arrow = Managers.Resource.Instantiate(obj, posTr.position, Quaternion.identity, this.transform);
-                    arrow.TryGetComponent(out ArrowCtrl arrowCtrl);
-                    arrowCtrl.Init();
-                }
-            }
-
-            
-
-
-        
-        }
-
-        if (unitClass == UnitClass.Spear)
-        {
-
-            if (monTarget != null)
-            {
-                float dist = (monTarget.transform.position - this.gameObject.transform.position).magnitude;
-                Debug.Log(dist);
-                Debug.Log(unitStat.attackRange);
-
-                if (dist < unitStat.attackRange + 0.5f)
-                    CriticalAttack(monTarget, warriorHitSound, warriorCriticalSound, warriorHitEff);
-            }
-
-            else if (monsterPortal != null)
-                CriticalAttack(monsterPortal, warriorHitSound, warriorCriticalSound, warriorHitEff);
-
-        }
 
     }
 

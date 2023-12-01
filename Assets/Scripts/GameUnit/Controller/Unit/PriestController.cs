@@ -6,13 +6,36 @@ using UnityEngine;
 public class PriestController : UnitController
 {
     //UnitController에서 프리스트 데이터를 초기화를 일단 해놓음
-    Collider2D[] unitColls2D;
-    [SerializeField] Unit unitTarget;
-    [SerializeField] List<Unit> unitCtrls = new List<Unit>();
+    private Collider2D[] unitColls2D;
+
+    [SerializeField] private Unit unitTarget;
+    [SerializeField] private List<Unit> unitCtrls = new List<Unit>();
+
+    private Transform posTr;
+
 
     string priestSound = "PriestHeal";
     string priestHitEff = "PriestEff";
     string prieshHealEff = "HealEff";
+
+    public override void Init()
+    {
+        base.Init();
+        unitStat = Managers.Data.priestDict[Managers.Game.UnitPriestLv];
+
+        hp = unitStat.hp;
+        att = unitStat.att;
+        knockbackForce = unitStat.knockBackForce;
+        attackRange = unitStat.attackRange;
+
+        moveSpeed = 2.5f;
+        maxHp = hp;
+
+        posTr = transform.Find("MagicPos");
+        SetUnitState(UnitState.Run);
+
+    }
+
 
     public override void EnemySensor()
     {
