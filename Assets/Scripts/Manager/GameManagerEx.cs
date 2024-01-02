@@ -24,6 +24,8 @@ public class GameData
     public Define.PlayerSkill curPlayerEquipSkill;
     public bool firstInit;
 
+    public bool tutorialEnd;
+
     public bool westStageClear;
     public bool eastStageClear;
     public bool southStageClear;
@@ -107,6 +109,7 @@ public class GameManagerEx
 
     public void UnitLvDictRefresh()
     {
+        //딕셔너리의 값을 갱신해준다.
         foreach(var unitClass in Enum.GetValues(typeof(UnitClass)).Cast<UnitClass>())
         {
             upgradeUnitLvDict[(int)unitClass] = GetUnitLevel(unitClass);
@@ -212,6 +215,12 @@ public class GameManagerEx
         set { gameData.firstInit = value; }
     }
 
+    public bool TutorialEnd
+    {
+        get { return gameData.tutorialEnd; }
+        set { gameData.tutorialEnd = value; }
+    }
+
     public bool WestStageClear
     {
         get { return gameData.westStageClear; }
@@ -293,6 +302,7 @@ public class GameManagerEx
         WeaknessSkillLv = 0;
         CurPlayerEquipSkill = Define.PlayerSkill.Count;
         FirstInit = false;
+        TutorialEnd = false;
         WestStageClear = false;
         EastStageClear = false;
         SouthStageClear = false;

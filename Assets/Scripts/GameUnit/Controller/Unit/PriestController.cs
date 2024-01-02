@@ -18,6 +18,9 @@ public class PriestController : UnitController
     string priestHitEff = "PriestEff";
     string prieshHealEff = "HealEff";
 
+
+
+
     public override void Init()
     {
         base.Init();
@@ -35,6 +38,12 @@ public class PriestController : UnitController
         SetUnitState(UnitState.Run);
 
     }
+
+    void Start()
+    {
+        Init();
+    }
+
 
 
     public override void EnemySensor()
@@ -104,10 +113,11 @@ public class PriestController : UnitController
         if (monTarget != null || unitTarget != null || monsterPortal != null)
             SetUnitState(UnitState.Trace);
 
-
         if (IsTargetOn())
             return;
 
+        if (rigbody == null)
+            TryGetComponent(out rigbody);
 
         rigbody.transform.position += Vector3.right * moveSpeed * Time.deltaTime;
 

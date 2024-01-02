@@ -79,7 +79,6 @@ public class GlobalData
         {
             for (int ii = 0; ii < g_unitSlotMax; ii++)
             {
-                Debug.Log("¿©±â");
 
                 if (ii == 0)
                     Managers.Game.SlotUnitClass.Add(UnitClass.Warrior);

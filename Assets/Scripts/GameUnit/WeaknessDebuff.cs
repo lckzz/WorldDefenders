@@ -15,7 +15,7 @@ public class WeaknessDebuff : Debuff, ISubject
     protected override void Start()
     {
         base.Start();
-        weaknessDebuffPrefab = Managers.Resource.Load<GameObject>("Prefabs/WeaknessEffect");
+        weaknessDebuffPrefab = Managers.Resource.Load<GameObject>("Prefabs/WeaknessEffect");  //프리팹을 받아온다.
     }
 
     public override void DebuffInstantiate()
@@ -72,12 +72,17 @@ public class WeaknessDebuff : Debuff, ISubject
 
     public override void DebuffOnOff(bool isOn,Unit unit = null) 
     {
-        DebuffInstantiate();
+        if (weaknessDebuffGo == null || debuffUI == null)
+            return;
+
+        if (isOn == true)
+            DebuffInstantiate();
+
         weaknessDebuffGo.SetActive(isOn);
 
 
         if (isOn == false)
-            debuffUI.DebuffUIDestroy();
+            debuffUI?.DebuffUIDestroy();
     }
 
 

@@ -4,10 +4,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static Define;
 
 public class UI_PlayerSkillWindow : UI_Base
 {
     [SerializeField] private GameObject skillNodePrefab;
+    [SerializeField] private GameObject skillEquipNoticeObj;
     [SerializeField] private Button backLobbyBtn;            //유닛클릭시 마스크오브젝트
     [SerializeField] private Button skillEquipBtn;
     [SerializeField] private Image skillEquipImg;
@@ -29,6 +31,9 @@ public class UI_PlayerSkillWindow : UI_Base
 
     private SkillNode curClickNode;
     private SkillNode clickNode;
+    private SkillEquipNotice skillEquipNotice;
+
+    private List<SkillNode> skillNodeList = new List<SkillNode>();
 
 
     //터치 
@@ -37,6 +42,15 @@ public class UI_PlayerSkillWindow : UI_Base
     private List<RaycastResult> rrList;
     //터치
 
+    //튜토 다이얼로그
+    private MaskDialogCtrl dialogCtrl;
+    private GameObject tutorialDialogObj;
+    private GameObject maskGameObject;
+    private TutorialMaskCtrl tutorialMaskCtrl;
+    //튜토 다이얼로그
+
+
+
     [SerializeField] private Image fadeImg;
     bool backFadeCheck = false;
 
@@ -44,6 +58,8 @@ public class UI_PlayerSkillWindow : UI_Base
     // Start is called before the first frame update
     public override void Start()
     {
+        skillNodeList.Clear();
+
         TryGetComponent(out gr);
         if (gr == null)
         {
@@ -60,6 +76,20 @@ public class UI_PlayerSkillWindow : UI_Base
         skillEquipTxtEnableColor = new Color32(50, 50, 50, skillEnabelColorAlpha);
         skillEquipTxtDisEnableColor = new Color32(50, 50, 50, skillDisEnableColorAlpha);
 
+        tutorialDialogObj = gameObject.transform.Find("DialogueCanvas").gameObject;
+        GameObject parentGo = backLobbyBtn?.gameObject.transform.parent.gameObject;
+        maskGameObject = parentGo.transform.Find("MaskGameObject").gameObject;
+        maskGameObject.TryGetComponent(out tutorialMaskCtrl);
+
+        if (Managers.Game.TutorialEnd == false)
+        {
+            //Managers.Dialog.dialogEndedStringInt -= UpgradeDialogEnd;
+            //Managers.Dialog.dialogEndedStringInt += UpgradeDialogEnd;
+            tutorialDialogObj.TryGetComponent(out dialogCtrl);
+            tutorialDialogObj?.SetActive(!Managers.Game.TutorialEnd);        //튜토리얼이 끝나지않았다면 다이얼로그 켜기
+            dialogCtrl?.MaskDialogInit(tutorialMaskCtrl, backLobbyBtn.gameObject, GameObjectSiblingLastSet);
+            dialogCtrl?.StartDialog(DialogKey.tutorialSkill.ToString(), DialogType.Dialog, DialogSize.Small, DialogId.NextDialog);
+        }
 
 
         skillNodeParentObj = GameObject.Find("SkillWindow");
@@ -68,16 +98,19 @@ public class UI_PlayerSkillWindow : UI_Base
             skillInfoObj = bgObj.transform.Find("SkillInfo").gameObject;
 
         skillInfoObj.TryGetComponent(out skillInfo);
+        skillEquipNoticeObj.TryGetComponent(out skillEquipNotice);
 
-        for (int ii = 0; ii < (int)Define.PlayerSkill.Count; ii++)
+        for (int ii = 0; ii < (int)PlayerSkill.Count; ii++)
         {
             GameObject obj = Object.Instantiate(skillNodePrefab, skillNodeParentObj.transform);
             SkillNode node;
             obj.TryGetComponent<SkillNode>(out node);
-            node.PlayerSkillType = (Define.PlayerSkill)ii;
-            node.SkillNodeSetting((Define.PlayerSkill)ii);
-            if (ii == (int)Define.PlayerSkill.Heal)
+            node.PlayerSkillType = (PlayerSkill)ii;
+            node.SkillNodeSetting((PlayerSkill)ii);
+            if (ii == (int)PlayerSkill.Heal)
                 clickNode = node;
+
+            skillNodeList.Add(node);
 
         }
 
@@ -96,6 +129,8 @@ public class UI_PlayerSkillWindow : UI_Base
                     lobby.LobbyUIOnOff(true);
                     lobby.LobbyTouchUnitInit();
                 }
+
+                Managers.UI.GetSceneUI<UI_Lobby>().DialogMaskSet((int)Define.DialogId.DialogMask, (int)Define.DialogOrder.Stage);
                 //GlobalData.SetUnitClass(unitSlotUiList);  //스킬셋팅
             });
 
@@ -133,10 +168,11 @@ public class UI_PlayerSkillWindow : UI_Base
             {
                 Managers.Sound.Play("Effect/UI_Click");
 
+                if (clickNode != null)
+                    clickNode.ClickNodeSelectImgOnOff(false);
 
                 curClickNode.ClickNodeSelectImgOnOff(true);
-                if(clickNode != null)
-                    clickNode.ClickNodeSelectImgOnOff(false);
+
 
 
                 clickNode = curClickNode;
@@ -176,14 +212,23 @@ public class UI_PlayerSkillWindow : UI_Base
     }
 
 
-    void EquipSkill()
+    void EquipSkill()  //장착버튼을 눌렀을시
     {
         if(clickNode != null)
         {
             if (clickNode.SkillData.level <= 0)
                 return;
 
-            Managers.Game.CurPlayerEquipSkill = clickNode.PlayerSkillType;
+            if (clickNode.PlayerSkillSt == PlayerSkillState.Equip)
+                return;
+
+            Managers.Game.CurPlayerEquipSkill = clickNode.PlayerSkillType;   //클릭한 노드의 스킬정보를 현재 장착한스킬에 넣어준다.
+            skillEquipNoticeObj.SetActive(true);
+
+            for (int ii = 0; ii < skillNodeList.Count; ii++)
+                skillNodeList[ii].SkillNodeRefresh(skillNodeList[ii].PlayerSkillType);
+            //clickNode.SkillNodeRefresh(Managers.Game.CurPlayerEquipSkill);
+
         }
     }
 

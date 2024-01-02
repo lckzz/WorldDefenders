@@ -109,6 +109,12 @@ public class Define
         Count
     }
 
+    public enum PlayerSkillState
+    {
+        NonEquip,
+        Equip
+    }
+
     public enum PlayerArrowType
     {
         Normal,
@@ -204,10 +210,60 @@ public class Define
         Count
     }
 
-    public enum DialogType
+    public enum DialogType  //다이얼로그인가 말풍선인가
     {
-        Tutorial,
+        Dialog,
         Speech,
+        Count
+    }
+
+    public enum DialogKey
+    {
+        tutorial,
+        tutorialSelectYes,
+        tutorialSelectNo,
+        tutorialUpgrade,
+        tutorialUpgradeTower,
+        tutorialUpgradeUnit,
+        tutorialParty,
+        tutorialPartyUnit,
+        tutorialPartyWindow,
+        tutorialSkill,
+        tutorialSkillTree,
+        tutorialSkillInfo,
+        tutorialStage
+
+    }
+
+    public enum DialogSize
+    {
+        Large,
+        Small
+    }
+
+    public enum DialogId
+    {
+        DialogMask,
+        NextDialog,
+        EndDialog,
+        None
+    }
+
+    public enum DialogOrder     //다이얼로그순서
+    {
+        Upgrade,
+        Party,
+        Skill,
+        Stage,
+        None
+    }
+
+
+    public enum DialogMask
+    {
+        FirstMask,
+        SecondMask,
+        BackMask,
         Count
     }
 

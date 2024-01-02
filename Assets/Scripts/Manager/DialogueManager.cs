@@ -1,4 +1,5 @@
 using SimpleJSON;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,14 +7,20 @@ using UnityEngine;
 public class DialogueManager 
 {
 
+    private JSONNode node;
+
+    public event Action<string,int> dialogEndedStringInt = null;
+    public event Action<int> dialogEndedInt = null;
+
     public Queue<string> DialogQueue { get; private set; } = new Queue<string>();
 
-    public JSONNode DialogJsonParsing(string key, Define.DialogType dialogType)
+    public JSONNode DialogJsonParsing(Define.DialogType dialogType)
     {
         TextAsset txt = null;
-        if (dialogType == Define.DialogType.Tutorial)
+        string key = dialogType.ToString();
+        if (dialogType == Define.DialogType.Dialog)
         {
-            txt = Managers.Data.tutorialDialogue[key];
+            txt = Managers.Data.dialogue[dialogType.ToString()];
         }
         else if(dialogType == Define.DialogType.Speech)
         {
@@ -37,10 +44,41 @@ public class DialogueManager
         for(int ii = 1; ii <= count; ii++)
         {
             DialogQueue.Enqueue(node[key]["word" + ii]);  //단어갯수만큼 큐에 넣어준다.
+            Debug.Log(node[key]["word" + ii]);
         }
+    }
 
+    public JSONNode DialogNodeInit(string dialogKey, Define.DialogType dialogType)
+    {
+        node = DialogJsonParsing(dialogType);
+        DialogSetting(dialogKey, node);
+        return node;
+    }
 
+    //public void EndDialog(int id,int order = -1)          //로비 튜토리얼 다이얼로그가 끝났을때 하는 행동
+    //{
+    //    if(Managers.Game.TutorialEnd == false && dialogEndedIntInt != null)      //튜토리얼이 끝나지않았다면
+    //        dialogEndedIntInt?.Invoke(id, order);        
 
+    //}
+
+    public void EndDialog(int id)          //다이얼로그가 끝났을때 하는 행동
+    {
+
+        if (Managers.Game.TutorialEnd == false && dialogEndedInt != null)      //튜토리얼이 끝나지않았다면
+            dialogEndedInt?.Invoke(id);
 
     }
+
+    public void EndDialog(string key,int id)          //다이얼로그가 끝났을때 하는 행동
+    {
+
+        if (Managers.Game.TutorialEnd == false && dialogEndedStringInt != null)      //튜토리얼이 끝나지않았다면
+            dialogEndedStringInt?.Invoke(key, id);
+
+    }
+
+
+
+
 }

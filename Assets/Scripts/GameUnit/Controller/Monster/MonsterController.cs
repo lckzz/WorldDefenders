@@ -64,7 +64,7 @@ public class MonsterController : Unit,IObserver
 
 
     protected readonly string appearTitleKey = "monsterAppearDialog";
-    protected readonly string dieTitleKey = "unitDieDialog";
+    protected readonly string dieTitleKey = "monsterDieDialog";
     private readonly string dieDialogSubKey = "monsterDie";
 
     protected readonly int appearProbability = 25;       //25프로확률로 등장하면서 말풍선

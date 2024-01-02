@@ -28,13 +28,18 @@ public class FireDebuff : Debuff
 
     public override void DebuffOnOff(bool isOn, Unit unit = null)
     {
-        DebuffInstantiate();
+        if (fireDebuffGo == null || debuffUI == null)
+            return;
+
+
+        if(isOn == true)
+            DebuffInstantiate();
 
         fireDebuffGo.SetActive(isOn);
         if (fireDebuffGo.activeSelf)    //화상디버프가 켜진다면
             FireDebuffOn(unit);       //지속데미지 디버프 시작
         else //화상디버프가 꺼진다면
-            debuffUI.DebuffUIDestroy();     //디버프UI 삭제
+            debuffUI?.DebuffUIDestroy();     //디버프UI가 있다면 삭제
     }
 
     public void FireDebuffOn(Unit unit)

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
+using static Define;
 
 public class UI_UnitSettingWindow : UI_Base
 {
@@ -49,12 +50,41 @@ public class UI_UnitSettingWindow : UI_Base
 
     bool backFadeCheck = false;
 
+    //튜토리얼 다이얼로그
+
+    private MaskDialogCtrl dialogCtrl;
+
+    private GameObject maskGameObject;
+    private TutorialMaskCtrl tutorialMaskCtrl;
+
+    private GameObject tutorialDialogObj;
+
+    //
+
+
 
     // Start is called before the first frame update
     public override void Start()
     {
         UiInit();
         UI_UnitSetInit();
+
+
+
+        tutorialDialogObj = gameObject.transform.Find("DialogueCanvas").gameObject;
+        GameObject parentGo = backLobbyBtn?.gameObject.transform.parent.gameObject;
+        maskGameObject = parentGo.transform.Find("MaskGameObject").gameObject;
+        maskGameObject.TryGetComponent(out tutorialMaskCtrl);
+
+        if (Managers.Game.TutorialEnd == false)
+        {
+            //Managers.Dialog.dialogEndedStringInt -= UpgradeDialogEnd;
+            //Managers.Dialog.dialogEndedStringInt += UpgradeDialogEnd;
+            tutorialDialogObj.TryGetComponent(out dialogCtrl);
+            tutorialDialogObj?.SetActive(!Managers.Game.TutorialEnd);        //튜토리얼이 끝나지않았다면 다이얼로그 켜기
+            dialogCtrl?.MaskDialogInit(tutorialMaskCtrl, backLobbyBtn.gameObject, GameObjectSiblingLastSet);
+            dialogCtrl?.StartDialog(DialogKey.tutorialParty.ToString(), DialogType.Dialog, DialogSize.Small, DialogId.NextDialog);
+        }
 
 
         if (backLobbyBtn != null)
@@ -71,6 +101,9 @@ public class UI_UnitSettingWindow : UI_Base
                     lobby.LobbyUIOnOff(true);
                     lobby.LobbyTouchUnitInit();
                 }
+
+                Managers.UI.GetSceneUI<UI_Lobby>().DialogMaskSet((int)Define.DialogId.DialogMask, (int)Define.DialogOrder.Skill);
+
 
 
             });
@@ -409,17 +442,7 @@ public class UI_UnitSettingWindow : UI_Base
 
     }
 
-    public void UnitUIInit()
-    {
-        //유닛 슬롯에 대한 값들 초기화
-        slotUiClick = false;
-        nodeUiClick = false;
-        curUnitNodeUI?.ClickImageOnOff(nodeUiClick);
-        curUnitSlotUI?.SlotClickUnitInfoBtnOnOff(false);
-        curUnitSlotUI = null;
-        curUnitNodeUI = null;
 
-    }
 
 
     void OnMousePointerDownCancel()
@@ -536,6 +559,31 @@ public class UI_UnitSettingWindow : UI_Base
 
     }
 
+    private void StartDialog()
+    {
+        if (Managers.Game.TutorialEnd == true)
+            return;
+
+        //Managers.Dialog.dialogEndedStringInt -= UpgradeDialogEnd;
+        //Managers.Dialog.dialogEndedStringInt += UpgradeDialogEnd;
+        //tutorialDialogObj.TryGetComponent(out dialogCtrl);
+        //tutorialDialogObj?.SetActive(!Managers.Game.TutorialEnd);        //튜토리얼이 끝나지않았다면 다이얼로그 켜기
+        //dialogCtrl?.StartDialog(DialogKey.tutorialUpgrade.ToString(), DialogType.Dialog, DialogSize.Small, DialogId.NextDialog);
+
+    }
+
+
+    public void UnitUIInit()
+    {
+        //유닛 슬롯에 대한 값들 초기화
+        slotUiClick = false;
+        nodeUiClick = false;
+        curUnitNodeUI?.ClickImageOnOff(nodeUiClick);
+        curUnitSlotUI?.SlotClickUnitInfoBtnOnOff(false);
+        curUnitSlotUI = null;
+        curUnitNodeUI = null;
+
+    }
 
     public void SlotUnitCancel()
     {

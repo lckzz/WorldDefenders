@@ -66,7 +66,6 @@ public abstract class UnitController : Unit
 
     public override void Init()
     {
-        Debug.Log("여기 들어옴");
         base.Init();
         spawnPosX = -9.2f;
 
@@ -76,7 +75,8 @@ public abstract class UnitController : Unit
 
     public override void OnEnable()
     {
-        if(sp != null && myColl != null)
+
+        if (sp != null && myColl != null)
         {
             //오브젝트 풀에서 생성되면 초기화 시켜줘야함
             isDie = false;

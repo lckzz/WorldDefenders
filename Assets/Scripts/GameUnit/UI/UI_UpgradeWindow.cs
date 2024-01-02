@@ -5,6 +5,7 @@ using TMPro;
 //using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
+using static Define;
 
 public class UI_UpgradeWindow : UI_Base
 {
@@ -25,6 +26,7 @@ public class UI_UpgradeWindow : UI_Base
     [Space(25)]
 
     [SerializeField] private Button backLobbyBtn;
+    private GameObject tutorialDialogObj;
 
     
     TowerStat tower = new TowerStat();
@@ -37,6 +39,11 @@ public class UI_UpgradeWindow : UI_Base
 
     UpgradeUnitNode unitUpgradeNode;
 
+    private MaskDialogCtrl dialogCtrl;
+
+    private GameObject maskGameObject;
+    private TutorialMaskCtrl tutorialMaskCtrl;
+    private float dialogYPos = -32.5f;
 
     private Dictionary<int, Action<int>> upgradeUnitRefreshDict = new Dictionary<int, Action<int>>();
 
@@ -49,10 +56,25 @@ public class UI_UpgradeWindow : UI_Base
             Managers.Game.PlayerLevel = 1;
 
         
-
+       
 
         unitUpgradePrefabs =  new GameObject[(int)UnitClass.Count];
         unitUpgradeObjs =  new GameObject[(int)UnitClass.Count];
+        tutorialDialogObj = gameObject.transform.Find("DialogueCanvas").gameObject;
+        GameObject parentGo = backLobbyBtn?.gameObject.transform.parent.gameObject;
+        maskGameObject = parentGo.transform.Find("MaskGameObject").gameObject;
+        maskGameObject.TryGetComponent(out tutorialMaskCtrl);
+
+        if (Managers.Game.TutorialEnd == false)
+        {
+            //Managers.Dialog.dialogEndedStringInt -= UpgradeDialogEnd;
+            //Managers.Dialog.dialogEndedStringInt += UpgradeDialogEnd;
+            tutorialDialogObj.TryGetComponent(out dialogCtrl);
+            tutorialDialogObj?.SetActive(!Managers.Game.TutorialEnd);        //튜토리얼이 끝나지않았다면 다이얼로그 켜기
+            dialogCtrl?.MaskDialogInit(tutorialMaskCtrl, backLobbyBtn.gameObject, GameObjectSiblingLastSet);
+            dialogCtrl?.StartDialog(DialogKey.tutorialUpgrade.ToString(), DialogType.Dialog, DialogSize.Small,DialogId.NextDialog);
+        }
+
 
 
         if (upgradeBtn != null)
@@ -69,6 +91,8 @@ public class UI_UpgradeWindow : UI_Base
                     lobby.LobbyUIOnOff(true);
                     lobby.LobbyTouchUnitInit();
                 }
+
+                Managers.UI.GetSceneUI<UI_Lobby>().DialogMaskSet((int)Define.DialogId.DialogMask,(int)Define.DialogOrder.Party);
 
             });
 
@@ -141,7 +165,53 @@ public class UI_UpgradeWindow : UI_Base
     }
 
 
+    void PlayerUpgradeOpen()
+    {
+        Managers.Sound.Play("Effect/UI_Click");
 
+        Managers.UI.ShowPopUp<UI_PlayerUpgradePopUp>();
+    }
+
+
+    //void UpgradeDialogEnd(string key, int id)
+    //{
+    //    if(id == (int)DialogId.NextDialog)
+    //    {
+    //        DialogKey dialogKey = (DialogKey)Enum.Parse(typeof(DialogKey), key);
+    //        if(dialogKey >= DialogKey.tutorialUpgrade && dialogKey < DialogKey.tutorialUpgradeUnit)
+    //        {  
+    //            //업그레이드한정 (업그레이드 다이얼로그는 분할되어있음)
+    //            dialogKey += 1;
+    //            dialogCtrl.StartDialog(dialogKey.ToString(), DialogType.Dialog, DialogSize.Small, DialogId.NextDialog);
+    //        }
+    //        else if(dialogKey == DialogKey.tutorialUpgradeUnit)
+    //        {
+    //            //튜토리얼업그레이드가 유닛을 설명하면 마지막이라서 
+    //            tutorialMaskCtrl.ShowMaskObject((int)Define.DialogMask.BackMask);
+    //            UpgradeGoSiblingSet(backLobbyBtn.gameObject);
+    //            return;
+
+    //        }
+
+
+    //        switch (dialogKey)
+    //        {
+    //            case DialogKey.tutorialUpgradeTower:
+    //                tutorialMaskCtrl.ShowMaskObject((int)Define.DialogMask.FirstMask);
+    //                dialogCtrl.DialogPosReset();
+
+    //                break;
+
+    //            case DialogKey.tutorialUpgradeUnit:
+    //                tutorialMaskCtrl.ShowMaskObject((int)Define.DialogMask.SecondMask);
+    //                dialogCtrl.ChangeDialogPos(dialogYPos);
+
+    //                break;
+
+    //        }
+          
+    //    }
+    //}
 
 
 
@@ -155,21 +225,7 @@ public class UI_UpgradeWindow : UI_Base
     }
 
 
-
-
-
-
-
-  
-
-
-    void PlayerUpgradeOpen()
-    {
-        Managers.Sound.Play("Effect/UI_Click");
-
-        Managers.UI.ShowPopUp<UI_PlayerUpgradePopUp>();
-    }
-
+    
 
 
 

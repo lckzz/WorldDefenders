@@ -23,4 +23,10 @@ public class UI_Base : MonoBehaviour
     }
 
 
+    public void GameObjectSiblingLastSet(GameObject go)
+    {
+        go.transform.SetAsLastSibling();        //해당 오브젝트를 가장 마지막에 배치
+    }
+
+
 }

@@ -8,7 +8,7 @@ public class WeaknessSkill : ActiveSkill
     {
         if (Managers.Data.weaknessSkillDict.TryGetValue(id, out SkillData data) == false)
         {
-            Debug.LogError("ProjecteController SetInfo Failed");
+            Debug.LogError("Failed");
             return;
         }
 
@@ -24,6 +24,7 @@ public class WeaknessSkill : ActiveSkill
             {
                 if(monCtrl.Debuff is WeaknessDebuff weaknessDebuff)
                 {
+                    Debug.Log(monCtrl.name);
                     weaknessDebuff.WeaknessSkillInfo(monCtrl.MoveSpeed, monCtrl.Att);
                     weaknessDebuff.UnitDebuff(SkillData.skillValue, 10.0f);
                     weaknessDebuff.DebuffOnOff(true);

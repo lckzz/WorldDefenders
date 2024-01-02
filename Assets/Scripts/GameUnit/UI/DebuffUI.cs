@@ -46,7 +46,8 @@ public class DebuffUI : MonoBehaviour
 
     public void DebuffUIDestroy()
     {
-        Managers.Resource.Destroy(this.gameObject);
+        if(gameObject != null)
+            Managers.Resource.Destroy(this.gameObject);
     }
 
 

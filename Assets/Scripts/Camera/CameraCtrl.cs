@@ -178,6 +178,9 @@ public class CameraCtrl : MonoBehaviour
 
     public void ShakeCamera(float shakeTime, float shakeIntensity)
     {
+        if (Shake == null)
+            TryGetComponent(out shake);
+
         Shake.OnShakeCamera(shakeTime, shakeIntensity);
     }
 }

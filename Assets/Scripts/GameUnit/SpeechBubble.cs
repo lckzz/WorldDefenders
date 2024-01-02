@@ -49,7 +49,7 @@ public class SpeechBubble : MonoBehaviour
 
 
         //스피치 버블의 타이틀키와 서브키를 받아와서 스피치 버블을 켜준다.
-        appearDialogNode = Managers.Dialog.DialogJsonParsing("speech", DialogType.Speech);
+        appearDialogNode = Managers.Dialog.DialogJsonParsing(DialogType.Speech);
         speechBBCtrl?.SetSpeechString(appearDialogNode[speechTitleKey][speechSubValue + randomIdxStr]);
         Debug.Log(speechSubValue + randomIdxStr);
 

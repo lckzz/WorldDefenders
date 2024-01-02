@@ -164,38 +164,18 @@ public class LobbyScene : BaseScene
             //GlobalData.g_SlotUnitClass
             lobbyUnits[ii].E_UniClass = Managers.Game.SlotUnitClass[ii];
             lobbyUnits[ii].RefreshUnitSet();
-            if ((int)lobbyUnits[ii].E_UniClass >= (int)UnitClass.Magician)
-                lobbyUnits[ii].transform.localScale = new Vector3(-1.3f, 1.3f, 1.3f);
-            else
-            {
-                switch(ii)
-                {
-                    case 0:
-                        LobbyUnitScaleSet(ii, new Vector3(-2.0f, 2.0f, 2.0f));
-                        break;
-                    case 1:
-                        LobbyUnitScaleSet(ii, new Vector3(-1.8f, 1.8f, 1.8f));
-                        break;
-                    case 2:
-                        LobbyUnitScaleSet(ii, new Vector3(-1.7f, 1.7f, 1.7f));
-                        break;
-                    case 3:
-                        LobbyUnitScaleSet(ii, new Vector3(-1.8f, 1.8f, 1.8f));
-                        break;
-                    case 4:
-                        LobbyUnitScaleSet(ii, new Vector3(-2.0f, 2.0f, 2.0f));
-                        break;
-                }
-            }
+            //if ((int)lobbyUnits[ii].E_UniClass >= (int)UnitClass.Magician)
+            //    lobbyUnits[ii].transform.localScale = new Vector3(-1.3f, 1.3f, 1.3f);
+
 
         }
     }
 
 
-    void LobbyUnitScaleSet(int idx, Vector3 scaleVec)
-    {
-        lobbyUnits[idx].transform.localScale = scaleVec;
-    }
+    //void LobbyUnitScaleSet(int idx, Vector3 scaleVec)
+    //{
+    //    lobbyUnits[idx].transform.localScale = scaleVec;
+    //}
 
 
     public void LobbyUIOnOff(bool isOn)
