@@ -17,7 +17,10 @@ public class MonsterArcherController : MonsterController
     {
         base.OnEnable();
         if (sp != null && myColl != null)
+        {
             speechBubble.SpeechBubbuleOn(appearTitleKey, appearDialogSubKey, appearProbability);
+            Init();
+        }
 
     }
 

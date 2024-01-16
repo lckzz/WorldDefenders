@@ -165,6 +165,8 @@ public class MonsterEvent
         {
             finalOneWarningUI = true;
             action(warningTxt);       //경고창 띄우기
+            Debug.Log("파이널 이벤튼ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ");
+
 
         }
         finalEliteMonsterTime -= Time.deltaTime;

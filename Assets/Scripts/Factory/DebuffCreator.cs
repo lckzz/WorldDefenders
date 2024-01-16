@@ -18,7 +18,13 @@ public class DebuffCreator : MonoBehaviour
         //해당 플레이어스킬의 키값이 들어와서 값이 있다면 그 타입에 맞는 디버프컴포넌트를 추가해준다.
         if(debuffDict.TryGetValue(playerSkill, out Type debuffType))
         {
-            return gameObject.AddComponent(debuffType) as Debuff;
+            Debuff debuff;
+            if (gameObject.TryGetComponent(out debuff) == false)     //만약 이 오브젝트에 디버프컴포넌트가 없다면
+                return gameObject.AddComponent(debuffType) as Debuff;
+            else
+                return gameObject.GetComponent(debuffType) as Debuff;
+
+
         }
 
 

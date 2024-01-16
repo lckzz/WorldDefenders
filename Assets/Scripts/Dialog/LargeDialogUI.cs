@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,9 @@ public class LargeDialogUI : BaseDialogueUI
     private DialogKey yesDialogKey;
     private DialogKey noDialogKey;
 
+    public Action yesClickAction = null;
+    public Action noClickAction = null;
+
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -20,6 +24,7 @@ public class LargeDialogUI : BaseDialogueUI
         if (dialogSelectYesBtn != null)
             dialogSelectYesBtn.onClick.AddListener(() =>
             {
+                OnYesBtnClick();
                 dialogPanelObj.SetActive(false);
                 HideDialogSelectBtns();
                 dialogCtrl.StartDialog(yesDialogKey.ToString(), DialogType.Dialog,DialogSize.Large,DialogId.DialogMask,DialogOrder.Upgrade);
@@ -29,6 +34,7 @@ public class LargeDialogUI : BaseDialogueUI
         if (dialogSelectNoBtn != null)
             dialogSelectNoBtn.onClick.AddListener(() =>
             {
+                OnNoBtnClick();           
                 dialogPanelObj.SetActive(false);
 
                 dialogCtrl.StartDialog(noDialogKey.ToString(), DialogType.Dialog, DialogSize.Large);
@@ -41,6 +47,24 @@ public class LargeDialogUI : BaseDialogueUI
         this.yesDialogKey = yesDialogKey;
         this.noDialogKey = noDialogKey;
 
+    }
+
+    public void OnYesBtnClick()
+    {
+        if (yesClickAction != null)
+            yesClickAction.Invoke();
+    }
+
+    public void OnNoBtnClick()
+    {
+        if (noClickAction != null)
+            noClickAction.Invoke();
+    }
+
+    public void SetDialogActions(Action yesAction , Action noAction)
+    {
+        yesClickAction = yesAction;
+        noClickAction = noAction;
     }
 
 

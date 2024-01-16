@@ -1,5 +1,6 @@
 using DG.Tweening;
 using SimpleJSON;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -26,6 +27,8 @@ public class DialogueCtrl : MonoBehaviour
     private DialogOrder dialogOrder;
     private DialogKey dialogKeyEnum;
 
+    private Action yesDialogAction = null;
+    private Action noDialogAction = null;
 
 
     private void Start()
@@ -58,6 +61,17 @@ public class DialogueCtrl : MonoBehaviour
         }
     }
 
+    public void YesSelectDialogInit(Action yesSelectDialog)
+    {
+        yesDialogAction -= yesSelectDialog;
+        yesDialogAction += yesSelectDialog;
+    }
+
+    public void NoSelectDialogInit(Action noSelectDialog)
+    {
+        noDialogAction -= noSelectDialog;
+        noDialogAction += noSelectDialog;
+    }
 
 
     public void StartDialog(string dialogKey,DialogType dialogType,DialogSize dialogSize,DialogId dialogId = DialogId.None,DialogOrder dialogOrder = DialogOrder.None)
@@ -116,7 +130,10 @@ public class DialogueCtrl : MonoBehaviour
                 int yesKey = node[dialogKey]["yesKey"];         //선택지 Yes No 키값을 통해서 값을 받아놓는다.
                 int noKey = node[dialogKey]["noKey"];
                 if (dialogUI is LargeDialogUI largeDialog)
+                {
                     largeDialog.dialogKeyInit((DialogKey)yesKey, (DialogKey)noKey);
+                    largeDialog.SetDialogActions(yesDialogAction, noDialogAction);
+                }
 
                 dialogSelectCo = StartCoroutine(DialogSelectShow());
                 yield return dialogSelectCo;        //선택변수가 true면 선택다이얼로그로
@@ -237,5 +254,7 @@ public class DialogueCtrl : MonoBehaviour
             Managers.Dialog.EndDialog((int)dialogId);   //다이얼로그의 아이디값에 따라서 다이얼로그가 끝낫을때 하는역할이 달라짐
         else if (dialogId == DialogId.NextDialog)
             Managers.Dialog.EndDialog(dialogKey, (int)dialogId);
+        else if (dialogId == DialogId.EndDialog)
+            Managers.Dialog.EndDialog();
     }
 }

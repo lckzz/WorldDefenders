@@ -35,14 +35,17 @@ public class WarningNotice : MonoBehaviour
     }
 
 
-    public void WarningObjisOn(string warningTxt)
+    public void WarningStart(string warningTxt)
     {
+        if (warningObj.activeSelf == false)
+            warningObj.SetActive(true);
+
 
         //경고창의 체크가 꺼져있을때
         if (co != null)
             StopCoroutine(co);
-        else
-            co = StartCoroutine(WarningObject(warningTxt)); //경고창을 켜준다
+
+        co = StartCoroutine(WarningObject(warningTxt)); //경고창을 켜준다
 
 
     }

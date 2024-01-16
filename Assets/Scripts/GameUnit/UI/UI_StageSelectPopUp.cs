@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static Define;
 
 public class UI_StageSelectPopUp : UI_Base
 {
@@ -19,6 +20,8 @@ public class UI_StageSelectPopUp : UI_Base
     [SerializeField] private GameObject paperBg;
     [SerializeField] private GameObject stageInfoObj;
     [SerializeField] private GameObject stageUIObj;
+    [SerializeField] private GameObject tutorialDialogArrowObj;
+
 
 
     private RectTransform paperRt;
@@ -38,13 +41,18 @@ public class UI_StageSelectPopUp : UI_Base
     private StageInfo stageInfo;
     bool backFadeCheck = false;
 
+    private GameObject dialogCanvas;
+    private DialogueCtrl dialogCtrl;
 
     public bool FadeCheck { get { return fadeCheck; }}
     // Start is called before the first frame update
     public override void Start()
     {
         Managers.Game.FileSave();
+        dialogCanvas = this.gameObject.transform.Find("DialogueCanvas").gameObject;
+        dialogCanvas?.TryGetComponent(out dialogCtrl);
         paperBg?.TryGetComponent(out paperRt);
+        tutorialDialogArrowObj = stageUIObj?.transform.Find("Arrow").gameObject;
         rtSizeDelta = paperRt.sizeDelta;
         rtSizeDelta.x = 0.0f;
         paperRt.sizeDelta = rtSizeDelta;
@@ -114,8 +122,11 @@ public class UI_StageSelectPopUp : UI_Base
 
     void GetStageInfo(int ii)
     {
+
+        TutorialGateClick(ii);
+
         //모든 1챕터를 돌아서 전부 클릭된곳을 꺼준다.
-        for(int i = 0; i < onestageSels.Length; i++)
+        for (int i = 0; i < onestageSels.Length; i++)
         {
             onestageSels[i].TryGetComponent(out stagenode);
             if(stagenode.StState == Define.StageState.Open)
@@ -156,6 +167,19 @@ public class UI_StageSelectPopUp : UI_Base
     }
 
 
+    void TutorialGateClick(int gateIdx)
+    {
+        if (Managers.Game.TutorialEnd == false && gateIdx == (int)SubStage.West)       //튜토리얼상태면서 서부스테이지를 클릭했다면
+        {
+            Managers.Game.TutorialEnd = true;
+            Managers.Game.FileSave();
+            HideTutorialArrow();
+            dialogCtrl?.StartDialog(DialogKey.tutorialStageInfo.ToString(), DialogType.Dialog, DialogSize.Small, DialogId.EndDialog);
+        }
+            
+
+    }
+
 
 
     void SelectStageTextRefresh(Define.MainStage mainstage, Define.SubStage subStage)
@@ -195,6 +219,14 @@ public class UI_StageSelectPopUp : UI_Base
             lobby.LobbyUIOnOff(true);
             lobby.LobbyTouchUnitInit();
         }
+
+
+        if(Managers.Game.TutorialEnd == false)
+            Managers.UI.GetSceneUI<UI_Lobby>().DialogMaskSet((int)Define.DialogId.DialogMask, (int)Define.DialogOrder.Stage);
+        else
+            Managers.UI.GetSceneUI<UI_Lobby>().HideDialogMask();
+
+        
     }
 
 
@@ -254,7 +286,7 @@ public class UI_StageSelectPopUp : UI_Base
 
     void StartInGame()
     {
-        Managers.Sound.Play("Effect/UI_Click");
+        Managers.Sound.Play("Effect/StageStart");
         Managers.Game.LobbyToGameScene = true;           //게임을 시작하면 다음에 로비로 돌아올시 스테이지 선택창이 뜨게끔
         stageUIObj.SetActive(false);
         fadeCheck = true;
@@ -267,13 +299,48 @@ public class UI_StageSelectPopUp : UI_Base
     {
         WaitForSeconds wfs = new WaitForSeconds(waitTime);
 
-        paperRt?.DOSizeDelta(new Vector2(endValue, paperRt.sizeDelta.y), waitTime);
+        Managers.Sound.Play("Effect/leather_inventory");
+        paperRt?.DOSizeDelta(new Vector2(endValue, paperRt.sizeDelta.y), waitTime).OnComplete(DialogStageSelect);
         yield return wfs;
 
         if (uiObj?.activeSelf == !uiObjActive)
             uiObj.SetActive(uiObjActive);
 
         yield return null;
+    }
+
+    private void DialogStageSelect()
+    {
+
+        if (Managers.Game.TutorialEnd == false)
+        {
+            dialogCtrl?.StartDialog(DialogKey.tutorialStage.ToString(), DialogType.Dialog, DialogSize.Small,DialogId.EndDialog);
+            Managers.Dialog.dialogEnded -= ShowTutorialArrow;
+            Managers.Dialog.dialogEnded += ShowTutorialArrow;
+
+        }
+
+        if (Managers.Game.StageAllClear())           //팝업에 들어왔을때 스테이지가 올클리어가 되면
+        {
+            Managers.Game.Stage1AllClear = true;
+            dialogCtrl?.StartDialog(DialogKey.stage1Ending.ToString(), DialogType.Dialog, DialogSize.Large);
+
+        }
+    }
+
+
+    private void ShowTutorialArrow()
+    {
+        if(tutorialDialogArrowObj == null)
+            tutorialDialogArrowObj = stageUIObj?.transform.Find("Arrow").gameObject;
+
+
+        tutorialDialogArrowObj?.SetActive(true);
+    }
+
+    private void HideTutorialArrow()
+    {
+        tutorialDialogArrowObj?.SetActive(false);
     }
 
     public void BackFadeIn(Image fadeImg, UI_Base closePopup, bool fadeCheck)
@@ -311,6 +378,15 @@ public class UI_StageSelectPopUp : UI_Base
                 }
             }
         }
+
+    }
+
+
+
+    private void OnDestroy()
+    {
+        //파괴되면 참조를 끊어준다.
+        Managers.Dialog.dialogEnded -= ShowTutorialArrow;
 
     }
 }

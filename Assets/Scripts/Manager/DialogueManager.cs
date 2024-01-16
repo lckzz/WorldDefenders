@@ -11,6 +11,7 @@ public class DialogueManager
 
     public event Action<string,int> dialogEndedStringInt = null;
     public event Action<int> dialogEndedInt = null;
+    public event Action dialogEnded = null;
 
     public Queue<string> DialogQueue { get; private set; } = new Queue<string>();
 
@@ -75,6 +76,14 @@ public class DialogueManager
 
         if (Managers.Game.TutorialEnd == false && dialogEndedStringInt != null)      //튜토리얼이 끝나지않았다면
             dialogEndedStringInt?.Invoke(key, id);
+
+    }
+
+    public void EndDialog()          //다이얼로그가 끝났을때 하는 행동
+    {
+
+        if (Managers.Game.TutorialEnd == false && dialogEnded != null)      //튜토리얼이 끝나지않았다면
+            dialogEnded?.Invoke();
 
     }
 

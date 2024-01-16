@@ -774,6 +774,7 @@ GameObject:
   - component: {fileID: 159346710}
   - component: {fileID: 159346709}
   - component: {fileID: 159346708}
+  - component: {fileID: 159346711}
   m_Layer: 0
   m_Name: TowerExplosion
   m_TagString: Untagged
@@ -869,6 +870,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1685709680}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &159346711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159346707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81924234b18d63845a69c0e14a42abc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &172218406
 GameObject:
   m_ObjectHideFlags: 0
@@ -915,6 +928,7 @@ GameObject:
   - component: {fileID: 173352823}
   - component: {fileID: 173352825}
   - component: {fileID: 173352824}
+  - component: {fileID: 173352826}
   m_Layer: 0
   m_Name: TowerDestroyEff3
   m_TagString: Untagged
@@ -1010,6 +1024,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &173352826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173352822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81924234b18d63845a69c0e14a42abc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &173787473
 GameObject:
   m_ObjectHideFlags: 0
@@ -1931,6 +1957,7 @@ GameObject:
   - component: {fileID: 322923691}
   - component: {fileID: 322923693}
   - component: {fileID: 322923692}
+  - component: {fileID: 322923694}
   m_Layer: 0
   m_Name: TowerDestroyEff2
   m_TagString: Untagged
@@ -2026,6 +2053,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &322923694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 322923690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81924234b18d63845a69c0e14a42abc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &329276111
 GameObject:
   m_ObjectHideFlags: 0
@@ -2459,7 +2498,7 @@ PlayableDirector:
   m_GameObject: {fileID: 380642880}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: ba1dab26b648a7043ac3f90ab7de3be8, type: 2}
+  m_PlayableAsset: {fileID: 11400000, guid: f540912ad7c83ce46a06153f7f10275f, type: 2}
   m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
@@ -2556,6 +2595,7 @@ GameObject:
   - component: {fileID: 382497483}
   - component: {fileID: 382497485}
   - component: {fileID: 382497484}
+  - component: {fileID: 382497486}
   m_Layer: 0
   m_Name: DestroyEff2
   m_TagString: Untagged
@@ -2651,6 +2691,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &382497486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382497482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81924234b18d63845a69c0e14a42abc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &386168316
 GameObject:
   m_ObjectHideFlags: 0
@@ -3080,7 +3132,7 @@ Transform:
   m_GameObject: {fileID: 413016575}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.15, y: 0, z: -475.8154}
+  m_LocalPosition: {x: -2.15, y: 0, z: -108.97745}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5674,6 +5726,7 @@ GameObject:
   - component: {fileID: 885725494}
   - component: {fileID: 885725496}
   - component: {fileID: 885725495}
+  - component: {fileID: 885725497}
   m_Layer: 0
   m_Name: TowerDestroyEff
   m_TagString: Untagged
@@ -5769,6 +5822,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &885725497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 885725493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81924234b18d63845a69c0e14a42abc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &885804884
 GameObject:
   m_ObjectHideFlags: 0
@@ -6269,6 +6334,7 @@ GameObject:
   - component: {fileID: 936518725}
   - component: {fileID: 936518724}
   - component: {fileID: 936518723}
+  - component: {fileID: 936518726}
   m_Layer: 0
   m_Name: DestroyEff1
   m_TagString: Untagged
@@ -6364,6 +6430,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 180479635}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &936518726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 936518722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81924234b18d63845a69c0e14a42abc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1003406054
 GameObject:
   m_ObjectHideFlags: 0
@@ -10017,6 +10095,7 @@ GameObject:
   - component: {fileID: 1650584349}
   - component: {fileID: 1650584351}
   - component: {fileID: 1650584350}
+  - component: {fileID: 1650584352}
   m_Layer: 0
   m_Name: DestroyEff3
   m_TagString: Untagged
@@ -10112,6 +10191,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1650584352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650584348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81924234b18d63845a69c0e14a42abc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1653143462
 GameObject:
   m_ObjectHideFlags: 0
@@ -12893,7 +12984,7 @@ Transform:
   m_GameObject: {fileID: 2104002352}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.4477167, y: -6.927249, z: -474.63043}
+  m_LocalPosition: {x: -7.4477167, y: -6.927249, z: -107.79248}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

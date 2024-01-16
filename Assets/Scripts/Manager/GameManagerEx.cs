@@ -29,6 +29,7 @@ public class GameData
     public bool westStageClear;
     public bool eastStageClear;
     public bool southStageClear;
+    public bool stage1AllClear;
 
     public float bgmValue;
     public float effValue;
@@ -239,6 +240,12 @@ public class GameManagerEx
         set { gameData.southStageClear = value; }
     }
 
+    public bool Stage1AllClear
+    {
+        get { return gameData.stage1AllClear; }
+        set { gameData.stage1AllClear = value; }
+    }
+
     public float BgmValue
     {
         get { return gameData.bgmValue; }
@@ -306,6 +313,7 @@ public class GameManagerEx
         WestStageClear = false;
         EastStageClear = false;
         SouthStageClear = false;
+        Stage1AllClear = false;
         BgmValue = 0.5f;
         EffValue = 0.5f;
         BgmisOn = false;
@@ -497,6 +505,18 @@ public class GameManagerEx
     public bool GameEndResult()
     {
         return stageState.GameEndResult();
+    }
+
+    public bool StageAllClear()
+    {
+        if (Stage1AllClear == true)
+            return false;
+
+        if (WestStageClear == true && EastStageClear == true && SouthStageClear == true)
+            return true;
+
+
+        return false;
     }
 
 

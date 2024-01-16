@@ -11,7 +11,7 @@ public class SceneManagerEx
 
     public void LoadScene(Define.Scene type)
     {
-        Managers.Clear();
+
         SceneManager.LoadScene(GetSceneName(type));
         Time.timeScale = 1.0f;
     }
@@ -35,6 +35,5 @@ public class SceneManagerEx
     public void Clear()
     {
         CurrentScene.Clear();
-
     }
 }

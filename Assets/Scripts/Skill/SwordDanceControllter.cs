@@ -11,6 +11,7 @@ public class SwordDanceControllter : SkillBase
     float _speed = 20.0f;
     float _lifeTime = 1.5f;
     int hitCount = 0;
+    int hitMaxCount = 10;
 
     public SwordDanceControllter() : base(Define.SkillType.Count)
     {
@@ -63,14 +64,14 @@ public class SwordDanceControllter : SkillBase
         if (coll.tag.Contains("Unit"))
         {
 
-            if(hitCount < 3)
+            if(hitCount < hitMaxCount)
             {
                 coll.TryGetComponent(out Unit unit);
-                unit.OnDamage(owener.Att);
+                unit.OnDamage(owener.Att * 2);
                 Managers.Resource.ResourceEffect(coll.transform.position, "HitEff");
                 hitCount++;
             }
-            else if(hitCount > 3)
+            else if(hitCount > hitMaxCount)
             {
                 GameObject.Destroy(this.gameObject, 0.5f);
             }

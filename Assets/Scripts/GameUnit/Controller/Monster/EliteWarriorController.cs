@@ -95,7 +95,7 @@ public class EliteWarriorController : EliteMonsterController
             if (Skills.activeSkillList.Count > 0)
             {
                 Debug.Log("발싸");
-                Skills.activeSkillList[0].UseSkill(this);     //스킬 사용
+                Skills.activeSkillList[0].UseSkill(this,skillenemyList);     //스킬 사용
                 SpeechchBubbleOn(skillTitleKey, skillDialogSubKey,skillProbability);
             }
         }

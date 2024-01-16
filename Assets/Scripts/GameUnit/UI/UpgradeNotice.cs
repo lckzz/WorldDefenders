@@ -31,12 +31,14 @@ public class UpgradeNotice : MonoBehaviour
                 {
                     if (Managers.UI.PeekPopupUI<UI_UnitUpgradePopUp>())
                     {
+                        Managers.Sound.Play("Effect/Upgrade");
                         Managers.UI.PeekPopupUI<UI_UnitUpgradePopUp>().UpgradeUnit();
                         Managers.UI.PeekPopupUI<UI_UnitUpgradePopUp>().LevelUpParticleOn();
 
                     }
                     else if (Managers.UI.PeekPopupUI<UI_PlayerUpgradePopUp>())
                     {
+                        Managers.Sound.Play("Effect/Upgrade");
                         Managers.UI.PeekPopupUI<UI_PlayerUpgradePopUp>().Upgrade();
                         Managers.UI.PeekPopupUI<UI_PlayerUpgradePopUp>().LevelUpParticleOn();
 

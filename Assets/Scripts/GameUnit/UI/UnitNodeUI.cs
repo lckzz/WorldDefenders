@@ -14,7 +14,9 @@ public class UnitNodeUI : UI_BaseSettingUnit
     Vector2 spearSizeDelta = new Vector2(120.0f, 120.0f);
     Vector3 spearTr = new Vector3(-9.0f, -9.0f, 0.0f);
     private Define.UnitNodeState unitNodeState = Define.UnitNodeState.None;
-
+    private Color32 normalClassColor = new Color32(72, 72, 72, 255);
+    private Color32 specialClassColor = new Color32(121, 81, 212,255);
+    private Image nodeImg;
 
 
     public UnitClass E_UnitClass { get { return e_UnitClass; } set { e_UnitClass = value; } }
@@ -22,8 +24,8 @@ public class UnitNodeUI : UI_BaseSettingUnit
 
     protected override void Init()
     {
-       
         unitImg.TryGetComponent<RectTransform>(out rt);
+        TryGetComponent(out nodeImg);
         for(int ii = 0; ii < transform.childCount; ii++)
         {
             if (transform.GetChild(ii).name.Contains("Lv"))
@@ -64,11 +66,13 @@ public class UnitNodeUI : UI_BaseSettingUnit
                 Debug.Log($"마법사 갱신! {e_UnitClass}");
                 UnitUISpriteInit(e_UnitClass, "Magician_Idle");
                 unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitMagicianLv}";
+                nodeImg.color = specialClassColor;
                 break;
             case UnitClass.Cavalry:
                 Debug.Log($"마법사 갱신! {e_UnitClass}");
                 UnitUISpriteInit(e_UnitClass, "Cavalry_Idle");
                 unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitCarlvlry}";
+                nodeImg.color = specialClassColor;
                 break;
 
             default:

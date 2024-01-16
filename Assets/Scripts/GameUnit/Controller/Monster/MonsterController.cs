@@ -490,12 +490,13 @@ public class MonsterController : Unit,IObserver
     {
         if (myColl.enabled)
         {
+
+            Debuff.DebuffDestory();
+
             speechBubble.SpeechBubbuleOn(dieTitleKey, dieDialogSubKey, dieProbability);
 
             SetMonsterState(MonsterState.Die);
             myColl.enabled = false;
-            if(Debuff is FireDebuff fireDebuff)
-                fireDebuff.DebuffOnOff(false);
 
 
             dropItem?.Drop(this.gameObject.transform.position);

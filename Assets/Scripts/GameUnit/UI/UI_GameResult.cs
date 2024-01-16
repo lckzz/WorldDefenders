@@ -152,6 +152,7 @@ public class UI_GameResult : UI_Base
     {
         Managers.UI.GetSceneUI<UI_GamePlay>().gameObject.SetActive(false);
         TimerSetting();
+        ResultSound();
     }
 
     public void SetStageType(Define.StageStageType type)
@@ -159,6 +160,14 @@ public class UI_GameResult : UI_Base
         stageType = type;
     }
 
+    private void ResultSound()
+    {
+        if (Managers.Game.GetStageStateType() == Define.StageStageType.Victory)
+            Managers.Sound.Play("Sounds/Effect/VictoryBig");
+        else
+            Managers.Sound.Play("Sounds/Effect/GameOver");
+
+    }
 
     private float RefreshBestClearTime()
     {

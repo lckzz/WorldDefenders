@@ -130,7 +130,8 @@ public class UI_PlayerSkillWindow : UI_Base
                     lobby.LobbyTouchUnitInit();
                 }
 
-                Managers.UI.GetSceneUI<UI_Lobby>().DialogMaskSet((int)Define.DialogId.DialogMask, (int)Define.DialogOrder.Stage);
+                if (Managers.Game.TutorialEnd == false)
+                    Managers.UI.GetSceneUI<UI_Lobby>().DialogMaskSet((int)Define.DialogId.DialogMask, (int)Define.DialogOrder.Stage);
                 //GlobalData.SetUnitClass(unitSlotUiList);  //스킬셋팅
             });
 

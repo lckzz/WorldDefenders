@@ -353,7 +353,6 @@ public class UI_UnitUpgradePopUp : UI_Base
 
     public void UpgradeUnit()
     {
-        Managers.Sound.Play("Effect/UI_Click");
 
         switch (unitidx)     // .버튼을 통해서 선택된 유닛
         {

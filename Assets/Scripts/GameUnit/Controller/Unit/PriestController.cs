@@ -186,7 +186,7 @@ public class PriestController : UnitController
         {
 
             int heal = (int)(att * 0.5f);     //힐량은 기본공격력의 반토막(크리는 터져도 똑같음)
-            unitCtrl.OnHeal((int)unitCtrl.MaxHp);
+            unitCtrl.OnHeal(att);
             Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
 
             
@@ -195,7 +195,7 @@ public class PriestController : UnitController
         else if(unit is SpecialUnitController spUnitCtrl)
         {
             int heal = (int)(att * 0.5f);     //힐량은 기본공격력의 반토막(크리는 터져도 똑같음)
-            spUnitCtrl.OnHeal((int)spUnitCtrl.MaxHp);
+            spUnitCtrl.OnHeal(att);
             Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
         }
 
@@ -217,6 +217,7 @@ public class PriestController : UnitController
             }
         }
 
+
     }
 
 
@@ -232,7 +233,7 @@ public class PriestController : UnitController
         else if (monTarget != null)
              CriticalAttack(monTarget, priestSound, priestSound, priestHitEff);
 
-        else if(unitTarget == null && monTarget == null)
+        else if(monsterPortal != null)
             CriticalAttack(monsterPortal, priestSound, priestSound, priestHitEff);
     }
 

@@ -231,7 +231,9 @@ public class Define
         tutorialSkill,
         tutorialSkillTree,
         tutorialSkillInfo,
-        tutorialStage
+        tutorialStage,
+        tutorialStageInfo,
+        stage1Ending
 
     }
 

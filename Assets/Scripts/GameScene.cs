@@ -50,7 +50,7 @@ public class GameScene : BaseScene
         Managers.Game.MonsterSpawnInit(monsterParentTr);
         Managers.Game.SetMonSpawnType(Define.MonsterSpawnType.Normal);
         Managers.Game.SetStageStateType(Define.StageStageType.Playing);
-        Managers.Sound.Play("BGM/GameBGM", Define.Sound.BGM);
+        Managers.Sound.Play("BGM/FranticLevel", Define.Sound.BGM);
         TryGetComponent(out playable);
         GameDirector(Define.GameStageDirector.Entrance);
 
@@ -88,14 +88,14 @@ public class GameScene : BaseScene
 
             Managers.Game.unitSummonDequeue(obj, unitSpawnTr);
             Managers.Game.CostIncreaseTime();
-            Managers.Game.NormalMonsterSpawn(Managers.Game.GetMonSpawnType(), warningNotice.WarningObjisOn, warningElite);
+            Managers.Game.NormalMonsterSpawn(Managers.Game.GetMonSpawnType(), warningNotice.WarningStart, warningElite);
 
             //Debug.Log(Managers.Game.GetMonSpawnType());
             if (Managers.Game.GetMonSpawnType() == Define.MonsterSpawnType.Normal)
             {
                 //웨이브를 기다리는 타이머함수
 
-                Managers.Game.MonsterWaveEvent(warningNotice.WarningObjisOn, warningWave);
+                Managers.Game.MonsterWaveEvent(warningNotice.WarningStart, warningWave);
                 //경고창을 띄우는 함수를 보내서 Wave이벤트일때 사용
             }
             else if (Managers.Game.GetMonSpawnType() == Define.MonsterSpawnType.Wave)
@@ -107,7 +107,7 @@ public class GameScene : BaseScene
             }
             else if (Managers.Game.GetMonSpawnType() == Define.MonsterSpawnType.Final)
             {
-                Managers.Game.FinalMonsterWave(warningNotice.WarningObjisOn, warningFinal, finalMonsterCount);
+                Managers.Game.FinalMonsterWave(warningNotice.WarningStart, warningFinal, finalMonsterCount);
             }
         }
         

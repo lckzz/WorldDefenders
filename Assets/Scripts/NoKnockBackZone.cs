@@ -12,7 +12,6 @@ public class NoKnockBackZone : MonoBehaviour
         {
             if (coll != null && coll.tag.Contains("Unit"))
             {
-                Debug.Log("여기 들어와있어용");
                 coll.TryGetComponent(out unit);
                 unit.IsNoKnockBack = true;
             }
@@ -38,7 +37,6 @@ public class NoKnockBackZone : MonoBehaviour
         {
             if (coll != null && coll.tag.Contains("Unit"))
             {
-                Debug.Log("여기 나갓어용");
 
                 coll.TryGetComponent(out unit);
                 unit.IsNoKnockBack = false;

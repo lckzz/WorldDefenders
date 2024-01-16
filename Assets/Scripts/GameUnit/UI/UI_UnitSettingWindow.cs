@@ -70,7 +70,7 @@ public class UI_UnitSettingWindow : UI_Base
         UI_UnitSetInit();
 
 
-
+        unitMaskObj?.SetActive(false);
         tutorialDialogObj = gameObject.transform.Find("DialogueCanvas").gameObject;
         GameObject parentGo = backLobbyBtn?.gameObject.transform.parent.gameObject;
         maskGameObject = parentGo.transform.Find("MaskGameObject").gameObject;
@@ -102,17 +102,13 @@ public class UI_UnitSettingWindow : UI_Base
                     lobby.LobbyTouchUnitInit();
                 }
 
-                Managers.UI.GetSceneUI<UI_Lobby>().DialogMaskSet((int)Define.DialogId.DialogMask, (int)Define.DialogOrder.Skill);
+                if (Managers.Game.TutorialEnd == false)
+                    Managers.UI.GetSceneUI<UI_Lobby>().DialogMaskSet((int)Define.DialogId.DialogMask, (int)Define.DialogOrder.Skill);
 
 
 
             });
 
-
-        ButtonEvent(rightScrollBtn.gameObject, RightScrollMoveOn, UIEvent.PointerDown);
-        ButtonEvent(rightScrollBtn.gameObject, RightScrollMoveOff, UIEvent.PointerUp);
-        ButtonEvent(leftScrollBtn.gameObject, LeftScrollMoveOn, UIEvent.PointerDown);
-        ButtonEvent(leftScrollBtn.gameObject, LeftScrollMoveOff, UIEvent.PointerUp);
         //ButtonEvent(leftScrollBtn.gameObject, RightBtnOn, UIEvent.PointerDown);
 
 
@@ -130,8 +126,7 @@ public class UI_UnitSettingWindow : UI_Base
         OnMousePointerDown();
         OnMousePointerUp();
         OnMousePointerDownCancel();
-        RightScrollMove();
-        LeftScrollMove();
+
 #if UNITY_EDITOR
         OnMousePointer();
 #endif
@@ -227,25 +222,25 @@ public class UI_UnitSettingWindow : UI_Base
         
     }
 
-    void ButtonEvent(GameObject obj, Action action = null, UIEvent type = UIEvent.PointerDown)
-    {
-        UI_EventHandler evt;
-        obj.TryGetComponent(out evt);
+    //void ButtonEvent(GameObject obj, Action action = null, UIEvent type = UIEvent.PointerDown)
+    //{
+    //    UI_EventHandler evt;
+    //    obj.TryGetComponent(out evt);
 
-        switch (type)
-        {
-            case UIEvent.PointerDown:
-                evt.OnPointerDownHandler -= action;
-                evt.OnPointerDownHandler += action;
-                break;
+    //    switch (type)
+    //    {
+    //        case UIEvent.PointerDown:
+    //            evt.OnPointerDownHandler -= action;
+    //            evt.OnPointerDownHandler += action;
+    //            break;
 
-            case UIEvent.PointerUp:
-                evt.OnPointerUpHandler -= action;
-                evt.OnPointerUpHandler += action;
-                break;
-        }
+    //        case UIEvent.PointerUp:
+    //            evt.OnPointerUpHandler -= action;
+    //            evt.OnPointerUpHandler += action;
+    //            break;
+    //    }
 
-    }
+    //}
     void UnitNodeUiInstantiate(UnitClass uniClass)
     {
         GameObject obj = Managers.Resource.Instantiate("UI/Unit", unitNodeContent.transform);
@@ -261,53 +256,6 @@ public class UI_UnitSettingWindow : UI_Base
     }
 
 
-    #region 버튼누를시 스크롤바 움직임
-
-    void RightScrollMoveOn()
-    {
-        rightScrollCheck = true;
-    }
-    void RightScrollMoveOff()
-    {
-        rightScrollCheck = false;
-    }
-
-    void LeftScrollMoveOn()
-    {
-        LeftScrollCheck = true;
-    }
-    void LeftScrollMoveOff()
-    {
-        LeftScrollCheck = false;
-    }
-
-
-    void RightScrollMove()
-    {
-        if(rightScrollCheck)
-        {
-            if(scrollbar.value < 1.0f)
-            {
-                scrollbar.value += Time.deltaTime * scrollbarSpeed;
-                if (scrollbar.value >= 1.0f)
-                    scrollbar.value = 1.0f;
-            }
-        }
-    }
-
-    void LeftScrollMove()
-    {
-        if (LeftScrollCheck)
-        {
-            if (scrollbar.value >= 0.0f)
-            {
-                scrollbar.value -= Time.deltaTime * scrollbarSpeed;
-                if (scrollbar.value <= 0.0f)
-                    scrollbar.value = 0.0f;
-            }
-        }
-    }
-    #endregion
 
     void OnMousePointerDown()
     {
@@ -331,6 +279,7 @@ public class UI_UnitSettingWindow : UI_Base
             if(unitSlotUI != null)  //슬롯을 클릭했다면
             {
                 Managers.Sound.Play("Effect/UI_Click");
+                Debug.Log("테스트클릭");
 
                 if (unitMaskObj.activeSelf)  //마스크 오브젝트가 켜져있다면 리턴
                     unitMaskObj.SetActive(false);
@@ -345,6 +294,9 @@ public class UI_UnitSettingWindow : UI_Base
                     nodeUiClick = false;        //노드클릭은 꺼줌
                     curUnitNodeUI.ClickImageOnOff(nodeUiClick);
                     curUnitNodeUI = null;
+
+                    UI_UnitSetInit();
+
                 }
                 else
                 {
@@ -373,7 +325,6 @@ public class UI_UnitSettingWindow : UI_Base
 
                 }
 
-                UI_UnitSetInit();
             }
 
             else if(unitNodeUI != null)  //유닛을 클릭했다면
@@ -392,17 +343,22 @@ public class UI_UnitSettingWindow : UI_Base
 
                 if(slotUiClick)     //유닛을 클릭했을때 그전에 슬롯이 클릭되었다면
                 {
+                    Debug.Log("여기 노드클릭하고 슬롯클릭");
                     //슬롯자리에 클릭한 유닛을 넣어줘야함
                     nodeUiClick = true;
                     curUnitNodeUI = unitNodeUI;     //현재 클릭한 유닛노드에 넣어주고
                     LoopEqualUnitSearch(curUnitSlotUI.SlotIdx, curUnitSlotUI);
                     curUnitSlotUI.SlotClickUnitInfoBtnOnOff(false);
                     UnitUIInit();
+                    UI_UnitSetInit();
+
 
                 }
 
                 else
                 {
+                    Debug.Log("테스트클릭유닛노드");
+
                     nodeUiClick = true;
                     curUnitNodeUI = unitNodeUI;     //현재 클릭한 유닛노드에 넣어주고
                     curUnitNodeUI.ClickImageOnOff(nodeUiClick);

@@ -22,6 +22,8 @@ public class TitleTouch : MonoBehaviour
 
     void SceneMove()
     {
+        Managers.Scene.Clear();
+        Managers.Sound.Clear();
         Managers.Loading.LoadScene(Define.Scene.Lobby);
     }
 }

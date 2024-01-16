@@ -9,6 +9,8 @@ public class SwordDanceSkill : ActiveSkill
         if (unit == null || enemys == null)
             return;
 
+        Debug.Log("持失さしさししさしささ");
+
         Vector3 pos = unit.transform.position;
         pos.x -= 1.0f;
         Generate(GlobalData.g_EliteWarriorID, unit, enemys,pos);
@@ -41,6 +43,7 @@ public class SwordDanceSkill : ActiveSkill
             Debug.LogError("ProjecteController SetInfo Failed");
             return;
         }
+
         SwordDanceControllter sk = Managers.Resource.Instantiate(data.skillPrefab).GetComponent<SwordDanceControllter>();
         sk.SetInfo(id, owner, enemy, data, spawnPos);
     }

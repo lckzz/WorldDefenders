@@ -18,6 +18,8 @@ public class Debuff : MonoBehaviour
 
     protected DebuffUI debuffUI;
 
+    protected Coroutine courtine;
+
 
     protected virtual void Start()
     {
@@ -51,6 +53,13 @@ public class Debuff : MonoBehaviour
 
         }
         //디버프 아이콘 생성하고 여기서 초기화해준다.
+    }
+
+    public virtual void DebuffDestory()
+    {
+        debuffInstantiateisOn = false;
+        debuffUIInstantiateisOn = false;
+        DebuffOnOff(false);
     }
 
 

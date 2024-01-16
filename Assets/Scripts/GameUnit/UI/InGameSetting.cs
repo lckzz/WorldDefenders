@@ -35,11 +35,19 @@ public class InGameSetting : Setting
 
     void InGameRetry()
     {
+        Managers.Sound.Clear();
+        Managers.UI.Clear();
+        Managers.Pool.Clear();
+
+
         Managers.Scene.LoadScene(Define.Scene.BattleStage_Field);
     }
 
     void InGameExit()
     {
+        Managers.Sound.Clear();
+        Managers.UI.Clear();
+        Managers.Pool.Clear();
         Managers.Scene.LoadScene(Define.Scene.Lobby);
     }
 }

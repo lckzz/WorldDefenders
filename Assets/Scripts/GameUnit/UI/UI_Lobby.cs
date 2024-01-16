@@ -87,6 +87,7 @@ public class UI_Lobby : UI_Base
             Managers.Dialog.dialogEndedInt -= ShowDialogMask;
             Managers.Dialog.dialogEndedInt += ShowDialogMask;
             dialogCtrl.StartDialog(DialogKey.tutorial.ToString(), DialogType.Dialog, DialogSize.Large);
+            dialogCtrl?.NoSelectDialogInit(NoClickTutorialEnd);
         }    
 
 
@@ -121,6 +122,12 @@ public class UI_Lobby : UI_Base
         RefreshSKillicon(Managers.Game.CurPlayerEquipSkill);
 
     }
+
+    void NoClickTutorialEnd()
+    {
+        Managers.Game.TutorialEnd = true;
+    }
+
 
     void TutorialMaskReset(int order)
     {
@@ -191,12 +198,20 @@ public class UI_Lobby : UI_Base
             dialogMaskGo.SetActive(true);
             dialogMask.MaskGameObjectPosSet(order);
         }
+
     }
+
 
     void MaskOrderSet(int order)
     {
         //마스크오브젝트를 표시할때 현재 위치와 순서를 셋팅함
         this.order = order;     
+    }
+
+    public void HideDialogMask()
+    {
+        dialogMaskGo.SetActive(false);
+
     }
 
     public void DialogMaskSet(int id , int order)

@@ -91,8 +91,8 @@ public class UI_UpgradeWindow : UI_Base
                     lobby.LobbyUIOnOff(true);
                     lobby.LobbyTouchUnitInit();
                 }
-
-                Managers.UI.GetSceneUI<UI_Lobby>().DialogMaskSet((int)Define.DialogId.DialogMask,(int)Define.DialogOrder.Party);
+                if (Managers.Game.TutorialEnd == false)
+                    Managers.UI.GetSceneUI<UI_Lobby>().DialogMaskSet((int)Define.DialogId.DialogMask,(int)Define.DialogOrder.Party);
 
             });
 

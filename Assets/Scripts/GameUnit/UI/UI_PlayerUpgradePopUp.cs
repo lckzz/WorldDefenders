@@ -95,7 +95,6 @@ public class UI_PlayerUpgradePopUp : UI_Base
 
     public void Upgrade()
     {
-        Managers.Sound.Play("Effect/UI_Click");
 
         if (towerLv < 10)
             Managers.Game.PlayerLevel++;

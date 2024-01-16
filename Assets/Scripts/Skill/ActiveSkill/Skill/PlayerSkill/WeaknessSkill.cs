@@ -25,6 +25,9 @@ public class WeaknessSkill : ActiveSkill
                 if(monCtrl.Debuff is WeaknessDebuff weaknessDebuff)
                 {
                     Debug.Log(monCtrl.name);
+                    if (monCtrl.IsDie)
+                        return;
+
                     weaknessDebuff.WeaknessSkillInfo(monCtrl.MoveSpeed, monCtrl.Att);
                     weaknessDebuff.UnitDebuff(SkillData.skillValue, 10.0f);
                     weaknessDebuff.DebuffOnOff(true);
@@ -36,6 +39,8 @@ public class WeaknessSkill : ActiveSkill
             {
                 if (eliteMonCtrl.Debuff is WeaknessDebuff weaknessDebuff)
                 {
+                    if (eliteMonCtrl.IsDie)
+                        return;
                     weaknessDebuff.WeaknessSkillInfo(eliteMonCtrl.MoveSpeed, eliteMonCtrl.Att);
                     weaknessDebuff.UnitDebuff(SkillData.skillValue, 10.0f);
                     weaknessDebuff.DebuffOnOff(true);
