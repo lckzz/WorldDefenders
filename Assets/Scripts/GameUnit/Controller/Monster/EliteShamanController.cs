@@ -16,7 +16,11 @@ public class EliteShamanController : EliteMonsterController
     {
         base.OnEnable();
         if (sp != null && myColl != null)
+        {
+            Init();
             speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
+
+        }
 
     }
 
@@ -37,7 +41,11 @@ public class EliteShamanController : EliteMonsterController
         attackRange = monStat.attackRange;
         moveSpeed = 2.0f;
 
+        DropCost = monStat.dropCost;
+
+
         magicPos = transform.Find("MagicPos");
+        Skills.ClearSkill();
         Skills.AddSkill<DarkPowerSkill>();
         speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
 
@@ -109,6 +117,7 @@ public class EliteShamanController : EliteMonsterController
     {
         //부모클래스에서의 공격은 근접용이라 새로 덮어써서 공격함수를 오버라이드한다.
         GameObject obj = Resources.Load<GameObject>("Prefabs/Weapon/ShamanMagicShot");
+        Managers.Sound.Play("Effect/MeleeSound");
 
         if (unitTarget != null)
         {
@@ -144,10 +153,16 @@ public class EliteShamanController : EliteMonsterController
             if (Skills.activeSkillList.Count > 0)
             {
                 Debug.Log("발싸");
-                Skills.activeSkillList[0].UseSkill(this);     //스킬 사용
+                Skills.activeSkillList[0].UseSkill(this,skillenemyList);     //스킬 사용
                 SpeechchBubbleOn(skillTitleKey, skillDialogSubKey,skillProbability);
             }
         }
+    }
+
+    public void ShamanSkillSound()
+    {
+        //애니메이션 이벤트 함수
+        Managers.Sound.Play("Effect/Monster/EliteShamanSkill");
     }
 
 }

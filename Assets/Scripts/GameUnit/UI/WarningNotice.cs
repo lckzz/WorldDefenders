@@ -28,7 +28,6 @@ public class WarningNotice : MonoBehaviour
     {
         if (co != null)
         {
-            Debug.Log("여기 코루틴 꺼저용");
             StopCoroutine(co);
 
         }
@@ -54,6 +53,7 @@ public class WarningNotice : MonoBehaviour
     {
 
         Debug.Log("여기 코루틴들어감");
+        Managers.Sound.Play("Effect/EventAlarm");
         rt.localPosition = new Vector3(1300.0f, rt.localPosition.y, rt.localPosition.z);
 
         Define.MonsterSpawnType type = Managers.Game.GetMonSpawnType();

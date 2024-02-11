@@ -74,7 +74,7 @@ public class DarkPowerController : SkillBase
         for (int ii = 0; ii < enemy.Count; ii++)
         {
             enemy[ii].gameObject.TryGetComponent(out Unit mon);
-            mon.OnDamage(10);
+            mon.OnDamage(mon.Att);
             Managers.Resource.ResourceEffect(enemy[ii].gameObject.transform.position, "HitEff");
             
         }

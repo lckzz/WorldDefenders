@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
-public class EliteMonsterController : Unit
+public class EliteMonsterController : MonsterBase
 {
     [SerializeField]
     protected MonsterClass monsterClass;
@@ -13,16 +13,17 @@ public class EliteMonsterController : Unit
     [SerializeField] protected bool skillOn = false;     //스킬 발동판단
 
 
-    protected List<Unit> unitCtrls = new List<Unit>();
-    [SerializeField] protected Unit unitTarget;
-    [SerializeField] protected PlayerTower playerTowerCtrl;
+    //protected List<Unit> unitCtrls = new List<Unit>();
+    //[SerializeField] protected Unit unitTarget;
+    //[SerializeField] protected PlayerTower playerTowerCtrl;
     protected List<Unit> skillenemyList = new List<Unit>();
 
 
     [SerializeField] protected GameObject appearDust;
+    
 
 
-    protected MonsterStat monStat;
+    //protected MonsterStat monStat;
 
     protected float coolTime = 20.0f;
 
@@ -42,33 +43,42 @@ public class EliteMonsterController : Unit
 
 
 
+    //[SerializeField] DebuffCreator debuffCreator;
 
-    private Debuff debuff;
+    //private Debuff debuff;
 
-    public Debuff Debuff { get { return debuff; } }
+    //public Debuff Debuff { get { return debuff; } }
 
     public SkillBook Skills { get; protected set; }
 
-    public Unit UnitCtrl { get { return unitTarget; } }
-    public PlayerTower PlayerTowerCtrl { get { return playerTowerCtrl; } }
+    //public Unit UnitCtrl { get { return unitTarget; } }
+    //public PlayerTower PlayerTowerCtrl { get { return playerTowerCtrl; } }
     public EliteMonsterState MonState { get { return state; } }
 
-    Coroutine startCoolTime;
+    Coroutine startCoolTimeCo;
 
     public override void OnEnable()
     {
+        base.OnEnable();
+        
+
         if (sp != null && myColl != null)
         {
-            //오브젝트 풀에서 생성되면 초기화 시켜줘야함
-            isDie = false;
-            isRun = false;
-            hp = maxHp;
+            ////오브젝트 풀에서 생성되면 초기화 시켜줘야함
+            //isDie = false;
+            //isRun = false;
+            //hp = maxHp;
+            //sp.color = new Color32(255, 255, 255, 255);
+            //myColl.enabled = true;
+            //appearDust?.SetActive(true);
+            //unitTarget = null;
+            //playerTowerCtrl = null;
+            if(startCoolTimeCo != null)
+                StopCoroutine(startCoolTimeCo);
+            skillOn = false;
+
             SetMonsterState(EliteMonsterState.Run);
-            sp.color = new Color32(255, 255, 255, 255);
-            myColl.enabled = true;
-            appearDust?.SetActive(true);
-            unitTarget = null;
-            playerTowerCtrl = null;
+
         }
 
     }
@@ -83,14 +93,22 @@ public class EliteMonsterController : Unit
 
         Skills = gameObject.GetComponent<SkillBook>();
 
-        TryGetComponent<Collider2D>(out myColl);
-        TryGetComponent<Debuff>(out debuff);
+        //TryGetComponent<Collider2D>(out myColl);
+        //TryGetComponent<Debuff>(out debuff);
+        //TryGetComponent(out debuffCreator);
 
         SetMonsterState(EliteMonsterState.Run);
-        startCoolTime = StartCoroutine(UnitSKillCoolTime(coolTime));
+        startCoolTimeCo = StartCoroutine(UnitSKillCoolTime(coolTime));
         appearDust?.SetActive(true);
 
-        
+
+
+        //debuff = debuffCreator.AddDebuffComponent(Managers.Game.CurPlayerEquipSkill);
+
+
+        //if (Debuff is WeaknessDebuff weaknessDebuff)
+        //    weaknessDebuff.AddObserver(this);           //디버프의 능력치변화값을 받아오기위한 구독
+
     }
 
 
@@ -108,7 +126,7 @@ public class EliteMonsterController : Unit
 
     }
 
-    void UnitSense()
+    protected override void UnitSense()
     {
 
         skillenemyList.Clear();
@@ -158,7 +176,7 @@ public class EliteMonsterController : Unit
 
         }
     }
-    void UnitDistanceAsending()
+    protected override void UnitDistanceAsending()
     {
         if (unitCtrls.Count > 0)
         {
@@ -209,17 +227,17 @@ public class EliteMonsterController : Unit
         }
     }
 
-    protected void TowerSensor()
-    {
-        //타워는 유닛이 없다면 그때 감지를하고 공격추격이나 공격을 할 수 있다.
+    //protected void TowerSensor()
+    //{
+    //    //타워는 유닛이 없다면 그때 감지를하고 공격추격이나 공격을 할 수 있다.
 
-        towerColl = Physics2D.OverlapBox(pos.position, boxSize, 0, LayerMask.GetMask("Tower"));
-        //Debug.Log(towerColl?.name);
-        if (towerColl != null)
-            towerColl.TryGetComponent(out playerTowerCtrl);
+    //    towerColl = Physics2D.OverlapBox(pos.position, boxSize, 0, LayerMask.GetMask("Tower"));
+    //    //Debug.Log(towerColl?.name);
+    //    if (towerColl != null)
+    //        towerColl.TryGetComponent(out playerTowerCtrl);
 
 
-    }
+    //}
 
     protected void MonsterStateCheck()
     {
@@ -510,12 +528,30 @@ public class EliteMonsterController : Unit
     {
         if (myColl.enabled)
         {
+            if (unitTarget != null)
+                unitTarget = null;
+            if (playerTowerCtrl != null)
+                playerTowerCtrl = null;
+
+            int randidx = 0;
+            randidx = UnityEngine.Random.Range(0, 2);
+            if (randidx == 0)
+                Managers.Sound.Play("Effect/Monster/MonsterDie1");
+            else
+                Managers.Sound.Play("Effect/Monster/MonsterDie2");
+
+            Debuff?.DebuffDestory();
 
             speechBubble.SpeechBubbuleOn(monsterDieTitleKey, monsterDieSubKey,dieProbability);
 
             SetMonsterState(EliteMonsterState.Die);
             myColl.enabled = false;
+
+            dropItem?.Drop(this.gameObject.transform.position);
             StartCoroutine(Util.DestroyTime(gameObject, 3.0f));
+            StartCoroutine(MonsterDieDropText());
+            StartCoroutine(UnitDeadSrAlpha());
+            onDead?.Invoke();
 
 
         }
@@ -527,6 +563,8 @@ public class EliteMonsterController : Unit
         if (hp > 0)
         {
             hp -= att;
+
+            NotifyToHpObserver();       //체력이 바뀌어서 옵저버들에게 체력이 바꼇다는걸 알리고 보내기
             //넉백이 안통하는 존에 있다면 넉백수치를 0으로 만들어준다.
 
             if (NoKnockBackValid())
@@ -583,56 +621,56 @@ public class EliteMonsterController : Unit
 
 
 
-    public override bool CriticalCheck()
-    {
-        //유닛공격력을 받아서 크리티컬확률을 받아서 확률에 맞으면 크리공격
-        //아니면 일반 공격
-        int rand = UnityEngine.Random.Range(0, 101);
-        if (rand <= monStat.criticalRate)
-            return true;
+    //public override bool CriticalCheck()
+    //{
+    //    //유닛공격력을 받아서 크리티컬확률을 받아서 확률에 맞으면 크리공격
+    //    //아니면 일반 공격
+    //    int rand = UnityEngine.Random.Range(0, 101);
+    //    if (rand <= monStat.criticalRate)
+    //        return true;
 
-        return false;
-
-
-    }
+    //    return false;
 
 
-    public override void CriticalAttack(Unit uniCtrl, string soundPath,string criticalSoundPath, string hitPath)
-    {
-        if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
-        {
-            Debug.Log("크리티컬!!!!");
-            int attack = att * 2;
-            uniCtrl.OnDamage(attack, monStat.knockBackForce,true);      //크리티컬이면 데미지2배에 넉백까지
-            Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, criticalSoundPath, hitPath);
+    //}
 
-        }
-        else  //노크리티컬이면 일반공격
-        {
-            Debug.Log("일반공격...");
 
-            uniCtrl.OnDamage(att);        //넉백은 없이
-            Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
+    //public override void CriticalAttack(Unit uniCtrl, string soundPath,string criticalSoundPath, string hitPath)
+    //{
+    //    if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
+    //    {
+    //        Debug.Log("크리티컬!!!!");
+    //        int attack = att * 2;
+    //        uniCtrl.OnDamage(attack, monStat.knockBackForce,true);      //크리티컬이면 데미지2배에 넉백까지
+    //        Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, criticalSoundPath, hitPath);
 
-        }
-    }
+    //    }
+    //    else  //노크리티컬이면 일반공격
+    //    {
+    //        Debug.Log("일반공격...");
 
-    public override void CriticalAttack(Tower tower, string soundPath, string criticalSoundPath, string hitPath)
-    {
-        if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
-        {
-            int attack = att * 2;
-            tower.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
-            Managers.Resource.ResourceEffectAndSound(tower.transform.position, criticalSoundPath, hitPath);
+    //        uniCtrl.OnDamage(att);        //넉백은 없이
+    //        Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
 
-        }
-        else  //노크리티컬이면 일반공격
-        {
-            tower.TowerDamage(att);        //넉백은 없이
-            Managers.Resource.ResourceEffectAndSound(tower.transform.position, soundPath, hitPath);
+    //    }
+    //}
 
-        }
-    }
+    //public override void CriticalAttack(Tower tower, string soundPath, string criticalSoundPath, string hitPath)
+    //{
+    //    if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
+    //    {
+    //        int attack = att * 2;
+    //        tower.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
+    //        Managers.Resource.ResourceEffectAndSound(tower.transform.position, criticalSoundPath, hitPath);
+
+    //    }
+    //    else  //노크리티컬이면 일반공격
+    //    {
+    //        tower.TowerDamage(att);        //넉백은 없이
+    //        Managers.Resource.ResourceEffectAndSound(tower.transform.position, soundPath, hitPath);
+
+    //    }
+    //}
 
     public virtual void OnSkill() { }
 
@@ -803,4 +841,9 @@ public class EliteMonsterController : Unit
         Gizmos.DrawWireCube(pos.position, boxSize);
     }
 
+    //public void Notified(int att, float speed)
+    //{
+    //    this.att = att;
+    //    this.moveSpeed = speed;
+    //}
 }

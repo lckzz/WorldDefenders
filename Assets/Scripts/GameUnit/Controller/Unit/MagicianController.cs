@@ -35,6 +35,9 @@ public class MagicianController : SpecialUnitController
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (Managers.Game.GameEndResult())       //게임이 끝났으면 리턴
+            return;
+
         EnemySensor();
         UnitStateCheck();
 
@@ -71,6 +74,7 @@ public class MagicianController : SpecialUnitController
     {
         GameObject obj = Managers.Resource.Load<GameObject>("Prefabs/Weapon/MagicShot");
 
+        Managers.Sound.Play("Effect/MeleeSound");
         if (monTarget != null)
         {
 
@@ -122,11 +126,17 @@ public class MagicianController : SpecialUnitController
         {
             if (Skills.activeSkillList.Count > 0)
             {
-                Debug.Log("발싸");
                 Skills.activeSkillList[0].UseSkill(this, skillMonList);     //스킬 사용
                 SpeechchBubbleOn(skillTitleKey,skillDialogSubKey,skillProbaility);
             }
         }
+    }
+
+    public void MagicianSkillSound()
+    {
+        //애니메이션 이벤트 함수
+        Managers.Sound.Play("Effect/MagicianSkill");
+
     }
 
 

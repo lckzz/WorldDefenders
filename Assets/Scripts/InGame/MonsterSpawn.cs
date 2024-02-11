@@ -18,6 +18,8 @@ public class MonsterSpawn
     {
         isSpawn = false;
         monsterCount = 0;
+        spawnTime = .0f;
+
     }
     public void MonsterSpawnInit(Transform parentTr)
     {
@@ -25,14 +27,15 @@ public class MonsterSpawn
         //인게임 들어올 때 스테이지에 맞는 몬스터들을 받는다.
         for (int ii = 0; ii < Managers.Game.MonsterTypeList.Count; ii++)
         {
-            monNameList.Add(System.Enum.GetName(typeof(Define.MonsterType), Managers.Game.MonsterTypeList[ii]));
+            monNameList.Add(Enum.GetName(typeof(Define.MonsterType), Managers.Game.MonsterTypeList[ii]));
             spawnList.Add(Managers.Resource.Load<GameObject>($"Prefabs/Monster/{monNameList[ii]}"));
         }
 
         for (int i = 0; i < parentTr.childCount; i++)
-        {
-            monsterSpawnPos[i] = parentTr.GetChild(i);
-        }
+             monsterSpawnPos[i] = parentTr.GetChild(i);
+
+        Init();
+
     }
 
 
@@ -42,9 +45,9 @@ public class MonsterSpawn
         {
             isSpawn = true;   //스폰타이머 시작
             if(spawnType == Define.MonsterSpawnType.Wave)
-                spawnTime = UnityEngine.Random.Range(1.0f, 2.0f);
+                spawnTime = UnityEngine.Random.Range(0.5f, 1.5f);
             else
-                spawnTime = UnityEngine.Random.Range(6.0f, 9.0f);
+                spawnTime = UnityEngine.Random.Range(5.0f, 7.0f);
 
             
         }

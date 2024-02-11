@@ -36,8 +36,8 @@ public class LobbyScene : BaseScene
     // Update is called once per frame
     void Update()
     {
-        SceneMove();
-        MouseClick();
+        //SceneMove();
+        //MouseClick();
 
 
     }

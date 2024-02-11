@@ -12,10 +12,8 @@ public class SpecialUnitAppear : MonoBehaviour
 
     private void OnEnable()
     {
-        if(anim != null)
-        {
-            cameraCtrl.ShakeCamera(0.2f, 0.25f);
-        }
+        if (anim != null)
+            Init();
     }
 
 
@@ -23,6 +21,13 @@ public class SpecialUnitAppear : MonoBehaviour
     {
         TryGetComponent(out anim);
         Camera.main.TryGetComponent(out cameraCtrl);
+        Debug.Log("sdsd");
+        Init();
+    }
+
+    private void Init()
+    {
+        Managers.Sound.Play("Effect/UnitDust");
         cameraCtrl.ShakeCamera(0.2f, 0.25f);
     }
 
@@ -43,7 +48,7 @@ public class SpecialUnitAppear : MonoBehaviour
         {
             if (coll.TryGetComponent(out Unit unit))
             {
-                unit.OnDamage(0, 100);
+                unit.OnDamage(0, 200);
             }
         }
 

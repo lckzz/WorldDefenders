@@ -23,7 +23,7 @@ public class UnitSlotUI : UI_BaseSettingUnit
 
     private float clickOnPosY = -95.0f;
     private float clickOffPosY = -160.0f;
-
+    private IOpenPanel openPanel;
 
     public UnitClass E_UnitClass { get { return e_UnitClass; } set { e_UnitClass = value; } }
     private int slotidx = 0;
@@ -39,6 +39,8 @@ public class UnitSlotUI : UI_BaseSettingUnit
         if (slotUnitClearBtn != null)
             slotUnitClearBtn.onClick.AddListener(() =>
             {
+                Managers.Sound.Play("Effect/UI_Click");
+
                 if (Managers.UI.PeekPopupUI<UI_UnitSettingWindow>().SlotListCount() < 4)  //슬롯안의 비어있는개수가 4이상이면
                 {
                     //슬롯의 배치해제
@@ -53,6 +55,8 @@ public class UnitSlotUI : UI_BaseSettingUnit
 
                 }
 
+                Managers.UI.PeekPopupUI<UI_UnitSettingWindow>().UI_UnitSetInit();
+
 
             });
 
@@ -60,7 +64,10 @@ public class UnitSlotUI : UI_BaseSettingUnit
         if (slotUnitInfoBtn != null)
             slotUnitInfoBtn.onClick.AddListener(() =>
             {
+                Managers.Sound.Play("Effect/UI_Click");
                 Managers.UI.ShowPopUp<UI_UnitInfoSelectPopUp>().PopUpOpenUnitInfoSetting(E_UnitClass, Define.UnitInfoSelectType.Slot);
+                openPanel = Managers.UI.PeekPopupUI<UI_UnitInfoSelectPopUp>();
+                openPanel.OpenRectTransformScaleSet();
             });
 
 

@@ -18,7 +18,7 @@ public class Debuff : MonoBehaviour
 
     protected DebuffUI debuffUI;
 
-    protected Coroutine courtine;
+    protected Coroutine coroutine;
 
 
     protected virtual void Start()
@@ -60,6 +60,12 @@ public class Debuff : MonoBehaviour
         debuffInstantiateisOn = false;
         debuffUIInstantiateisOn = false;
         DebuffOnOff(false);
+    }
+
+    public virtual void DebuffInit()
+    {
+        if (coroutine != null)
+            StopCoroutine(coroutine);
     }
 
 

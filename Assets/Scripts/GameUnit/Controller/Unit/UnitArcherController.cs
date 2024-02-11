@@ -21,7 +21,7 @@ public class UnitArcherController : UnitController
     {
         base.Init();
 
-        unitStat = Managers.Data.warriorDict[Managers.Game.UnitArcherLv];
+        unitStat = Managers.Data.archerDict[Managers.Game.UnitArcherLv];
 
         hp = unitStat.hp;
         att = unitStat.att;
@@ -45,11 +45,7 @@ public class UnitArcherController : UnitController
         Init();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 
 
     public override void OnAttack()

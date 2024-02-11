@@ -121,7 +121,6 @@ public class UI_PlayerSkillWindow : UI_Base
             backLobbyBtn.onClick.AddListener(() =>
             {
                 Managers.Sound.Play("Effect/UI_Click");
-
                 Managers.UI.ClosePopUp(this);
 
                 if (Managers.Scene.CurrentScene is LobbyScene lobby)
@@ -218,11 +217,16 @@ public class UI_PlayerSkillWindow : UI_Base
         if(clickNode != null)
         {
             if (clickNode.SkillData.level <= 0)
+            {
+                Managers.Sound.Play("Effect/Error");
                 return;
+
+            }
 
             if (clickNode.PlayerSkillSt == PlayerSkillState.Equip)
                 return;
 
+            Managers.Sound.Play("Effect/Equip");
             Managers.Game.CurPlayerEquipSkill = clickNode.PlayerSkillType;   //클릭한 노드의 스킬정보를 현재 장착한스킬에 넣어준다.
             skillEquipNoticeObj.SetActive(true);
 

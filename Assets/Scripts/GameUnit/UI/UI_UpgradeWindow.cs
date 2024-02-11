@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 //using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static Define;
 
@@ -33,7 +34,9 @@ public class UI_UpgradeWindow : UI_Base
 
     private UnitClass unitClass;
 
-    bool backFadeCheck = false;
+    private bool backFadeCheck = false;
+
+    private IOpenPanel openPanel;
 
     public bool StartFadeCheck { get { return startFadeOut; } }
 
@@ -60,7 +63,7 @@ public class UI_UpgradeWindow : UI_Base
 
         unitUpgradePrefabs =  new GameObject[(int)UnitClass.Count];
         unitUpgradeObjs =  new GameObject[(int)UnitClass.Count];
-        tutorialDialogObj = gameObject.transform.Find("DialogueCanvas").gameObject;
+        tutorialDialogObj = gameObject.transform.Find("DialogueCanvas").gameObject; 
         GameObject parentGo = backLobbyBtn?.gameObject.transform.parent.gameObject;
         maskGameObject = parentGo.transform.Find("MaskGameObject").gameObject;
         maskGameObject.TryGetComponent(out tutorialMaskCtrl);
@@ -70,6 +73,8 @@ public class UI_UpgradeWindow : UI_Base
             //Managers.Dialog.dialogEndedStringInt -= UpgradeDialogEnd;
             //Managers.Dialog.dialogEndedStringInt += UpgradeDialogEnd;
             tutorialDialogObj.TryGetComponent(out dialogCtrl);
+            Debug.Log(dialogCtrl);
+
             tutorialDialogObj?.SetActive(!Managers.Game.TutorialEnd);        //튜토리얼이 끝나지않았다면 다이얼로그 켜기
             dialogCtrl?.MaskDialogInit(tutorialMaskCtrl, backLobbyBtn.gameObject, GameObjectSiblingLastSet);
             dialogCtrl?.StartDialog(DialogKey.tutorialUpgrade.ToString(), DialogType.Dialog, DialogSize.Small,DialogId.NextDialog);
@@ -84,7 +89,6 @@ public class UI_UpgradeWindow : UI_Base
             backLobbyBtn.onClick.AddListener(() =>
             {
                 Managers.Sound.Play("Effect/UI_Click");
-
                 Managers.UI.ClosePopUp(this);
                 if (Managers.Scene.CurrentScene is LobbyScene lobby)
                 {
@@ -168,8 +172,9 @@ public class UI_UpgradeWindow : UI_Base
     void PlayerUpgradeOpen()
     {
         Managers.Sound.Play("Effect/UI_Click");
-
         Managers.UI.ShowPopUp<UI_PlayerUpgradePopUp>();
+        openPanel = Managers.UI.PeekPopupUI<UI_PlayerUpgradePopUp>();
+        openPanel.OpenRectTransformScaleSet();
     }
 
 
@@ -278,6 +283,7 @@ public class UI_UpgradeWindow : UI_Base
         }
         
     }
+
 
 
     public void BackFadeIn(Image fadeImg, UI_Base closePopup, bool fadeCheck)

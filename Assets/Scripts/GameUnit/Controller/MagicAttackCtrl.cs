@@ -9,7 +9,7 @@ public class MagicAttackCtrl : MonoBehaviour
     private Unit monsterCtrl;
     [SerializeField] private MonsterPortal monPortal;
     [SerializeField] private float magicSpeed = 20.0f;
-
+    private int hitCount = 0;
 
     Vector3 shotDir;
 
@@ -33,10 +33,12 @@ public class MagicAttackCtrl : MonoBehaviour
         monsterCtrl = null;
         monPortal = null;
         shotDir = Vector3.zero;
-    }
+        hitCount = 0;
 
-    // Start is called before the first frame update
-    void Start()
+}
+
+// Start is called before the first frame update
+void Start()
     {
         Init();
 
@@ -89,13 +91,17 @@ public class MagicAttackCtrl : MonoBehaviour
         if ((monsterCtrl == null && monPortal == null))
             return;
 
+
+
+
         if (coll.tag == "Monster")
         {
 
             Unit monctrl = null;
             coll.TryGetComponent(out monctrl);
-            if (monctrl != null && monsterCtrl == monctrl)
+            if (monctrl == monsterCtrl)
             {
+                Managers.Sound.Play("Effect/MagicianAttackHit");
                 monctrl.OnDamage(unitCtrl.Att);
 
                 Vector3 pos = coll.transform.position;
@@ -114,6 +120,8 @@ public class MagicAttackCtrl : MonoBehaviour
             coll.TryGetComponent<Tower>(out monPort);
             if (monPort != null)
             {
+                Managers.Sound.Play("Effect/MagicianAttackHit");
+
                 monPort.TowerDamage(unitCtrl.Att);
 
                 Vector3 pos = coll.transform.position;

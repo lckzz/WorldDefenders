@@ -69,6 +69,7 @@ public class MeteorController : SkillBase
         {
             if(coll.gameObject == enemy.gameObject)
             {
+                Managers.Sound.Play("Effect/Explosion");
                 coll.TryGetComponent(out Unit mon);
                 mon.OnDamage(100);
                 Managers.Resource.ResourceEffect(coll.transform.position, "MeteorEff");

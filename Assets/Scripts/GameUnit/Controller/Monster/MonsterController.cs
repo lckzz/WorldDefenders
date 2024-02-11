@@ -27,7 +27,7 @@ public enum MonsterState
     Die
 }
 
-public class MonsterController : Unit,IObserver
+public class MonsterController : MonsterBase
 {
 
     [SerializeField]
@@ -35,30 +35,30 @@ public class MonsterController : Unit,IObserver
 
 
 
-    List<Unit> unitCtrls = new List<Unit>();
-    [SerializeField] protected Unit unitTarget;
-    [SerializeField] protected PlayerTower playerTowerCtrl;
+    //List<Unit> unitCtrls = new List<Unit>();
+    ////[SerializeField] protected Unit unitTarget;
+    ////[SerializeField] protected PlayerTower playerTowerCtrl;
 
-    protected MonsterStat monStat;
+    //protected MonsterStat monStat;
 
-    DropItem dropItem;
+    //DropItem dropItem;
 
-    [SerializeField] DebuffCreator debuffCreator;
-    Debuff debuff;
+    //[SerializeField] DebuffCreator debuffCreator;
+    //Debuff debuff;
 
 
 
     //public float Hp { get { return hp; } }
 
     public int DropGold { get ; protected set; }
-    public int DropCost { get; protected set; }
+    //public int DropCost { get; protected set; }
 
     public int KnockBackForce { get { return knockbackForce; } }
 
 
-    public Debuff Debuff { get { return debuff; } }
-    public Unit UnitCtrl { get { return unitTarget; } }
-    public PlayerTower PlayerTowerCtrl { get { return playerTowerCtrl; } }
+    //public Debuff Debuff { get { return debuff; } }
+    //public Unit UnitCtrl { get { return unitTarget; } }
+    //public PlayerTower PlayerTowerCtrl { get { return playerTowerCtrl; } }
     public MonsterState MonState { get { return state; } }
 
 
@@ -75,34 +75,37 @@ public class MonsterController : Unit,IObserver
     {
         base.Init();
 
-        monStat = new MonsterStat();
+        //monStat = new MonsterStat();
         spawnPosX = 18.0f;
 
-        TryGetComponent(out myColl);
-        TryGetComponent(out dropItem);
-        TryGetComponent(out debuffCreator);
+        //TryGetComponent(out myColl);
+        //TryGetComponent(out dropItem);
+        //TryGetComponent(out debuffCreator);
 
-        debuff = debuffCreator.AddDebuffComponent(Managers.Game.CurPlayerEquipSkill);
+        //debuff = debuffCreator.AddDebuffComponent(Managers.Game.CurPlayerEquipSkill);
 
 
-        if(Debuff is WeaknessDebuff weaknessDebuff)
-            weaknessDebuff.AddObserver(this);           //디버프의 능력치변화값을 받아오기위한 구독
+        //if(Debuff is WeaknessDebuff weaknessDebuff)
+        //    weaknessDebuff.AddObserver(this);           //디버프의 능력치변화값을 받아오기위한 구독
 
     }
 
     public override void OnEnable()
     {
+        base.OnEnable();
+
         if (sp != null && myColl != null)
         {
-            //오브젝트 풀에서 생성되면 초기화 시켜줘야함
-            isDie = false;
-            isRun = false;
-            hp = maxHp;
+            ////오브젝트 풀에서 생성되면 초기화 시켜줘야함
+            //isDie = false;
+            //isRun = false;
+            //hp = maxHp;
+            //sp.color = new Color32(255, 255, 255, 255);
+            //myColl.enabled = true;
+            //unitTarget = null;
+            //playerTowerCtrl = null;
             SetMonsterState(MonsterState.Run);
-            sp.color = new Color32(255, 255, 255, 255);
-            myColl.enabled = true;
-            unitTarget = null;
-            playerTowerCtrl = null;
+
         }
 
     }
@@ -131,7 +134,7 @@ public class MonsterController : Unit,IObserver
     }
 
     //유닛들을 감지
-    void UnitSense()
+    protected override void UnitSense()
     {
         unitCtrls.Clear();
         enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Unit") | LayerMask.GetMask("SpecialUnit"));
@@ -183,7 +186,7 @@ public class MonsterController : Unit,IObserver
         }
     }
     //감지한 유닛들의 해당 캐릭터와의 거리 오름차순
-    void UnitDistanceAsending()
+    protected override void UnitDistanceAsending()
     {
         if (unitCtrls.Count > 0)
         {
@@ -241,17 +244,17 @@ public class MonsterController : Unit,IObserver
     }
 
 
-    void TowerSensor()
-    {
-        //타워는 유닛이 없다면 그때 감지를하고 공격추격이나 공격을 할 수 있다.
+    //void TowerSensor()
+    //{
+    //    //타워는 유닛이 없다면 그때 감지를하고 공격추격이나 공격을 할 수 있다.
 
-        towerColl = Physics2D.OverlapBox(pos.position, boxSize, 0, LayerMask.GetMask("Tower"));
+    //    towerColl = Physics2D.OverlapBox(pos.position, boxSize, 0, LayerMask.GetMask("Tower"));
 
 
-        if (towerColl != null)
-            towerColl.TryGetComponent(out playerTowerCtrl);
+    //    if (towerColl != null)
+    //        towerColl.TryGetComponent(out playerTowerCtrl);
         
-    }
+    //}
 
 
 
@@ -490,8 +493,21 @@ public class MonsterController : Unit,IObserver
     {
         if (myColl.enabled)
         {
+            if (unitTarget != null)
+                unitTarget = null;
+            if (playerTowerCtrl != null)
+                playerTowerCtrl = null;
 
-            Debuff.DebuffDestory();
+            int randidx = 0;
+            randidx = UnityEngine.Random.Range(0, 2);
+            if (randidx == 0)
+                Managers.Sound.Play("Effect/Monster/MonsterDie1");
+            else
+                Managers.Sound.Play("Effect/Monster/MonsterDie2");
+
+
+
+            Debuff?.DebuffDestory();
 
             speechBubble.SpeechBubbuleOn(dieTitleKey, dieDialogSubKey, dieProbability);
 
@@ -502,6 +518,9 @@ public class MonsterController : Unit,IObserver
             dropItem?.Drop(this.gameObject.transform.position);
             StartCoroutine(Util.DestroyTime(gameObject, 3.0f));
             StartCoroutine(MonsterDieDropText());
+            StartCoroutine(UnitDeadSrAlpha());
+            onDead?.Invoke();
+
 
         }
     }
@@ -512,6 +531,8 @@ public class MonsterController : Unit,IObserver
         if (hp > 0)
         {
             hp -= att;
+            NotifyToHpObserver();       //체력이 바뀌어서 옵저버들에게 체력이 바꼇다는걸 알리고 보내기
+
 
             //넉백이 안통하는 존에 있다면 넉백수치를 0으로 만들어준다.
             if (NoKnockBackValid())
@@ -548,56 +569,54 @@ public class MonsterController : Unit,IObserver
     public override void OnAttack() { }
 
 
-    public override bool CriticalCheck()
-    {
-        //유닛공격력을 받아서 크리티컬확률을 받아서 확률에 맞으면 크리공격
-        //아니면 일반 공격
-        int rand = UnityEngine.Random.Range(0, 101);
-        if (rand <= monStat.criticalRate)
-            return true;
+    //public override bool CriticalCheck()
+    //{
+    //    //유닛공격력을 받아서 크리티컬확률을 받아서 확률에 맞으면 크리공격
+    //    //아니면 일반 공격
+    //    int rand = UnityEngine.Random.Range(0, 101);
+    //    if (rand <= monStat.criticalRate)
+    //        return true;
 
-        return false;
-
-
-    }
+    //    return false;
 
 
-    public override void CriticalAttack(Unit uniCtrl, string soundPath, string criticalSoundPath,  string hitPath)
-    {
-        if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
-        {
-            int attack = att * 2;
-            uniCtrl.OnDamage(attack, monStat.knockBackForce,true);      //크리티컬이면 데미지2배에 넉백까지
-            Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, criticalSoundPath, hitPath);
-
-        }
-        else  //노크리티컬이면 일반공격
-        {
+    //}
 
 
-            uniCtrl.OnDamage(att);        //넉백은 없이
-            Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
+    //public override void CriticalAttack(Unit uniCtrl, string soundPath, string criticalSoundPath,  string hitPath)
+    //{
+    //    if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
+    //    {
+    //        int attack = att * 2;
+    //        uniCtrl.OnDamage(attack, monStat.knockBackForce,true);      //크리티컬이면 데미지2배에 넉백까지
+    //        Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, criticalSoundPath, hitPath);
 
-        }
-    }
+    //    }
+    //    else  //노크리티컬이면 일반공격
+    //    {
+    //        uniCtrl.OnDamage(att);        //넉백은 없이
+    //        Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
 
-    public override void CriticalAttack(Tower tower, string soundPath, string criticalSoundPath, string hitPath)
-    {
-        if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
-        {
-            int attack = att * 2;
-            tower.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
-            Managers.Resource.ResourceEffectAndSound(tower.transform.position, criticalSoundPath, hitPath);
+    //    }
+    //}
 
-        }
-        else  //노크리티컬이면 일반공격
-        {
+    //public override void CriticalAttack(Tower tower, string soundPath, string criticalSoundPath, string hitPath)
+    //{
+    //    if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
+    //    {
+    //        int attack = att * 2;
+    //        tower.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
+    //        Managers.Resource.ResourceEffectAndSound(tower.transform.position, criticalSoundPath, hitPath);
 
-            tower.TowerDamage(att);        //넉백은 없이
-            Managers.Resource.ResourceEffectAndSound(tower.transform.position, soundPath, hitPath);
+    //    }
+    //    else  //노크리티컬이면 일반공격
+    //    {
 
-        }
-    }
+    //        tower.TowerDamage(att);        //넉백은 없이
+    //        Managers.Resource.ResourceEffectAndSound(tower.transform.position, soundPath, hitPath);
+
+    //    }
+    //}
 
 
 
@@ -666,23 +685,7 @@ public class MonsterController : Unit,IObserver
     }
 
 
-    WaitForSeconds wfs = new WaitForSeconds(1.5f);
-    IEnumerator MonsterDieDropText()
-    {
-        yield return wfs;           //시간 대기후 텍스트
 
-        //일반 몬스터는 죽으면 코스트를 뱉는다.
-        int randItem = UnityEngine.Random.Range(0, 2);
-        unitHUDHp?.ItemHudInit((int)DropItemType.Cost);
-
-        unitHUDHp?.SpawnHUDText(DropCost.ToString(), (int)UnitDamageType.Item);
-        Managers.Game.Cost += DropCost;
-        Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCost(Managers.Game.Cost);
-
-        
-        
-
-    }
 
 
 
@@ -751,12 +754,12 @@ public class MonsterController : Unit,IObserver
     }
 
 
-    public void Notified(int att, float speed)
-    {
-        this.att = att;
-        this.moveSpeed = speed;
+    //public void Notified(int att, float speed)
+    //{
+    //    this.att = att;
+    //    this.moveSpeed = speed;
 
-    }
+    //}
 
 
     private void OnDrawGizmos()

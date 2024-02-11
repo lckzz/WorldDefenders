@@ -6,6 +6,7 @@ public class DarkPowerSkill : ActiveSkill
 {
     public override void UseSkill(Unit unit, List<Unit> enemys)
     {
+
         if (unit == null || enemys == null)
             return;
 
@@ -44,12 +45,12 @@ public class DarkPowerSkill : ActiveSkill
 
     void GenerateDark(int unitLv, Unit owner, List<Unit> enemy)
     {
-        ////메테오 3개 소환
         if (Managers.Data.eliteShamanSkillDict.TryGetValue(unitLv, out SkillData data) == false)
         {
             Debug.LogError("ProjecteController SetInfo Failed");
             return;
         }
+
         DarkPowerController dc = Managers.Resource.Instantiate(data.skillPrefab).GetComponent<DarkPowerController>();
         dc.SetInfo(owner, enemy, data);
     }

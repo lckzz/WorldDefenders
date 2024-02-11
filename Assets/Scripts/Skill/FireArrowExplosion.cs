@@ -34,6 +34,7 @@ public class FireArrowExplosion : MonoBehaviour
                 {
                     monCtrl.OnDamage(skillData.skillValue, explosionKnockBack); //폭발데미지를 입고
                     fireDebuff.DebuffOnOff(true, monCtrl);   //그 후엔 초마다 데미지를 받는 화상 오브젝트를 켜준다.
+                    fireDebuff.FireDebuffOn(monCtrl);
                 }
 
 
@@ -44,15 +45,20 @@ public class FireArrowExplosion : MonoBehaviour
                 {
                     eliteMonCtrl.OnDamage(skillData.skillValue, explosionKnockBack); //폭발데미지를 입고
                     fireDebuff.DebuffOnOff(true, eliteMonCtrl);   //그 후엔 초마다 데미지를 받는 화상 오브젝트를 켜준다.
+                    fireDebuff.FireDebuffOn(eliteMonCtrl);
+
                 }
-          
+
             }
 
         }
 
     }
 
-
+    public void EffectSound()
+    {
+        Managers.Sound.Play("Effect/Explosion");
+    }
 
 
     //애니메이션 이벤트 함수

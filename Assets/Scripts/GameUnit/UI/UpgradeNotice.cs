@@ -56,10 +56,8 @@ public class UpgradeNotice : MonoBehaviour
             });
 
         if (noBtn != null)
-            noBtn.onClick.AddListener(() =>
-            {
-                ParentGameObjectOff();
-            });
+            noBtn.onClick.AddListener(ParentGameObjectOff);
+
 
         
         if (checkBtn != null)
@@ -75,6 +73,7 @@ public class UpgradeNotice : MonoBehaviour
 
     void ParentGameObjectOff()
     {
+        Managers.Sound.Play("Effect/UI_Click");
         transform.parent.gameObject.SetActive(false);
     }
 

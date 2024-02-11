@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static System.Collections.Specialized.BitVector32;
 
@@ -111,7 +112,7 @@ public class UI_GameResult : UI_Base
             }
             Managers.Game.Gold += stageGold;
             Managers.Game.FileSave();
-            speed = 35.0f;
+            speed = 200.0f;
 
         }
 
@@ -160,8 +161,12 @@ public class UI_GameResult : UI_Base
         stageType = type;
     }
 
+
+
     private void ResultSound()
     {
+        Managers.Sound.Clear();
+
         if (Managers.Game.GetStageStateType() == Define.StageStageType.Victory)
             Managers.Sound.Play("Sounds/Effect/VictoryBig");
         else
@@ -334,6 +339,7 @@ public class UI_GameResult : UI_Base
 
                         Managers.UI.ClosePopUp(this);
                         //GameManager.instance.SceneEndOn();
+                        Managers.Pool.Clear();
                         Managers.Scene.LoadScene(Define.Scene.Lobby);
 
 

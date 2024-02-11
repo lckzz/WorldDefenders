@@ -332,6 +332,16 @@ public class GameManagerEx
             Managers.Game.MonsterTypeList.Add(monTypeList[ii]);
     }
 
+    public void InGameInit(Transform parentTr, Define.MonsterSpawnType monType, Define.StageStageType stageType)
+    {
+        EventInit();
+        UnitQueueClear();
+        MonsterSpawnInit(parentTr);
+        SetMonSpawnType(monType);
+        SetStageStateType(stageType);
+
+    }
+
 
     //코스트 관리
     #region 코스트 및 재화 관리
@@ -387,9 +397,14 @@ public class GameManagerEx
         unitSpawn.UnitSummonEnqueue(unitObj, unitCost, node);
     }
 
-    public void unitSummonDequeue(GameObject go, Transform[] tr)
+    public void UnitSummonDequeue(GameObject go, Transform[] tr)
     {
         unitSpawn.UnitSummonDequeue(go, tr);
+    }
+
+    public void UnitQueueClear()
+    {
+        unitSpawn.UnitQueueClear();
     }
 
     //유닛 소환

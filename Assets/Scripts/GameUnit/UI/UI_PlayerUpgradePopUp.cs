@@ -1,11 +1,13 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEngine.UI.CanvasScaler;
 
-public class UI_PlayerUpgradePopUp : UI_Base
+public class UI_PlayerUpgradePopUp : UI_Base,IOpenPanel
 {
     public TextMeshProUGUI curLvTxt;
     public TextMeshProUGUI curHpTxt;
@@ -22,11 +24,15 @@ public class UI_PlayerUpgradePopUp : UI_Base
     TowerStat tower = new TowerStat();
 
     [SerializeField] private GameObject noticePanel;
+    [SerializeField] private GameObject upgradeObj;
 
     [SerializeField] private GameObject levelUpParticle;
     [SerializeField] private GameObject skillOpen;
     private int towerLv = 0;
     private int towerMaxLv = 10;
+
+    private RectTransform rt;
+
 
     private LevelUpParticle levelUp;
     private UpgradeNotice upgradeNotice;
@@ -68,13 +74,15 @@ public class UI_PlayerUpgradePopUp : UI_Base
     }
 
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
         PlayerInit();
 
         levelUpParticle.TryGetComponent(out levelUp);
         noticePanel.transform.Find("Notice").TryGetComponent(out upgradeNotice);
         skillOpen.TryGetComponent(out skillOpenNotice);
+        //OpenRectTransformScaleSet();
+
 
         if (upgradeBtn != null)
             upgradeBtn.onClick.AddListener(UpgradeNoticePanelOn);
@@ -83,6 +91,7 @@ public class UI_PlayerUpgradePopUp : UI_Base
             closeBtn.onClick.AddListener(() =>
             {
                 levelUp.DoKill();
+                Managers.Sound.Play("Effect/UI_Click");
                 Managers.UI.ClosePopUp(this);
             });
     }
@@ -150,6 +159,7 @@ public class UI_PlayerUpgradePopUp : UI_Base
         if (towerLv >= towerMaxLv)
             return;
 
+        Managers.Sound.Play("Effect/UI_Click");
         noticePanel.SetActive(true);
         upgradeNotice.SetUpgradeGold(tower.price);
     }
@@ -162,4 +172,12 @@ public class UI_PlayerUpgradePopUp : UI_Base
         levelUpParticle.SetActive(true);
     }
 
+    public void OpenRectTransformScaleSet()
+    {
+        if(rt == null)
+            upgradeObj.TryGetComponent(out rt);
+
+        rt.localScale = new Vector3(0, 0, 0);
+        rt.DOScale(new Vector3(1.0f, 1.0f, 1.0f), 0.1f).SetEase(Ease.OutQuad);
+    }
 }

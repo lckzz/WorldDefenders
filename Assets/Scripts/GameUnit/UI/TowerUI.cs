@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TowerUI : UnitUI
+public class TowerUI : HpUIBase
 {
     private PlayerTower playerTower;
     
@@ -14,27 +14,27 @@ public class TowerUI : UnitUI
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        UpdateHp(hpSpeed);
+    //void Update()
+    //{
+    //    UpdateHp(hpSpeed);
 
-    }
-
-
-    public override void UpdateHp(float hpspeed)
-    {
-        if (hpbar != null)
-        {
-            float hp = playerTower.hpPercent();
+    //}
 
 
-            if (hpbar.fillAmount > hp)
-                hpbar.fillAmount -= Time.deltaTime * hpspeed;
+    //public override void UpdateHp(float hpspeed)
+    //{
+    //    if (hpbar != null)
+    //    {
+    //        float hp = playerTower.hpPercent();
 
-            if(hpbar.fillAmount <= hp)
-                hpbar.fillAmount += Time.deltaTime * hpspeed;
+
+    //        if (hpbar.fillAmount > hp)
+    //            hpbar.fillAmount -= Time.deltaTime * hpspeed;
+
+    //        if(hpbar.fillAmount <= hp)
+    //            hpbar.fillAmount += Time.deltaTime * hpspeed;
 
 
-        }
-    }
+    //    }
+    //}
 }

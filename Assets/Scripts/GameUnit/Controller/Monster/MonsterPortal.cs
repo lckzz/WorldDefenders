@@ -70,12 +70,38 @@ public class MonsterPortal : Tower
         cameraCtrl?.Shake.VirtulCameraShake(0, 0);
     }
 
-
-    public override float hpPercent()
+    public void OpenGateSound()
     {
-
-        return hp / maxHp;
+        //타임라인 시그널 함수
+        float time = 0.1f;
+        StartCoroutine(GateOpenSound(time));
     }
+
+    IEnumerator GateOpenSound(float time)
+    {
+        WaitForSeconds wfs = new WaitForSeconds(time);
+        int maxCnt = 18;
+        int count = 0;
+        while(true)
+        {
+            if (Managers.Scene.CurrentScene is GameScene gameScene)   //타임라인이 플레이중이 아니라면 소리끄기
+                if (gameScene.PlayableDt.state != UnityEngine.Playables.PlayState.Playing)
+                    yield break;
+            
+
+            count++;
+            Managers.Sound.Play("Effect/OpenGate");
+
+
+            yield return wfs;
+
+            if (count > maxCnt)
+                yield break;
+        }
+
+    }
+
+
 
     public override void TowerDamage(int att)
     {
@@ -83,10 +109,11 @@ public class MonsterPortal : Tower
         if (hp > 0)
         {
             hp -= att;
-            if(Managers.Game.FinalMonsterCheck() == false)          //마지막웨이브가 꺼진상태라면
+            NotifyToHpObserver();
+            if (Managers.Game.FinalMonsterCheck() == false)          //마지막웨이브가 꺼진상태라면
             {
                 //엘리트몬스터스폰타입이 아니라면
-                if(hpPercent() <= 0.3f)   //체력이 30퍼미만이 되면
+                if(hpPer <= 0.3f)   //체력이 30퍼미만이 되면
                 {
                     Managers.Game.SetMonSpawnType(Define.MonsterSpawnType.Final);  //마지막웨이브상태로 바꿔준다.
                 }

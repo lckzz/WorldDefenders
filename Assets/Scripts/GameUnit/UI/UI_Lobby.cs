@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static Define;
 
@@ -72,6 +73,8 @@ public class UI_Lobby : UI_Base
 
         Managers.Game.Gold = 100000;
 
+
+
         profileLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.PlayerLevel}";
         goldTxt.text = Managers.Game.Gold.ToString();
         RefreshSKillicon(Managers.Game.CurPlayerEquipSkill);
@@ -99,8 +102,8 @@ public class UI_Lobby : UI_Base
 
         }
 
-    
 
+        
 
     }
 
@@ -141,6 +144,7 @@ public class UI_Lobby : UI_Base
 
     void UpgradeOn()
     {
+        Managers.Sound.Play("Effect/UI_Click");
         LobbyUIOnOff(false);
         Managers.Dialog.dialogEndedInt -= ShowDialogMask;
         Managers.UI.ShowPopUp<UI_UpgradeWindow>();
@@ -150,6 +154,7 @@ public class UI_Lobby : UI_Base
 
     void UnitSettingOn()
     {
+        Managers.Sound.Play("Effect/UI_Click");
         LobbyUIOnOff(false);
         Managers.UI.ShowPopUp<UI_UnitSettingWindow>();
         TutorialMaskReset(order);
@@ -157,6 +162,7 @@ public class UI_Lobby : UI_Base
 
     void PlayerSkillOn()
     {
+        Managers.Sound.Play("Effect/UI_Click");
         LobbyUIOnOff(false);
         Managers.UI.ShowPopUp<UI_PlayerSkillWindow>();
         TutorialMaskReset(order);
@@ -165,25 +171,17 @@ public class UI_Lobby : UI_Base
 
     void StageSelectOn()
     {
+        Managers.Sound.Play("Effect/UI_Click");
         LobbyUIOnOff(false);
         Managers.UI.ShowPopUp<UI_StageSelectPopUp>();
         TutorialMaskReset(order);
 
     }
 
-    void LobbySceneRefresh()
-    {
-        if (lobbyScene != null)
-        {
-            lobbyScene.RefreshUnit();
-            lobbyScene.LobbyTouchUnitInit();
-
-        }
-    }
-
 
     void OpenSettingPopUp()
     {
+        Managers.Sound.Play("Effect/UI_Click");
         LobbyUIOnOff(false);
         Managers.UI.ShowPopUp<UI_SettingPopUp>();
         Managers.UI.PeekPopupUI<UI_SettingPopUp>().SettingType(Define.SettingType.LobbySetting);
@@ -243,5 +241,7 @@ public class UI_Lobby : UI_Base
         skillImg.sprite = skilliconSptrites[(int)playersk];
 
     }
+
+
 
 }

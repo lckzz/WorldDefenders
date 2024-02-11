@@ -89,11 +89,12 @@ public class UI_UnitSettingWindow : UI_Base
 
         if (backLobbyBtn != null)
             backLobbyBtn.onClick.AddListener(() =>
-            {   
+            {
                 //뒤로가면 
+
                 Managers.Sound.Play("Effect/UI_Click");
                 Managers.Game.FileSave();
-
+                
                 Managers.UI.ClosePopUp(this);
                 GlobalData.SetUnitClass(unitSlotUiList);
                 if (Managers.Scene.CurrentScene is LobbyScene lobby)
@@ -133,7 +134,7 @@ public class UI_UnitSettingWindow : UI_Base
     }
 
 
-    void  UI_UnitSetInit()
+    public void  UI_UnitSetInit()
     {
         if(unitNodeContent.transform.childCount > 0)
         {
@@ -211,7 +212,6 @@ public class UI_UnitSettingWindow : UI_Base
             unitSlotUiList.Add(slots.transform.GetChild(ii).GetComponent<UnitSlotUI>());
         }
 
-        Debug.Log(unitSlotUiList.Count);
 
         for (int ii = 0; ii< unitSlotUiList.Count;ii++)
         {
@@ -222,25 +222,6 @@ public class UI_UnitSettingWindow : UI_Base
         
     }
 
-    //void ButtonEvent(GameObject obj, Action action = null, UIEvent type = UIEvent.PointerDown)
-    //{
-    //    UI_EventHandler evt;
-    //    obj.TryGetComponent(out evt);
-
-    //    switch (type)
-    //    {
-    //        case UIEvent.PointerDown:
-    //            evt.OnPointerDownHandler -= action;
-    //            evt.OnPointerDownHandler += action;
-    //            break;
-
-    //        case UIEvent.PointerUp:
-    //            evt.OnPointerUpHandler -= action;
-    //            evt.OnPointerUpHandler += action;
-    //            break;
-    //    }
-
-    //}
     void UnitNodeUiInstantiate(UnitClass uniClass)
     {
         GameObject obj = Managers.Resource.Instantiate("UI/Unit", unitNodeContent.transform);
@@ -278,8 +259,8 @@ public class UI_UnitSettingWindow : UI_Base
 
             if(unitSlotUI != null)  //슬롯을 클릭했다면
             {
+
                 Managers.Sound.Play("Effect/UI_Click");
-                Debug.Log("테스트클릭");
 
                 if (unitMaskObj.activeSelf)  //마스크 오브젝트가 켜져있다면 리턴
                     unitMaskObj.SetActive(false);
@@ -289,7 +270,7 @@ public class UI_UnitSettingWindow : UI_Base
                 //유닛배치슬롯을 클릭했을 때
                 if (nodeUiClick)     //슬롯을 클릭했을때 그전에 노드를 클릭했다면
                 {
-                    Debug.Log("요기용");
+                    
                     LoopEqualUnitSearch(unitSlotUI.SlotIdx,unitSlotUI);
                     nodeUiClick = false;        //노드클릭은 꺼줌
                     curUnitNodeUI.ClickImageOnOff(nodeUiClick);
@@ -335,15 +316,18 @@ public class UI_UnitSettingWindow : UI_Base
                     return;
                 }
 
-                Managers.Sound.Play("Effect/UI_Click");
+
 
                 //유닛노드를 클릭했을 때
                 if (unitMaskObj.activeSelf)  //마스크 오브젝트가 켜져있거나 슬롯클릭이 켜져있다면 리턴
                     return;
 
-                if(slotUiClick)     //유닛을 클릭했을때 그전에 슬롯이 클릭되었다면
+
+                Managers.Sound.Play("Effect/UI_Click");
+
+                if (slotUiClick)     //유닛을 클릭했을때 그전에 슬롯이 클릭되었다면
                 {
-                    Debug.Log("여기 노드클릭하고 슬롯클릭");
+                    
                     //슬롯자리에 클릭한 유닛을 넣어줘야함
                     nodeUiClick = true;
                     curUnitNodeUI = unitNodeUI;     //현재 클릭한 유닛노드에 넣어주고
@@ -355,15 +339,14 @@ public class UI_UnitSettingWindow : UI_Base
 
                 }
 
-                else
+                else   //슬롯을 클릭하지않고 유닛을 클릭했을때 유닛정보창이 오픈
                 {
-                    Debug.Log("테스트클릭유닛노드");
 
                     nodeUiClick = true;
                     curUnitNodeUI = unitNodeUI;     //현재 클릭한 유닛노드에 넣어주고
                     curUnitNodeUI.ClickImageOnOff(nodeUiClick);
                     Managers.UI.ShowPopUp<UI_UnitInfoSelectPopUp>().PopUpOpenUnitInfoSetting(curUnitNodeUI.E_UnitClass,Define.UnitInfoSelectType.Node);
-
+                    curUnitNodeUI.OpenUnitInfoTween();
                 }
 
 
@@ -371,6 +354,8 @@ public class UI_UnitSettingWindow : UI_Base
 
             else if(curUnitSlotUI == null && curUnitNodeUI == null)
             {
+                Managers.Sound.Play("Effect/UI_Click");
+
                 if (nodeUiClick)
                 {
                     //unitMaskObj.SetActive(false);
@@ -407,6 +392,7 @@ public class UI_UnitSettingWindow : UI_Base
         {
             unitSlotUICancel = UiRaycastGetFirstComponent<UnitSlotUI>(gr);
 
+            Managers.Sound.Play("Effect/UI_Click");
             if (unitNodeUI != null)
             {
                 if (unitMaskObj.activeSelf)  //마스크 오브젝트가 켜져있다면 끄고 유닛노드도 null처리
@@ -515,18 +501,6 @@ public class UI_UnitSettingWindow : UI_Base
 
     }
 
-    private void StartDialog()
-    {
-        if (Managers.Game.TutorialEnd == true)
-            return;
-
-        //Managers.Dialog.dialogEndedStringInt -= UpgradeDialogEnd;
-        //Managers.Dialog.dialogEndedStringInt += UpgradeDialogEnd;
-        //tutorialDialogObj.TryGetComponent(out dialogCtrl);
-        //tutorialDialogObj?.SetActive(!Managers.Game.TutorialEnd);        //튜토리얼이 끝나지않았다면 다이얼로그 켜기
-        //dialogCtrl?.StartDialog(DialogKey.tutorialUpgrade.ToString(), DialogType.Dialog, DialogSize.Small, DialogId.NextDialog);
-
-    }
 
 
     public void UnitUIInit()
@@ -561,6 +535,7 @@ public class UI_UnitSettingWindow : UI_Base
 
 
     }
+
 
     T  OtherUIRayCast<T>(T ui, ref T tempUi) where T : Component
     {

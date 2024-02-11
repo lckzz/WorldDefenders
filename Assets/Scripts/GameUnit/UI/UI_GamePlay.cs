@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEngine.UI.CanvasScaler;
 using Random = UnityEngine.Random;
@@ -62,36 +63,40 @@ public class UI_GamePlay : UI_Base
 
     //----------Game SkillSet---------------------
     [Header("-------------Skill---------------")]
-    [SerializeField] Button skillBtn;
-    [SerializeField] Image skillImg;
-    [SerializeField] Image skillCoolImg;
-    [SerializeField] Sprite[] skillsprites;
-    [SerializeField] GameObject skillParticleObj;
+    [SerializeField] private Button skillBtn;
+    [SerializeField] private Image skillImg;
+    [SerializeField] private Image skillCoolImg;
+    [SerializeField] private Sprite[] skillsprites;
+    [SerializeField] private GameObject skillParticleObj;
+    private HealParticle towerHealParicle;
 
-    SkillData skillData;
-    bool skillOnOff = false;
-    float skillCoolTime = .0f;
-    float skillCool = .0f;
+    private bool skillOnOff = false;
+    private float skillCoolTime = .0f;
+    private float skillCool = .0f;
 
 
     [SerializeField] private GameObject skillDurationObj;
     [SerializeField] private Image skillDurationImg;
     [SerializeField] private Image skillDurationTimeImg;
     [SerializeField] private TextMeshProUGUI skillDurationTimeTxt;
+    [SerializeField] private TextMeshProUGUI fireSkillCountTxt;
+
+    private Coroutine skillDurationCo = null;
+
     private float durationTime;
     //----------Game SkillSet---------------------
 
-    bool fadeCheck = true;
+
 
     //----------DOTween MovePos--------------
-    float uiAttBtnBeforePosY = -580.0f;
-    float uiAttBtnAfterPosY = -280.0f;
+    float uiAttBtnBeforePosY = -220.0f;
+    float uiAttBtnAfterPosY = 85.6f;
 
-    float uiSkillBtnBeforePosY = -435.0f;
-    float uiSkillBtnAfterPosY = -150.0f;
+    float uiSkillBtnBeforePosY = -75.0f;
+    float uiSkillBtnAfterPosY = 218.2f;
 
     float uiCostBeforePosY = -130.0f;
-    float uiCostAfterPosY = 70.0f;
+    float uiCostAfterPosY = 115.75f;
     //----------DOTween MoveSetting--------------
 
 
@@ -105,12 +110,12 @@ public class UI_GamePlay : UI_Base
 
     UnitNode unitNode;
     GameObject unitObj;
-    GameObject unitSpawnBtnPrefab;
+
 
     [SerializeField] private Vector3[] unitNodePos;
     Vector3 unitNodeStartPos = new Vector3(105.0f, -260.0f, .0f);
 
-    public SkillBook Skills { get; protected set; }
+    Coroutine StartUISet = null;
 
     //UI_EventHandler evt;
 
@@ -131,7 +136,6 @@ public class UI_GamePlay : UI_Base
             unitNodeStartPos.x += 175.0f;
         }
 
-        Debug.Log(Managers.Game.SlotUnitClass.Count);
 
 
         for (int ii = 0; ii < Managers.Game.SlotUnitClass.Count; ii++)
@@ -156,6 +160,7 @@ public class UI_GamePlay : UI_Base
 
         GameObject.Find("Player").TryGetComponent<PlayerController>(out player);
         player.transform.parent.gameObject.TryGetComponent(out playerTower);
+        skillParticleObj.TryGetComponent(out towerHealParicle);
 
         if (settingBtn != null)
             settingBtn.onClick.AddListener(InGameSetting);
@@ -173,7 +178,6 @@ public class UI_GamePlay : UI_Base
 
         CameraMoveColorInit();
 
-        Skills = player.GetComponent<SkillBook>();
 
 
         if (Managers.Game.CurPlayerEquipSkill == Define.PlayerSkill.Count)   //스킬이 장착되어있지않다면 스킬을 꺼주고
@@ -182,7 +186,7 @@ public class UI_GamePlay : UI_Base
         else
         {
             skillBtn.gameObject.SetActive(true);    //스킬 장착이 되었다면 스킬을 켜준다.
-            SkillInit();   //스킬 초기화
+            SkillUIInit();   //스킬 초기화
         }
 
 
@@ -238,7 +242,6 @@ public class UI_GamePlay : UI_Base
         return true;
     }
 
-    Coroutine StartUISet = null;
 
     private void OnEnable()
     {
@@ -259,8 +262,8 @@ public class UI_GamePlay : UI_Base
         UpdateCost(Managers.Game.Cost);
     }
 
-    float delaySeconds = 0.1f;
-    IEnumerator StartUnitNodeUIMove()
+    private float delaySeconds = 0.1f;
+    private IEnumerator StartUnitNodeUIMove()
     {
         WaitForSeconds wfs = new WaitForSeconds(delaySeconds);
 
@@ -302,7 +305,7 @@ public class UI_GamePlay : UI_Base
     }
 
 
-    void SkillInit()
+    private void SkillUIInit()
     {
         skillsprites = new Sprite[(int)Define.PlayerSkill.Count];
         for(int ii = 0; ii < skillsprites.Length; ii++)
@@ -322,33 +325,11 @@ public class UI_GamePlay : UI_Base
         }
         skillImg.sprite = skillsprites[(int)Managers.Game.CurPlayerEquipSkill];
 
-        skillData = new SkillData();
-
-        switch(Managers.Game.CurPlayerEquipSkill)
-        {
-            case Define.PlayerSkill.Heal:
-                skillData = Managers.Data.healSkillDict[(int)Managers.Game.TowerHealSkillLv];
-                Skills.AddSkill<TowerHealSkill>();
-                break;
-
-            case Define.PlayerSkill.FireArrow:
-                skillData = Managers.Data.fireArrowSkillDict[(int)Managers.Game.FireArrowSkillLv];
-                Skills.AddSkill<FireArrowSkill>();
-
-                break;
-
-            case Define.PlayerSkill.Weakness:
-                skillData = Managers.Data.weaknessSkillDict[(int)Managers.Game.WeaknessSkillLv];
-                Skills.AddSkill<WeaknessSkill>();
-
-                break;
-
-
-        }
+        
     }
 
 
-    void ButtonEvent(GameObject obj,Action action = null, UIEvent type = UIEvent.PointerDown)
+    private void ButtonEvent(GameObject obj,Action action = null, UIEvent type = UIEvent.PointerDown)
     {
         UI_EventHandler evt;
         obj.TryGetComponent(out evt);
@@ -368,7 +349,7 @@ public class UI_GamePlay : UI_Base
         
     }
 
-    void ButtonEvent1(GameObject obj, string path,int idx, Action<string,int> action = null, UIEvent type = UIEvent.PointerDown)
+    private void ButtonEvent1(GameObject obj, string path,int idx, Action<string,int> action = null, UIEvent type = UIEvent.PointerDown)
     {
         UI_EventHandler evt;
         obj.TryGetComponent(out evt);
@@ -387,22 +368,21 @@ public class UI_GamePlay : UI_Base
     }
 
 
-    void UnitButtonSetting(int i , string path)
+    private void UnitButtonSetting(int i , string path)
     {
         ButtonEvent1(uiUnit[i].gameObject, path, i, UnitSummonBtnClick, UIEvent.PointerDown);
     }
 
-    void InGameSetting()
+    private void InGameSetting()
     {
-        Debug.Log("wqeqwe");
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
         Managers.UI.ShowPopUp<UI_SettingPopUp>();
         Managers.UI.PeekPopupUI<UI_SettingPopUp>().SettingType(Define.SettingType.InGameSetting);
         Time.timeScale = 0.0f;
     }
 
 
-    void CameraMoveColorInit()
+    private void CameraMoveColorInit()
     {
         clickOnMoveColor = new Color32(255, 255, 255, clickOnMoveColorAlpha);
         clickOffMoveColor = new Color32(255, 255, 255, clickOffMoveColorAlpha);
@@ -416,7 +396,7 @@ public class UI_GamePlay : UI_Base
 
 
 
-    void LeftBtnOn()
+    private void LeftBtnOn()
     {
         if (Managers.UI.PeekPopupUI<UI_SettingPopUp>() != null)
             return;
@@ -424,7 +404,7 @@ public class UI_GamePlay : UI_Base
         leftBtnCheck = true;
         leftCameraMoveImg.color = clickOnMoveColor;
     }
-    void LeftBtnOff()
+    private void LeftBtnOff()
     {
         if (Managers.UI.PeekPopupUI<UI_SettingPopUp>() != null)
             return;
@@ -434,7 +414,7 @@ public class UI_GamePlay : UI_Base
 
     }
 
-    void RightBtnOn()
+    private void RightBtnOn()
     {
         if (Managers.UI.PeekPopupUI<UI_SettingPopUp>() != null)
             return;
@@ -443,7 +423,7 @@ public class UI_GamePlay : UI_Base
         rightCameraMoveImg.color = clickOnMoveColor;
 
     }
-    void RightBtnOff()
+    private void RightBtnOff()
     {
         if (Managers.UI.PeekPopupUI<UI_SettingPopUp>() != null)
             return;
@@ -454,77 +434,104 @@ public class UI_GamePlay : UI_Base
     }
 
 
-    void UpdateSkillCoolTimeSet()
+    private void UpdateSkillCoolTimeSet()  //스킬버튼을 누르면 행동
     {
         if (skillOnOff)
             return;
-        //스킬을 누르면 장착된 스킬이 나가게 할것 (스킬북을 통해서)
-        if (Skills.activeSkillList.Count > 0)
-        {
-            Debug.Log("플레이어 스킬");
-            switch(Managers.Game.CurPlayerEquipSkill)
-            {
-                case Define.PlayerSkill.Heal:
-                    Skills.activeSkillList[0].UseSkill(playerTower);     //스킬 사용
-                    break;
 
-                case Define.PlayerSkill.FireArrow:
 
-                    Skills.activeSkillList[0].UseSkill(player);     //스킬 사용
-                    break;
 
-                case Define.PlayerSkill.Weakness:
-                    Skills.activeSkillList[0].UseSkill(player.SkillMonsterExplore());     //스킬 사용
-                    break;
-            }
-            
-        }
+        player.ActiveSkillUse();
+
         //스킬을 누르면 해당 스킬의 쿨타임을 받고
-        skillCoolTime = skillData.skillCoolTime;
+        skillCoolTime = player.SkillData.skillCoolTime;
         skillOnOff = true; //스킬이 나가서 쿨타임 시작
         skillCoolImg.gameObject.SetActive(skillOnOff);
 
-        if(Managers.Game.CurPlayerEquipSkill == Define.PlayerSkill.FireArrow || Managers.Game.CurPlayerEquipSkill == Define.PlayerSkill.Weakness)
+        if(Managers.Game.CurPlayerEquipSkill != Define.PlayerSkill.Heal) //폭발화살일때 약화일때 지속시간을 보여준다.
         {
             skillDurationObj.SetActive(true);
             skillDurationImg.sprite = skillsprites[(int)Managers.Game.CurPlayerEquipSkill];
-            StartCoroutine(SkillDurationTime());
+
+            if (skillDurationCo != null)
+                StopCoroutine(skillDurationCo);
+
+            skillDurationCo = StartCoroutine(SkillDurationTime());
+
+        }
+        else
+        {
+            //성벽수리 사용시
+            skillParticleObj.SetActive(true); 
         }
 
 
     }
 
-    IEnumerator SkillDurationTime()
+
+    private WaitForSeconds wfs = new WaitForSeconds(0.1f);
+
+    private IEnumerator SkillDurationTime()  //스킬 지속시간 UI 표시
     {
         float duration = 0.0f;
+
+        yield return wfs;       //0.1초 대기해준다.
+
+
         while(true)
         {
+            
+
             skillDurationTimeTxt.text = ((int)player.DurationTime).ToString();
-            duration = durationTime / skillData.skillValue;
+            duration = durationTime / player.SkillData.skillDuration;
             durationTime += Time.deltaTime;
 
             if (skillDurationTimeImg?.fillAmount < duration)
                 skillDurationTimeImg.fillAmount += Time.deltaTime * 1.0f;
 
 
-            if (duration >= .99f)
+            if(Managers.Game.CurPlayerEquipSkill == Define.PlayerSkill.FireArrow)
             {
-                skillDurationTimeImg.fillAmount = 1;
-                durationTime = 0.0f;
-                skillDurationObj.SetActive(false);
-                yield break;
+                if (fireSkillCountTxt.gameObject.activeSelf == false)   //화살갯수를 켜준다.
+                    fireSkillCountTxt.gameObject.SetActive(true);
+
+                fireSkillCountTxt.text = player.FireArrowCount.ToString();
+
+
+                if (duration >= .99f || player.FireArrowCount <= 0)
+                {
+                    skillDurationTimeImg.fillAmount = 1;
+                    durationTime = 0.0f;
+                    skillDurationObj.SetActive(false);
+                    yield break;
+                }
             }
+            else if(Managers.Game.CurPlayerEquipSkill == Define.PlayerSkill.Weakness)
+            {
+                if (fireSkillCountTxt.gameObject.activeSelf == true)  //화살갯수를 꺼준다.
+                    fireSkillCountTxt.gameObject.SetActive(false);
+
+                if (duration >= .99f)
+                {
+                    skillDurationTimeImg.fillAmount = 1;
+                    durationTime = 0.0f;
+                    skillDurationObj.SetActive(false);
+                    skillDurationTimeTxt.text = player.SkillData.skillDuration.ToString();
+                    yield break;
+                }
+            }
+
 
             yield return null;
         }
     }
 
-    void UpdateSkill()
+    private void UpdateSkill()
     {
         if(skillOnOff)
         {
 
-            skillCool = skillCoolTime / skillData.skillCoolTime;
+            skillCool = skillCoolTime / player.SkillData.skillCoolTime;
 
             skillCoolTime -= Time.deltaTime;
 
@@ -613,6 +620,9 @@ public class UI_GamePlay : UI_Base
     //유닛 버튼을 누를시 소환
     public void UnitSummonBtnClick(string namePath,int idx)
     {
+        if (Managers.Game.GameEndResult())       //개임이 끝났으면 유닛버튼은 눌리지 않는다.
+            return;
+
         unitObj = Resources.Load<GameObject>(namePath);
 
         uiUnit[idx].TryGetComponent(out unitNode);
@@ -630,9 +640,11 @@ public class UI_GamePlay : UI_Base
             return;
 
 
-        if (rt.anchoredPosition.y == beforePosY)
-            rt.DOLocalMoveY(afterPosY, 0.5f).SetEase(Ease.OutBack);
+        if (rt.anchoredPosition.y <= beforePosY)
+            rt.DOAnchorPosY(afterPosY, 0.5f).SetEase(Ease.OutBack);
     }
+
+
 
 
 }

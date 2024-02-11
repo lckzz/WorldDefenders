@@ -73,7 +73,6 @@ public class ShamanMagicAttackCtrl : MonoBehaviour
         }
         else if (tower != null)
         {
-            Debug.Log("qwewqe");
             shotDir = tower.transform.position - monCtrl.transform.position;
             shotDir.Normalize();
 
@@ -86,6 +85,8 @@ public class ShamanMagicAttackCtrl : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
+
+        Managers.Sound.Play("Effect/MagicianAttackHit");
         if (coll.tag == "Unit")
         {
 
@@ -129,7 +130,7 @@ public class ShamanMagicAttackCtrl : MonoBehaviour
 
 
 
-    //리소스매니저에 있어야할듯?
+  
     void MagicEffectAndSound(Vector3 pos, string soundPath, string effPath)
     {
         //Managers.Sound.Play($"Sounds/Effect/{soundPath}");

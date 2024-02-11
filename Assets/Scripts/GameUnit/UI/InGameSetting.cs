@@ -27,11 +27,11 @@ public class InGameSetting : Setting
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        ToggleSoundMute(Define.Sound.BGM, Define.Sound.Effect);
-        SliderSound(Define.Sound.BGM, Define.Sound.Effect);
-    }
+    //void Update()
+    //{
+    //    ToggleSoundMute(Define.Sound.BGM, Define.Sound.Effect);
+    //    SliderSound(Define.Sound.BGM, Define.Sound.Effect);
+    //}
 
     void InGameRetry()
     {

@@ -106,4 +106,12 @@ public class SkillBook : MonoBehaviour
 
         return null;
     }
+
+    public void ClearSkill()
+    {
+        if(activeSkillList.Count > 0)       //액티브스킬이 하나라도 있다면 삭제
+            activeSkillList.Clear();
+
+
+    }
 }

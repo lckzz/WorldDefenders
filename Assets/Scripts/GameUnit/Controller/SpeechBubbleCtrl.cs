@@ -28,10 +28,9 @@ public class SpeechBubbleCtrl : MonoBehaviour
     {
         speechBubbleTxt.text = speech;
         float x = speechBubbleTxt.preferredWidth;
-        Debug.Log(x);
+
 
         x = (x > 2.2f) ? 2.4f : x + 0.3f;
-        Debug.Log(x);
         if(rt == null)
             this.TryGetComponent<RectTransform>(out rt);
 

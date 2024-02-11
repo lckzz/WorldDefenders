@@ -31,16 +31,17 @@ public class PlayerTower : Tower
 
 
 
-    public override float hpPercent()
-    {
-        return hp / maxHp;
-    }
+    //public override float hpPercent()
+    //{
+    //    return hp / maxHp;
+    //}
 
     public override void TowerDamage(int att)
     {
         if (hp > 0)
         {
             hp -= att;
+            NotifyToHpObserver();
 
             if (hp <= 0)
             {

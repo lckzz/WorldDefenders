@@ -4,32 +4,41 @@ using UnityEngine;
 
 public class WeaknessSkill : ActiveSkill
 {
+    PlayerSkillData playerSkillData = null;
     public override void SkillDataSetting(int id)
     {
-        if (Managers.Data.weaknessSkillDict.TryGetValue(id, out SkillData data) == false)
+
+
+
+        if (Managers.Data.weaknessSkillDict.TryGetValue(id, out PlayerSkillData data) == false)
         {
             Debug.LogError("Failed");
             return;
         }
 
         SkillData = data;
+        playerSkillData = SkillData as PlayerSkillData;
+        
+
+
     }
 
 
-    public override void UseSkill(List<Unit> enemys)
+    public override void UseSkill(List<MonsterBase> enemys)
     {
         for(int ii = 0; ii < enemys.Count; ii++)
         {
+
             if (enemys[ii] is MonsterController monCtrl)
             {
-                if(monCtrl.Debuff is WeaknessDebuff weaknessDebuff)
+
+                if (monCtrl.Debuff is WeaknessDebuff weaknessDebuff)
                 {
-                    Debug.Log(monCtrl.name);
                     if (monCtrl.IsDie)
-                        return;
+                        continue;
 
                     weaknessDebuff.WeaknessSkillInfo(monCtrl.MoveSpeed, monCtrl.Att);
-                    weaknessDebuff.UnitDebuff(SkillData.skillValue, 10.0f);
+                    weaknessDebuff.UnitDebuff(playerSkillData.skillValue, playerSkillData.skillDuration);
                     weaknessDebuff.DebuffOnOff(true);
                 }
 
@@ -39,10 +48,11 @@ public class WeaknessSkill : ActiveSkill
             {
                 if (eliteMonCtrl.Debuff is WeaknessDebuff weaknessDebuff)
                 {
+
                     if (eliteMonCtrl.IsDie)
-                        return;
+                        continue;
                     weaknessDebuff.WeaknessSkillInfo(eliteMonCtrl.MoveSpeed, eliteMonCtrl.Att);
-                    weaknessDebuff.UnitDebuff(SkillData.skillValue, 10.0f);
+                    weaknessDebuff.UnitDebuff(SkillData.skillValue, playerSkillData.skillDuration);
                     weaknessDebuff.DebuffOnOff(true);
                 }
 

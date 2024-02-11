@@ -48,6 +48,7 @@ public class TitleScene : BaseScene
     {
         if(Input.GetMouseButtonDown(0))
         {
+            Managers.Sound.Play("Effect/UI_Click");
             titleTouch = UiRaycastGetFirstComponent<TitleTouch>(gr);
             touchTxt.gameObject.SetActive(false);
             titleTouch.TouchOnPanel();
@@ -81,6 +82,7 @@ public class TitleScene : BaseScene
             Managers.Game.GameDataInit(); //초기화만
 
         }
+
     }
 
     void TitleSoundInit()

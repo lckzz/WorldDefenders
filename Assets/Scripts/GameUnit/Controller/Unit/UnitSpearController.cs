@@ -9,7 +9,7 @@ public class UnitSpearController : UnitController
     private readonly string criticalSound = "CriticalSound";
     private readonly string hitEff = "HitEff";
 
-    private readonly string appearDialogSubKey = "archerAppear";
+    private readonly string appearDialogSubKey = "spearAppear";
 
 
     public override void OnEnable()

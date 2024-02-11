@@ -17,7 +17,7 @@ public class UnitNodeUI : UI_BaseSettingUnit
     private Color32 normalClassColor = new Color32(72, 72, 72, 255);
     private Color32 specialClassColor = new Color32(121, 81, 212,255);
     private Image nodeImg;
-
+    private IOpenPanel openPanel;
 
     public UnitClass E_UnitClass { get { return e_UnitClass; } set { e_UnitClass = value; } }
 
@@ -88,6 +88,12 @@ public class UnitNodeUI : UI_BaseSettingUnit
     void Start()
     {
         Init();
+    }
+
+    public void OpenUnitInfoTween()
+    {
+        openPanel = Managers.UI.PeekPopupUI<UI_UnitInfoSelectPopUp>();
+        openPanel?.OpenRectTransformScaleSet();
     }
 
     //private void Update()

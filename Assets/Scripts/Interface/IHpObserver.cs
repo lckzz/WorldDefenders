@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IHpObserver 
 {
-    public void Notified(int hp);
+    public void Notified(float hp);
 }

@@ -27,6 +27,7 @@ public class WeaknessDebuff : Debuff, ISubject
 
         if (debuffInstantiateisOn == false)
         {
+            Debug.Log("여기 디버프생성");
             debuffInstantiateisOn = true;
             weaknessDebuffGo = Managers.Resource.Instantiate(weaknessDebuffPrefab, debuffObj.transform);
 
@@ -51,8 +52,16 @@ public class WeaknessDebuff : Debuff, ISubject
         originalUnitAtt = unitAtt;
 
         //디버프당하면 속도랑 공격력이 낮아짐
-        unitSpeed -= unitSpeed * (debuffIdx / 100);
-        unitAtt -= (int)(unitAtt * (debuffIdx / 100));
+        //unitSpeed -= unitSpeed * (debuffIdx / 100);
+        //unitAtt -= (int)(unitAtt * (debuffIdx / 100));
+        float floatidx = (unitAtt * (debuffIdx / 100));     //몬스터공격력 75값을 구함
+        unitAtt -= Mathf.RoundToInt(floatidx);
+
+        floatidx = (unitSpeed * (debuffIdx / 100));     //몬스터속도 75값을 구함
+        unitSpeed -= Mathf.RoundToInt(floatidx);
+
+        Debug.Log("디버프" + debuffIdx / 100);
+        Debug.Log("디버프공격" + unitAtt);
 
         NotifyToObserver();     //변화된 값들을 옵저버들에게 전해줌
 
@@ -72,13 +81,14 @@ public class WeaknessDebuff : Debuff, ISubject
 
     public void UnitDebuff(float debuffIdx, float durationTime)
     {
-        courtine = StartCoroutine(StartWeaknessDebuff(debuffIdx, durationTime));
+        coroutine = StartCoroutine(StartWeaknessDebuff(debuffIdx, durationTime));
     }
 
     public override void DebuffOnOff(bool isOn,Unit unit = null) 
     {
         Debug.Log("여기에옴ㄴㅇㄴㅁㅇㄴㅁ" + weaknessDebuffGo);
         Debug.Log("여기에옴ㄴㅇㄴㅁㅇㄴㅁ2222" + debuffUI);
+        Debug.Log("인스탄트" + debuffInstantiateisOn);
 
 
         if (debuffUI == null)
@@ -90,8 +100,12 @@ public class WeaknessDebuff : Debuff, ISubject
             DebuffInstantiate();
         else
         {
+            Debug.Log("여기 디버프 다사라짐" );
+
             Managers.Resource.Destroy(weaknessDebuffGo);
             debuffUI?.DebuffUIDestroy();
+            debuffInstantiateisOn = false;
+            debuffUIInstantiateisOn = false;
 
         }
     }
@@ -125,11 +139,11 @@ public class WeaknessDebuff : Debuff, ISubject
     }
 
 
-    void DebuffInit()
+    public override void DebuffInit()
     {
-        if (courtine != null)
-            StopCoroutine(courtine);
+        base.DebuffInit();
 
+        debuffInstantiateisOn = false;
         unitSpeed = originalUnitSpeed;
         unitAtt = originalUnitAtt;
         NotifyToObserver();     //변화된 값들을 옵저버들에게 전해줌 (디버프상태로 죽으면 원래값을 적용하고 다시 몬스터한테 전달해줌)

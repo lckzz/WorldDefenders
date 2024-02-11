@@ -56,16 +56,10 @@ public class PlayerArrowCtrl : MonoBehaviour
 
             Unit monctrl = null;
             coll.TryGetComponent<Unit>(out monctrl);
-            if (arrowType == Define.PlayerArrowType.Fire)
-            {
-                if (monctrl != null)
-                    monctrl.OnDamage(player.Att * 2);
-            }
-            else
-            {
-                if (monctrl != null)
-                    monctrl.OnDamage(player.Att);
-            }
+
+            if (monctrl != null)
+                monctrl.OnDamage(player.Att);
+
 
 
             Managers.Resource.ResourceEffectAndSound(monctrl.transform.position, "ArrowHit", "HitEff");

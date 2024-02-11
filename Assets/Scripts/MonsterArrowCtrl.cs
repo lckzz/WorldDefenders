@@ -114,7 +114,7 @@ public class MonsterArrowCtrl : MonoBehaviour
 
             Unit uniCtrl = null;
             coll.TryGetComponent<Unit>(out uniCtrl);
-            if (uniCtrl != null)
+            if (uniCtrl != null && unitCtrl == uniCtrl)
                 uniCtrl.OnDamage(monsterCtrl.Att);
 
                 

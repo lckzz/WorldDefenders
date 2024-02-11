@@ -67,6 +67,12 @@ public class SpecialUnitController : Unit
             myColl.enabled = true;
             appearDust?.SetActive(true);
 
+
+            if (startCoolTime != null)
+                StopCoroutine(startCoolTime);
+
+            skillOn = false;
+
         }
 
     }
@@ -536,9 +542,10 @@ public class SpecialUnitController : Unit
             speechBubble.SpeechBubbuleOn(dieTitleKey, dieDialogSubKey, dieProbaility);
             myColl.enabled = false;
             StartCoroutine(Util.DestroyTime(gameObject, 5.0f));
+            StartCoroutine(UnitDeadSrAlpha());
 
             SetUnitState(SpecialUnitState.Die);
-
+            onDead?.Invoke();
         }
     }
 
@@ -564,6 +571,8 @@ public class SpecialUnitController : Unit
         if (hp > 0)
         {
             hp -= att;
+            NotifyToHpObserver();       //체력이 바뀌어서 옵저버들에게 체력이 바꼇다는걸 알리고 보내기
+
             //넉백이 안통하는 존에 있다면 넉백수치를 0으로 만들어준다.
             if (NoKnockBackValid())
                 knockBack = 0;

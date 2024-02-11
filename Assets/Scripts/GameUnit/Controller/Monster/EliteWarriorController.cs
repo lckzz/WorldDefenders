@@ -19,7 +19,11 @@ public class EliteWarriorController : EliteMonsterController
     {
         base.OnEnable();
         if (sp != null && myColl != null)
+        {
+            Init();
             speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
+
+        }
 
     }
 
@@ -39,8 +43,11 @@ public class EliteWarriorController : EliteMonsterController
         knockbackForce = monStat.knockBackForce;
         attackRange = monStat.attackRange;
         moveSpeed = 2.0f;
+        DropCost = monStat.dropCost;
 
         swordPos = transform.Find("SwordPos");
+
+        Skills.ClearSkill();
         Skills.AddSkill<SwordDanceSkill>();
         speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
 

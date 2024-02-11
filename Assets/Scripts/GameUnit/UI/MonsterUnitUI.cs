@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MonsterUnitUI : UnitUI
+public class MonsterUnitUI : HpUIBase
 {
     private Unit uniCtrl = null;
     //[SerializeField] private MonsterController monCtrl;
@@ -32,39 +32,25 @@ public class MonsterUnitUI : UnitUI
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        UpdateHp(hpSpeed);
-        if(uniCtrl != null)
-        {
-            if(uniCtrl.IsDie)
-            {
+    //void Update()
+    //{
+    //    UpdateHp(hpSpeed);
+    //    if(uniCtrl != null)
+    //    {
+    //        if(uniCtrl.IsDie)
+    //        {
 
-                if(uniCtrl != null)
-                    UnitDeadSpAlpha<Unit>(uniCtrl, spr);
+    //            if(uniCtrl != null)
+    //                UnitDeadSpAlpha<Unit>(uniCtrl, spr);
 
 
 
-            }
-        }
+    //        }
+    //    }
 
-    }
+    //}
 
     
 
-    public override void UpdateHp(float _hpspeed)
-    {
-        if(hpbar != null)
-        {
 
-            if(uniCtrl != null)
-                hp = uniCtrl.hpPercent();
-
-
-            
-            if (hpbar.fillAmount > hp)
-                hpbar.fillAmount -= Time.deltaTime * _hpspeed;
-
-        }
-    }
 }

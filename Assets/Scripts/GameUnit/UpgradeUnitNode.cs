@@ -17,7 +17,7 @@ public class UpgradeUnitNode : MonoBehaviour
     [SerializeField] private UnitClass upgradeUnit;
 
     private int unitLv = 0;
-
+    private IOpenPanel openPanel;
     // Start is called before the first frame update
     void Start()
     {
@@ -150,6 +150,9 @@ public class UpgradeUnitNode : MonoBehaviour
                     break;
                 }
         }
+
+        openPanel = Managers.UI.PeekPopupUI<UI_UnitUpgradePopUp>();
+        openPanel.OpenRectTransformScaleSet();
 
 
 

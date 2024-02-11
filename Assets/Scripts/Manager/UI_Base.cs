@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UI_Base : MonoBehaviour
 {
@@ -28,5 +29,5 @@ public class UI_Base : MonoBehaviour
         go.transform.SetAsLastSibling();        //해당 오브젝트를 가장 마지막에 배치
     }
 
-
+ 
 }

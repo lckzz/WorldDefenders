@@ -32,6 +32,11 @@ public class UnitSpawn
         instancObj.transform.position = tr[ran].position;
     }
 
+    public void UnitQueueClear()
+    {
+        if (spawnQueue.Count > 0)    //큐에 무언가 있다면
+            spawnQueue.Clear();         //클리어해주기
+    }
 
 
 }

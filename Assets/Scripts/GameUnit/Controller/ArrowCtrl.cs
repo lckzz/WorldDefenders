@@ -106,13 +106,16 @@ public class ArrowCtrl : MonoBehaviour
         if (coll.tag == "Monster")
         {
 
-            Managers.Sound.Play("Sounds/Effect/Arrowhit");
 
             Unit monctrl = null;
             coll.TryGetComponent<Unit>(out monctrl);
-            if (monctrl != null)
+            if (monctrl != null && monsterCtrl == monctrl)
+            {
+                Managers.Sound.Play("Sounds/Effect/Arrowhit");
                 monctrl.OnDamage(unitCtrl.Att);
-            
+
+            }
+
 
 
             StartCoroutine(Util.DestroyTime(gameObject));

@@ -6,7 +6,7 @@ using static Define;
 public class FireDebuff : Debuff
 {
 
-    private Coroutine fireCoroutine = null;
+
     private GameObject fireDebuffPrefab;
     private GameObject fireDebuffGo;
 
@@ -28,26 +28,34 @@ public class FireDebuff : Debuff
 
     public override void DebuffOnOff(bool isOn, Unit unit = null)
     {
-        if (fireDebuffGo == null || debuffUI == null)
-            return;
-
-
         if(isOn == true)
             DebuffInstantiate();
+        else
+        {
+            if(fireDebuffGo != null)
+            {
+                Managers.Resource.Destroy(fireDebuffGo);
+                debuffUI?.DebuffUIDestroy();     //디버프UI가 있다면 삭제
 
-        fireDebuffGo.SetActive(isOn);
-        if (fireDebuffGo.activeSelf)    //화상디버프가 켜진다면
-            FireDebuffOn(unit);       //지속데미지 디버프 시작
-        else //화상디버프가 꺼진다면
-            debuffUI?.DebuffUIDestroy();     //디버프UI가 있다면 삭제
+            }
+
+        }
+
+    }
+
+    public override void DebuffDestory()
+    {
+        //몬스터가 죽으면 디버프 초기화
+        base.DebuffDestory();
+        DebuffInit();
     }
 
     public void FireDebuffOn(Unit unit)
     {
-        if (fireCoroutine != null)
-            StopCoroutine(fireCoroutine);
+        if (coroutine != null)
+            StopCoroutine(coroutine);
 
-        fireCoroutine = StartCoroutine(FireDebuffCo(unit));
+        coroutine = StartCoroutine(FireDebuffCo(unit));
     }
 
 

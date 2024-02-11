@@ -13,17 +13,22 @@ public class EliteMonsterAppear : MonoBehaviour
     private void OnEnable()
     {
         if (anim != null)
-        {
-            cameraCtrl.ShakeCamera(0.2f, 0.25f);
-        }
+            Init();
     }
 
     private void Start()
     {
         TryGetComponent(out anim);
         Camera.main.TryGetComponent(out cameraCtrl);
-        cameraCtrl.ShakeCamera(0.2f,0.25f);
+        Init();
     }
+
+    private void Init()
+    {
+        Managers.Sound.Play("Effect/UnitDust");
+        cameraCtrl.ShakeCamera(0.2f, 0.25f);
+    }
+
 
     private void Update()
     {

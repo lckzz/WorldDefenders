@@ -28,6 +28,8 @@ public class GameScene : BaseScene
     private readonly string warningElite = "게이트에서 강력한 몬스터 개체 출현!";
     private readonly string warningFinal = "강력한 몬스터 여러 개체가 출현!!!";
 
+    public PlayableDirector PlayableDt { get { return playable; } }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,10 +48,11 @@ public class GameScene : BaseScene
         
 
         SceneType = Define.Scene.BattleStage_Field;
-        Managers.Game.EventInit();
-        Managers.Game.MonsterSpawnInit(monsterParentTr);
-        Managers.Game.SetMonSpawnType(Define.MonsterSpawnType.Normal);
-        Managers.Game.SetStageStateType(Define.StageStageType.Playing);
+        //Managers.Game.EventInit();
+        //Managers.Game.MonsterSpawnInit(monsterParentTr);
+        //Managers.Game.SetMonSpawnType(Define.MonsterSpawnType.Normal);
+        //Managers.Game.SetStageStateType(Define.StageStageType.Playing);
+        Managers.Game.InGameInit(monsterParentTr, Define.MonsterSpawnType.Normal, Define.StageStageType.Playing);
         Managers.Sound.Play("BGM/FranticLevel", Define.Sound.BGM);
         TryGetComponent(out playable);
         GameDirector(Define.GameStageDirector.Entrance);
@@ -86,7 +89,7 @@ public class GameScene : BaseScene
             Managers.UI.GetSceneUI<UI_GamePlay>().UpdateCoolTime(speed);
             Managers.UI.GetSceneUI<UI_GamePlay>().InGameTimer();
 
-            Managers.Game.unitSummonDequeue(obj, unitSpawnTr);
+            Managers.Game.UnitSummonDequeue(obj, unitSpawnTr);
             Managers.Game.CostIncreaseTime();
             Managers.Game.NormalMonsterSpawn(Managers.Game.GetMonSpawnType(), warningNotice.WarningStart, warningElite);
 

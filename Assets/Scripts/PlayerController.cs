@@ -12,6 +12,14 @@ public enum PlayerState
 
 public class PlayerController : MonoBehaviour
 {
+    private enum PlayerControllerOrder
+    {
+        PlayerAim,
+        AttackPos,
+        PlayerSkillFever,
+        PlayerDust
+    }
+
     private Transform playerAimTr;
     private Transform attackPosTr;
     private PlayerState playerState = PlayerState.idle;
@@ -39,24 +47,33 @@ public class PlayerController : MonoBehaviour
 
     private LineRenderer lr;
     private bool lineSet = false;
+    private GameObject playerDust;
 
 
     //FireArrowSKill
     private GameObject playerSkillFeverObj;
     private bool skillOn = false;
     private float durationTime = 0.0f;
+    private int fireArrowCount = 0;         //스킬사용시 카운트
     private Define.PlayerArrowType playerArrow = Define.PlayerArrowType.Normal;
     public Define.PlayerArrowType PlayerArrow { get { return playerArrow; } set { playerArrow = value; } }
 
-    public float DurationTime { get { return durationTime; } }
-    public SkillData SkillData { get; set; }
-    //FireArrowSKill
+    //WeaknessSkill
+    private List<MonsterBase> enemys = new List<MonsterBase>();
 
+    public int FireArrowCount { get { return fireArrowCount; } }
+    public float DurationTime { get { return durationTime; } }
+    public PlayerSkillData SkillData { get; set; }
+    public SkillBook Skills { get; protected set; }
+
+    //FireArrowSKill
+    Tower playerTower;
     TowerStat tower = new TowerStat();
 
     private readonly int hashAnimAttack = Animator.StringToHash("Attack");
     private readonly int hashAnimIdle = Animator.StringToHash("Idle");
     private readonly int hashAnimShot = Animator.StringToHash("Shot");
+    private readonly int hashAnimDie = Animator.StringToHash("Die");
 
 
     public int Att { get { return att; } }
@@ -77,31 +94,103 @@ public class PlayerController : MonoBehaviour
         TryGetComponent<Animator>(out anim);
         TryGetComponent<LineRenderer>(out lr);
         TryGetComponent(out spRend);
-        playerAimTr = this.transform.GetChild(0).transform;
-        attackPosTr = this.transform.GetChild(1).transform;
+        Skills = GetComponent<SkillBook>();
+        playerAimTr = this.transform.GetChild((int)PlayerControllerOrder.PlayerAim).transform;
+        attackPosTr = this.transform.GetChild((int)PlayerControllerOrder.AttackPos).transform;
         playerSkillFeverObj = this.transform.Find("PlayerSkillFever").gameObject;
+        playerDust = transform.GetChild((int)PlayerControllerOrder.PlayerDust).gameObject;
+        this.transform.parent.gameObject.transform.GetChild(0).TryGetComponent(out playerTower);
+
+        Debug.Log(playerTower);
 
         startPlayerAimTr = playerAimTr.position;
         lr.startWidth = .1f;
         lr.endWidth = .1f;
         PlayerAimOnOff(false);
 
+
+        if (Managers.Game.CurPlayerEquipSkill != Define.PlayerSkill.Count)   //스킬이 장착되어 있다면 스킬초기화
+            SkillInit();   //스킬 초기화
+
+        
+
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Managers.Game.GameEndResult())       //게임이 끝났으면 리턴
+            return;
+
         PlayerAimMove();
         AttackCoolTimer();
         AimLine();
+
+    }
+
+    void SkillInit()
+    {
+        SkillData = new PlayerSkillData();
+
+        switch (Managers.Game.CurPlayerEquipSkill)
+        {
+            case Define.PlayerSkill.Heal:
+                SkillData = Managers.Data.healSkillDict[(int)Managers.Game.TowerHealSkillLv];
+                Skills.AddSkill<TowerHealSkill>();
+                break;
+
+            case Define.PlayerSkill.FireArrow:
+                SkillData = Managers.Data.fireArrowSkillDict[(int)Managers.Game.FireArrowSkillLv];
+                Skills.AddSkill<FireArrowSkill>();
+
+                break;
+
+            case Define.PlayerSkill.Weakness:
+                SkillData = Managers.Data.weaknessSkillDict[(int)Managers.Game.WeaknessSkillLv];
+                Skills.AddSkill<WeaknessSkill>();
+
+                break;
+
+
+        }
+    }
+
+    public void ActiveSkillUse()
+    {
+        //스킬을 누르면 장착된 스킬이 나가게 할것 (스킬북을 통해서)
+        if (Skills.activeSkillList.Count > 0)
+        {
+            switch (Managers.Game.CurPlayerEquipSkill)
+            {
+                case Define.PlayerSkill.Heal:
+
+                    Skills.activeSkillList[0].UseSkill(playerTower);     //스킬 사용
+                    Debug.Log("힐");
+                    break;
+
+                case Define.PlayerSkill.FireArrow:
+
+                    Skills.activeSkillList[0].UseSkill(this);     //스킬 사용
+                    break;
+
+                case Define.PlayerSkill.Weakness:
+                    Skills.activeSkillList[0].UseSkill(SkillMonsterExplore());     //스킬 사용
+                    break;
+            }
+
+        }
+
         SkillDuration();
     }
 
 
-
-
     public void AttackWait()           //버튼을 누르면 활쏠 준비를 한다.
     {
+        if (Managers.Game.GameEndResult())       //게임이 끝났으면 리턴
+            return;
+
         if (!attack)
             return;
 
@@ -129,6 +218,10 @@ public class PlayerController : MonoBehaviour
 
     public void ShotArrow()         //버튼에서 손을 땔때 공격(화살이 생성)
     {
+        if (Managers.Game.GameEndResult())       //게임이 끝났으면 리턴
+            return;
+
+
         if (!attack || !ready1)
             return;
 
@@ -153,6 +246,9 @@ public class PlayerController : MonoBehaviour
         if (!lineSet)
             lr.enabled = false;
 
+        if (fireArrowCount > 0)
+            fireArrowCount--;
+
     }
 
     public void ArrowInfo(ref Vector3 Vecdir)
@@ -173,18 +269,29 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    public List<Unit> SkillMonsterExplore()    //적 탐색
+    public List<MonsterBase> SkillMonsterExplore()    //적 탐색
     {
-        List<Unit> enemys = new List<Unit>();
-        GameObject[] go = GameObject.FindGameObjectsWithTag("Monster");
+        enemys.Clear();     //리스트안에 들어있는것들을 클리어해주고
+
+        MonsterBase[] go = FindObjectsOfType<MonsterBase>();//GameObject.FindGameObjectsWithTag("Monster");     //현재 찾을수있는 몬스터태그를 가진 오브젝트들을 찾아서 배열에 넣어준다.
 
         for(int ii = 0; ii < go.Length; ii++)
         {
-            go[ii].TryGetComponent(out Unit enemy);
-            enemys.Add(enemy);
+            enemys.Add(go[ii]);
         }
 
         return enemys;
+    }
+
+    public void PlayerDieStart()
+    {
+        anim.SetTrigger(hashAnimDie);
+        spRend.flipX = true;
+    }
+
+    public void PlayerDieEnd()
+    {
+        playerDust.SetActive(true);
     }
 
 
@@ -264,39 +371,66 @@ public class PlayerController : MonoBehaviour
 
     void SkillDuration()
     {
-        if(playerSkillFeverObj.activeSelf == true)
+        if(Managers.Game.CurPlayerEquipSkill == Define.PlayerSkill.FireArrow)
         {
-            //이 오브젝트가 켜지면 스킬이 써졌다는것
-            if(skillOn == false)
-            {
-                skillOn = true;
-                durationTime = SkillData.skillValue;
-                StartCoroutine(DurationSkillTime());
-            }
 
+            fireArrowCount = 5;         //스킬사용되면 5개의 폭발화살 장착
+            //skillOn = true;
+            durationTime = SkillData.skillDuration;
+            StartCoroutine(DurationSkillCoolTime());
+            
+
+        }
+        else if(Managers.Game.CurPlayerEquipSkill == Define.PlayerSkill.Weakness)
+        {
+            durationTime = SkillData.skillDuration;
+            
+            StartCoroutine(DurationSkillCoolTime());
         }
     }
 
 
-    IEnumerator DurationSkillTime()
+    IEnumerator DurationSkillCoolTime()
     {
         while(true)
         {
             durationTime -= Time.deltaTime;
 
-
-            if(durationTime <= 0.0f)
+            //skillOn = false;
+            if (Managers.Game.CurPlayerEquipSkill == Define.PlayerSkill.FireArrow)
             {
-                skillOn = false;
-                playerSkillFeverObj.SetActive(false);
-                playerArrow = Define.PlayerArrowType.Normal;
-                yield break;
+                if (fireArrowCount <= 0)  //화살횟수를 다쓰면 스킬 종료
+                {
+                    playerArrow = Define.PlayerArrowType.Normal;
+                    playerSkillFeverObj.SetActive(false);
+                    fireArrowCount = 0;
+                    yield break;
+
+                }
+
             }
+
+
+            if (durationTime <= 0.0f)  //지속시간이 지나면 스킬 종료
+            {
+                if(Managers.Game.CurPlayerEquipSkill == Define.PlayerSkill.FireArrow)   //폭발화살이라면 지속시간이 끝나면 기본화살로 바꾸기
+                {
+                    playerArrow = Define.PlayerArrowType.Normal;
+                    playerSkillFeverObj.SetActive(false);
+                    fireArrowCount = 0;
+                }
+
+                yield break;
+
+            }
+
 
 
             yield return null;
         }
     }
+
+
 
 
 }

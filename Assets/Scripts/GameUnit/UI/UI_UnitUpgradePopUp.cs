@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 
-public class UI_UnitUpgradePopUp : UI_Base
+public class UI_UnitUpgradePopUp : UI_Base,IOpenPanel
 {
 
     [SerializeField] private Button closeBtn;
@@ -21,6 +22,7 @@ public class UI_UnitUpgradePopUp : UI_Base
     [SerializeField] private TextMeshProUGUI curHpTxt;
     [SerializeField] private TextMeshProUGUI curAttTxt;
     [SerializeField] private TextMeshProUGUI curCostTxt;
+    [SerializeField] private GameObject curLevelObj;
 
 
 
@@ -35,9 +37,15 @@ public class UI_UnitUpgradePopUp : UI_Base
     [SerializeField] private GameObject[] nextPriestObjs;
     [SerializeField] private GameObject nextMagicianObj;
     [SerializeField] private GameObject nextCavarlyObj;
+    [SerializeField] private GameObject nextLevelObj;
 
 
-
+    [Header("--------------MaxLevel---------------")]
+    [SerializeField] private TextMeshProUGUI maxLvTxt;
+    [SerializeField] private TextMeshProUGUI maxHpTxt;
+    [SerializeField] private TextMeshProUGUI maxAttTxt;
+    [SerializeField] private TextMeshProUGUI maxCostTxt;
+    [SerializeField] private GameObject maxLevelObj;
 
 
     [Header("--------------UnitPrefab---------------")]
@@ -76,16 +84,13 @@ public class UI_UnitUpgradePopUp : UI_Base
         levelUpParticle.TryGetComponent(out levelUp);
         upgradeObj.TryGetComponent(out rt);
         noticePanel.transform.Find("Notice").TryGetComponent(out upgradeNotice);
-        rt.sizeDelta = new Vector2(rt.sizeDelta.x, 10.0f);
-        rt.DOSizeDelta(new Vector2(907f, 500f), 0.25f).SetEase(Ease.OutQuad);
+
 
         UnitInit();
 
         if (closeBtn != null)
             closeBtn.onClick.AddListener(() =>
             {
-                
-                Managers.Sound.Play("Effect/UI_Click");
                 levelUp.DoKill();           //남아있는 파티클의 두트윈을 전부 삭제한다.
                 Managers.UI.ClosePopUp(this);
                 Managers.UI.PeekPopupUI<UI_UpgradeWindow>().UpgradeUnitRefresh(unitidx);
@@ -149,32 +154,45 @@ public class UI_UnitUpgradePopUp : UI_Base
 
         this.unitLv = unitLv;
 
-        curLvTxt.text = $"Level {unit.level}";
-        curHpTxt.text = unit.hp.ToString();
-        curAttTxt.text = unit.att.ToString();
-        curCostTxt.text = unit.cost.ToString();
-
-
-        if(unitLv < unitMaxLv)
+        if(JudgmentMaxLevel() == true)      //유닛이 맥스레벨이라면
         {
-            int nextLv = unitLv + 1;
-            unit = unitDict[nextLv];
-
-
-            nextLvTxt.text = $"Level {unit.level}";
-            nextHpTxt.text = unit.hp.ToString();
-            nextAttTxt.text = unit.att.ToString();
-            nextCostTxt.text = unit.cost.ToString();
-            goldTxt.text = unit.price.ToString();
+            maxLvTxt.text = $"Level {unit.level}";
+            maxHpTxt.text = unit.hp.ToString();
+            maxAttTxt.text = unit.att.ToString();
+            maxCostTxt.text = unit.cost.ToString();
         }
-        else
+
+        else  //맥스레벨이 아니라면
         {
-            nextLvTxt.text = $"Level {unit.level}";
-            nextHpTxt.text = unit.hp.ToString();
-            nextAttTxt.text = unit.att.ToString();
-            nextCostTxt.text = unit.cost.ToString();
-            goldTxt.text = "Max";
+            curLvTxt.text = $"Level {unit.level}";
+            curHpTxt.text = unit.hp.ToString();
+            curAttTxt.text = unit.att.ToString();
+            curCostTxt.text = unit.cost.ToString();
+
+
+
+            if (unitLv < unitMaxLv)
+            {
+                int nextLv = unitLv + 1;
+                unit = unitDict[nextLv];
+
+
+                nextLvTxt.text = $"Level {unit.level}";
+                nextHpTxt.text = unit.hp.ToString();
+                nextAttTxt.text = unit.att.ToString();
+                nextCostTxt.text = unit.cost.ToString();
+                goldTxt.text = unit.price.ToString();
+            }
+            else
+            {
+                nextLvTxt.text = $"Level {unit.level}";
+                nextHpTxt.text = unit.hp.ToString();
+                nextAttTxt.text = unit.att.ToString();
+                nextCostTxt.text = unit.cost.ToString();
+                goldTxt.text = "Max";
+            }
         }
+
 
     }
 
@@ -351,6 +369,24 @@ public class UI_UnitUpgradePopUp : UI_Base
         upgradeNotice.SetUpgradeGold(unit.price);
     }
 
+    bool JudgmentMaxLevel()      //레벨이 맥스인지 판단
+    {
+        if(unitLv >= unitMaxLv)  //만약 최대레벨이라면 맥스레벨만표시되게
+        {
+            maxLevelObj.SetActive(true);
+            curLevelObj.SetActive(false);
+            nextLevelObj.SetActive(false);
+            return true;
+        }
+        else
+        {
+            maxLevelObj.SetActive(false);
+            curLevelObj.SetActive(true);
+            nextLevelObj.SetActive(true);
+            return false;
+        }
+    }
+
     public void UpgradeUnit()
     {
 
@@ -403,6 +439,16 @@ public class UI_UnitUpgradePopUp : UI_Base
             levelUpParticle.SetActive(false);           //켜져있다면 강제로 끄고 다시 갱신
 
         levelUpParticle.SetActive(true);
+    }
+
+    public void OpenRectTransformScaleSet()
+    {
+        if(rt == null)
+            upgradeObj.TryGetComponent(out rt);
+
+        rt.localScale = new Vector3(0, 0, 0);
+        rt.DOScale(new Vector3(1.0f, 1.0f, 1.0f), 0.1f).SetEase(Ease.OutQuad);
+
     }
 
 

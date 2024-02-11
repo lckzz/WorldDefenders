@@ -20,7 +20,11 @@ public class EliteCavalryController : EliteMonsterController
     {
         base.OnEnable();
         if (sp != null && myColl != null)
+        {
+            Init();
             speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
+
+        }
 
     }
 
@@ -41,6 +45,7 @@ public class EliteCavalryController : EliteMonsterController
         attackRange = monStat.attackRange;
         moveSpeed = 2.0f;
 
+        Skills.ClearSkill();
         Skills.AddSkill<SkeletonSummonSkill>();
 
 
@@ -106,6 +111,7 @@ public class EliteCavalryController : EliteMonsterController
             if (Skills.activeSkillList.Count > 0)
             {
                 Debug.Log("발싸");
+                Managers.Sound.Play("Effect/Monster/EliteCavarlySkill");
                 Skills.activeSkillList[0].UseSkill(this);     //스킬 사용
                 SpeechchBubbleOn(skillTitleKey,skillDialogSubKey,skillProbability);
             }

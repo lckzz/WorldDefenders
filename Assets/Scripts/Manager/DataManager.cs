@@ -41,9 +41,9 @@ public class DataManager
     public Dictionary<int, SkillData> eliteShamanSkillDict { get; private set; } = new Dictionary<int, SkillData>();
 
 
-    public Dictionary<int, SkillData> healSkillDict { get; private set; } = new Dictionary<int, SkillData>();
-    public Dictionary<int, SkillData> fireArrowSkillDict { get; private set; } = new Dictionary<int, SkillData>();
-    public Dictionary<int, SkillData> weaknessSkillDict { get; private set; } = new Dictionary<int, SkillData>();
+    public Dictionary<int, PlayerSkillData> healSkillDict { get; private set; } = new Dictionary<int, PlayerSkillData>();
+    public Dictionary<int, PlayerSkillData> fireArrowSkillDict { get; private set; } = new Dictionary<int, PlayerSkillData>();
+    public Dictionary<int, PlayerSkillData> weaknessSkillDict { get; private set; } = new Dictionary<int, PlayerSkillData>();
     #endregion
 
     #region  다이얼로그
@@ -70,9 +70,9 @@ public class DataManager
         eliteCavalrySkillDict = LoadJson<EliteCavalrySkillData, int, SkillData>("SkillData").MakeDict();
         eliteShamanSkillDict = LoadJson<EliteShamanSkillData, int, SkillData>("SkillData").MakeDict();
 
-        healSkillDict = LoadJson<HealSkillData, int, SkillData>("SkillData").MakeDict();
-        fireArrowSkillDict = LoadJson<FireArrowSkillData, int, SkillData>("SkillData").MakeDict();
-        weaknessSkillDict = LoadJson<WeaknessSkillData, int, SkillData>("SkillData").MakeDict();
+        healSkillDict = LoadJson<HealSkillData, int, PlayerSkillData>("SkillData").MakeDict();
+        fireArrowSkillDict = LoadJson<FireArrowSkillData, int, PlayerSkillData>("SkillData").MakeDict();
+        weaknessSkillDict = LoadJson<WeaknessSkillData, int, PlayerSkillData>("SkillData").MakeDict();
 
         dialogue = new Dictionary<string, TextAsset>
         {

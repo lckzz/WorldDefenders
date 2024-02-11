@@ -2,9 +2,10 @@ using SimpleJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 
-public abstract class Unit : MonoBehaviour,ISensor
+public abstract class Unit : MonoBehaviour,ISensor, IHpSubject
 {
     // Start is called before the first frame update
     [SerializeField]  protected float hp = 0;
@@ -24,6 +25,7 @@ public abstract class Unit : MonoBehaviour,ISensor
     protected float moveSpeed = .0f;
     protected bool isRun = false;
     protected bool isAtt = false;
+    [SerializeField]
     protected bool isDie = false;
     protected bool isIdle = false;
 
@@ -53,6 +55,10 @@ public abstract class Unit : MonoBehaviour,ISensor
 
     protected UnitHp unitHUDHp;
 
+    //Hp값 주체로써 옵저버에게 
+    private List<IHpObserver> observerList = new List<IHpObserver>();
+
+
 
     //넉백 관련 변수
     protected bool knockbackStart = false;
@@ -67,6 +73,12 @@ public abstract class Unit : MonoBehaviour,ISensor
     private Transform parentTr;
     private GameObject hudPrefab;
 
+    //죽을때 spriteRender를통한 페이드아웃
+    protected UnityEngine.Color color = new UnityEngine.Color(0, 0, 0);
+
+    protected float destoryTimer = 1.5f;
+    protected bool startImgFadeOut = false;
+
 
     public bool IsDie { get { return isDie; } }
     public int Att { get { return att; } }
@@ -76,7 +88,7 @@ public abstract class Unit : MonoBehaviour,ISensor
 
     public bool IsNoKnockBack { get { return isNoKnockBack; } set { isNoKnockBack = value; } }
 
-
+    public Action onDead;
 
     public virtual void Init()
     {
@@ -105,18 +117,6 @@ public abstract class Unit : MonoBehaviour,ISensor
         return hp / maxHp;
     }
 
-    public virtual void UnitDead()
-    {
-        if(unitDestroyTime > 0.0f)
-        {
-            unitDestroyTime -= Time.deltaTime;
-            if(unitDestroyTime < 0.0f)
-            {
-                unitDestroyTime = .0f;
-
-            }
-        }
-    }
 
     public bool NoKnockBackValid()
     {
@@ -126,7 +126,47 @@ public abstract class Unit : MonoBehaviour,ISensor
         return true;
     }
 
+    protected IEnumerator UnitDeadSrAlpha()
+    {
+        while (true)
+        {
 
+            if (destoryTimer > 0.0f)
+            {
+                destoryTimer -= Time.deltaTime;
+                if (destoryTimer < .0f)
+                {
+                    destoryTimer = .0f;
+                    startImgFadeOut = true;
+
+                }
+            }
+
+
+            if (startImgFadeOut)
+            {
+
+                color = sp.color;
+                if (color.a > .0f)
+                {
+                    color.a -= Time.deltaTime * 2.0f;
+                }
+                else
+                {
+                    destoryTimer = 1.5f;
+                    startImgFadeOut = false;
+                    yield break;
+
+                }
+
+                sp.color = color;
+
+
+            }
+
+            yield return null;
+        }
+    }
 
 
 
@@ -147,12 +187,22 @@ public abstract class Unit : MonoBehaviour,ISensor
     public abstract void CriticalAttack(Unit ctrl,string soundPath,string criticalSoundPath,string hitPath);
     public abstract void CriticalAttack(Tower ctrl, string soundPath, string criticalSoundPath, string hitPath);
 
+    public void AddHpObserver(IHpObserver observer)
+    {   //현재 주체의 정보를 받을 옵저버들을 추가한다.
+        observerList.Add(observer);
+    }
 
+    public void RemoveHpObserver(IHpObserver observer)
+    {   //현재 주체의 정보를 안받을 옵저버들을 삭제한다.
+        observerList.Remove(observer);
+    }
 
-
-
-
-
-
-
+    public void NotifyToHpObserver()   //데미지를 입거나 회복하면 옵저버에게 현재 체력을 보내주기
+    {
+        float hpPercent = hp / maxHp;
+        //구독하고있는 옵저버들에게 전달해줄 내용
+        foreach (IHpObserver obs in observerList)
+            obs.Notified(hpPercent);       //현재 유닛의 체력퍼센트를 구독하고 있는 옵저버들에게 전달해준다.
+        
+    }
 }

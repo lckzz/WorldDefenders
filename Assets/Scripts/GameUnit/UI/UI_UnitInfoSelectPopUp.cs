@@ -1,10 +1,12 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_UnitInfoSelectPopUp : UI_Base
+public class UI_UnitInfoSelectPopUp : UI_Base,IOpenPanel
 {
 
     //캐릭터 셋팅에서 선택한 유닛의 정보를 볼수 있고 배치할 수 있는 버튼이 있는 곳이다.
@@ -19,11 +21,13 @@ public class UI_UnitInfoSelectPopUp : UI_Base
     [SerializeField] private TextMeshProUGUI unitInfoLvTxt;
 
     [SerializeField] private TextMeshProUGUI unitInfoDescTxt;
+    [SerializeField] private GameObject unitInfoObj;
     [SerializeField] private GameObject unitInfoBgObj;
     [SerializeField] private GameObject normalSkillObj;
     [SerializeField] private GameObject specialSkillObj;
     private Image normalImg;
     private Image specialImg;
+    private RectTransform rt;
 
 
 
@@ -66,6 +70,8 @@ public class UI_UnitInfoSelectPopUp : UI_Base
             {
                 if (nodeUI != null)
                     nodeUI.ClickImageOnOff(false);
+
+                Managers.Sound.Play("Effect/UI_Click");
                 Managers.UI.ClosePopUp(this);
                 Managers.UI.PeekPopupUI<UI_UnitSettingWindow>()?.UnitUIInit();
 
@@ -77,6 +83,8 @@ public class UI_UnitInfoSelectPopUp : UI_Base
             {
                 if (nodeUI != null)
                     nodeUI.ClickImageOnOff(false);
+
+                Managers.Sound.Play("Effect/UI_Click");
                 Managers.UI.ClosePopUp(this);
                 Managers.UI.PeekPopupUI<UI_UnitSettingWindow>()?.MaskObjectOnOff(true);
                 //배치를 누르면 팝업이 꺼지고 선택할 수 있게
@@ -85,6 +93,7 @@ public class UI_UnitInfoSelectPopUp : UI_Base
         if (clearBtn != null)
             clearBtn.onClick.AddListener(() =>
             {
+                Managers.Sound.Play("Effect/UI_Click");
                 Managers.UI.ClosePopUp(this);
                 Managers.UI.PeekPopupUI<UI_UnitSettingWindow>()?.SlotUnitCancel();
 
@@ -234,4 +243,12 @@ public class UI_UnitInfoSelectPopUp : UI_Base
 
     }
 
+    public void OpenRectTransformScaleSet()
+    {
+        if (rt == null)
+            unitInfoObj.TryGetComponent(out rt);
+
+        rt.localScale = new Vector3(0, 0, 0);
+        rt.DOScale(new Vector3(1.0f, 1.0f, 1.0f), 0.1f).SetEase(Ease.OutQuad);
+    }
 }

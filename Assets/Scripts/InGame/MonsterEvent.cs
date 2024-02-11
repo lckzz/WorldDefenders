@@ -71,6 +71,7 @@ public class MonsterEvent
         eliteMonsterisOn = false;
         finalOneWarningUI = false;
         finalMonsterisOn = false;
+        finalEliteMonsterCount = 0;
     }
 
 

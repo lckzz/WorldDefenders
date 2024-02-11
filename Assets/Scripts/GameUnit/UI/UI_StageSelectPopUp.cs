@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Define;
@@ -39,10 +40,13 @@ public class UI_StageSelectPopUp : UI_Base
 
     private UI_PlayerController ui_PlayerCtrl;
     private StageInfo stageInfo;
-    bool backFadeCheck = false;
+    private bool backFadeCheck = false;
 
     private GameObject dialogCanvas;
     private DialogueCtrl dialogCtrl;
+
+
+    private bool gameStart = false;         //게임시작버튼이 눌리면 true
 
     public bool FadeCheck { get { return fadeCheck; }}
     // Start is called before the first frame update
@@ -56,6 +60,7 @@ public class UI_StageSelectPopUp : UI_Base
         rtSizeDelta = paperRt.sizeDelta;
         rtSizeDelta.x = 0.0f;
         paperRt.sizeDelta = rtSizeDelta;
+        gameStart = false;
         if(stageUIObj != null)
         {
             if (stageUIObj.activeSelf)
@@ -122,6 +127,10 @@ public class UI_StageSelectPopUp : UI_Base
 
     void GetStageInfo(int ii)
     {
+        if (gameStart == true)
+            return;
+
+
 
         TutorialGateClick(ii);
 
@@ -141,6 +150,8 @@ public class UI_StageSelectPopUp : UI_Base
 
         if (stagenode.StState == Define.StageState.Open)
         {
+            Managers.Sound.Play("Effect/StageClick");
+
             Managers.Game.SetMonsterList(stagenode.StageMonsterList);  //정적변수에 몬스터의 정보들을 받아둔다.
             if (ui_PlayerCtrl.IsGo == false)
                 SelectStageTextRefresh(Define.MainStage.One, Managers.Game.CurStageType);
@@ -157,6 +168,8 @@ public class UI_StageSelectPopUp : UI_Base
         else
         {
             //락걸린 스테이지를 눌럿을때
+            Managers.Sound.Play("Effect/Error");
+
             StartBtnInActive();     //버튼 비활성화 
             stageInfo?.gameObject.SetActive(false);  //열린 스테이지정보 오브젝틀르 꺼준다.
 
@@ -212,7 +225,6 @@ public class UI_StageSelectPopUp : UI_Base
     void ClosePopUp()
     {
         Managers.Sound.Play("Effect/UI_Click");
-
         Managers.UI.ClosePopUp(this);
         if (Managers.Scene.CurrentScene is LobbyScene lobby)
         {
@@ -286,21 +298,35 @@ public class UI_StageSelectPopUp : UI_Base
 
     void StartInGame()
     {
+        startBtn.enabled = false;
         Managers.Sound.Play("Effect/StageStart");
-        Managers.Game.LobbyToGameScene = true;           //게임을 시작하면 다음에 로비로 돌아올시 스테이지 선택창이 뜨게끔
-        stageUIObj.SetActive(false);
-        fadeCheck = true;
+        StartCoroutine(StartGame());
         
         //Managers.Scene.LoadScene(Define.Scene.BattleStage_Field);
     }
 
-    float waitTime = 0.7f;
+    float waitTime = 0f;
+
+    
+    IEnumerator StartGame()
+    {
+        gameStart = true;
+        waitTime = 1.0f;
+        yield return new WaitForSeconds(waitTime);
+        Managers.Game.LobbyToGameScene = true;           //게임을 시작하면 다음에 로비로 돌아올시 스테이지 선택창이 뜨게끔
+        stageUIObj.SetActive(false);
+        fadeCheck = true;
+    }
+
+
+
     IEnumerator StartPaperDeltaSizeDo(float endValue, bool uiObjActive)
     {
+        waitTime = 0.7f;
         WaitForSeconds wfs = new WaitForSeconds(waitTime);
 
         Managers.Sound.Play("Effect/leather_inventory");
-        paperRt?.DOSizeDelta(new Vector2(endValue, paperRt.sizeDelta.y), waitTime).OnComplete(DialogStageSelect);
+        paperRt?.DOSizeDelta(new Vector2(endValue, paperRt.sizeDelta.y), waitTime).OnComplete(StageDialogSelect);
         yield return wfs;
 
         if (uiObj?.activeSelf == !uiObjActive)
@@ -309,7 +335,7 @@ public class UI_StageSelectPopUp : UI_Base
         yield return null;
     }
 
-    private void DialogStageSelect()
+    private void StageDialogSelect()
     {
 
         if (Managers.Game.TutorialEnd == false)

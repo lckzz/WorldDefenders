@@ -109,23 +109,9 @@
     }
   ],
 
-  "eliteCavalrySkill": [
-    {
-      "id": "0009",
-      "level": "1",
-      "name": "SkeletonSummon",
-      "skillValue": "0",
-      "skillTargetCount": "0",
-      "skillCoolTime": "20",
-      "skillPrefab": "Skill/SkeletonSummon",
-      "skillImg": "",
-      "desc": "전사 스켈레톤을 소환하여 싸운다."
-    }
-  ],
-
   "eliteShamanSkill": [
     {
-      "id": "0010",
+      "id": "0009",
       "level": "1",
       "name": "DarkPower",
       "skillValue": "0",
@@ -137,6 +123,20 @@
     }
   ],
 
+  "eliteCavalrySkill": [
+    {
+      "id": "0010",
+      "level": "1",
+      "name": "SkeletonSummon",
+      "skillValue": "0",
+      "skillTargetCount": "0",
+      "skillCoolTime": "20",
+      "skillPrefab": "Skill/SkeletonSummon",
+      "skillImg": "",
+      "desc": "전사 스켈레톤을 소환하여 싸운다."
+    }
+  ],
+
   "healSkill": [
     {
       "id": "1000",
@@ -144,6 +144,7 @@
       "name": "성문 수리",
       "skillValue": "0",
       "skillTargetCount": "0",
+      "skillDuration": "0",
       "skillCoolTime": "0",
       "skillPrefab": "Skill/TowerHealSkill",
       "skillDialog1": "성문을 고쳤어요",
@@ -155,8 +156,9 @@
       "id": "1000",
       "level": "1",
       "name": "성문 수리",
-      "skillValue": "30",
+      "skillValue": "50",
       "skillTargetCount": "0",
+      "skillDuration": "0",
       "skillCoolTime": "10",
       "skillPrefab": "Skill/TowerHealSkill",
       "skillDialog1": "성문을 고쳤어요",
@@ -168,14 +170,15 @@
       "id": "1000",
       "level": "2",
       "name": "성문 수리",
-      "skillValue": "45",
+      "skillValue": "50",
       "skillTargetCount": "0",
+      "skillDuration": "0",
       "skillCoolTime": "10",
       "skillPrefab": "Skill/TowerHealSkill",
       "skillDialog1": "성문을 고쳤어요",
       "skillDialog2": "성문 수리!",
       "skillImg": "Sprite/SKill/Heal",
-      "desc": "현재 타워의 체력을 최대체력의 45%를 회복시켜준다."
+      "desc": "현재 타워의 체력을 최대체력의 50%를 회복시켜준다."
     },
     {
       "id": "1000",
@@ -183,6 +186,7 @@
       "name": "성문 수리",
       "skillValue": "50",
       "skillTargetCount": "0",
+      "skillDuration": "0",
       "skillCoolTime": "0",
       "skillPrefab": "Skill/TowerHealSkill",
       "skillDialog1": "성문을 고쳤어요",
@@ -200,12 +204,13 @@
       "name": "불화살",
       "skillValue": "10",
       "skillTargetCount": "0",
+      "skillDuration": "0",
       "skillCoolTime": "30",
       "skillPrefab": "Skill/FireArrowSkill",
       "skillDialog1": "화염 화살 장전",
       "skillDialog2": "불타라",
       "skillImg": "Sprite/SKill/FireArrow",
-      "desc": "플레이어의 화살이 10초 동안 적을 넉백시키는 폭발화살로 바뀐다.\n 폭발에 휘말린 적들은 화상을 입는다."
+      "desc": "플레이어의 화살이 10초 동안 적들을 넉백시키고 화상 디버프를 주는 폭발 화살로 바뀐다.\n 단 10초간 최대 5번의 폭발화살 사용이 가능하다."
     },
     {
       "id": "1001",
@@ -213,12 +218,13 @@
       "name": "불화살",
       "skillValue": "10",
       "skillTargetCount": "0",
+      "skillDuration": "10",
       "skillCoolTime": "30",
       "skillPrefab": "Skill/FireArrowSkill",
-      "skillDialog1": "화염 화살 장전",
+      "skillDialog1": "불화살 장전",
       "skillDialog2": "불타라",
       "skillImg": "Sprite/SKill/FireArrow",
-      "desc": "플레이어의 화살이 10초 동안 적을 넉백시키는 폭발화살로 바뀐다.\n 폭발에 휘말린 적들은 화상을 입는다."
+      "desc": "플레이어의 화살이 10초 동안 적들을 넉백시키고 화상 디버프를 주는 폭발 화살로 바뀐다.\n 단 10초간 최대 5번의 폭발화살 사용이 가능하다."
     },
     {
       "id": "1001",
@@ -226,12 +232,13 @@
       "name": "불화살",
       "skillValue": "7",
       "skillTargetCount": "0",
+      "skillDuration": "10",
       "skillCoolTime": "30",
       "skillPrefab": "Skill/FireArrowSkill",
       "skillDialog1": "화염 화살 장전",
       "skillDialog2": "불타라",
       "skillImg": "Sprite/SKill/FireArrow",
-      "desc": "플레이어의 화살이 7초 동안 적을 넉백시키는 폭발화살로 바뀐다.\n 폭발에 휘말린 적들은 화상을 입는다."
+      "desc": "플레이어의 화살이 10초 동안 적들을 넉백시키고 화상 디버프를 주는 폭발 화살로 바뀐다.\n 단 10초간 최대 5번의 폭발화살 사용이 가능하다."
     },
     {
       "id": "1001",
@@ -239,12 +246,13 @@
       "name": "불화살",
       "skillValue": "10",
       "skillTargetCount": "0",
+      "skillDuration": "10",
       "skillCoolTime": "30",
       "skillPrefab": "Skill/FireArrowSkill",
       "skillDialog1": "화염 화살 장전",
       "skillDialog2": "불타라",
       "skillImg": "Sprite/SKill/FireArrow",
-      "desc": "플레이어의 화살이 10초 동안 적을 넉백시키는 폭발화살로 바뀐다.\n 폭발에 휘말린 적들은 화상을 입는다."
+      "desc": "플레이어의 화살이 10초 동안 적들을 넉백시키고 화상 디버프를 주는 폭발 화살로 바뀐다.\n 단 10초간 최대 5번의 폭발화살 사용이 가능하다."
     }
 
 
@@ -259,6 +267,7 @@
       "name": "약화",
       "skillValue": "75",
       "skillTargetCount": "0",
+      "skillDuration": "0",
       "skillCoolTime": "30",
       "skillPrefab": "Skill/Meteor",
       "skillDialog1": "약화!",
@@ -272,6 +281,7 @@
       "name": "약화",
       "skillValue": "75",
       "skillTargetCount": "0",
+      "skillDuration": "10",
       "skillCoolTime": "30",
       "skillPrefab": "Skill/Meteor",
       "skillDialog1": "약화!",
@@ -285,6 +295,7 @@
       "name": "약화",
       "skillValue": "50",
       "skillTargetCount": "0",
+      "skillDuration": "10",
       "skillCoolTime": "30",
       "skillPrefab": "Skill/Meteor",
       "skillDialog1": "약화!",
@@ -298,6 +309,7 @@
       "name": "약화",
       "skillValue": "75",
       "skillTargetCount": "0",
+      "skillDuration": "10",
       "skillCoolTime": "30",
       "skillPrefab": "Skill/Meteor",
       "skillDialog1": "약화!",

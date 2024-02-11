@@ -84,7 +84,8 @@ public class LobbyUnit : MonoBehaviour
                 
                 else
                     unitPrefab = Managers.Resource.Instantiate($"Unit/LobbyUnit/Warrior/{pathLv2}", this.gameObject.transform);
-                
+
+                Debug.Log(unitPrefab);
                 break;
             case UnitClass.Archer:
                 if (unitLv < 5)

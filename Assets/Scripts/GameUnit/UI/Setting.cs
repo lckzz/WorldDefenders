@@ -33,6 +33,7 @@ public abstract class Setting : MonoBehaviour
 
     public void DefalutSoundSet()                       //디폴트셋팅
     {
+
         Managers.Game.BgmValue = defalutBgmValue;
         Managers.Game.EffValue = defalutEffValue;
         Managers.Game.BgmisOn = defalutBgmisOn;
@@ -48,6 +49,10 @@ public abstract class Setting : MonoBehaviour
 
     public void ToggleSoundMute(Define.Sound bgmType,Define.Sound effType)
     {
+        //if((Managers.Game.BgmisOn != bgmMuteToggle.isOn) || (Managers.Game.EffisOn != effMuteToggle.isOn))
+        //    Managers.Sound.Play("Effect/UI_Click");
+
+
         Managers.Game.BgmisOn = bgmMuteToggle.isOn;
         Managers.Game.EffisOn = effMuteToggle.isOn;
 
@@ -80,6 +85,7 @@ public abstract class Setting : MonoBehaviour
 
     public void CloseSettingPopUp()
     {
+
         Managers.UI.ClosePopUp(ui_Setting);
         if (Managers.Scene.CurrentScene is LobbyScene lobby)
         {
@@ -94,6 +100,15 @@ public abstract class Setting : MonoBehaviour
         }
 
 
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+            Managers.Sound.Play("Effect/UI_Click");
+
+        ToggleSoundMute(Define.Sound.BGM, Define.Sound.Effect);
+        SliderSound(Define.Sound.BGM, Define.Sound.Effect);
     }
 
 }

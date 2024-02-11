@@ -43,6 +43,7 @@ public class SkillEquipNotice : MonoBehaviour
     {
         skillEquipCheckBtn?.onClick.AddListener(() =>
         {
+            Managers.Sound.Play("Effect/UI_Click");
             this.gameObject.SetActive(false);
         });
     }
