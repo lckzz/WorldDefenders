@@ -16,9 +16,9 @@ public class MonsterArcherController : MonsterController
     public override void OnEnable()
     {
         base.OnEnable();
-        if (sp != null && myColl != null)
+        if (myColl != null)
         {
-            speechBubble.SpeechBubbuleOn(appearTitleKey, appearDialogSubKey, appearProbability);
+            speechBubble.SpeechBubbleOn(appearTitleKey, appearDialogSubKey, appearProbability);
             Init();
         }
 
@@ -27,31 +27,10 @@ public class MonsterArcherController : MonsterController
     public override void Init()
     {
         base.Init();
-        switch (Managers.Game.CurStageType)
-        {
-            case SubStage.West:
-                monStat = Managers.Data.monsterDict[GlobalData.g_BowSkeletonID];
-                break;
-            case SubStage.East:
-                monStat = Managers.Data.monsterDict[GlobalData.g_MidBowSkeletonID];
-                break;
-            case SubStage.South:
-                monStat = Managers.Data.monsterDict[GlobalData.g_HighBowSkeletonID];
-                break;
-        }
-
-        att = monStat.att;
-        hp = monStat.hp;
-        maxHp = hp;
-        knockbackForce = monStat.knockBackForce;
-        attackRange = monStat.attackRange;
-        moveSpeed = 2.0f;
-        DropGold = monStat.dropGold;
-        DropCost = monStat.dropCost;
 
         arrowPos = transform.Find("ArrowPos");
         SetMonsterState(MonsterState.Run);
-        speechBubble.SpeechBubbuleOn(appearTitleKey, appearDialogSubKey, appearProbability);
+        speechBubble.SpeechBubbleOn(appearTitleKey, appearDialogSubKey, appearProbability);
     }
 
     // Start is called before the first frame update

@@ -8,7 +8,6 @@ using TMPro;
 public class UnitNodeUI : UI_BaseSettingUnit
 {
     //유닛배치에 붙어있는 유닛노드관한 스크립트
-    //[SerializeField] private Image unitImg;
     //[SerializeField] private UnitClass e_UnitClass = UnitClass.Count;
     private TextMeshProUGUI unitLvTxt;
     Vector2 spearSizeDelta = new Vector2(120.0f, 120.0f);
@@ -24,7 +23,7 @@ public class UnitNodeUI : UI_BaseSettingUnit
 
     protected override void Init()
     {
-        unitImg.TryGetComponent<RectTransform>(out rt);
+        base.Init();
         TryGetComponent(out nodeImg);
         for(int ii = 0; ii < transform.childCount; ii++)
         {
@@ -32,54 +31,54 @@ public class UnitNodeUI : UI_BaseSettingUnit
                 transform.GetChild(ii).TryGetComponent(out unitLvTxt);
         }
 
-
+        UnitUISpriteInit();
 
         //처음에 생성되면 해당갱신해주기
-        switch (e_UnitClass)
-        {
-            case UnitClass.Warrior:
-                Debug.Log($"워리어 갱신! {e_UnitClass}");
-                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitWarriorLv, "KnifeUnitLv1Img", "KnifeUnitLv2Img");
-                unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitWarriorLv}";
-                break;
+        //switch (e_UnitClass)
+        //{
+        //    case UnitClass.Warrior:
+        //        Debug.Log($"워리어 갱신! {e_UnitClass}");
+        //        UnitUISpriteInit(e_UnitClass, Managers.Game.UnitWarriorLv, "KnifeUnitLv1Img", "KnifeUnitLv2Img");
+        //        unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitWarriorLv}";
+        //        break;
 
-            case UnitClass.Archer:
-                Debug.Log($"아처 갱신! {e_UnitClass}");
-                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitArcherLv, "BowUnitLv1Img", "BowUnitLv2Img");
-                unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitArcherLv}";
-                break;
+        //    case UnitClass.Archer:
+        //        Debug.Log($"아처 갱신! {e_UnitClass}");
+        //        UnitUISpriteInit(e_UnitClass, Managers.Game.UnitArcherLv, "BowUnitLv1Img", "BowUnitLv2Img");
+        //        unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitArcherLv}";
+        //        break;
 
-            case UnitClass.Spear:
-                Debug.Log($"창병 갱신! {e_UnitClass}");
-                rt.sizeDelta = spearSizeDelta;
-                rt.transform.localPosition = spearTr;
-                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitSpearLv, "SpearUnitLv1Img", "SpearUnitLv2Img");
-                unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitSpearLv}";
-                break;
-            case UnitClass.Priest:
-                Debug.Log($"사제 갱신! {e_UnitClass}");
-                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitPriestLv, "PriestLv1Img", "PriestLv2Img");
-                unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitPriestLv}";
-                break;
+        //    case UnitClass.Spear:
+        //        Debug.Log($"창병 갱신! {e_UnitClass}");
+        //        rt.sizeDelta = spearSizeDelta;
+        //        rt.transform.localPosition = spearTr;
+        //        UnitUISpriteInit(e_UnitClass, Managers.Game.UnitSpearLv, "SpearUnitLv1Img", "SpearUnitLv2Img");
+        //        unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitSpearLv}";
+        //        break;
+        //    case UnitClass.Priest:
+        //        Debug.Log($"사제 갱신! {e_UnitClass}");
+        //        UnitUISpriteInit(e_UnitClass, Managers.Game.UnitPriestLv, "PriestLv1Img", "PriestLv2Img");
+        //        unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitPriestLv}";
+        //        break;
 
-            case UnitClass.Magician:
-                Debug.Log($"마법사 갱신! {e_UnitClass}");
-                UnitUISpriteInit(e_UnitClass, "Magician_Idle");
-                unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitMagicianLv}";
-                nodeImg.color = specialClassColor;
-                break;
-            case UnitClass.Cavalry:
-                Debug.Log($"마법사 갱신! {e_UnitClass}");
-                UnitUISpriteInit(e_UnitClass, "Cavalry_Idle");
-                unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitCarlvlry}";
-                nodeImg.color = specialClassColor;
-                break;
+        //    case UnitClass.Magician:
+        //        Debug.Log($"마법사 갱신! {e_UnitClass}");
+        //        UnitUISpriteInit(e_UnitClass, "Magician_Idle");
+        //        unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitMagicianLv}";
+        //        nodeImg.color = specialClassColor;
+        //        break;
+        //    case UnitClass.Cavalry:
+        //        Debug.Log($"마법사 갱신! {e_UnitClass}");
+        //        UnitUISpriteInit(e_UnitClass, "Cavalry_Idle");
+        //        unitLvTxt.text = $"<#FF9F13>Lv</color> {Managers.Game.UnitCavalryLv}";
+        //        nodeImg.color = specialClassColor;
+        //        break;
 
-            default:
-                Debug.Log("유닛노드에 유닛클래스가 설정이 안됫어요;");
-                break;
+        //    default:
+        //        Debug.Log("유닛노드에 유닛클래스가 설정이 안됫어요;");
+        //        break;
 
-        }
+        //}
 
 
     }
@@ -90,11 +89,24 @@ public class UnitNodeUI : UI_BaseSettingUnit
         Init();
     }
 
+
+    protected override void UnitUISpriteInit()
+    {
+        base.UnitUISpriteInit();
+
+        if (unitPosObj != null)  //유닛노드의 위치할 오브젝트가 있다면
+            Managers.Resource.Instantiate(unitStat.unitSpriteUIPrefabs, unitPosObj.transform);        //유닛노드의 위치한 오브젝트의 하위에 유닛을 생성한다.
+    }
+
+
+
     public void OpenUnitInfoTween()
     {
         openPanel = Managers.UI.PeekPopupUI<UI_UnitInfoSelectPopUp>();
         openPanel?.OpenRectTransformScaleSet();
     }
+
+
 
     //private void Update()
     //{

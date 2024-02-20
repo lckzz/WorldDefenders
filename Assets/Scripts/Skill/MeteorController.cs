@@ -4,18 +4,13 @@ using UnityEngine;
 
 public class MeteorController : SkillBase
 {
-    Unit owener;
+
     Unit enemy;
     Vector3 pos;
     Vector3 curPos;
     float _speed = 20.0f;
     float _lifeTime = 3.0f;
 
-
-    public MeteorController() : base(Define.SkillType.Count)
-    {
-            
-    }
 
     public void SetInfo(Unit owner,Unit enemy, SkillData data, Vector3 startPos)
     {
@@ -25,7 +20,7 @@ public class MeteorController : SkillBase
         //    return;
         //}
 
-        owener = owner;
+        Owner = owner;
         this.enemy = enemy;
         pos = startPos;
         SkillData = data;
@@ -47,10 +42,10 @@ public class MeteorController : SkillBase
         base.UpdateController();
         
         //적이 사라지면 프리팹도 사라지게 해야댐
-        if (owener == null || enemy.IsDie == true)
+        if (Owner == null || enemy.IsDie == true)
             Destroy(this.gameObject);
 
-        curPos = owener.transform.position;
+        curPos = Owner.transform.position;
         curPos.y += 2.0f;
 
         Vector3 shotDir = (enemy.transform.position - curPos).normalized;
@@ -71,7 +66,12 @@ public class MeteorController : SkillBase
             {
                 Managers.Sound.Play("Effect/Explosion");
                 coll.TryGetComponent(out Unit mon);
-                mon.OnDamage(100);
+
+                if(Owner.CriticalCheck())
+                    mon.OnDamage(Mathf.RoundToInt(Owner.Att * (SkillData.skillValue * 0.01f)) * 2,0,true);      //넉백은 없고 크리티컬은 터짐
+                else
+                    mon.OnDamage(Mathf.RoundToInt(Owner.Att * (SkillData.skillValue * 0.01f)));      //노크리티컬
+
                 Managers.Resource.ResourceEffect(coll.transform.position, "MeteorEff");
                 Destroy(this.gameObject);
             }

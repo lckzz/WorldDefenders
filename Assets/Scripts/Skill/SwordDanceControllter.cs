@@ -4,18 +4,15 @@ using UnityEngine;
 
 public class SwordDanceControllter : SkillBase
 {
-    Unit owener;
-    List<Unit> enemy = new List<Unit>();
-    Vector3 pos;
-    Vector3 curPos;
-    float _speed = 20.0f;
-    float _lifeTime = 1.5f;
-    int hitCount = 0;
-    int hitMaxCount = 10;
+    private List<Unit> enemy;
+    private Vector3 pos;
+    private Vector3 curPos;
+    private float _speed = 20.0f;
+    private float _lifeTime = 1.5f;
+    private int hitCount = 0;
+    private int hitMaxCount = 10;
 
-    public SwordDanceControllter() : base(Define.SkillType.Count)
-    {
-    }
+
 
     public void SetInfo(int id, Unit owner, List<Unit> enemy, SkillData data, Vector3 startPos)
     {
@@ -25,8 +22,8 @@ public class SwordDanceControllter : SkillBase
         //    return;
         //}
 
-        owener = owner;
-        this.enemy = enemy;
+        Owner = owner;
+        this.enemy = new List<Unit>(enemy);
         pos = startPos;
         SkillData = data;
         this.transform.position = pos;
@@ -48,7 +45,7 @@ public class SwordDanceControllter : SkillBase
         base.UpdateController();
 
         //적이 사라지면 프리팹도 사라지게 해야댐
-        if (owener == null)
+        if (Owner == null)
             Destroy(this.gameObject);
 
 
@@ -67,7 +64,12 @@ public class SwordDanceControllter : SkillBase
             if(hitCount < hitMaxCount)
             {
                 coll.TryGetComponent(out Unit unit);
-                unit.OnDamage(owener.Att * 2);
+
+                if (Owner.CriticalCheck())
+                    unit.OnDamage(Mathf.RoundToInt(Owner.Att * (SkillData.skillValue * 0.01f)) * 2, 0, true);      //넉백은 없고 크리티컬은 터짐
+                else
+                    unit.OnDamage(Mathf.RoundToInt(Owner.Att * (SkillData.skillValue * 0.01f)));      //노크리티컬
+
                 Managers.Resource.ResourceEffect(coll.transform.position, "HitEff");
                 hitCount++;
             }

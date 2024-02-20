@@ -69,7 +69,7 @@ public class MonsterArrowCtrl : MonoBehaviour
     }
 
 
-    void Shot<T,T1>(T unit ,T1 tower) where T : Unit where T1 : PlayerTower
+    void Shot(Unit unit , PlayerTower tower)
     {
         if (unit != null)
         {
@@ -110,15 +110,18 @@ public class MonsterArrowCtrl : MonoBehaviour
             if (unitCtrl == null)
                 return;
 
-            Managers.Sound.Play("Sounds/Effect/Arrowhit");
 
             Unit uniCtrl = null;
             coll.TryGetComponent<Unit>(out uniCtrl);
             if (uniCtrl != null && unitCtrl == uniCtrl)
+            {
+                Managers.Sound.Play("Sounds/Effect/Arrowhit");
                 uniCtrl.OnDamage(monsterCtrl.Att);
 
-                
-            
+            }
+
+
+
 
 
             StartCoroutine(Util.DestroyTime(gameObject));

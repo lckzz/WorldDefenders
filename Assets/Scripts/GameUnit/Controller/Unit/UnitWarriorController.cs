@@ -17,8 +17,8 @@ public class UnitWarriorController : UnitController
     public override void OnEnable()
     {
         base.OnEnable();
-        if (sp != null && myColl != null)
-            speechBubble.SpeechBubbuleOn(appearTitleKey,appearDialogSubKey, appearProbability);
+        if (myColl != null)
+            speechBubble.SpeechBubbleOn(appearTitleKey,appearDialogSubKey, appearProbability);
 
     }
 
@@ -26,19 +26,9 @@ public class UnitWarriorController : UnitController
     {
         base.Init();
 
-        unitStat = Managers.Data.warriorDict[Managers.Game.UnitWarriorLv];
-
-        hp = unitStat.hp;
-        att = unitStat.att;
-        knockbackForce = unitStat.knockBackForce;
-        attackRange = unitStat.attackRange;
-
-        moveSpeed = 2.5f;
-        maxHp = hp;
-
         SetUnitState(UnitState.Run);
 
-        speechBubble.SpeechBubbuleOn(appearTitleKey, appearDialogSubKey, appearProbability);
+        speechBubble.SpeechBubbleOn(appearTitleKey, appearDialogSubKey, appearProbability);
 
 
     }

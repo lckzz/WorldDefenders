@@ -16,10 +16,10 @@ public class MonsterWarriorController : MonsterController
     public override void OnEnable()
     {
         base.OnEnable();
-        if (sp != null && myColl != null)
+        if (myColl != null)
         {
             Init();
-            speechBubble.SpeechBubbuleOn(appearTitleKey, appearDialogSubKey, appearProbability);
+            speechBubble.SpeechBubbleOn(appearTitleKey, appearDialogSubKey, appearProbability);
 
         }
 
@@ -29,31 +29,8 @@ public class MonsterWarriorController : MonsterController
     {
         base.Init();
 
-        switch (Managers.Game.CurStageType)
-        {
-            case SubStage.West:
-                monStat = Managers.Data.monsterDict[GlobalData.g_NormalSkeletonID];
-                break;
-            case SubStage.East:
-                monStat = Managers.Data.monsterDict[GlobalData.g_MidSkeletonID];
-                break;
-            case SubStage.South:
-                monStat = Managers.Data.monsterDict[GlobalData.g_HighSkeletonID];
-                break;
-        }
-
-
-        att = monStat.att;
-        hp = monStat.hp;
-        maxHp = hp;
-        knockbackForce = monStat.knockBackForce;
-        attackRange = monStat.attackRange;
-        moveSpeed = 2.0f;
-        DropGold = monStat.dropGold;
-        DropCost = monStat.dropCost;
-
         SetMonsterState(MonsterState.Run);
-        speechBubble.SpeechBubbuleOn(appearTitleKey, appearDialogSubKey, appearProbability);
+        speechBubble.SpeechBubbleOn(appearTitleKey, appearDialogSubKey, appearProbability);
     }
 
     // Start is called before the first frame update

@@ -25,6 +25,8 @@ public abstract class Unit : MonoBehaviour,ISensor, IHpSubject
     protected float moveSpeed = .0f;
     protected bool isRun = false;
     protected bool isAtt = false;
+
+
     [SerializeField]
     protected bool isDie = false;
     protected bool isIdle = false;
@@ -32,7 +34,6 @@ public abstract class Unit : MonoBehaviour,ISensor, IHpSubject
     [SerializeField]
     protected Animator anim; 
     protected Rigidbody2D rigbody;
-    protected SpriteRenderer sp;
 
     [SerializeField]
     protected float attackCoolTime = 1.5f;
@@ -64,6 +65,8 @@ public abstract class Unit : MonoBehaviour,ISensor, IHpSubject
     protected bool knockbackStart = false;
     protected float knockbackDuration = 0.25f;
     protected bool isNoKnockBack = false;           //넉백이 안되는 구간에 있다면
+    protected Coroutine knockBackCo = null;
+    public Coroutine KnockBackCo { get { return knockBackCo; } }
 
 
     //말풍선
@@ -73,12 +76,11 @@ public abstract class Unit : MonoBehaviour,ISensor, IHpSubject
     private Transform parentTr;
     private GameObject hudPrefab;
 
-    //죽을때 spriteRender를통한 페이드아웃
-    protected UnityEngine.Color color = new UnityEngine.Color(0, 0, 0);
-
     protected float destoryTimer = 1.5f;
     protected bool startImgFadeOut = false;
 
+
+    
 
     public bool IsDie { get { return isDie; } }
     public int Att { get { return att; } }
@@ -95,7 +97,6 @@ public abstract class Unit : MonoBehaviour,ISensor, IHpSubject
         TryGetComponent<Animator>(out anim);
         TryGetComponent<Rigidbody2D>(out rigbody);
         TryGetComponent<Collider2D>(out myColl);
-        TryGetComponent<SpriteRenderer>(out sp);
         TryGetComponent(out speechBubble);
 
         TryGetComponent<UnitHp>(out unitHUDHp);
@@ -110,6 +111,8 @@ public abstract class Unit : MonoBehaviour,ISensor, IHpSubject
         Vector3 vec = this.gameObject.transform.position;
         vec.z = 0.0f;
         gameObject.transform.position = vec;        //혹시라도 설정된 z축이 0이 아닐때를 대비해서 0으로 넣어줌
+
+
     }
 
     public float hpPercent()
@@ -126,54 +129,95 @@ public abstract class Unit : MonoBehaviour,ISensor, IHpSubject
         return true;
     }
 
-    protected IEnumerator UnitDeadSrAlpha()
+    //protected virtual IEnumerator UnitDeadSrAlpha()
+    //{
+    //    while (true)
+    //    {
+
+    //        if (destoryTimer > 0.0f)
+    //        {
+    //            destoryTimer -= Time.deltaTime;
+    //            if (destoryTimer < .0f)
+    //            {
+    //                destoryTimer = .0f;
+    //                startImgFadeOut = true;
+
+    //            }
+    //        }
+
+
+    //        if (startImgFadeOut)
+    //        {
+
+    //            if(colors.Count <= 0)       //컬러값이 없다면 
+    //            {
+    //                foreach (var sp in spriteRenders)
+    //                {
+    //                    colors.Add(sp.color);
+    //                    originColors.Add(sp.color);
+    //                }
+    //            }
+
+
+    //            for(int ii = 0; ii < spriteRenders.Length; ii++)
+    //            {
+    //                if (colors[ii].a > .0f)
+    //                {
+    //                    color = colors[ii];
+    //                    color.a -= Time.deltaTime * 2.0f;
+    //                }
+    //                else
+    //                {
+    //                    destoryTimer = 1.5f;
+    //                    startImgFadeOut = false;
+    //                    yield break;
+
+    //                }
+
+    //                colors[ii] = color;
+    //                spriteRenders[ii].color = colors[ii];
+
+    //                shadowColor.a = colors[ii].a;
+
+    //                if (shadowSR != null)
+    //                    shadowSR.color = shadowColor;
+
+    //            }
+
+
+
+
+    //        }
+
+    //        yield return null;
+    //    }
+    //}
+
+    protected IEnumerator DestroyTime(GameObject go, float time = 0.0f)
     {
-        while (true)
-        {
 
-            if (destoryTimer > 0.0f)
-            {
-                destoryTimer -= Time.deltaTime;
-                if (destoryTimer < .0f)
-                {
-                    destoryTimer = .0f;
-                    startImgFadeOut = true;
+        WaitForSeconds wfs = new WaitForSeconds(time);
+        yield return wfs;  //초만큼 대기하고
+        anim.Rebind();
 
-                }
-            }
+        Managers.Resource.Destroy(go);
 
 
-            if (startImgFadeOut)
-            {
-
-                color = sp.color;
-                if (color.a > .0f)
-                {
-                    color.a -= Time.deltaTime * 2.0f;
-                }
-                else
-                {
-                    destoryTimer = 1.5f;
-                    startImgFadeOut = false;
-                    yield break;
-
-                }
-
-                sp.color = color;
 
 
-            }
+        yield return null;
 
-            yield return null;
-        }
+
     }
-
-
-
 
     public virtual void OnHeal(int heal) { }
 
-    public abstract void OnEnable();
+    public virtual void OnEnable()
+    {
+        
+
+
+    }
     public abstract void EnemySensor(); //적감지 센서
 
     public abstract void AttackDelay();
@@ -205,4 +249,6 @@ public abstract class Unit : MonoBehaviour,ISensor, IHpSubject
             obs.Notified(hpPercent);       //현재 유닛의 체력퍼센트를 구독하고 있는 옵저버들에게 전달해준다.
         
     }
+
+
 }

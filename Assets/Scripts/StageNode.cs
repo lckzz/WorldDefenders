@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class StageNode : MonoBehaviour
 {
-    [SerializeField] private Define.SubStage stage;
+    [SerializeField] private Define.Stage stage;
     [SerializeField] private Image stageImg;
     [SerializeField] private Image stageSubImg;
     [SerializeField] private Image stageTxtImg;
@@ -23,7 +23,7 @@ public class StageNode : MonoBehaviour
 
     private StageAnim stageAnim;
 
-
+    private const int MONSTERLIST_TOTAL_COUNT = 5;
 
 
     private Color stageLockColor = new Color32(82, 82, 82, 255);
@@ -31,13 +31,15 @@ public class StageNode : MonoBehaviour
     private Color stageNonClickColor = new Color32(176, 0, 255, 255);       //보라색
     private Color stageClickColor = new Color32(203, 95, 53, 255);         //자홍색
 
-    private Color bossstageOpneColor = new Color32(255, 117, 125, 255);
+    private Color bossstageOpneColor = new Color32(255, 0, 0, 255);
 
 
+    private List<int> stageMonsterIntList = new List<int>();
+    [SerializeField] private List<Define.MonsterType> stageMonsterList = new List<Define.MonsterType>();
 
-    private List<Define.MonsterType> stageMonsterList = new List<Define.MonsterType>();
+    private Dictionary<int, int> stageMonsterDict;
 
-    public Define.SubStage Stage { get { return stage; } }      //현재의 스테이지위치를 보내줌
+    public Define.Stage Stage { get { return stage; } }      //현재의 스테이지위치를 보내줌
     public List<Define.MonsterType> StageMonsterList { get { return stageMonsterList; } }
 
     private Define.StageState stageState = Define.StageState.Lock;
@@ -66,59 +68,29 @@ public class StageNode : MonoBehaviour
         if (stageAnim == null)
             this.gameObject.TryGetComponent(out stageAnim);
 
-
-
-
-        //해당 스테이지에 따라서 몬스터리스트를 갱신해주고 현재 스테이지의 상태를 보여줌
-        switch (stage)
+        stageMonsterDict = new Dictionary<int, int>
         {
-            case Define.SubStage.West:
-                stageMonsterList.Add(Define.MonsterType.NormalSkeleton);
-                stageMonsterList.Add(Define.MonsterType.BowSkeleton);
-                stageMonsterList.Add(Define.MonsterType.EliteWarrior);
+            { 0,Managers.Game.OneChapterStageInfoList[(int)stage].StageData.appearMonster1 },
+            { 1,Managers.Game.OneChapterStageInfoList[(int)stage].StageData.appearMonster2 },
+            { 2,Managers.Game.OneChapterStageInfoList[(int)stage].StageData.appearMonster3 },
+            { 3,Managers.Game.OneChapterStageInfoList[(int)stage].StageData.appearMonster4 },
+            { 4,Managers.Game.OneChapterStageInfoList[(int)stage].StageData.appearMonster5 },
 
-                stageState = Define.StageState.Open;
-                
-                //if(Managers.Game.WestStageClear)
-                //{
-                //    fireEffObj.SetActive(false);
-                //    stageClearTxt.gameObject.SetActive(true);
-                //}
+        };
 
-                break;
-            case Define.SubStage.East:
-                stageMonsterList.Add(Define.MonsterType.MidSkeleton);
-                stageMonsterList.Add(Define.MonsterType.MidBowSkeleton);
-                stageMonsterList.Add(Define.MonsterType.EliteShaman);
-                
-                if(Managers.Game.WestStageClear)
-                    stageState = Define.StageState.Open;
-                else
-                    stageState = Define.StageState.Lock;
-                //if (Managers.Game.EastStageClear)
-                //{
-                //    fireEffObj.SetActive(false);
-                //    stageClearTxt.gameObject.SetActive(true);
-                //}
 
-                break;
-            case Define.SubStage.South:
-                stageMonsterList.Add(Define.MonsterType.HighSkeleton);
-                stageMonsterList.Add(Define.MonsterType.HighBowSkeleton);
-                stageMonsterList.Add(Define.MonsterType.EliteCavalry);
 
-                if (Managers.Game.EastStageClear)
-                    stageState = Define.StageState.Open;
-                else
-                    stageState = Define.StageState.Lock;
-                //if (Managers.Game.SouthStageClear)
-                //{
-                //    fireEffObj.SetActive(false);
-                //    stageClearTxt.gameObject.SetActive(true);
-                //}
+        StageMonsterSetting();
 
-                break;
+        if((int)stage > 0 && Managers.Game.OneChapterStageInfoList[(int)stage].state == 0)      //첫스테이지가 아니면서 이미 잠금상태라면
+        {
+            if (Managers.Game.OneChapterStageInfoList[(int)stage - 1].clear == true)        //전단계가 클리어라면
+                Managers.Game.OneChapterStageInfoList[(int)stage].state = 1;        //열림 상태로
+
         }
+
+
+        stageState = StageEnumToInt<Define.StageState>(Managers.Game.OneChapterStageInfoList[(int)stage].state);
 
 
 
@@ -147,7 +119,7 @@ public class StageNode : MonoBehaviour
                 if (lockImg.gameObject.activeSelf)
                     lockImg.gameObject.SetActive(false);
 
-                if(stage != Define.SubStage.Boss)
+                if(stage != Define.Stage.Boss)
                 {
                     stageImg.color = stageNonClickColor;
                     stageSubImg.color = stageNormalColor;
@@ -164,6 +136,31 @@ public class StageNode : MonoBehaviour
         }
 
     }
+
+
+    T StageEnumToInt<T>(int idx) where T : System.Enum
+    {
+        return (T)System.Enum.ToObject(typeof(T),idx);
+    }
+
+
+    private void StageMonsterSetting()
+    {
+        foreach(int idx in GetStageMonsterDict())
+        {
+            //딕셔너리를 돌아서
+            if(idx >= 0)  //0보다 같거나 크면
+                stageMonsterList.Add(StageEnumToInt<Define.MonsterType>(idx));      //스테이지 몬스터리스트에 넣어주기
+
+            
+        }
+
+            
+        //stageMonsterList.Add(StageEnumToInt<Define.MonsterType>(Managers.Game.OneChapterStageInfoList[(int)stage].StageData.appearMonster1));
+        //stageMonsterList.Add(StageEnumToInt<Define.MonsterType>(Managers.Game.OneChapterStageInfoList[(int)stage].StageData.appearMonster2));
+        //stageMonsterList.Add(StageEnumToInt<Define.MonsterType>(Managers.Game.OneChapterStageInfoList[(int)stage].StageData.appearMonster3));
+    }
+
 
     public void ClickStageDoOn()
     {
@@ -190,7 +187,7 @@ public class StageNode : MonoBehaviour
         stageImgRt?.DOSizeDelta(new Vector2(100.0f, 50.0f), 0.1f);
         stageSubImgRt?.DOSizeDelta(new Vector2(102.0f, 107.0f), 0.1f);
         stageObjectiveRt?.DOSizeDelta(new Vector2(0.0f, stageObjectiveRt.sizeDelta.y), 0.3f);
-        stageImg.color = stageNonClickColor;
+        stageImg.color = (stage == Define.Stage.Boss) ? bossstageOpneColor : stageImg.color = stageNonClickColor;
         if (stageClearTxt != null)
         {
             if (stageClearTxt.gameObject.activeSelf)
@@ -202,5 +199,12 @@ public class StageNode : MonoBehaviour
     public Vector3 GetNodePosition()
     {
         return stageImgRt.localPosition;
+    }
+
+
+
+    private IEnumerable GetStageMonsterDict()
+    {
+        return stageMonsterDict.Values;
     }
 }

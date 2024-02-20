@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using UnityEditor;
 
 public class UnitSlotUI : UI_BaseSettingUnit
 {
@@ -81,13 +82,13 @@ public class UnitSlotUI : UI_BaseSettingUnit
 
     protected override void Init()
     {
-
+        base.Init();
         slotUnitClearBtn?.TryGetComponent(out slotUnitClearRt);
         slotUnitInfoBtn?.TryGetComponent(out slotUnitInfoRt);
 
         SlotUnitLvTxtObjOnOff(false);           //처음에 들어오면 레벨은 전부 꺼줌(슬롯안에 유닛이 배치되어야만 온)
         //처음에 생성되면 해당갱신해주기
-        unitImg.TryGetComponent(out rt);
+
         if (selectImgObj != null)
             selectImgObj.SetActive(false);
 
@@ -98,7 +99,13 @@ public class UnitSlotUI : UI_BaseSettingUnit
     }
 
 
+    protected override void UnitUISpriteInit()
+    {
+        base.UnitUISpriteInit();
 
+        if (unitPosObj != null)  //유닛노드의 위치할 오브젝트가 있다면
+            Managers.Resource.Instantiate(unitStat.unitSpriteUIPrefabs, unitPosObj.transform);        //유닛노드의 위치한 오브젝트의 하위에 유닛을 생성한다.
+    }
 
     public void SetUnitClass(UnitClass uniClass)
     {
@@ -109,75 +116,23 @@ public class UnitSlotUI : UI_BaseSettingUnit
 
     public void RefreshUnitImg()
     {
-        if(rt == null)
-            unitImg.TryGetComponent(out rt);
+        if(e_UnitClass == UnitClass.Count)
+        {
+            SlotUnitLvTxtObjOnOff(false);
+            SlotClickUnitInfoBtnOnOff(false);       //슬롯클릭시 나오는  UI를 일단 꺼두기
+
+            if (unitPosObj.transform.childCount > 0)     //만약 초기화하는데 유닛포스안에 하위오브젝트가 있다면
+                Destroy(unitPosObj.transform.GetChild(0).gameObject);           //그 오브젝트는 삭제해준다.
+
+            return;
+        }
 
         SlotUnitLvTxtObjOnOff(true);
         SlotClickUnitInfoBtnOnOff(false);       //슬롯클릭시 나오는  UI를 일단 꺼두기
 
-        switch (e_UnitClass)
-        {
+        UnitUISpriteInit();
+        SlotUnitLvInit(Managers.Game.GetUnitLevel(e_UnitClass));
 
-            case UnitClass.Warrior:
-                //Debug.Log($"워리어 갱신! {e_UnitClass}");
-                rt.sizeDelta = defalutSizeDelta;
-                rt.transform.localPosition = defalutTr;
-                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitWarriorLv, "KnifeUnitLv1Img", "KnifeUnitLv2Img");
-                SlotUnitLvInit(Managers.Game.UnitWarriorLv);
-                break;
-
-            case UnitClass.Archer:
-                //Debug.Log($"아처 갱신! {e_UnitClass}");
-                rt.sizeDelta = defalutSizeDelta;
-                rt.transform.localPosition = defalutTr;
-                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitArcherLv, "BowUnitLv1Img", "BowUnitLv2Img");
-                SlotUnitLvInit(Managers.Game.UnitArcherLv);
-                break;
-
-            case UnitClass.Spear:
-                //Debug.Log($"창병 갱신! {e_UnitClass}");
-
-                rt.sizeDelta = spearSizeDelta;
-                rt.transform.localPosition = spearTr;
-                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitSpearLv, "SpearUnitLv1Img", "SpearUnitLv2Img");
-                SlotUnitLvInit(Managers.Game.UnitSpearLv);
-                break;
-
-            case UnitClass.Priest:
-                //Debug.Log($"아처 갱신! {e_UnitClass}");
-                rt.sizeDelta = defalutSizeDelta;
-                rt.transform.localPosition = defalutTr;
-                UnitUISpriteInit(e_UnitClass, Managers.Game.UnitPriestLv, "PriestLv1Img", "PriestLv2Img");
-                SlotUnitLvInit(Managers.Game.UnitPriestLv);
-                break;
-
-            case UnitClass.Magician:
-                //Debug.Log($"창병 갱신! {e_UnitClass}");
-
-                rt.sizeDelta = defalutSizeDelta;
-                rt.transform.localPosition = defalutTr;
-                UnitUISpriteInit(e_UnitClass, "Magician_Idle");
-                SlotUnitLvInit(Managers.Game.UnitMagicianLv);
-                break;
-            case UnitClass.Cavalry:
-                //Debug.Log($"창병 갱신! {e_UnitClass}");
-
-                rt.sizeDelta = defalutSizeDelta;
-                rt.transform.localPosition = defalutTr;
-                UnitUISpriteInit(e_UnitClass, "Cavalry_Idle");
-                SlotUnitLvInit(Managers.Game.UnitCarlvlry);
-                break;
-
-            default:
-                if (unitImg != null)
-                    unitImg.gameObject.SetActive(false);
-
-                SlotClickUnitInfoBtnOnOff(false);       //슬롯클릭시 나오는  UI를 일단 꺼두기
-                SlotUnitLvTxtObjOnOff(false);           //처음에 들어오면 레벨은 전부 꺼줌(슬롯안에 유닛이 배치되어야만 온)
-                //Debug.Log("유닛노드에 유닛클래스가 설정이 안됫어요;");
-                break;
-
-        }
     }
 
 
@@ -233,7 +188,8 @@ public class UnitSlotUI : UI_BaseSettingUnit
         }
     }
 
-    
+
+
 
 
 

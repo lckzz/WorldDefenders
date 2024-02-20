@@ -10,7 +10,8 @@
       "criticalRate": "15",
       "attackRange": "1.5",
       "dropGold": "0",
-      "dropCost": "7"
+      "dropCost": "7",
+      "monsterPrefab": "Monster/NormalSkeleton"
     },
     {
       "id": "0002",
@@ -22,7 +23,8 @@
       "criticalRate": "15",
       "attackRange": "5.0",
       "dropGold": "0",
-      "dropCost": "7"
+      "dropCost": "7",
+      "monsterPrefab": "Monster/NormalBowSkeleton"
     },
 
     {
@@ -33,9 +35,10 @@
       "att": "30",
       "knockBackForce": "30",
       "criticalRate": "20",
-      "attackRange": "3.0",
+      "attackRange": "2.0",
       "dropGold": "0",
-      "dropCost": "7"
+      "dropCost": "7",
+      "monsterPrefab": "Monster/SpearSkeleton"
     },
 
     {
@@ -48,7 +51,8 @@
       "criticalRate": "20",
       "attackRange": "1.5",
       "dropGold": "0",
-      "dropCost": "7"
+      "dropCost": "7",
+      "monsterPrefab": "Monster/MiddleSkeleton"
     },
 
     {
@@ -61,37 +65,68 @@
       "criticalRate": "20",
       "attackRange": "5.0",
       "dropGold": "0",
-      "dropCost": "7"
+      "dropCost": "7",
+      "monsterPrefab": "Monster/MiddleBowSkeleton"
     },
 
     {
       "id": "0006",
+      "name": "MidSpearSkeleton",
+      "level": "5",
+      "hp": "300",
+      "att": "40",
+      "knockBackForce": "30",
+      "criticalRate": "30",
+      "attackRange": "2.0",
+      "dropGold": "0",
+      "dropCost": "7",
+      "monsterPrefab": "Monster/MidSpearSkeleton"
+    },
+
+    {
+      "id": "0007",
       "name": "HighWarriorSkeleton",
-      "level": "7",
+      "level": "8",
       "hp": "400",
       "att": "70",
       "knockBackForce": "30",
       "criticalRate": "20",
       "attackRange": "1.5",
       "dropGold": "0",
-      "dropCost": "7"
+      "dropCost": "7",
+      "monsterPrefab": "Monster/HighSkeleton"
     },
 
     {
-      "id": "0007",
+      "id": "0008",
       "name": "HighArcherSkeleton",
-      "level": "9",
+      "level": "8",
       "hp": "350",
       "att": "50",
       "knockBackForce": "30",
       "criticalRate": "20",
       "attackRange": "5.0",
       "dropGold": "0",
-      "dropCost": "7"
+      "dropCost": "7",
+      "monsterPrefab": "Monster/HighBowSkeleton"
     },
 
     {
-      "id": "0008",
+      "id": "0009",
+      "name": "HighSpearSkeleton",
+      "level": "8",
+      "hp": "450",
+      "att": "50",
+      "knockBackForce": "30",
+      "criticalRate": "20",
+      "attackRange": "2.0",
+      "dropGold": "0",
+      "dropCost": "7",
+      "monsterPrefab": "Monster/HighSpearSkeleton"
+    },
+
+    {
+      "id": "00101",
       "name": "EliteWarrior",
       "level": "4",
       "hp": "1500",
@@ -100,10 +135,11 @@
       "criticalRate": "40",
       "attackRange": "1.5",
       "dropGold": "0",
-      "dropCost": "45"
+      "dropCost": "45",
+      "monsterPrefab": "Monster/EliteWarrior"
     },
     {
-      "id": "0009",
+      "id": "00102",
       "name": "EliteShaman",
       "level": "7",
       "hp": "2300",
@@ -112,19 +148,34 @@
       "criticalRate": "40",
       "attackRange": "5.0",
       "dropGold": "0",
-      "dropCost": "45"
+      "dropCost": "45",
+      "monsterPrefab": "Monster/EliteShaman"
     },
     {
-      "id": "00010",
+      "id": "00103",
       "name": "EliteCavarly",
-      "level": "10",
+      "level": "9",
       "hp": "3000",
       "att": "90",
       "knockBackForce": "30",
       "criticalRate": "40",
       "attackRange": "1.75",
       "dropGold": "0",
-      "dropCost": "45"
+      "dropCost": "45",
+      "monsterPrefab": "Monster/EliteCavalry"
+    },
+    {
+      "id": "00104",
+      "name": "SkeletonKing",
+      "level": "10",
+      "hp": "5000",
+      "att": "120",
+      "knockBackForce": "30",
+      "criticalRate": "40",
+      "attackRange": "1.75",
+      "dropGold": "0",
+      "dropCost": "100",
+      "monsterPrefab": "Monster/SkeletonKing"
     }
   ]
 

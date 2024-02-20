@@ -89,33 +89,35 @@ public class UI_GamePlay : UI_Base
 
 
     //----------DOTween MovePos--------------
-    float uiAttBtnBeforePosY = -220.0f;
-    float uiAttBtnAfterPosY = 85.6f;
+    private float uiAttBtnBeforePosY = -220.0f;
+    private float uiAttBtnAfterPosY = 85.6f;
 
-    float uiSkillBtnBeforePosY = -75.0f;
-    float uiSkillBtnAfterPosY = 218.2f;
+    private float uiSkillBtnBeforePosY = -75.0f;
+    private float uiSkillBtnAfterPosY = 218.2f;
 
-    float uiCostBeforePosY = -130.0f;
-    float uiCostAfterPosY = 115.75f;
+    private float uiCostBeforePosY = -130.0f;
+    private float uiCostAfterPosY = 115.75f;
     //----------DOTween MoveSetting--------------
 
 
 
-    bool leftBtnCheck = false;      //왼쪽 움직임 버튼을 눌럿는지 판단하는 변수
-    bool rightBtnCheck = false;     //오른쪽 움직임 버튼을 눌럿는지 판단하는 변수
+    private bool leftBtnCheck = false;      //왼쪽 움직임 버튼을 눌럿는지 판단하는 변수
+    private bool rightBtnCheck = false;     //오른쪽 움직임 버튼을 눌럿는지 판단하는 변수
 
     public bool LeftBtnCheck { get { return leftBtnCheck; }}
     public bool RightBtnCheck { get { return rightBtnCheck; } }
 
 
-    UnitNode unitNode;
-    GameObject unitObj;
+    //private UnitNode unitNode;
+    //private GameObject unitObj;
 
 
     [SerializeField] private Vector3[] unitNodePos;
-    Vector3 unitNodeStartPos = new Vector3(105.0f, -260.0f, .0f);
+    private Vector3 unitNodeStartPos = new Vector3(105.0f, -260.0f, .0f);
 
-    Coroutine StartUISet = null;
+
+
+    private Coroutine StartUISet = null;
 
     //UI_EventHandler evt;
 
@@ -129,6 +131,7 @@ public class UI_GamePlay : UI_Base
         Managers.Game.MoneyCostInit();
 
         unitNodePos = new Vector3[5];
+
 
         for(int i = 0; i < unitNodePos.Length; i++)
         {
@@ -190,51 +193,52 @@ public class UI_GamePlay : UI_Base
         }
 
 
-        for (int i = 0; i < uiUnit.Length; i++)
-        {
-            uiUnit[i].TryGetComponent<UnitNode>(out UnitNode node);
+
+        //for (int i = 0; i < uiUnit.Length; i++)
+        //{
+        //    uiUnit[i].TryGetComponent<UnitNode>(out UnitNode node);
 
 
-            switch (node.Unit)
-            {
-                case UnitClass.Warrior:
-                    if(Managers.Game.UnitWarriorLv < 5)
-                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Warrior/WarriorUnitLv1");
-                    else if(Managers.Game.UnitWarriorLv >= 5)
-                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Warrior/WarriorUnitLv2");
-                    break;
+        //    //switch (node.Unit)
+        //    //{
+        //    //    case UnitClass.Warrior:
+        //    //        if(Managers.Game.UnitWarriorLv < 5)
+        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Warrior/WarriorUnitLv1");
+        //    //        else if(Managers.Game.UnitWarriorLv >= 5)
+        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Warrior/WarriorUnitLv2");
+        //    //        break;
 
-                case UnitClass.Archer:
-                    if(Managers.Game.UnitArcherLv < 5)
-                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Archer/ArcherUnitLv1");
-                    else
-                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Archer/ArcherUnitLv2");
+        //    //    case UnitClass.Archer:
+        //    //        if(Managers.Game.UnitArcherLv < 5)
+        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Archer/ArcherUnitLv1");
+        //    //        else
+        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Archer/ArcherUnitLv2");
 
-                    break;
+        //    //        break;
 
-                case UnitClass.Spear:
-                    if(Managers.Game.UnitSpearLv < 5)
-                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Spear/SpearUnitLv1");
-                    else
-                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Spear/SpearUnitLv2");
+        //    //    case UnitClass.Spear:
+        //    //        if(Managers.Game.UnitSpearLv < 5)
+        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Spear/SpearUnitLv1");
+        //    //        else
+        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Spear/SpearUnitLv2");
 
-                    break;
+        //    //        break;
 
-                case UnitClass.Priest:
-                    if (Managers.Game.UnitPriestLv < 5)
-                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Priest/PriestUnitLv1");
-                    else
-                        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Priest/PriestUnitLv2");
+        //    //    case UnitClass.Priest:
+        //    //        if (Managers.Game.UnitPriestLv < 5)
+        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Priest/PriestUnitLv1");
+        //    //        else
+        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Priest/PriestUnitLv2");
 
-                    break;
-                case UnitClass.Magician:
-                    UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/MagicianUnit");
-                    break;
-                case UnitClass.Cavalry:
-                    UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/CavalryUnit");
-                    break;
-            }
-        }
+        //    //        break;
+        //    //    case UnitClass.Magician:
+        //    //        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/MagicianUnit");
+        //    //        break;
+        //    //    case UnitClass.Cavalry:
+        //    //        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/CavalryUnit");
+        //    //        break;
+        //    //}
+        //}
 
         StartUISet = StartCoroutine(StartUnitNodeUIMove());
 
@@ -349,29 +353,29 @@ public class UI_GamePlay : UI_Base
         
     }
 
-    private void ButtonEvent1(GameObject obj, string path,int idx, Action<string,int> action = null, UIEvent type = UIEvent.PointerDown)
-    {
-        UI_EventHandler evt;
-        obj.TryGetComponent(out evt);
+    //private void ButtonEventActionStringInt(GameObject obj, string path,int idx, Action<string,int> action = null, UIEvent type = UIEvent.PointerDown)
+    //{
+    //    UI_EventHandler evt;
+    //    obj.TryGetComponent(out evt);
 
 
-        switch (type)
-        {
-            case UIEvent.PointerDown:
-                evt.OnPointerDownUnitHandler -= (unUsedPath,unUsedIdx) => action(path,idx);
-                evt.OnPointerDownUnitHandler += (unUsedPath,unUsedIdx) => action(path,idx);
+    //    switch (type)
+    //    {
+    //        case UIEvent.PointerDown:
+    //            evt.OnPointerDownUnitHandler -= (unUsedPath,unUsedIdx) => action(path,idx);
+    //            evt.OnPointerDownUnitHandler += (unUsedPath,unUsedIdx) => action(path,idx);
                 
-                break;
+    //            break;
 
-        }
+    //    }
 
-    }
+    //}
 
 
-    private void UnitButtonSetting(int i , string path)
-    {
-        ButtonEvent1(uiUnit[i].gameObject, path, i, UnitSummonBtnClick, UIEvent.PointerDown);
-    }
+    //private void UnitButtonSetting(int i , string path)
+    //{
+    //    ButtonEventActionStringInt(uiUnit[i].gameObject, path, i, UnitSummonBtnClick, UIEvent.PointerDown);
+    //}
 
     private void InGameSetting()
     {
@@ -500,9 +504,9 @@ public class UI_GamePlay : UI_Base
 
                 if (duration >= .99f || player.FireArrowCount <= 0)
                 {
-                    skillDurationTimeImg.fillAmount = 1;
-                    durationTime = 0.0f;
                     skillDurationObj.SetActive(false);
+                    skillDurationTimeImg.fillAmount = 0;
+                    durationTime = 0.0f;
                     yield break;
                 }
             }
@@ -513,9 +517,9 @@ public class UI_GamePlay : UI_Base
 
                 if (duration >= .99f)
                 {
-                    skillDurationTimeImg.fillAmount = 1;
-                    durationTime = 0.0f;
                     skillDurationObj.SetActive(false);
+                    skillDurationTimeImg.fillAmount = 0;
+                    durationTime = 0.0f;
                     skillDurationTimeTxt.text = player.SkillData.skillDuration.ToString();
                     yield break;
                 }
@@ -617,21 +621,7 @@ public class UI_GamePlay : UI_Base
 
 
 
-    //유닛 버튼을 누를시 소환
-    public void UnitSummonBtnClick(string namePath,int idx)
-    {
-        if (Managers.Game.GameEndResult())       //개임이 끝났으면 유닛버튼은 눌리지 않는다.
-            return;
-
-        unitObj = Resources.Load<GameObject>(namePath);
-
-        uiUnit[idx].TryGetComponent(out unitNode);
-
-        if (unitNode?.CoolCheck == false) //쿨타임이 돌고 있지않을 때
-        {
-            Managers.Game.UnitSummonEnqueue(unitObj, unitNode.UnitCost, unitNode);
-        }
-    }
+ 
 
 
     public void UiMove(RectTransform rt, float beforePosY , float afterPosY)

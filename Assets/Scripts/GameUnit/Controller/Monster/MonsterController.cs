@@ -11,9 +11,11 @@ public enum MonsterClass
 {
     Warrior,
     Archer,
+    Spear,
     EliteWarrior,
     EliteCavalry,
     EliteShaman,
+    SkeletonKing,
     Count
 }
 
@@ -33,32 +35,11 @@ public class MonsterController : MonsterBase
     [SerializeField]
     private MonsterState state = MonsterState.Run;        //테스트용이라 런 
 
-
-
-    //List<Unit> unitCtrls = new List<Unit>();
-    ////[SerializeField] protected Unit unitTarget;
-    ////[SerializeField] protected PlayerTower playerTowerCtrl;
-
-    //protected MonsterStat monStat;
-
-    //DropItem dropItem;
-
-    //[SerializeField] DebuffCreator debuffCreator;
-    //Debuff debuff;
-
-
-
-    //public float Hp { get { return hp; } }
-
     public int DropGold { get ; protected set; }
     //public int DropCost { get; protected set; }
 
     public int KnockBackForce { get { return knockbackForce; } }
 
-
-    //public Debuff Debuff { get { return debuff; } }
-    //public Unit UnitCtrl { get { return unitTarget; } }
-    //public PlayerTower PlayerTowerCtrl { get { return playerTowerCtrl; } }
     public MonsterState MonState { get { return state; } }
 
 
@@ -71,22 +52,58 @@ public class MonsterController : MonsterBase
     protected readonly int dieProbability = 25;
 
 
+    protected Dictionary<Stage, Dictionary<MonsterClass, MonsterStat>> monsterStatDict;
+
+
     public override void Init()
     {
         base.Init();
 
-        //monStat = new MonsterStat();
+        monsterStatDict = new Dictionary<Stage, Dictionary<MonsterClass, MonsterStat>>
+        {
+            { Stage.West, new Dictionary<MonsterClass, MonsterStat>
+            {
+                { MonsterClass.Warrior,Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.NormalSkeleton]] },
+                { MonsterClass.Archer,Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.NormalBowSkeleton]] },
+                { MonsterClass.Spear,Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.SpearSkeleton]] },
+
+            } },
+            { Stage.South, new Dictionary<MonsterClass, MonsterStat>
+            {
+                { MonsterClass.Warrior,Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.MidSkeleton]] },
+                { MonsterClass.Archer,Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.MidBowSkeleton]] },
+                { MonsterClass.Spear,Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.MidSpearSkeleton]] },
+
+            } },
+            { Stage.East, new Dictionary<MonsterClass, MonsterStat>
+            {
+                { MonsterClass.Warrior,Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.HighSkeleton]] },
+                { MonsterClass.Archer,Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.HighBowSkeleton]] },
+                { MonsterClass.Spear,Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.HighSpearSkeleton]] },
+
+            } },
+            { Stage.Boss, new Dictionary<MonsterClass, MonsterStat>
+            {
+                { MonsterClass.Warrior,Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.HighSkeleton]] },
+                { MonsterClass.Archer,Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.HighBowSkeleton]] },
+                { MonsterClass.Spear,Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.HighSpearSkeleton]] },
+
+            } }
+
+        };
+
+        monStat = monsterStatDict[Managers.Game.CurStageType][monsterClass];
+        att = monStat.att;
+        hp = monStat.hp;
+        maxHp = hp;
+        knockbackForce = monStat.knockBackForce;
+        attackRange = monStat.attackRange;
+        moveSpeed = 2.0f;
+        DropGold = monStat.dropGold;
+        DropCost = monStat.dropCost;
+
+
         spawnPosX = 18.0f;
-
-        //TryGetComponent(out myColl);
-        //TryGetComponent(out dropItem);
-        //TryGetComponent(out debuffCreator);
-
-        //debuff = debuffCreator.AddDebuffComponent(Managers.Game.CurPlayerEquipSkill);
-
-
-        //if(Debuff is WeaknessDebuff weaknessDebuff)
-        //    weaknessDebuff.AddObserver(this);           //디버프의 능력치변화값을 받아오기위한 구독
 
     }
 
@@ -94,16 +111,8 @@ public class MonsterController : MonsterBase
     {
         base.OnEnable();
 
-        if (sp != null && myColl != null)
+        if (myColl != null)
         {
-            ////오브젝트 풀에서 생성되면 초기화 시켜줘야함
-            //isDie = false;
-            //isRun = false;
-            //hp = maxHp;
-            //sp.color = new Color32(255, 255, 255, 255);
-            //myColl.enabled = true;
-            //unitTarget = null;
-            //playerTowerCtrl = null;
             SetMonsterState(MonsterState.Run);
 
         }
@@ -509,16 +518,16 @@ public class MonsterController : MonsterBase
 
             Debuff?.DebuffDestory();
 
-            speechBubble.SpeechBubbuleOn(dieTitleKey, dieDialogSubKey, dieProbability);
+            speechBubble.SpeechBubbleOn(dieTitleKey, dieDialogSubKey, dieProbability);
 
             SetMonsterState(MonsterState.Die);
             myColl.enabled = false;
 
 
             dropItem?.Drop(this.gameObject.transform.position);
-            StartCoroutine(Util.DestroyTime(gameObject, 3.0f));
+            StartCoroutine(DestroyTime(gameObject, 3.0f));
+
             StartCoroutine(MonsterDieDropText());
-            StartCoroutine(UnitDeadSrAlpha());
             onDead?.Invoke();
 
 

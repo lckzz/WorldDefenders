@@ -9,14 +9,33 @@ using static UnityEngine.UI.CanvasScaler;
 
 public class UI_PlayerUpgradePopUp : UI_Base,IOpenPanel
 {
-    public TextMeshProUGUI curLvTxt;
-    public TextMeshProUGUI curHpTxt;
-    public TextMeshProUGUI curAttTxt;
+    [Header("----------------curLv----------------")]
+    [SerializeField] private GameObject curLvObj;
 
-    public TextMeshProUGUI nextLvTxt;
-    public TextMeshProUGUI nextHpTxt;
-    public TextMeshProUGUI nextAttTxt;
-    public TextMeshProUGUI goldTxt;
+    [SerializeField] private TextMeshProUGUI curLvTxt;
+    [SerializeField] private TextMeshProUGUI curHpTxt;
+    [SerializeField] private TextMeshProUGUI curAttTxt;
+
+    [Space(20)]
+    [Header("----------------NextLv----------------")]
+
+    [SerializeField] private GameObject nextLvObj;
+
+    [SerializeField] private TextMeshProUGUI nextLvTxt;
+    [SerializeField] private TextMeshProUGUI nextHpTxt;
+    [SerializeField] private TextMeshProUGUI nextAttTxt;
+
+    [Space(20)]
+    [Header("----------------MaxLv----------------")]
+
+    [SerializeField] private GameObject maxLvObj;
+    [SerializeField] private TextMeshProUGUI maxLvTxt;
+    [SerializeField] private TextMeshProUGUI maxHpTxt;
+    [SerializeField] private TextMeshProUGUI maxAttTxt;
+
+    [Space(20)]
+    [SerializeField] private GameObject nextArrowObj;
+    [SerializeField] private TextMeshProUGUI goldTxt;
 
     public Button upgradeBtn;
     public Button closeBtn;
@@ -40,37 +59,38 @@ public class UI_PlayerUpgradePopUp : UI_Base,IOpenPanel
 
     void PlayerInit()
     {
-        towerLv = Managers.Game.PlayerLevel;
+        //towerLv = Managers.Game.PlayerLevel;
 
 
-        if (towerLv > 10)
-            return;
+        //if (towerLv > 10)
+        //    return;
 
-        tower = Managers.Data.towerDict[towerLv];
-        curLvTxt.text = tower.level.ToString();
-        curHpTxt.text = tower.hp.ToString();
-        curAttTxt.text = tower.att.ToString();
+        //tower = Managers.Data.towerDict[towerLv];
+        //curLvTxt.text = tower.level.ToString();
+        //curHpTxt.text = tower.hp.ToString();
+        //curAttTxt.text = tower.att.ToString();
 
 
-        if (towerLv < 10)
-        {
-            int nextLv = towerLv + 1;
-            tower = Managers.Data.towerDict[nextLv];
+        //if (towerLv < 10)
+        //{
+        //    int nextLv = towerLv + 1;
+        //    tower = Managers.Data.towerDict[nextLv];
 
-            
-            nextLvTxt.text = tower.level.ToString();
-            nextHpTxt.text = tower.hp .ToString();
-            nextAttTxt.text = tower.att.ToString();
-            goldTxt.text = tower.price.ToString();
-        }
-        else
-        {
-            nextLvTxt.text = tower.level.ToString();
-            nextHpTxt.text = tower.hp.ToString();
-            nextAttTxt.text = tower.att.ToString();
-        }
 
-      
+        //    nextLvTxt.text = tower.level.ToString();
+        //    nextHpTxt.text = tower.hp .ToString();
+        //    nextAttTxt.text = tower.att.ToString();
+        //    goldTxt.text = tower.price.ToString();
+        //}
+        //else
+        //{
+        //    nextLvTxt.text = tower.level.ToString();
+        //    nextHpTxt.text = tower.hp.ToString();
+        //    nextAttTxt.text = tower.att.ToString();
+        //}
+        RefreshTextUI();
+
+
     }
 
     // Start is called before the first frame update
@@ -116,25 +136,48 @@ public class UI_PlayerUpgradePopUp : UI_Base,IOpenPanel
     {
         towerLv = Managers.Game.PlayerLevel;
         tower = Managers.Data.towerDict[towerLv];
-        curLvTxt.text = tower.level.ToString();
-        curHpTxt.text = tower.hp.ToString();
-        curAttTxt.text = tower.att.ToString();
 
-        if (towerLv < 10)
+
+        if (IsTowerMaxLevel() == false)
         {
+            //타워가 만렙이 아니라면
+            curLvObj.SetActive(true);
+            nextArrowObj.SetActive(true);
+            nextLvObj.SetActive(true);
+            maxLvObj.SetActive(false);
+
+            curLvTxt.text = tower.level.ToString();
+            curHpTxt.text = tower.hp.ToString();
+            curAttTxt.text = tower.att.ToString();
+
+
             int nextLv = towerLv + 1;
             tower = Managers.Data.towerDict[nextLv];
             nextLvTxt.text = tower.level.ToString();
-            nextHpTxt.text = tower.hp .ToString();
-            nextAttTxt.text = tower.att .ToString();
-            goldTxt.text = tower.price.ToString();
-        }
-        else
-        {
-            nextLvTxt.text = tower.level.ToString();
             nextHpTxt.text = tower.hp.ToString();
             nextAttTxt.text = tower.att.ToString();
+            goldTxt.text = tower.price.ToString();
+            Debug.Log("테스트2");
+
         }
+
+        else
+        {
+
+            Debug.Log("테스트");
+            //타워가 만렙이라면
+            curLvObj.SetActive(false);
+            nextArrowObj.SetActive(false);
+            nextLvObj.SetActive(false);
+            maxLvObj.SetActive(true);
+
+            maxLvTxt.text = tower.level.ToString();
+            maxHpTxt.text = tower.hp.ToString();
+            maxAttTxt.text = tower.att.ToString();
+            goldTxt.text = "Max";
+        }
+
+
 
         if (towerLv == 3)  //3레벨 달성시 폭발화살 레벨업!해서 개방
         {
@@ -162,6 +205,15 @@ public class UI_PlayerUpgradePopUp : UI_Base,IOpenPanel
         Managers.Sound.Play("Effect/UI_Click");
         noticePanel.SetActive(true);
         upgradeNotice.SetUpgradeGold(tower.price);
+    }
+
+
+    bool IsTowerMaxLevel()
+    {
+        if (towerLv < towerMaxLv)
+            return false;
+
+        return true;
     }
 
     public void LevelUpParticleOn()

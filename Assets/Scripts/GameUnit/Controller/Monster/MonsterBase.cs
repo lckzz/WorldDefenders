@@ -7,6 +7,8 @@ using static Define;
 
 public abstract class MonsterBase : Unit, IObserver
 {
+    [SerializeField] protected MonsterClass monsterClass;
+    
     protected List<Unit> unitCtrls = new List<Unit>();
     [SerializeField] protected Unit unitTarget;
     [SerializeField] protected PlayerTower playerTowerCtrl;
@@ -18,6 +20,7 @@ public abstract class MonsterBase : Unit, IObserver
 
     protected DebuffCreator debuffCreator;
     protected Debuff debuff;
+
 
     public int DropCost { get; protected set; }
 
@@ -36,13 +39,13 @@ public abstract class MonsterBase : Unit, IObserver
 
     public override void OnEnable()
     {
-        if (sp != null && myColl != null)
+        if (myColl != null)
         {
             //오브젝트 풀에서 생성되면 초기화 시켜줘야함
             isDie = false;
             isRun = false;
             hp = maxHp;
-            sp.color = new Color32(255, 255, 255, 255);
+            
             myColl.enabled = true;
             unitTarget = null;
             playerTowerCtrl = null;
@@ -52,6 +55,7 @@ public abstract class MonsterBase : Unit, IObserver
     public override void Init()
     {
         base.Init();
+
         monStat = new MonsterStat();
 
         TryGetComponent(out myColl);

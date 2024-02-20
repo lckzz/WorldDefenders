@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Define;
 
 public class DarkPowerSkill : ActiveSkill
 {
@@ -11,7 +12,7 @@ public class DarkPowerSkill : ActiveSkill
             return;
 
 
-        GenerateDark(GlobalData.g_EliteShamanID, unit, enemys);
+        GenerateDark(Managers.Game.MonsterTypeIdDict[MonsterType.EliteShaman], unit, enemys);
         
 
     }
@@ -43,9 +44,9 @@ public class DarkPowerSkill : ActiveSkill
         SkillData = data;
     }
 
-    void GenerateDark(int unitLv, Unit owner, List<Unit> enemy)
+    void GenerateDark(int id, Unit owner, List<Unit> enemy)
     {
-        if (Managers.Data.eliteShamanSkillDict.TryGetValue(unitLv, out SkillData data) == false)
+        if (Managers.Data.eliteShamanSkillDict.TryGetValue(id, out SkillData data) == false)
         {
             Debug.LogError("ProjecteController SetInfo Failed");
             return;

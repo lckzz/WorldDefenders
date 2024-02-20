@@ -15,10 +15,10 @@ public class UnitSpearController : UnitController
     public override void OnEnable()
     {
         base.OnEnable();
-        if (sp != null && myColl != null)
+        if (myColl != null)
         {
             Init();
-            speechBubble.SpeechBubbuleOn(appearTitleKey, appearDialogSubKey, appearProbability);
+            SpeechBubbleOn(appearTitleKey, appearDialogSubKey, appearProbability);
 
         }
 
@@ -28,18 +28,9 @@ public class UnitSpearController : UnitController
     {
         base.Init();
 
-        unitStat = Managers.Data.spearDict[Managers.Game.UnitSpearLv];
-        hp = unitStat.hp;
-        att = unitStat.att;
-        knockbackForce = unitStat.knockBackForce;
-        attackRange = unitStat.attackRange;
-
-        moveSpeed = 2.5f;
-        maxHp = hp;
-
         SetUnitState(UnitState.Run);
 
-        speechBubble.SpeechBubbuleOn(appearTitleKey, appearDialogSubKey, appearProbability);
+        SpeechBubbleOn(appearTitleKey, appearDialogSubKey, appearProbability);
     }
 
     // Start is called before the first frame update
@@ -57,7 +48,7 @@ public class UnitSpearController : UnitController
         {
             float dist = (monTarget.transform.position - this.gameObject.transform.position).magnitude;
 
-            if (dist < unitStat.attackRange + 0.5f)
+            if (dist < unitStat.attackRange)
                 CriticalAttack(monTarget, hitSound, criticalSound, hitEff);
         }
 

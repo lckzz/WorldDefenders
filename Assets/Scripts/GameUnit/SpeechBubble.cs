@@ -34,7 +34,7 @@ public class SpeechBubble : MonoBehaviour
     }
 
 
-    public void SpeechBubbuleOn(string speechTitleKey,string speechSubValue,int probability)
+    public void SpeechBubbleOn(string speechTitleKey,string speechSubValue,int probability)
     {
         if (speechBubbleObj == null)
             Init();

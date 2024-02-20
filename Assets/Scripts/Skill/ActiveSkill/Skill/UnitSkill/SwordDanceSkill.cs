@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Define;
 
 public class SwordDanceSkill : ActiveSkill
 {
@@ -13,7 +14,7 @@ public class SwordDanceSkill : ActiveSkill
 
         Vector3 pos = unit.transform.position;
         pos.x -= 1.0f;
-        Generate(GlobalData.g_EliteWarriorID, unit, enemys,pos);
+        Generate(Managers.Game.MonsterTypeIdDict[MonsterType.EliteWarrior], unit, enemys,pos);
         
 
     }

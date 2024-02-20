@@ -5,14 +5,8 @@ using UnityEngine;
 public class SkillBase : MonoBehaviour
 {
     public Unit Owner { get; set; }
-    public Define.SkillType SkillType { get; set; } = Define.SkillType.Count;
-
     public SkillData SkillData { get; protected set; }
 
-    public SkillBase(Define.SkillType skillType)
-    {
-        SkillType = skillType;
-    }
 
     void Awake()
     {

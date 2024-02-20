@@ -167,16 +167,21 @@ public class PlayerController : MonoBehaviour
                 case Define.PlayerSkill.Heal:
 
                     Skills.activeSkillList[0].UseSkill(playerTower);     //스킬 사용
-                    Debug.Log("힐");
+
+                    Managers.Sound.Play($"Effect/{SkillData.skillSound}");
                     break;
 
                 case Define.PlayerSkill.FireArrow:
 
                     Skills.activeSkillList[0].UseSkill(this);     //스킬 사용
+                    Managers.Sound.Play($"Effect/{SkillData.skillSound}");
+
                     break;
 
                 case Define.PlayerSkill.Weakness:
                     Skills.activeSkillList[0].UseSkill(SkillMonsterExplore());     //스킬 사용
+                    Managers.Sound.Play($"Effect/{SkillData.skillSound}");
+
                     break;
             }
 

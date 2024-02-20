@@ -4,25 +4,24 @@ using UnityEngine;
 using static Define;
 
 public class EliteCavalryController : EliteMonsterController
-{
-    private GameObject miniPortal1;
-    private GameObject miniPortal2;
-
+{ 
     private readonly string skillDialogSubKey = "eliteCavalrySkillDialog";
     private readonly string appearDialogSubKey = "eliteCavalryAppear";
 
+    [SerializeField] private GameObject accObj;
+    private SPUM_HorseSpriteList spumHorseList;
+    private List<SpriteRenderer> allSpriteRenderList = new List<SpriteRenderer>();
+    private List<SpriteRenderer> horseSRs = new List<SpriteRenderer>();
 
-    public GameObject MiniPortal1 { get { return miniPortal1; } }
-    public GameObject MiniPortal2 { get { return miniPortal2; } }
 
 
     public override void OnEnable()
     {
         base.OnEnable();
-        if (sp != null && myColl != null)
+        if (myColl != null)
         {
             Init();
-            speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
+            speechBubble.SpeechBubbleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
 
         }
 
@@ -32,36 +31,11 @@ public class EliteCavalryController : EliteMonsterController
     {
         base.Init();
 
-        monStat = new MonsterStat();
-
-
-        monStat = Managers.Data.monsterDict[GlobalData.g_EliteCavalryID];
-
-
-        att = monStat.att;
-        hp = monStat.hp;
-        maxHp = hp;
-        knockbackForce = monStat.knockBackForce;
-        attackRange = monStat.attackRange;
-        moveSpeed = 2.0f;
-
         Skills.ClearSkill();
-        Skills.AddSkill<SkeletonSummonSkill>();
+        Skills.AddSkill<AttackAfterImageSkill>();
+        coolTime = Skills.activeSkillList[0].SkillData.skillCoolTime;
 
-
-
-        for (int ii = 0;ii < this.transform.childCount;ii++)
-        {
-            if (this.transform.GetChild(ii).name.Contains("PortalPos1"))
-                miniPortal1 = transform.GetChild(ii).gameObject;
-
-            if(this.transform.GetChild(ii).name.Contains("PortalPos2"))
-                miniPortal2 = transform.GetChild(ii).gameObject;
-
-        }
-
-
-        speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey,appearProbability);
+        speechBubble.SpeechBubbleOn(monsterAppearTitleKey, appearDialogSubKey,appearProbability);
 
     }
 
@@ -83,6 +57,9 @@ public class EliteCavalryController : EliteMonsterController
         EnemySensor();
         MonsterStateCheck();
     }
+
+
+
 
     public override void MonsterSkill()
     {
@@ -110,13 +87,19 @@ public class EliteCavalryController : EliteMonsterController
         {
             if (Skills.activeSkillList.Count > 0)
             {
-                Debug.Log("발싸");
+                if (startCoolTimeCo != null)
+                    StopCoroutine(startCoolTimeCo);
+
                 Managers.Sound.Play("Effect/Monster/EliteCavarlySkill");
                 Skills.activeSkillList[0].UseSkill(this);     //스킬 사용
                 SpeechchBubbleOn(skillTitleKey,skillDialogSubKey,skillProbability);
+                startCoolTimeCo = StartCoroutine(UnitSkillCoolTime(coolTime));              //스킬사용시 쿨타임시작 코루틴
+
             }
         }
     }
 
+
+   
 
 }

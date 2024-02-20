@@ -20,8 +20,8 @@ public class MagicianController : SpecialUnitController
     public override void OnEnable()
     {
         base.OnEnable();
-        if (sp != null && myColl != null)
-            speechBubble.SpeechBubbuleOn(appearDialogSubkey, appearDialogSubkey, appearProbability);
+        if (myColl != null)
+            SpeechBubbleOn(appearTitleKey, appearDialogSubkey, appearProbability);
 
     }
 
@@ -47,26 +47,11 @@ public class MagicianController : SpecialUnitController
     public override void Init()
     {
         base.Init();
-        unitStat = new UnitStat();
-
-        unitStat = Managers.Data.magicDict[Managers.Game.UnitMagicianLv];
-
-
-
-
-        hp = unitStat.hp;
-        att = unitStat.att;
-        knockbackForce = unitStat.knockBackForce;
-        attackRange = unitStat.attackRange;
-        coolTime = 20.0f;
-
-        moveSpeed = 2.5f;
-        maxHp = hp;
-
 
         magicPos = transform.Find("MagicPos");
         Skills.AddSkill<MeteroSkill>();
-        speechBubble.SpeechBubbuleOn(appearTitleKey, appearDialogSubkey, appearProbability);
+        coolTime = Skills.activeSkillList[0].SkillData.skillCoolTime;
+        SpeechBubbleOn(appearTitleKey, appearDialogSubkey, appearProbability);
 
     }
 
@@ -80,9 +65,9 @@ public class MagicianController : SpecialUnitController
 
             if (obj != null)
             {
-                GameObject magicBall = Managers.Resource.Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
+                GameObject magicBall = Managers.Resource.Instantiate(obj, magicPos.position, Quaternion.identity);
                 magicBall.TryGetComponent(out MagicAttackCtrl magicCtrl);
-                magicCtrl.Init();
+                magicCtrl.Init(this);
             }
         }
         else
@@ -90,9 +75,9 @@ public class MagicianController : SpecialUnitController
 
             if (obj != null)
             {
-                GameObject magicBall = Managers.Resource.Instantiate(obj, magicPos.position, Quaternion.identity, this.transform);
+                GameObject magicBall = Managers.Resource.Instantiate(obj, magicPos.position, Quaternion.identity);
                 magicBall.TryGetComponent(out MagicAttackCtrl magicCtrl);
-                magicCtrl.Init();
+                magicCtrl.Init(this);
 
             }
         }
@@ -126,8 +111,14 @@ public class MagicianController : SpecialUnitController
         {
             if (Skills.activeSkillList.Count > 0)
             {
+                if (startCoolTimeCo != null)
+                    StopCoroutine(startCoolTimeCo);
+
+
                 Skills.activeSkillList[0].UseSkill(this, skillMonList);     //스킬 사용
-                SpeechchBubbleOn(skillTitleKey,skillDialogSubKey,skillProbaility);
+                SpeechBubbleOn(skillTitleKey,skillDialogSubKey,skillProbaility);
+                startCoolTimeCo = StartCoroutine(UnitSkillCoolTime(coolTime));              //스킬사용시 쿨타임시작 코루틴
+
             }
         }
     }

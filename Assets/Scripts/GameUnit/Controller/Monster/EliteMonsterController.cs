@@ -5,25 +5,16 @@ using static Define;
 
 public class EliteMonsterController : MonsterBase
 {
-    [SerializeField]
-    protected MonsterClass monsterClass;
+
     [SerializeField]
     private EliteMonsterState state = EliteMonsterState.Run;
     private bool isSkil = false;
+    private bool isSummon = false;      //소환된 엘리트몬스터인지 판단하는 변수
     [SerializeField] protected bool skillOn = false;     //스킬 발동판단
+    [SerializeField] protected GameObject appearDust;
 
-
-    //protected List<Unit> unitCtrls = new List<Unit>();
-    //[SerializeField] protected Unit unitTarget;
-    //[SerializeField] protected PlayerTower playerTowerCtrl;
     protected List<Unit> skillenemyList = new List<Unit>();
 
-
-    [SerializeField] protected GameObject appearDust;
-    
-
-
-    //protected MonsterStat monStat;
 
     protected float coolTime = 20.0f;
 
@@ -42,43 +33,29 @@ public class EliteMonsterController : MonsterBase
     protected readonly int skillProbability = 100;
 
 
+    protected Dictionary<MonsterClass, MonsterStat> eliteMonsterStatDict;
 
-    //[SerializeField] DebuffCreator debuffCreator;
 
-    //private Debuff debuff;
-
-    //public Debuff Debuff { get { return debuff; } }
-
+    public bool IsSummon { get { return isSummon; } set { isSummon = value; } }
     public SkillBook Skills { get; protected set; }
 
-    //public Unit UnitCtrl { get { return unitTarget; } }
-    //public PlayerTower PlayerTowerCtrl { get { return playerTowerCtrl; } }
     public EliteMonsterState MonState { get { return state; } }
 
-    Coroutine startCoolTimeCo;
+    protected Coroutine startCoolTimeCo;
 
     public override void OnEnable()
     {
         base.OnEnable();
         
 
-        if (sp != null && myColl != null)
+        if (myColl != null)
         {
-            ////오브젝트 풀에서 생성되면 초기화 시켜줘야함
-            //isDie = false;
-            //isRun = false;
-            //hp = maxHp;
-            //sp.color = new Color32(255, 255, 255, 255);
-            //myColl.enabled = true;
-            //appearDust?.SetActive(true);
-            //unitTarget = null;
-            //playerTowerCtrl = null;
             if(startCoolTimeCo != null)
                 StopCoroutine(startCoolTimeCo);
             skillOn = false;
+            isSummon = false;
 
             SetMonsterState(EliteMonsterState.Run);
-
         }
 
     }
@@ -88,26 +65,45 @@ public class EliteMonsterController : MonsterBase
         base.Init();
 
 
+        Debug.Log(Managers.Game.MonsterTypeIdDict[MonsterType.SkeletonKing]);
+        eliteMonsterStatDict = new Dictionary<MonsterClass, MonsterStat>
+        {
+            {MonsterClass.EliteWarrior, Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.EliteWarrior]] },
+            {MonsterClass.EliteShaman, Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.EliteShaman]] },
+            {MonsterClass.EliteCavalry, Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.EliteCavalry]] },
+            {MonsterClass.SkeletonKing, Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[MonsterType.SkeletonKing]] }
+
+
+        };
+
+        monStat = eliteMonsterStatDict[monsterClass];           //해당 유닛에 적용된 몬스터클래스를 넣어주면 맞는 몬스터스탯을 적용함
+
+        //현재 몬스터의 스탯을 받아서 적용
+        att = monStat.att;
+        hp = monStat.hp;
+        maxHp = hp;
+        knockbackForce = monStat.knockBackForce;
+        attackRange = monStat.attackRange;
+        moveSpeed = 2.0f;
+        DropCost = monStat.dropCost;
+
 
         spawnPosX = 20.0f;
 
+
+
         Skills = gameObject.GetComponent<SkillBook>();
 
-        //TryGetComponent<Collider2D>(out myColl);
-        //TryGetComponent<Debuff>(out debuff);
-        //TryGetComponent(out debuffCreator);
-
         SetMonsterState(EliteMonsterState.Run);
-        startCoolTimeCo = StartCoroutine(UnitSKillCoolTime(coolTime));
-        appearDust?.SetActive(true);
 
 
+        if (startCoolTimeCo != null)
+            StopCoroutine(startCoolTimeCo);
 
-        //debuff = debuffCreator.AddDebuffComponent(Managers.Game.CurPlayerEquipSkill);
+        startCoolTimeCo = StartCoroutine(UnitSkillCoolTime(coolTime));
+        if(!isSummon)
+            appearDust?.SetActive(true);
 
-
-        //if (Debuff is WeaknessDebuff weaknessDebuff)
-        //    weaknessDebuff.AddObserver(this);           //디버프의 능력치변화값을 받아오기위한 구독
 
     }
 
@@ -115,8 +111,6 @@ public class EliteMonsterController : MonsterBase
 
     public override void EnemySensor()      //적감지
     {
-        //Debug.Log(isTargeting);
-        //Debug.Log($"타겟팅{isTageting}");
         #region 타겟구현
 
 
@@ -227,17 +221,6 @@ public class EliteMonsterController : MonsterBase
         }
     }
 
-    //protected void TowerSensor()
-    //{
-    //    //타워는 유닛이 없다면 그때 감지를하고 공격추격이나 공격을 할 수 있다.
-
-    //    towerColl = Physics2D.OverlapBox(pos.position, boxSize, 0, LayerMask.GetMask("Tower"));
-    //    //Debug.Log(towerColl?.name);
-    //    if (towerColl != null)
-    //        towerColl.TryGetComponent(out playerTowerCtrl);
-
-
-    //}
 
     protected void MonsterStateCheck()
     {
@@ -260,8 +243,6 @@ public class EliteMonsterController : MonsterBase
                 }
             case EliteMonsterState.Attack:
                 {
-
-
                     UnitAttack();
                     break;
                 }
@@ -542,15 +523,15 @@ public class EliteMonsterController : MonsterBase
 
             Debuff?.DebuffDestory();
 
-            speechBubble.SpeechBubbuleOn(monsterDieTitleKey, monsterDieSubKey,dieProbability);
+            speechBubble.SpeechBubbleOn(monsterDieTitleKey, monsterDieSubKey,dieProbability);
 
             SetMonsterState(EliteMonsterState.Die);
             myColl.enabled = false;
 
             dropItem?.Drop(this.gameObject.transform.position);
-            StartCoroutine(Util.DestroyTime(gameObject, 3.0f));
+            StartCoroutine(DestroyTime(gameObject, 3.0f));
+
             StartCoroutine(MonsterDieDropText());
-            StartCoroutine(UnitDeadSrAlpha());
             onDead?.Invoke();
 
 
@@ -619,58 +600,6 @@ public class EliteMonsterController : MonsterBase
 
     }
 
-
-
-    //public override bool CriticalCheck()
-    //{
-    //    //유닛공격력을 받아서 크리티컬확률을 받아서 확률에 맞으면 크리공격
-    //    //아니면 일반 공격
-    //    int rand = UnityEngine.Random.Range(0, 101);
-    //    if (rand <= monStat.criticalRate)
-    //        return true;
-
-    //    return false;
-
-
-    //}
-
-
-    //public override void CriticalAttack(Unit uniCtrl, string soundPath,string criticalSoundPath, string hitPath)
-    //{
-    //    if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
-    //    {
-    //        Debug.Log("크리티컬!!!!");
-    //        int attack = att * 2;
-    //        uniCtrl.OnDamage(attack, monStat.knockBackForce,true);      //크리티컬이면 데미지2배에 넉백까지
-    //        Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, criticalSoundPath, hitPath);
-
-    //    }
-    //    else  //노크리티컬이면 일반공격
-    //    {
-    //        Debug.Log("일반공격...");
-
-    //        uniCtrl.OnDamage(att);        //넉백은 없이
-    //        Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
-
-    //    }
-    //}
-
-    //public override void CriticalAttack(Tower tower, string soundPath, string criticalSoundPath, string hitPath)
-    //{
-    //    if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
-    //    {
-    //        int attack = att * 2;
-    //        tower.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
-    //        Managers.Resource.ResourceEffectAndSound(tower.transform.position, criticalSoundPath, hitPath);
-
-    //    }
-    //    else  //노크리티컬이면 일반공격
-    //    {
-    //        tower.TowerDamage(att);        //넉백은 없이
-    //        Managers.Resource.ResourceEffectAndSound(tower.transform.position, soundPath, hitPath);
-
-    //    }
-    //}
 
     public virtual void OnSkill() { }
 
@@ -804,25 +733,31 @@ public class EliteMonsterController : MonsterBase
 
     public void SpeechchBubbleOn(string speechTitleKey , string speechSubKey,int probaility)
     {
-        speechBubble.SpeechBubbuleOn(speechTitleKey,speechSubKey, probaility);
+        speechBubble.SpeechBubbleOn(speechTitleKey,speechSubKey, probaility);
 
 
     }
 
 
 
-    IEnumerator UnitSKillCoolTime(float coolTime)
+    protected IEnumerator UnitSkillCoolTime(float coolTime)
     {
-        WaitForSeconds wfs = new WaitForSeconds(coolTime);
+
+        float cool = coolTime;
 
         while (true)
         {
             if (!skillOn)     //스킬이 안돌았다면
             {
-                yield return wfs; //쿨타임 대기
+                cool -= Time.deltaTime;
 
-                skillOn = true;      //스킬 사용가능!  스킬사용하면 다시 false로
-                Debug.Log("스킬온!@!@");
+                if(cool <= 0.0f)        //0보다 작아지면
+                {
+                    cool = 0.0f;
+                    skillOn = true;      //스킬 사용가능!  스킬사용하면 다시 false로
+
+                    yield break;        //쿨타임이 다돌면 코루틴 종료
+                }
 
             }
 

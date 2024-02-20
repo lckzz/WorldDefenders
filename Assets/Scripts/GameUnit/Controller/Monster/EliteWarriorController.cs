@@ -18,10 +18,10 @@ public class EliteWarriorController : EliteMonsterController
     public override void OnEnable()
     {
         base.OnEnable();
-        if (sp != null && myColl != null)
+        if (myColl != null)
         {
             Init();
-            speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
+            speechBubble.SpeechBubbleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
 
         }
 
@@ -31,25 +31,12 @@ public class EliteWarriorController : EliteMonsterController
     {
         base.Init();
 
-        monStat = new MonsterStat();
-
-
-        monStat = Managers.Data.monsterDict[GlobalData.g_EliteWarriorID];
-
-
-        att = monStat.att;
-        hp = monStat.hp;
-        maxHp = hp;
-        knockbackForce = monStat.knockBackForce;
-        attackRange = monStat.attackRange;
-        moveSpeed = 2.0f;
-        DropCost = monStat.dropCost;
-
-        swordPos = transform.Find("SwordPos");
-
         Skills.ClearSkill();
         Skills.AddSkill<SwordDanceSkill>();
-        speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
+        coolTime = Skills.activeSkillList[0].SkillData.skillCoolTime;
+
+        swordPos = transform.Find("SwordPos");
+        speechBubble.SpeechBubbleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
 
 
     }
@@ -101,9 +88,13 @@ public class EliteWarriorController : EliteMonsterController
         {
             if (Skills.activeSkillList.Count > 0)
             {
-                Debug.Log("발싸");
+                if (startCoolTimeCo != null)
+                    StopCoroutine(startCoolTimeCo);
+
                 Skills.activeSkillList[0].UseSkill(this,skillenemyList);     //스킬 사용
                 SpeechchBubbleOn(skillTitleKey, skillDialogSubKey,skillProbability);
+                startCoolTimeCo = StartCoroutine(UnitSkillCoolTime(coolTime));              //스킬사용시 쿨타임시작 코루틴
+
             }
         }
     }

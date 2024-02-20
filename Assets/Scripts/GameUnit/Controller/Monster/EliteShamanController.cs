@@ -11,14 +11,15 @@ public class EliteShamanController : EliteMonsterController
     private readonly string appearDialogSubKey = "eliteShamanAppear";
 
     //매직포스
+    private int maxSkillTargetCount = 5;
 
     public override void OnEnable()
     {
         base.OnEnable();
-        if (sp != null && myColl != null)
+        if (myColl != null)
         {
             Init();
-            speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
+            speechBubble.SpeechBubbleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
 
         }
 
@@ -28,26 +29,14 @@ public class EliteShamanController : EliteMonsterController
     {
         base.Init();
 
-        monStat = new MonsterStat();
-
-
-        monStat = Managers.Data.monsterDict[GlobalData.g_EliteShamanID];
-
-
-        att = monStat.att;
-        hp = monStat.hp;
-        maxHp = hp;
-        knockbackForce = monStat.knockBackForce;
-        attackRange = monStat.attackRange;
-        moveSpeed = 2.0f;
-
-        DropCost = monStat.dropCost;
+        Skills.ClearSkill();
+        Skills.AddSkill<DarkPowerSkill>();
+        coolTime = Skills.activeSkillList[0].SkillData.skillCoolTime;
 
 
         magicPos = transform.Find("MagicPos");
-        Skills.ClearSkill();
-        Skills.AddSkill<DarkPowerSkill>();
-        speechBubble.SpeechBubbuleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
+
+        speechBubble.SpeechBubbleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
 
 
     }
@@ -78,17 +67,7 @@ public class EliteShamanController : EliteMonsterController
     {
         base.EnemySensor();
 
-        for (int i = 0; i < unitCtrls.Count; i++)   //최대 타겟수
-        {
-            if (i == 0)
-                skillenemyList.Add(unitCtrls[i]);
 
-            else if (i < 3)
-            {
-                skillenemyList.Add(unitCtrls[unitCtrls.Count - i]);
-
-            }
-        }
 
     }
 
@@ -152,9 +131,27 @@ public class EliteShamanController : EliteMonsterController
         {
             if (Skills.activeSkillList.Count > 0)
             {
-                Debug.Log("발싸");
+                skillenemyList.Clear();
+                for (int i = 0; i < unitCtrls.Count; i++)   //최대 타겟수
+                {
+                    if (i == 0)
+                        skillenemyList.Add(unitCtrls[i]);
+
+                    else if (i < maxSkillTargetCount)
+                    {
+                        skillenemyList.Add(unitCtrls[unitCtrls.Count - i]);
+
+                    }
+                }
+
+                if (startCoolTimeCo != null)
+                    StopCoroutine(startCoolTimeCo);
+
+
                 Skills.activeSkillList[0].UseSkill(this,skillenemyList);     //스킬 사용
                 SpeechchBubbleOn(skillTitleKey, skillDialogSubKey,skillProbability);
+                startCoolTimeCo = StartCoroutine(UnitSkillCoolTime(coolTime));              //스킬사용시 쿨타임시작 코루틴
+
             }
         }
     }

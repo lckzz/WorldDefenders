@@ -50,16 +50,8 @@ public class GlobalData
 
 
     //-------------몬스터 아이디-----------
-    public static int g_NormalSkeletonID = 0001;
-    public static int g_BowSkeletonID = 0002;
-    public static int g_SpearSkeletonID = 0003;
-    public static int g_MidSkeletonID = 0004;
-    public static int g_MidBowSkeletonID = 0005;
-    public static int g_HighSkeletonID = 0006;
-    public static int g_HighBowSkeletonID = 0007;
-    public static int g_EliteWarriorID = 0008;
-    public static int g_EliteShamanID = 0009;
-    public static int g_EliteCavalryID = 0010;
+
+
     //-------------몬스터 아이디-----------
 
 

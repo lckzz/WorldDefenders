@@ -22,7 +22,6 @@ public class UI_UnitUpgradePopUp : UI_Base,IOpenPanel
     [SerializeField] private TextMeshProUGUI curHpTxt;
     [SerializeField] private TextMeshProUGUI curAttTxt;
     [SerializeField] private TextMeshProUGUI curCostTxt;
-    [SerializeField] private GameObject curLevelObj;
 
 
 
@@ -31,13 +30,7 @@ public class UI_UnitUpgradePopUp : UI_Base,IOpenPanel
     [SerializeField] private TextMeshProUGUI nextHpTxt;
     [SerializeField] private TextMeshProUGUI nextAttTxt;
     [SerializeField] private TextMeshProUGUI nextCostTxt;
-    [SerializeField] private GameObject[] nextWarriorObjs;
-    [SerializeField] private GameObject[] nextArcherObjs;
-    [SerializeField] private GameObject[] nextSpearObjs;
-    [SerializeField] private GameObject[] nextPriestObjs;
-    [SerializeField] private GameObject nextMagicianObj;
-    [SerializeField] private GameObject nextCavarlyObj;
-    [SerializeField] private GameObject nextLevelObj;
+
 
 
     [Header("--------------MaxLevel---------------")]
@@ -45,19 +38,12 @@ public class UI_UnitUpgradePopUp : UI_Base,IOpenPanel
     [SerializeField] private TextMeshProUGUI maxHpTxt;
     [SerializeField] private TextMeshProUGUI maxAttTxt;
     [SerializeField] private TextMeshProUGUI maxCostTxt;
+
+
+    [Header("--------------LevelObj---------------")]
+    [SerializeField] private GameObject normalLevelObj;
     [SerializeField] private GameObject maxLevelObj;
 
-
-    [Header("--------------UnitPrefab---------------")]
-    [SerializeField] private GameObject[] warriorPrefabs;
-    [SerializeField] private GameObject[] archerPrefabs;
-    [SerializeField] private GameObject[] spearPrefabs;
-    [SerializeField] private GameObject[] priestPrefabs;
-
-
-    [Header("------------SpeacialUnit---------------")]
-    [SerializeField] private GameObject magicianObj;
-    [SerializeField] private GameObject cavarlyObj;
 
     [Space(50)]
     [SerializeField] private GameObject upgradeObj;
@@ -69,13 +55,19 @@ public class UI_UnitUpgradePopUp : UI_Base,IOpenPanel
 
     private RectTransform rt;
     private int unitLv = 0;
+    private int nextUnitLv = 0;
     private int unitMaxLv = 10;
+
+
+    [SerializeField] private GameObject curUnitParentObj;
+    [SerializeField] private GameObject nextUnitParentObj;
+    [SerializeField] private GameObject maxUnitParentObj;
 
 
     private int unitidx = 0;                //받아올 유닛의 클래스의정보
     
     private UnitStat unit = new UnitStat();
-
+    private UnitStat nextUnit = new UnitStat();
 
 
     // Start is called before the first frame update
@@ -91,6 +83,7 @@ public class UI_UnitUpgradePopUp : UI_Base,IOpenPanel
         if (closeBtn != null)
             closeBtn.onClick.AddListener(() =>
             {
+                Managers.Sound.Play("Effect/UI_Click");
                 levelUp.DoKill();           //남아있는 파티클의 두트윈을 전부 삭제한다.
                 Managers.UI.ClosePopUp(this);
                 Managers.UI.PeekPopupUI<UI_UpgradeWindow>().UpgradeUnitRefresh(unitidx);
@@ -114,34 +107,31 @@ public class UI_UnitUpgradePopUp : UI_Base,IOpenPanel
     void UnitInit()
     {
 
+
+
         switch (unitidx)     // .버튼을 통해서 선택된 유닛
         {
             case (int)UnitClass.Warrior:
                 RefreshUnitStatUI(Managers.Game.UnitWarriorLv, Managers.Data.warriorDict);
-                RefreshUnitImgAnim(Managers.Game.UnitWarriorLv, warriorPrefabs);
                 break;
             case (int)UnitClass.Archer:
                 RefreshUnitStatUI(Managers.Game.UnitArcherLv, Managers.Data.archerDict);
-                RefreshUnitImgAnim(Managers.Game.UnitArcherLv,archerPrefabs);
                 break;
             case (int)UnitClass.Spear:
                 RefreshUnitStatUI(Managers.Game.UnitSpearLv, Managers.Data.spearDict);
-                RefreshUnitImgAnim(Managers.Game.UnitSpearLv, spearPrefabs);
                 break;
             case (int)UnitClass.Priest:
                 RefreshUnitStatUI(Managers.Game.UnitPriestLv, Managers.Data.priestDict);
-                RefreshUnitImgAnim(Managers.Game.UnitPriestLv, priestPrefabs);
                 break;
             case (int)UnitClass.Magician:
                 RefreshUnitStatUI(Managers.Game.UnitMagicianLv, Managers.Data.magicDict);
-                RefreshUnitImgAnim(magicianObj);
                 break;
             case (int)UnitClass.Cavalry:
-                RefreshUnitStatUI(Managers.Game.UnitCarlvlry, Managers.Data.cavarlyDict);
-                RefreshUnitImgAnim(cavarlyObj);
+                RefreshUnitStatUI(Managers.Game.UnitCavalryLv, Managers.Data.cavarlyDict);
                 break;
         }
 
+        RefreshUnitImgAnim();
 
 
     }
@@ -152,6 +142,14 @@ public class UI_UnitUpgradePopUp : UI_Base,IOpenPanel
 
         unit = unitDict[unitLv];
 
+        nextUnitLv = unitLv + 1;
+        if(nextUnitLv >= unitMaxLv)
+        {
+            nextUnitLv = unitMaxLv;
+        }
+
+        nextUnit = unitDict[nextUnitLv];
+
         this.unitLv = unitLv;
 
         if(JudgmentMaxLevel() == true)      //유닛이 맥스레벨이라면
@@ -160,185 +158,48 @@ public class UI_UnitUpgradePopUp : UI_Base,IOpenPanel
             maxHpTxt.text = unit.hp.ToString();
             maxAttTxt.text = unit.att.ToString();
             maxCostTxt.text = unit.cost.ToString();
+            goldTxt.text = "Max";
+
         }
 
         else  //맥스레벨이 아니라면
         {
+            //현재 유닛
             curLvTxt.text = $"Level {unit.level}";
             curHpTxt.text = unit.hp.ToString();
             curAttTxt.text = unit.att.ToString();
             curCostTxt.text = unit.cost.ToString();
 
+            //다음레벨 유닛
+            nextLvTxt.text = $"Level {nextUnit.level}";
+            nextHpTxt.text = nextUnit.hp.ToString();
+            nextAttTxt.text = nextUnit.att.ToString();
+            nextCostTxt.text = nextUnit.cost.ToString();
+            goldTxt.text = nextUnit.price.ToString();
+            
 
-
-            if (unitLv < unitMaxLv)
-            {
-                int nextLv = unitLv + 1;
-                unit = unitDict[nextLv];
-
-
-                nextLvTxt.text = $"Level {unit.level}";
-                nextHpTxt.text = unit.hp.ToString();
-                nextAttTxt.text = unit.att.ToString();
-                nextCostTxt.text = unit.cost.ToString();
-                goldTxt.text = unit.price.ToString();
-            }
-            else
-            {
-                nextLvTxt.text = $"Level {unit.level}";
-                nextHpTxt.text = unit.hp.ToString();
-                nextAttTxt.text = unit.att.ToString();
-                nextCostTxt.text = unit.cost.ToString();
-                goldTxt.text = "Max";
-            }
         }
-
-
     }
 
-    void RefreshUnitImgAnim(int unitLv,GameObject[] unitObjs)
+    void RefreshUnitImgAnim()
     {
-        if(unitObjs == warriorPrefabs)
+        if(curUnitParentObj.transform.childCount > 0)       //만약 안에 이미 하위 오브젝트들이 존재한다면 다 없애줌
         {
-            if (unitLv < 5)
+            for (int ii = 0; ii < curUnitParentObj.transform.childCount; ii++)
             {
-                warriorPrefabs[(int)Define.UnitUILv.One].SetActive(true);
-                warriorPrefabs[(int)Define.UnitUILv.Two].SetActive(false);
-                warriorPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
-
-            else
-            {
-                warriorPrefabs[(int)Define.UnitUILv.One].SetActive(false);
-                warriorPrefabs[(int)Define.UnitUILv.Two].SetActive(true);
-                warriorPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
-
-            if (unitLv + 1 < 5)
-            {
-                nextWarriorObjs[(int)Define.UnitUILv.One].SetActive(true);
-                nextWarriorObjs[(int)Define.UnitUILv.Two].SetActive(false);
-                nextWarriorObjs[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
-
-            else
-            {
-                nextWarriorObjs[(int)Define.UnitUILv.One].SetActive(false);
-                nextWarriorObjs[(int)Define.UnitUILv.Two].SetActive(true);
-                nextWarriorObjs[(int)Define.UnitUILv.Three].SetActive(false);
+                Destroy(curUnitParentObj.transform.GetChild(ii).gameObject);
+                Destroy(nextUnitParentObj.transform.GetChild(ii).gameObject);
 
             }
         }
 
-        if (unitObjs == archerPrefabs)
+        if(unit.level < unitMaxLv)     //현재 유닛의 레벨이 만렙보다 작으면 현재와 다음레벨에 맞는 이미지 생성  
         {
-            if (unitLv < 5)
-            {
-                archerPrefabs[(int)Define.UnitUILv.One].SetActive(true);
-                archerPrefabs[(int)Define.UnitUILv.Two].SetActive(false);
-                archerPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
-
-            else
-            {
-                archerPrefabs[(int)Define.UnitUILv.One].SetActive(false);
-                archerPrefabs[(int)Define.UnitUILv.Two].SetActive(true);
-                archerPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
-
-            if (unitLv + 1 < 5)
-            {
-                nextArcherObjs[(int)Define.UnitUILv.One].SetActive(true);
-                nextArcherObjs[(int)Define.UnitUILv.Two].SetActive(false);
-                nextArcherObjs[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
-
-            else
-            {
-                nextArcherObjs[(int)Define.UnitUILv.One].SetActive(false);
-                nextArcherObjs[(int)Define.UnitUILv.Two].SetActive(true);
-                nextArcherObjs[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
+            Managers.Resource.Instantiate(unit.unitUIPrefabs, curUnitParentObj.transform);
+            Managers.Resource.Instantiate(nextUnit.unitUIPrefabs, nextUnitParentObj.transform);
         }
-
-        if (unitObjs == spearPrefabs)
-        {
-            if (unitLv < 5)
-            {
-                spearPrefabs[(int)Define.UnitUILv.One].SetActive(true);
-                spearPrefabs[(int)Define.UnitUILv.Two].SetActive(false);
-                spearPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
-
-            else
-            {
-                spearPrefabs[(int)Define.UnitUILv.One].SetActive(false);
-                spearPrefabs[(int)Define.UnitUILv.Two].SetActive(true);
-                spearPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
-
-            if (unitLv + 1 < 5)
-            {
-                nextSpearObjs[(int)Define.UnitUILv.One].SetActive(true);
-                nextSpearObjs[(int)Define.UnitUILv.Two].SetActive(false);
-                nextSpearObjs[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
-
-            else
-            {
-                nextSpearObjs[(int)Define.UnitUILv.One].SetActive(false);
-                nextSpearObjs[(int)Define.UnitUILv.Two].SetActive(true);
-                nextSpearObjs[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
-        }
-
-        if (unitObjs == priestPrefabs)
-        {
-            if (unitLv < 5)
-            {
-                priestPrefabs[(int)Define.UnitUILv.One].SetActive(true);
-                priestPrefabs[(int)Define.UnitUILv.Two].SetActive(false);
-                priestPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
-
-            else
-            {
-                priestPrefabs[(int)Define.UnitUILv.One].SetActive(false);
-                priestPrefabs[(int)Define.UnitUILv.Two].SetActive(true);
-                priestPrefabs[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
-
-            if (unitLv + 1 < 5)
-            {
-                nextPriestObjs[(int)Define.UnitUILv.One].SetActive(true);
-                nextPriestObjs[(int)Define.UnitUILv.Two].SetActive(false);
-                nextPriestObjs[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
-
-            else
-            {
-                nextPriestObjs[(int)Define.UnitUILv.One].SetActive(false);
-                nextPriestObjs[(int)Define.UnitUILv.Two].SetActive(true);
-                nextPriestObjs[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
-        }
-
-
+        else    //만렙시 현재 유닛만 생성
+            Managers.Resource.Instantiate(unit.unitUIPrefabs, maxUnitParentObj.transform);
 
 
 
@@ -346,25 +207,13 @@ public class UI_UnitUpgradePopUp : UI_Base,IOpenPanel
     }
 
 
-    void RefreshUnitImgAnim(GameObject unitObj)
-    {
-        if(unitObj == magicianObj)
-        {
-            magicianObj.SetActive(true);
-            nextMagicianObj.SetActive(true);
-        }
-        if (unitObj == cavarlyObj)
-        {
-            cavarlyObj.SetActive(true);
-            nextCavarlyObj.SetActive(true);
-        }
-    }
 
     void UpgradeNoticePanelOn()
     {
         if (unitLv >= unitMaxLv)
             return;
 
+        Managers.Sound.Play("Effect/UI_Click");
         noticePanel.SetActive(true);
         upgradeNotice.SetUpgradeGold(unit.price);
     }
@@ -374,15 +223,13 @@ public class UI_UnitUpgradePopUp : UI_Base,IOpenPanel
         if(unitLv >= unitMaxLv)  //만약 최대레벨이라면 맥스레벨만표시되게
         {
             maxLevelObj.SetActive(true);
-            curLevelObj.SetActive(false);
-            nextLevelObj.SetActive(false);
+            normalLevelObj.SetActive(false);
             return true;
         }
         else
         {
             maxLevelObj.SetActive(false);
-            curLevelObj.SetActive(true);
-            nextLevelObj.SetActive(true);
+            normalLevelObj.SetActive(true);
             return false;
         }
     }
@@ -396,41 +243,41 @@ public class UI_UnitUpgradePopUp : UI_Base,IOpenPanel
                 if(Managers.Game.UnitWarriorLv < 10)
                     Managers.Game.UnitWarriorLv++;
                 RefreshUnitStatUI(Managers.Game.UnitWarriorLv, Managers.Data.warriorDict);
-                RefreshUnitImgAnim(Managers.Game.UnitWarriorLv, warriorPrefabs);
                 break;
             case (int)UnitClass.Archer:
                 if (Managers.Game.UnitArcherLv < 10)
                     Managers.Game.UnitArcherLv++;
                 RefreshUnitStatUI(Managers.Game.UnitArcherLv, Managers.Data.archerDict);
-                RefreshUnitImgAnim(Managers.Game.UnitArcherLv, archerPrefabs);
                 break;
             case (int)UnitClass.Spear:
                 if (Managers.Game.UnitSpearLv < 10)
                     Managers.Game.UnitSpearLv++;
                 RefreshUnitStatUI(Managers.Game.UnitSpearLv, Managers.Data.spearDict);
-                RefreshUnitImgAnim(Managers.Game.UnitSpearLv, spearPrefabs);
                 break;
             case (int)UnitClass.Priest:
                 if (Managers.Game.UnitPriestLv < 10)
                     Managers.Game.UnitPriestLv++;
                 RefreshUnitStatUI(Managers.Game.UnitPriestLv, Managers.Data.priestDict);
-                RefreshUnitImgAnim(Managers.Game.UnitPriestLv, priestPrefabs);
                 break;
 
             case (int)UnitClass.Magician:
                 if (Managers.Game.UnitMagicianLv < 10)
                     Managers.Game.UnitMagicianLv++;
                 RefreshUnitStatUI(Managers.Game.UnitMagicianLv, Managers.Data.magicDict);
-                RefreshUnitImgAnim(magicianObj);
+                Managers.Game.SetSpecialUnitSkillInit((UnitClass)unitidx, Managers.Game.UnitMagicianLv);             //해당 유닛의 레벨에 따라서 스킬레벨 변경
                 break;
             case (int)UnitClass.Cavalry:
-                if (Managers.Game.UnitCarlvlry < 10)
-                    Managers.Game.UnitCarlvlry++;
-                RefreshUnitStatUI(Managers.Game.UnitCarlvlry, Managers.Data.cavarlyDict);
-                RefreshUnitImgAnim(cavarlyObj);
+                if (Managers.Game.UnitCavalryLv < 10)
+                    Managers.Game.UnitCavalryLv++;
+                RefreshUnitStatUI(Managers.Game.UnitCavalryLv, Managers.Data.cavarlyDict);
+                Managers.Game.SetSpecialUnitSkillInit((UnitClass)unitidx, Managers.Game.UnitCavalryLv);             // 해당 유닛의 레벨에 따라서 스킬레벨 변경
+
                 break;
 
         }
+
+        RefreshUnitImgAnim();
+
     }
 
     public void LevelUpParticleOn()

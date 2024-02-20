@@ -7,11 +7,6 @@ public abstract class ActiveSkill : SkillBase
     public float CoolTime { get; set; }
     public bool CoolTimeCheck { get; set; }
 
-
-    public ActiveSkill() : base(Define.SkillType.Active)
-    {
-    }
-
     public override bool Init()
     {
         base.Init();
@@ -19,6 +14,7 @@ public abstract class ActiveSkill : SkillBase
     }
 
     public abstract void SkillDataSetting(int id);
+
 
 
     public virtual void UseSkill(List<MonsterBase> enemys) { }

@@ -39,6 +39,8 @@ public class DataManager
     public Dictionary<int, SkillData> eliteWarriorSkillDict { get; private set; } = new Dictionary<int, SkillData>();
     public Dictionary<int, SkillData> eliteCavalrySkillDict { get; private set; } = new Dictionary<int, SkillData>();
     public Dictionary<int, SkillData> eliteShamanSkillDict { get; private set; } = new Dictionary<int, SkillData>();
+    public Dictionary<int, SkillData> skeletonKingSkillDict { get; private set; } = new Dictionary<int, SkillData>();
+
 
 
     public Dictionary<int, PlayerSkillData> healSkillDict { get; private set; } = new Dictionary<int, PlayerSkillData>();
@@ -49,7 +51,12 @@ public class DataManager
     #region  다이얼로그
     public Dictionary<string,TextAsset> dialogue { get; private set; } = new Dictionary<string,TextAsset>();
     public Dictionary<string, TextAsset> speechDialogue { get; private set; } = new Dictionary<string, TextAsset>();
-    #endregion 
+    #endregion
+
+    #region 스테이지
+    public Dictionary<int, StageData> stageDict { get; private set; } = new Dictionary<int, StageData>();
+
+    #endregion
 
 
     public void Init()
@@ -69,6 +76,7 @@ public class DataManager
         eliteWarriorSkillDict = LoadJson<EliteWarriorSkillData, int, SkillData>("SkillData").MakeDict();
         eliteCavalrySkillDict = LoadJson<EliteCavalrySkillData, int, SkillData>("SkillData").MakeDict();
         eliteShamanSkillDict = LoadJson<EliteShamanSkillData, int, SkillData>("SkillData").MakeDict();
+        skeletonKingSkillDict = LoadJson<SkeletonKingSkillData, int, SkillData>("SkillData").MakeDict();
 
         healSkillDict = LoadJson<HealSkillData, int, PlayerSkillData>("SkillData").MakeDict();
         fireArrowSkillDict = LoadJson<FireArrowSkillData, int, PlayerSkillData>("SkillData").MakeDict();
@@ -82,6 +90,8 @@ public class DataManager
         {
             { "Speech", Managers.Resource.Load<TextAsset>("Data/InGameSpeechData") }
         };
+
+        stageDict = LoadJson<OneChapterStageData, int, StageData>("OneChapterStageData").MakeDict();
 
     }
     Loader LoadJson<Loader,Key,Value>(string path) where Loader : ILoader<Key,Value>

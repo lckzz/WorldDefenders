@@ -5,7 +5,7 @@ using UnityEngine;
 public class Managers : MonoBehaviour
 {
     static Managers s_instance;
-    static Managers Instance { get { Init();  return s_instance; } }
+    public static Managers Instance { get { Init();  return s_instance; } }
 
     PoolManager _pool = new PoolManager();
     SceneManagerEx _scene = new SceneManagerEx();
@@ -43,10 +43,11 @@ public class Managers : MonoBehaviour
             DontDestroyOnLoad(go);
             s_instance = go.GetComponent<Managers>();
 
-            s_instance._game.UnitLvDictInit();
             s_instance._pool.Init();
             s_instance._sound.Init();
             s_instance._data.Init();
+            s_instance._game.UnitDictInit();
+
 
         }
     }

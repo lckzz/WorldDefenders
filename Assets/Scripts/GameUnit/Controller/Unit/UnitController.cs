@@ -28,38 +28,17 @@ public enum UnitState
     Die
 }
 
-public abstract class UnitController : Unit
+public abstract class UnitController : UnitBase
 {
 
 
     [SerializeField]
     protected UnitState state = UnitState.Run;        //테스트용이라 런 
 
-
-    protected List<Unit> monCtrls = new List<Unit>();  //범위안에 들어온 몬스터의 정보들을 모아둠
-    [SerializeField] protected Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
-    [SerializeField] protected MonsterPortal monsterPortal;
-
-
-
-
-    //아처 사제 전용
-
-    //아처 사제 전용
-
-    protected UnitStat unitStat;
-
     public int KnockBackForce { get { return knockbackForce; } }
-
-    public Unit Monctrl { get { return monTarget; } }
-
-    public MonsterPortal MonsterPortal { get { return monsterPortal; } }
 
     public UnitState UniState { get { return state; } }
 
-    protected readonly string appearTitleKey = "unitAppearDialog";
-    protected readonly string dieTitleKey = "unitDieDialog";
-    private readonly string dieDialogSubKey = "unitDie";
 
     protected readonly int appearProbability = 25;       //25프로확률로 등장하면서 말풍선
     protected readonly int dieProbability = 25;
@@ -69,23 +48,33 @@ public abstract class UnitController : Unit
         base.Init();
         spawnPosX = -9.2f;
 
-        unitStat = new UnitStat();
+    }
 
+
+    private void OnDisable()
+    {
+  
     }
 
     public override void OnEnable()
     {
 
-        if (sp != null && myColl != null)
+        if (myColl != null)
         {
-            //오브젝트 풀에서 생성되면 초기화 시켜줘야함
+
             isDie = false;
             isRun = false;
+            //오브젝트 풀에서 생성되면 초기화 시켜줘야함
+
             hp = maxHp;
+
+
             SetUnitState(UnitState.Run);
-            sp.color = new Color32(255, 255, 255, 255);
+
+
             myColl.enabled = true;
             monTarget = null;
+
         }
 
     }
@@ -96,6 +85,8 @@ public abstract class UnitController : Unit
     {
         if (Managers.Game.GameEndResult())       //게임이 끝났으면 리턴
             return;
+
+
         EnemySensor();
         UnitStateCheck();
 
@@ -121,118 +112,6 @@ public abstract class UnitController : Unit
     }
 
     //유닛들을 감지
-    void UnitSense()
-    {
-        //타겟리스트 초기화해줌
-        monCtrls.Clear();
-        enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Monster") | LayerMask.GetMask("EliteMonster"));
-        if (enemyColls2D != null)
-        {
-            if (enemyColls2D.Length <= 0)
-            {
-
-                TowerSensor();
-                //박스안 콜라이더가 아무것도 없으면
-                if (monTarget != null)  //이전에 몬스터 타겟팅이 잡혓더라면
-                {
-                    monTarget = null;
-                    return;
-                }
-            }
-            else
-            {
-                monsterPortal = null;
-            }
-
-
-            //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
-            for (int ii = 0; ii < enemyColls2D.Length; ii++)
-            {
-                if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("Monster"))
-                {
-                    MonsterController monctrl;
-                    enemyColls2D[ii].TryGetComponent<MonsterController>(out monctrl);
-                    monCtrls.Add(monctrl);
-
-                }
-                else if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("EliteMonster"))
-                {
-                    EliteMonsterController elite;
-                    enemyColls2D[ii].TryGetComponent<EliteMonsterController>(out elite);
-                    monCtrls.Add(elite);
-
-                }
-            }
-
-
-        }
-    }
-
-    //감지한 유닛들의 해당 캐릭터와의 거리 오름차순
-    void UnitDistanceAsending()
-    {
-        if (monCtrls.Count > 0)
-        {
-            float disMin = 0;
-            int min = 0;
-
-
-            if (monCtrls.Count > 1)
-            {
-                for (int i = 0; i < monCtrls.Count; i++)
-                {
-                    if (i == 0 && monCtrls.Count > 1)
-                    {
-
-                        float distA = (monCtrls[i].transform.position - this.transform.position).sqrMagnitude;
-                        float distB = (monCtrls[i + 1].transform.position - this.transform.position).sqrMagnitude;
-
-                        if (distA * distA > distB * distB)
-                        {
-                            disMin = distB * distB;
-                            min = i + 1;
-                        }
-                        else
-                        {
-                            disMin = distA * distA;
-                            min = i;
-                        }
-                    }
-
-                    else if (i < monCtrls.Count - 1)
-                    {
-                        float distB = (monCtrls[i + 1].transform.position - this.transform.position).sqrMagnitude;
-
-                        if (disMin > distB * distB)
-                        {
-                            disMin = distB * distB;
-                            min = i + 1;
-                        }
-
-
-                    }
-
-                }
-            }
-
-
-            if (monCtrls.Count != 0)
-            {
-                monTarget = monCtrls[min];
-            }
-
-        }
-    }
-
-
-    void TowerSensor()
-    {
-        towerColl = Physics2D.OverlapBox(pos.position, boxSize, 0, LayerMask.GetMask("MonsterPortal"));
-        if (towerColl != null)
-            towerColl.TryGetComponent(out monsterPortal);
-    }
-
-
 
 
     void UnitStateCheck()
@@ -296,6 +175,8 @@ public abstract class UnitController : Unit
                         isRun = false;
                         anim.SetBool("Run", isRun);
                     }
+
+  
                     break;
                 }
             case UnitState.Run:
@@ -401,38 +282,7 @@ public abstract class UnitController : Unit
             Trace(monsterPortal);
     }
 
-    protected virtual bool IsTargetOn()
-    {
-        if (monTarget == null && monsterPortal == null)
-            return false;
 
-
-        if(monTarget != null)
-        {
-            if(monTarget.gameObject.layer == LayerMask.NameToLayer("Monster") && monTarget is MonsterController monsterCtrl)
-            {
-                if (monsterCtrl.MonState == MonsterState.Die)
-                    return false;
-
-                if (!monTarget.gameObject.activeInHierarchy)
-                    return false;
-            }
-
-            else if(monTarget.gameObject.layer == LayerMask.NameToLayer("EliteMonster") && monTarget is EliteMonsterController elite)
-            {
-                if (elite.MonState == Define.EliteMonsterState.Die)
-                    return false;
-
-                if (!monTarget.gameObject.activeInHierarchy)
-                    return false;
-            }
-
-        }
-
-
-
-        return true;
-    }
 
 
     void UnitAttack()
@@ -457,14 +307,17 @@ public abstract class UnitController : Unit
     {
         if (myColl.enabled)
         {
-            speechBubble.SpeechBubbuleOn(dieTitleKey, dieDialogSubKey, dieProbability);
+            speechBubble.SpeechBubbleOn(dieTitleKey, dieDialogSubKey, dieProbability);
             SetUnitState(UnitState.Die);
             myColl.enabled = false;
-            StartCoroutine(Util.DestroyTime(gameObject,5.0f));
-            StartCoroutine(UnitDeadSrAlpha());
+            StartCoroutine(DestroyTime(gameObject, 3.0f));
             onDead?.Invoke();
         }
     }
+
+
+
+
 
 
    
@@ -511,75 +364,60 @@ public abstract class UnitController : Unit
 
 
 
-    public override void OnHeal(int heal)
-    {
-        if(hp > 0)
-        {
-            unitHUDHp?.SpawnHUDText(heal.ToString(), (int)Define.UnitDamageType.Team);
-            hp += heal;
-
-        }
-
-        if (hp >= maxHp)
-            hp = maxHp;
-    }
 
 
-    public override void OnAttack()    //애니메이션 이벤트 함수
-    {
 
 
-    }
 
 
-    public override bool CriticalCheck()
-    {
-        //유닛공격력을 받아서 크리티컬확률을 받아서 확률에 맞으면 크리공격
-        //아니면 일반 공격
-        int rand = UnityEngine.Random.Range(0, 101);
-        if (rand <= unitStat.criticalRate)
-            return true;
+    //public override bool CriticalCheck()
+    //{
+    //    //유닛공격력을 받아서 크리티컬확률을 받아서 확률에 맞으면 크리공격
+    //    //아니면 일반 공격
+    //    int rand = UnityEngine.Random.Range(0, 101);
+    //    if (rand <= unitStat.criticalRate)
+    //        return true;
 
-        return false;
-
-
-    }
+    //    return false;
 
 
-    public override void CriticalAttack(Unit monCtrl,string soundPath, string criticalSoundPath, string hitPath)
-    {
-        if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
-        {
-            int attack = att * 2;
-            monCtrl.OnDamage(attack, unitStat.knockBackForce,true);      //크리티컬이면 데미지2배에 넉백까지
-            Managers.Resource.ResourceEffectAndSound(monTarget.transform.position, criticalSoundPath, hitPath);
+    //}
 
-        }
-        else  //노크리티컬이면 일반공격
-        {
+
+    //public override void CriticalAttack(Unit monCtrl,string soundPath, string criticalSoundPath, string hitPath)
+    //{
+    //    if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
+    //    {
+    //        int attack = att * 2;
+    //        monCtrl.OnDamage(attack, unitStat.knockBackForce,true);      //크리티컬이면 데미지2배에 넉백까지
+    //        Managers.Resource.ResourceEffectAndSound(monTarget.transform.position, criticalSoundPath, hitPath);
+
+    //    }
+    //    else  //노크리티컬이면 일반공격
+    //    {
             
-            monCtrl.OnDamage(att);        //넉백은 없이
-            Managers.Resource.ResourceEffectAndSound(monTarget.transform.position, soundPath, hitPath);
+    //        monCtrl.OnDamage(att);        //넉백은 없이
+    //        Managers.Resource.ResourceEffectAndSound(monTarget.transform.position, soundPath, hitPath);
 
-        }
-    }
+    //    }
+    //}
 
-    public override void CriticalAttack(Tower monPortal, string soundPath, string criticalSoundPath, string hitPath)
-    {
-        if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
-        {
-            int attack = att * 2;
-            monPortal.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
-            Managers.Resource.ResourceEffectAndSound(monPortal.transform.position, criticalSoundPath, hitPath);
+    //public override void CriticalAttack(Tower monPortal, string soundPath, string criticalSoundPath, string hitPath)
+    //{
+    //    if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
+    //    {
+    //        int attack = att * 2;
+    //        monPortal.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
+    //        Managers.Resource.ResourceEffectAndSound(monPortal.transform.position, criticalSoundPath, hitPath);
 
-        }
-        else  //노크리티컬이면 일반공격
-        {
-            monPortal.TowerDamage(att);        //넉백은 없이
-            Managers.Resource.ResourceEffectAndSound(monPortal.transform.position, soundPath, hitPath);
+    //    }
+    //    else  //노크리티컬이면 일반공격
+    //    {
+    //        monPortal.TowerDamage(att);        //넉백은 없이
+    //        Managers.Resource.ResourceEffectAndSound(monPortal.transform.position, soundPath, hitPath);
 
-        }
-    }
+    //    }
+    //}
 
 
 
@@ -599,7 +437,10 @@ public abstract class UnitController : Unit
         {
             dir.y = 0;
             knockbackStart = true;
-            StartCoroutine(RestoreGravityAfterKnockback(force));
+            if (knockBackCo != null)
+                StopCoroutine(knockBackCo);
+
+            knockBackCo = StartCoroutine(RestoreGravityAfterKnockback(force));
 
         }
 
@@ -713,20 +554,20 @@ public abstract class UnitController : Unit
     }
 
 
-    public void AddObserver(IHpObserver observer)
-    {
+    //public void AddObserver(IHpObserver observer)
+    //{
 
-    }
+    //}
 
-    public void RemoveObserver(IHpObserver observer)
-    {
+    //public void RemoveObserver(IHpObserver observer)
+    //{
 
-    }
+    //}
 
-    public void NotifyToObserver(IHpObserver observer)
-    {
+    //public void NotifyToObserver(IHpObserver observer)
+    //{
 
-    }
+    //}
 
 
     private void OnDrawGizmos()

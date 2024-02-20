@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Define;
 
 public class SkillBook : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class SkillBook : MonoBehaviour
         {
             skillPrefab.TryGetComponent(out MeteroSkill mk);
             activeSkillList.Add(mk);
-            activeSkillList[0].SkillDataSetting(Managers.Game.UnitMagicianLv);
+            activeSkillList[0].SkillDataSetting(Managers.Game.SpecialUnitSkillLvDict[UnitClass.Magician]);
 
             return mk as T;
         }
@@ -25,7 +26,7 @@ public class SkillBook : MonoBehaviour
         {
             skillPrefab.TryGetComponent(out SwordSummonSkill ssk);
             activeSkillList.Add(ssk);
-            activeSkillList[0].SkillDataSetting(1);
+            activeSkillList[0].SkillDataSetting(Managers.Game.SpecialUnitSkillLvDict[UnitClass.Cavalry]);
 
 
             return ssk as T;
@@ -35,7 +36,7 @@ public class SkillBook : MonoBehaviour
         {
             skillPrefab.TryGetComponent(out SwordDanceSkill sk);
             activeSkillList.Add(sk);
-            activeSkillList[0].SkillDataSetting(GlobalData.g_EliteWarriorID);
+            activeSkillList[0].SkillDataSetting(Managers.Game.MonsterTypeIdDict[MonsterType.EliteWarrior]);
 
 
             return sk as T;
@@ -45,17 +46,28 @@ public class SkillBook : MonoBehaviour
         {
             skillPrefab.TryGetComponent(out SkeletonSummonSkill ssk);
             activeSkillList.Add(ssk);
-            activeSkillList[0].SkillDataSetting(GlobalData.g_EliteCavalryID);
+            activeSkillList[0].SkillDataSetting(Managers.Game.MonsterTypeIdDict[MonsterType.SkeletonKing]);
 
 
             return ssk as T;
+        }
+
+        else if (type == typeof(AttackAfterImageSkill))
+        {
+            skillPrefab.TryGetComponent(out AttackAfterImageSkill aais);
+            Debug.Log(aais);
+            activeSkillList.Add(aais);
+            activeSkillList[0].SkillDataSetting(Managers.Game.MonsterTypeIdDict[MonsterType.EliteCavalry]);
+
+
+            return aais as T;
         }
 
         else if (type == typeof(DarkPowerSkill))
         {
             skillPrefab.TryGetComponent(out DarkPowerSkill dps);
             activeSkillList.Add(dps);
-            activeSkillList[0].SkillDataSetting(GlobalData.g_EliteShamanID);
+            activeSkillList[0].SkillDataSetting(Managers.Game.MonsterTypeIdDict[MonsterType.EliteShaman]);
 
 
             return dps as T;

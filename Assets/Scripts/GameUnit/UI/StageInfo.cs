@@ -23,15 +23,15 @@ public class StageInfo : MonoBehaviour
     private int min = 0;
     private RectTransform rt;
 
-    private readonly string[] stageLvStr = { "1 ~ 3", "4 ~ 7", "8 ~ 10" };
+    //private readonly string[] stageLvStr = { "1 ~ 3", "4 ~ 7", "8 ~ 10" };
 
 
-    private readonly string[] stageNameStr = { "¼­ºÎ ½£Áö´ë", "µ¿ºÎ ½£Áö´ë", "³²ºÎ ½£Áö´ë" };
+    //private readonly string[] stageNameStr = { "¼­ºÎ ½£Áö´ë", "µ¿ºÎ ½£Áö´ë", "³²ºÎ ½£Áö´ë" };
 
 
 
-    [SerializeField] private Sprite[] meleeSkeletons;
-    [SerializeField] private Sprite[] bowSkeletons;
+    //[SerializeField] private Sprite[] meleeSkeletons;
+    //[SerializeField] private Sprite[] bowSkeletons;
 
 
     private void OnEnable()
@@ -49,26 +49,29 @@ public class StageInfo : MonoBehaviour
         rt.sizeDelta = new Vector2(rt.sizeDelta.x, 10);
         rt.DOSizeDelta(new Vector2(rt.sizeDelta.x, 294.0f), 0.25f).SetEase(Ease.OutQuad);
 
-        stageMonsterImg1.sprite = meleeSkeletons[(int)Managers.Game.CurStageType];
-        stageMonsterImg2.sprite = bowSkeletons[(int)Managers.Game.CurStageType];
-        stageNameTxt.text = stageNameStr[(int)Managers.Game.CurStageType];
-        stageLvTxt.text = stageLvStr[(int)Managers.Game.CurStageType];
-        
-        switch (Managers.Game.CurStageType)
-        {
-            case Define.SubStage.West:
-                stageClearGoldTxt.text = Managers.Game.WestStageGold.ToString();
-                TimeScore(Managers.Game.WestStageBestTime);
-                break;
-            case Define.SubStage.East:
-                stageClearGoldTxt.text = Managers.Game.EastStageGold.ToString();
-                TimeScore(Managers.Game.EastStageBestTime);
-                break;
-            case Define.SubStage.South:
-                stageClearGoldTxt.text = Managers.Game.SouthStageGold.ToString();
-                TimeScore(Managers.Game.SouthStageBestTime);
-                break;
-        }
+        stageMonsterImg1.sprite = Managers.Resource.Load<Sprite>(Managers.Game.OneChapterStageInfoList[(int)Managers.Game.CurStageType].StageData.monster1);
+        stageMonsterImg2.sprite = Managers.Resource.Load<Sprite>(Managers.Game.OneChapterStageInfoList[(int)Managers.Game.CurStageType].StageData.monster2);
+        stageNameTxt.text = Managers.Game.OneChapterStageInfoList[(int)Managers.Game.CurStageType].StageData.name;
+        stageLvTxt.text = string.Format("{0} ~ {1}", Managers.Game.OneChapterStageInfoList[(int)Managers.Game.CurStageType].StageData.minLevel, Managers.Game.OneChapterStageInfoList[(int)Managers.Game.CurStageType].StageData.maxLevel);//Managers.Game.OneChapterStageInfoList[(int)Managers.Game.CurStageType].StageData.minLevel.ToString();
+
+        stageClearGoldTxt.text = Managers.Game.OneChapterStageInfoList[(int)Managers.Game.CurStageType].StageData.gold.ToString();
+        TimeScore(Managers.Game.OneChapterStageInfoList[(int)Managers.Game.CurStageType].bestTime);
+
+        //switch (Managers.Game.CurStageType)
+        //{
+        //    case Define.SubStage.West:
+        //        stageClearGoldTxt.text = Managers.Game.WestStageGold.ToString();
+        //        TimeScore(Managers.Game.WestStageBestTime);
+        //        break;
+        //    case Define.SubStage.East:
+        //        stageClearGoldTxt.text = Managers.Game.EastStageGold.ToString();
+        //        TimeScore(Managers.Game.EastStageBestTime);
+        //        break;
+        //    case Define.SubStage.South:
+        //        stageClearGoldTxt.text = Managers.Game.SouthStageGold.ToString();
+        //        TimeScore(Managers.Game.SouthStageBestTime);
+        //        break;
+        //}
 
 
     }
@@ -78,7 +81,7 @@ public class StageInfo : MonoBehaviour
         Vector3 stagePos = rt.localPosition;
         stagePos.x = pos.x + 230.0f;
 
-        if (Managers.Game.CurStageType == Define.SubStage.West)
+        if (Managers.Game.CurStageType == Define.Stage.West)
             stagePos.y = pos.y + 40.0f;
         else
          stagePos.y = pos.y + 10.0f;

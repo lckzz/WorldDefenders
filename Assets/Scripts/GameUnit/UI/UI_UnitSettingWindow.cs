@@ -100,7 +100,7 @@ public class UI_UnitSettingWindow : UI_Base
                 if (Managers.Scene.CurrentScene is LobbyScene lobby)
                 {
                     lobby.LobbyUIOnOff(true);
-                    lobby.LobbyTouchUnitInit();
+                    lobby.LobbyUnitInit();
                 }
 
                 if (Managers.Game.TutorialEnd == false)
@@ -179,7 +179,7 @@ public class UI_UnitSettingWindow : UI_Base
                 }
                 else if (ii == (int)UnitClass.Cavalry)
                 {
-                    if (Managers.Game.UnitCarlvlry > 0)
+                    if (Managers.Game.UnitCavalryLv > 0)
                         UnitNodeUiInstantiate(UnitClass.Cavalry);
                 }
 
@@ -616,7 +616,7 @@ public class UI_UnitSettingWindow : UI_Base
                         if (Managers.Scene.CurrentScene is LobbyScene lobby)
                         {
                             lobby.LobbyUIOnOff(true);
-                            lobby.LobbyTouchUnitInit();
+                            lobby.LobbyUnitInit();
                         }
 
 

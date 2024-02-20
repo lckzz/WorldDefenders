@@ -126,7 +126,7 @@ public class UI_PlayerSkillWindow : UI_Base
                 if (Managers.Scene.CurrentScene is LobbyScene lobby)
                 {
                     lobby.LobbyUIOnOff(true);
-                    lobby.LobbyTouchUnitInit();
+                    lobby.LobbyUnitInit();
                 }
 
                 if (Managers.Game.TutorialEnd == false)
@@ -280,7 +280,7 @@ public class UI_PlayerSkillWindow : UI_Base
                         if (Managers.Scene.CurrentScene is LobbyScene lobby)
                         {
                             lobby.LobbyUIOnOff(true);
-                            lobby.LobbyTouchUnitInit();
+                            lobby.LobbyUnitInit();
                         }
 
 

@@ -14,6 +14,7 @@ public class NoKnockBackZone : MonoBehaviour
             {
                 coll.TryGetComponent(out unit);
                 unit.IsNoKnockBack = true;
+
             }
         }
 

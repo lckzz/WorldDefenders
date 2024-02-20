@@ -5,9 +5,9 @@ using UnityEngine;
 public class StageState 
 {
     private Define.StageStageType stageStateType = Define.StageStageType.Playing;
-    private Define.SubStage curStageType = Define.SubStage.East;
+    private Define.Stage curStageType = Define.Stage.South;
 
-    public Define.SubStage CurStageType { get { return curStageType; } set { curStageType = value; } }
+    public Define.Stage CurStageType { get { return curStageType; } set { curStageType = value; } }
 
     public Define.StageStageType StageStateType 
     { 
@@ -21,6 +21,36 @@ public class StageState
     {
         stageStateType = type;
         Managers.UI.ShowPopUp<UI_GameResult>().SetStageType(stageStateType);     //게임결과창 팝업을 열어줌
+    }
+
+    public void StageInfoInit()
+    {
+        if (Managers.Game.OneChapterStageInfoList.Count > 0)
+            return;     //만약 이미 객체가 생성되어있다면 리턴
+
+        int ii = 0;
+        foreach(var data in GetStageData())     //딕셔너리의 개수만큼 객체 생성
+        {
+            OneChapterStageInfo stageInfo = null;
+
+            if (ii == 0)   //처음꺼는 열어두기
+                stageInfo = new OneChapterStageInfo(data,data.id,false,1);
+            else
+                stageInfo = new OneChapterStageInfo(data,data.id);
+
+            Managers.Game.OneChapterStageInfoList.Add(stageInfo);
+
+            ii++;
+        }
+
+        Debug.Log(Managers.Game.OneChapterStageInfoList[3].StageData.name);
+    }
+
+
+
+    public IEnumerable<StageData> GetStageData()
+    {
+        return Managers.Data.stageDict.Values;
     }
 
 

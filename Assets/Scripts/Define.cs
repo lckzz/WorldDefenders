@@ -49,16 +49,19 @@ public class Define
 
     public enum MonsterType
     {
-        NormalSkeleton,
-        BowSkeleton,
-        SpearSkeleton,
-        MidSkeleton,
-        MidBowSkeleton,
-        HighSkeleton,
-        HighBowSkeleton,
-        EliteWarrior,
+        NormalSkeleton = 1,
+        NormalBowSkeleton = 2,
+        SpearSkeleton = 3,
+        MidSkeleton = 4,
+        MidBowSkeleton = 5,
+        MidSpearSkeleton = 6,
+        HighSkeleton = 7,
+        HighBowSkeleton = 8,
+        HighSpearSkeleton = 9,
+        EliteWarrior = 101,
         EliteShaman,
         EliteCavalry,
+        SkeletonKing,
         Count
     }
 
@@ -71,17 +74,17 @@ public class Define
     }
 
 
-    public enum MainStage
+    public enum Chapter
     {
         One
     }
 
 
-    public enum SubStage
+    public enum Stage
     {
         West,
-        East,
         South,
+        East,
         Boss
 
     }

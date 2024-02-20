@@ -4,10 +4,9 @@ using UnityEditor;
 using UnityEngine;
 using static Define;
 
-public class SpecialUnitController : Unit
+public class SpecialUnitController : UnitBase
 {
-    [SerializeField]
-    protected UnitClass unitClass;
+
     [SerializeField]
     protected Define.SpecialUnitState state = Define.SpecialUnitState.Run;
 
@@ -15,12 +14,9 @@ public class SpecialUnitController : Unit
     protected bool isAttacking = false;
     [SerializeField] protected bool skillOn = false;     //스킬 발동판단
 
-    protected List<Unit> monCtrls = new List<Unit>();  //범위안에 들어온 몬스터의 정보들을 모아둠
-    [SerializeField] protected Unit monTarget;  //몬스터들의 정보들중에서 제일 유닛과 가까운 몬스터정보를 받아옴
-    [SerializeField] protected MonsterPortal monsterPortal;
+
     protected List<Unit> skillMonList = new List<Unit>();
 
-    protected UnitStat unitStat;
 
     protected float coolTime = 20.0f;
 
@@ -28,18 +24,14 @@ public class SpecialUnitController : Unit
     protected readonly string warriorCriticalSound = "CriticalSound";
     protected readonly string warriorHitEff = "HitEff";
 
-    protected readonly string appearTitleKey = "unitAppearDialog";
-    protected readonly string dieTitleKey = "unitDieDialog";
-    protected readonly string skillTitleKey = "skillDialog";
 
-    protected readonly string dieDialogSubKey = "specialUnitDie";
+
+
+    protected readonly string skillTitleKey = "skillDialog";
 
     protected readonly int appearProbability = 50;
     protected readonly int dieProbaility = 70;
     protected readonly int skillProbaility = 100;
-
-
-
 
 
     [SerializeField] protected GameObject appearDust;
@@ -47,29 +39,25 @@ public class SpecialUnitController : Unit
 
 
     public SkillBook Skills { get; protected set; }
-    public Unit Monctrl { get { return monTarget; } }
 
-    public MonsterPortal MonsterPortal { get { return monsterPortal; } }
 
     public SpecialUnitState UniState { get { return state; } }
 
-    Coroutine startCoolTime;
+    protected Coroutine startCoolTimeCo;
 
     public override void OnEnable()
     {
-        if (sp != null && myColl != null)
+        if (myColl != null)
         {
             //오브젝트 풀에서 생성되면 초기화 시켜줘야함
             isDie = false;
             hp = maxHp;
             SetUnitState(SpecialUnitState.Run);
-            sp.color = new Color32(255, 255, 255, 255);
             myColl.enabled = true;
             appearDust?.SetActive(true);
 
-
-            if (startCoolTime != null)
-                StopCoroutine(startCoolTime);
+            if (startCoolTimeCo != null)
+                StopCoroutine(startCoolTimeCo);
 
             skillOn = false;
 
@@ -81,13 +69,12 @@ public class SpecialUnitController : Unit
     {
         base.Init();
         spawnPosX = -9.2f;
-
         Skills = gameObject.GetComponent<SkillBook>();
 
 
         SetUnitState(SpecialUnitState.Run);
 
-        startCoolTime = StartCoroutine(UnitSKillCoolTime(coolTime));
+        startCoolTimeCo = StartCoroutine(UnitSkillCoolTime(coolTime));
         appearDust?.SetActive(true);
 
 
@@ -116,52 +103,14 @@ public class SpecialUnitController : Unit
 
     }
     //유닛들을 감지
-    void UnitSense()
+    protected override void UnitSense()
     {
         monCtrls.Clear();
         skillMonList.Clear();
-        enemyColls2D = Physics2D.OverlapBoxAll(pos.position, boxSize, 0, LayerMask.GetMask("Monster") | LayerMask.GetMask("EliteMonster"));
-        if (enemyColls2D != null)
-        {
-            if (enemyColls2D.Length <= 0)
-            {
-                TowerSensor();
-
-                //박스안 콜라이더가 아무것도 없으면
-                if (monTarget != null)  //이전에 몬스터 타겟팅이 잡혓더라면
-                {
-                    monTarget = null;
-                    return;
-                }
-            }
-
-
-
-            //체크박스안에 들어온 콜라이더중에서 현재 유닛과의 거리가 제일 가까운 것을 골라내기
-            for (int ii = 0; ii < enemyColls2D.Length; ii++)
-            {
-                if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("Monster"))
-                {
-                    MonsterController monctrl;
-                    enemyColls2D[ii].TryGetComponent(out monctrl);
-                    monCtrls.Add(monctrl);
-
-                }
-                else if (enemyColls2D[ii].gameObject.layer == LayerMask.NameToLayer("EliteMonster"))
-                {
-                    EliteMonsterController elite;
-                    enemyColls2D[ii].TryGetComponent(out elite);
-                    monCtrls.Add(elite);
-
-
-                }
-            }
-
-
-        }
+        base.UnitSense();
     }
 
-    void UnitDistanceAsending()
+    protected override void UnitDistanceAsending()
     {
         if (monCtrls.Count > 0)
         {
@@ -472,37 +421,37 @@ public class SpecialUnitController : Unit
             Trace(monsterPortal);
     }
 
-    bool IsTargetOn()
-    {
-        if (monTarget == null && monsterPortal == null)
-            return false;
+    //bool IsTargetOn()
+    //{
+    //    if (monTarget == null && monsterPortal == null)
+    //        return false;
 
 
-        if (monTarget != null)
-        {
-            if (monTarget.gameObject.layer == LayerMask.NameToLayer("Monster") && monTarget is MonsterController monsterCtrl)
-            {
-                if (monsterCtrl.MonState == MonsterState.Die)
-                    return false;
+    //    if (monTarget != null)
+    //    {
+    //        if (monTarget.gameObject.layer == LayerMask.NameToLayer("Monster") && monTarget is MonsterController monsterCtrl)
+    //        {
+    //            if (monsterCtrl.MonState == MonsterState.Die)
+    //                return false;
 
-                if (!monTarget.gameObject.activeInHierarchy)
-                    return false;
-            }
+    //            if (!monTarget.gameObject.activeInHierarchy)
+    //                return false;
+    //        }
 
-            else if (monTarget.gameObject.layer == LayerMask.NameToLayer("EliteMonster") && monTarget is EliteMonsterController elite)
-            {
-                if (elite.MonState == Define.EliteMonsterState.Die)
-                    return false;
+    //        else if (monTarget.gameObject.layer == LayerMask.NameToLayer("EliteMonster") && monTarget is EliteMonsterController elite)
+    //        {
+    //            if (elite.MonState == Define.EliteMonsterState.Die)
+    //                return false;
 
-                if (!monTarget.gameObject.activeInHierarchy)
-                    return false;
-            }
-        }
+    //            if (!monTarget.gameObject.activeInHierarchy)
+    //                return false;
+    //        }
+    //    }
 
 
 
-        return true;
-    }
+    //    return true;
+    //}
 
     void UnitAttack()
     {
@@ -539,30 +488,14 @@ public class SpecialUnitController : Unit
     {
         if (myColl.enabled)
         {
-            speechBubble.SpeechBubbuleOn(dieTitleKey, dieDialogSubKey, dieProbaility);
+            speechBubble.SpeechBubbleOn(dieTitleKey, dieDialogSubKey, dieProbaility);
             myColl.enabled = false;
-            StartCoroutine(Util.DestroyTime(gameObject, 5.0f));
-            StartCoroutine(UnitDeadSrAlpha());
-
+            StartCoroutine(DestroyTime(gameObject, 3.0f));
             SetUnitState(SpecialUnitState.Die);
             onDead?.Invoke();
         }
     }
 
-    public override void OnHeal(int heal)
-    {
-        if (hp > 0)
-        {
-            unitHUDHp?.SpawnHUDText(heal.ToString(), (int)Define.UnitDamageType.Team);
-            hp += heal;
-
-        }
-
-
-        if (hp >= maxHp)
-            hp = maxHp;
-
-    }
 
 
     public override void OnDamage(int att, int knockBack = 0, bool criticalCheck = false)
@@ -607,60 +540,49 @@ public class SpecialUnitController : Unit
 
 
 
-    public override void OnAttack()    //애니메이션 이벤트 함수
-    {
+    //public override void OnAttack()    //애니메이션 이벤트 함수
+    //{
 
-    }
-
-
-    public override bool CriticalCheck()
-    {
-        //유닛공격력을 받아서 크리티컬확률을 받아서 확률에 맞으면 크리공격
-        //아니면 일반 공격
-        int rand = UnityEngine.Random.Range(0, 101);
-        if (rand <= unitStat.criticalRate)
-            return true;
-
-        return false;
+    //}
 
 
-    }
 
 
-    public override void CriticalAttack(Unit monCtrl, string soundPath, string criticlaSoundPath, string hitPath)
-    {
-        if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
-        {
-            int attack = att * 2;
-            monCtrl.OnDamage(attack, unitStat.knockBackForce,true);      //크리티컬이면 데미지2배에 넉백까지
-            Managers.Resource.ResourceEffectAndSound(monTarget.transform.position,warriorCriticalSound,warriorHitEff);
 
-        }
-        else  //노크리티컬이면 일반공격
-        {
+    //public override void CriticalAttack(Unit monCtrl, string soundPath, string criticlaSoundPath, string hitPath)
+    //{
+    //    if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
+    //    {
+    //        int attack = att * 2;
+    //        monCtrl.OnDamage(attack, unitStat.knockBackForce,true);      //크리티컬이면 데미지2배에 넉백까지
+    //        Managers.Resource.ResourceEffectAndSound(monTarget.transform.position,warriorCriticalSound,warriorHitEff);
 
-            monCtrl.OnDamage(att);        //넉백은 없이
-            Managers.Resource.ResourceEffectAndSound(monTarget.transform.position, warriorHitSound, warriorHitEff);
+    //    }
+    //    else  //노크리티컬이면 일반공격
+    //    {
 
-        }
-    }
+    //        monCtrl.OnDamage(att);        //넉백은 없이
+    //        Managers.Resource.ResourceEffectAndSound(monTarget.transform.position, warriorHitSound, warriorHitEff);
 
-    public override void CriticalAttack(Tower monPortal, string soundPath,string criticlaSoundPath, string hitPath)
-    {
-        if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
-        {
-            int attack = att * 2;
-            monPortal.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
-            Managers.Resource.ResourceEffectAndSound(monPortal.transform.position,  warriorCriticalSound, warriorHitEff);
+    //    }
+    //}
 
-        }
-        else  //노크리티컬이면 일반공격
-        {
-            monPortal.TowerDamage(att);        //넉백은 없이
-            Managers.Resource.ResourceEffectAndSound(monPortal.transform.position, warriorHitSound, warriorHitEff);
+    //public override void CriticalAttack(Tower monPortal, string soundPath,string criticlaSoundPath, string hitPath)
+    //{
+    //    if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
+    //    {
+    //        int attack = att * 2;
+    //        monPortal.TowerDamage(attack);      //크리티컬이면 데미지2배 타워는 2배만
+    //        Managers.Resource.ResourceEffectAndSound(monPortal.transform.position,  warriorCriticalSound, warriorHitEff);
 
-        }
-    }
+    //    }
+    //    else  //노크리티컬이면 일반공격
+    //    {
+    //        monPortal.TowerDamage(att);        //넉백은 없이
+    //        Managers.Resource.ResourceEffectAndSound(monPortal.transform.position, warriorHitSound, warriorHitEff);
+
+    //    }
+    //}
 
 
 
@@ -732,34 +654,45 @@ public class SpecialUnitController : Unit
         Vector3 vec = obj.gameObject.transform.position - this.transform.position;
         traceDistance = vec.sqrMagnitude;
         Vector3 dir = vec.normalized;
-        if (unitClass == UnitClass.Magician)
-        {
-            if (traceDistance < attackRange * attackRange)
-            {
-                SetUnitState(SpecialUnitState.Attack);
-            }
-            else
-            {
-                rigbody.transform.position += dir * moveSpeed * Time.fixedDeltaTime;
-                SetUnitState(SpecialUnitState.Trace);
-            }
 
+        if (traceDistance < Mathf.Pow(attackRange, 2))
+        {
+            SetUnitState(SpecialUnitState.Attack);
+        }
+        else
+        {
+            rigbody.transform.position += dir * moveSpeed * Time.fixedDeltaTime;
+            SetUnitState(SpecialUnitState.Trace);
         }
 
-        else if (unitClass == UnitClass.Cavalry)
-        {
-            if (traceDistance < attackRange * attackRange)
-            {
+        //if (unitClass == UnitClass.Magician)
+        //{
+        //    if (traceDistance < attackRange * attackRange)
+        //    {
+        //        SetUnitState(SpecialUnitState.Attack);
+        //    }
+        //    else
+        //    {
+        //        rigbody.transform.position += dir * moveSpeed * Time.fixedDeltaTime;
+        //        SetUnitState(SpecialUnitState.Trace);
+        //    }
 
-                SetUnitState(SpecialUnitState.Attack);
-            }
-            else
-            {
-                rigbody.transform.position += dir * moveSpeed * Time.fixedDeltaTime;
-                SetUnitState(SpecialUnitState.Trace);
-            }
+        //}
 
-        }
+        //else if (unitClass == UnitClass.Cavalry)
+        //{
+        //    if (traceDistance < attackRange * attackRange)
+        //    {
+
+        //        SetUnitState(SpecialUnitState.Attack);
+        //    }
+        //    else
+        //    {
+        //        rigbody.transform.position += dir * moveSpeed * Time.fixedDeltaTime;
+        //        SetUnitState(SpecialUnitState.Trace);
+        //    }
+
+        //}
 
     }
 
@@ -808,18 +741,23 @@ public class SpecialUnitController : Unit
 
     
 
-    IEnumerator UnitSKillCoolTime(float coolTime)
+    protected IEnumerator UnitSkillCoolTime(float coolTime)
     {
-        WaitForSeconds wfs = new WaitForSeconds(coolTime);
+        float cool = coolTime;
 
         while(true)
         {
             if(!skillOn)     //스킬이 안돌았다면
             {
-                yield return wfs; //쿨타임 대기
+                cool -= Time.deltaTime;
 
-                skillOn = true;      //스킬 사용가능!  스킬사용하면 다시 false로
-                Debug.Log("스킬온!@!@");
+                if (cool <= 0.0f)        //0보다 작아지면
+                {
+                    cool = 0.0f;
+                    skillOn = true;      //스킬 사용가능!  스킬사용하면 다시 false로
+
+                    yield break;        //쿨타임이 다돌면 코루틴 종료
+                }
 
             }
 
@@ -831,12 +769,12 @@ public class SpecialUnitController : Unit
 
     }
 
-    public void SpeechchBubbleOn(string speechTitleKey, string speechSubKey, int probaility)
-    {
-        speechBubble.SpeechBubbuleOn(speechTitleKey, speechSubKey, probaility);
+    //public void SpeechchBubbleOn(string speechTitleKey, string speechSubKey, int probaility)
+    //{
+    //    speechBubble.SpeechBubbuleOn(speechTitleKey, speechSubKey, probaility);
 
 
-    }
+    //}
 
     private void OnDrawGizmos()
     {

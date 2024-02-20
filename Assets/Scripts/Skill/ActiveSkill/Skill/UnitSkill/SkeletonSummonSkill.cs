@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Define;
 using static Unity.Burst.Intrinsics.X86;
 
 public class SkeletonSummonSkill : ActiveSkill
@@ -11,21 +12,21 @@ public class SkeletonSummonSkill : ActiveSkill
             return;
 
 
-        int summonidx = 2;
-        unit.TryGetComponent(out EliteCavalryController ecCtrl);
+        //int summonidx = 2;
+        unit.TryGetComponent(out SkeletonKingController skCtrl);
         List<GameObject> goList = new List<GameObject>();
-        goList.Add(ecCtrl.MiniPortal1);
-        goList.Add(ecCtrl.MiniPortal2);
+        goList.Add(skCtrl.MiniPortal1);
+        //goList.Add(skCtrl.MiniPortal2);
 
 
 
-        for (int ii = 0; ii < goList.Count; ii++)
-        {
+        //for (int ii = 0; ii < goList.Count; ii++)
+        //{
             
-            Vector3 pos = goList[ii].transform.position;
+        Vector3 pos = goList[0].transform.position;
 
-            GenerateMiniPortal(GlobalData.g_EliteCavalryID, summonidx, unit, pos);
-        }
+        GenerateMiniPortal(Managers.Game.MonsterTypeIdDict[MonsterType.SkeletonKing], unit, pos);
+        //}
     }
 
     public override void UseSkill(Unit unit, Tower tower)
@@ -46,7 +47,7 @@ public class SkeletonSummonSkill : ActiveSkill
 
     public override void SkillDataSetting(int id)
     {
-        if (Managers.Data.eliteCavalrySkillDict.TryGetValue(id, out SkillData data) == false)
+        if (Managers.Data.skeletonKingSkillDict.TryGetValue(id, out SkillData data) == false)
         {
             Debug.LogError("ProjecteController SetInfo Failed");
             return;
@@ -55,16 +56,16 @@ public class SkeletonSummonSkill : ActiveSkill
         SkillData = data;
     }
 
-    void GenerateMiniPortal(int unitLv, int summonCount,Unit owner, Vector3 spawnPos)
+    void GenerateMiniPortal(int id,Unit owner, Vector3 spawnPos)
     {
         ////Æ÷Å» ¼ÒÈ¯
-        if (Managers.Data.eliteCavalrySkillDict.TryGetValue(unitLv, out SkillData data) == false)
+        if (Managers.Data.skeletonKingSkillDict.TryGetValue(id, out SkillData data) == false)
         {
             Debug.LogError("ProjecteController SetInfo Failed");
             return;
         }
 
         SkeletonSummonController ssc = Managers.Resource.Instantiate(data.skillPrefab).GetComponent<SkeletonSummonController>();
-        ssc.SetInfo(unitLv,summonCount, owner, data, spawnPos);
+        ssc.SetInfo(owner, data, spawnPos);
     }
 }

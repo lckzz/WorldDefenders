@@ -11,13 +11,33 @@ using UnityEngine.UI;
 public class UpgradeUnitNode : MonoBehaviour
 {
     private string className = "";
-    [SerializeField] private GameObject[] classObj;
+    //[SerializeField] private GameObject[] classObj;
     [SerializeField] private TextMeshProUGUI lvText;
     [SerializeField] private Button upgradeBtn;
     [SerializeField] private UnitClass upgradeUnit;
+    [SerializeField] private GameObject spriteUnitParentObj;
 
+    private int unitIdx = 0;
+
+    public int UnitIdx { 
+        get 
+        { 
+            return unitIdx;
+        } 
+        set 
+        { 
+            if(value < (int)UnitClass.Count)
+            {
+                unitIdx = value;
+                upgradeUnit = (UnitClass)unitIdx;
+            }
+        }
+    }
     private int unitLv = 0;
     private IOpenPanel openPanel;
+
+    private UnitStat unitStat;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,66 +51,96 @@ public class UpgradeUnitNode : MonoBehaviour
 
     void Init()
     {
+        unitStat = new UnitStat();
 
-        UpgradeUnitInit();
+        //UpgradeUnitInit();
 
-        Debug.Log(classObj.Length);
 
         UnitButtonEvent(upgradeBtn.gameObject, (int)upgradeUnit, OpenUpgradeUnitPopUp, UIEvent.PointerDown);
       
     }
 
 
-    void UpgradeUnitInit()
+    public void UpgradeUnitInit(int idx)
     {
-        if (this.gameObject.name.Contains("Warrior"))
-        {
-            upgradeUnit = UnitClass.Warrior;
-            unitLv = Managers.Game.UnitWarriorLv;
-        }
-        else if (gameObject.name.Contains("Archer"))
-        {
-            upgradeUnit = UnitClass.Archer;
-            unitLv = Managers.Game.UnitArcherLv;
+        UnitIdx = idx;
 
-        }
-        else if (gameObject.name.Contains("Spear"))
-        {
-            upgradeUnit = UnitClass.Spear;
-            unitLv = Managers.Game.UnitSpearLv;
-        }
-        else if (gameObject.name.Contains("Priest"))
-        {
-            upgradeUnit = UnitClass.Priest;
-            unitLv = Managers.Game.UnitPriestLv;
 
-        }
-        else if (gameObject.name.Contains("Magician"))
-        {
-            upgradeUnit = UnitClass.Magician;
-            unitLv = Managers.Game.UnitMagicianLv;
+        unitLv = Managers.Game.GetUnitLevel((UnitClass)UnitIdx);
 
-        }
-        else if (gameObject.name.Contains("Cavalry"))
+        switch(UnitIdx)
         {
-            upgradeUnit = UnitClass.Cavalry;
-            unitLv = Managers.Game.UnitCarlvlry;
+            case (int)UnitClass.Warrior:
+                unitStat = Managers.Data.warriorDict[unitLv];
+                break;
+            case (int)UnitClass.Archer:
+                unitStat = Managers.Data.archerDict[unitLv];
+                break;
+            case (int)UnitClass.Spear:
+                unitStat = Managers.Data.spearDict[unitLv];
+                break;
+            case (int)UnitClass.Priest:
+                unitStat = Managers.Data.priestDict[unitLv];
+                break;
+            case (int)UnitClass.Magician:
+                unitStat = Managers.Data.magicDict[unitLv];
+                break;
+            case (int)UnitClass.Cavalry:
+                unitStat = Managers.Data.cavarlyDict[unitLv];
+                break;
+
 
         }
 
 
-        if ((int)upgradeUnit < (int)UnitClass.Magician)
-            classObj = new GameObject[(int)Define.UnitUILv.Count];
-        else 
-            classObj = new GameObject[(int)Define.UnitUILv.One];
+        //if (this.gameObject.name.Contains("Warrior"))
+        //{
+        //    upgradeUnit = UnitClass.Warrior;
+        //    unitLv = Managers.Game.UnitWarriorLv;
+        //}
+        //else if (gameObject.name.Contains("Archer"))
+        //{
+        //    upgradeUnit = UnitClass.Archer;
+        //    unitLv = Managers.Game.UnitArcherLv;
+
+        //}
+        //else if (gameObject.name.Contains("Spear"))
+        //{
+        //    upgradeUnit = UnitClass.Spear;
+        //    unitLv = Managers.Game.UnitSpearLv;
+        //}
+        //else if (gameObject.name.Contains("Priest"))
+        //{
+        //    upgradeUnit = UnitClass.Priest;
+        //    unitLv = Managers.Game.UnitPriestLv;
+
+        //}
+        //else if (gameObject.name.Contains("Magician"))
+        //{
+        //    upgradeUnit = UnitClass.Magician;
+        //    unitLv = Managers.Game.UnitMagicianLv;
+
+        //}
+        //else if (gameObject.name.Contains("Cavalry"))
+        //{
+        //    upgradeUnit = UnitClass.Cavalry;
+        //    unitLv = Managers.Game.UnitCavalryLv;
+
+        //}
 
 
-        for (int ii = 0; ii < classObj.Length; ii++)
-        {
-            if (classObj[ii] == null)
-                classObj[ii] = this.transform.GetChild(ii).gameObject;
+        //if ((int)upgradeUnit < (int)UnitClass.Magician)
+        //    classObj = new GameObject[(int)Define.UnitUILv.Count];
+        //else 
+        //    classObj = new GameObject[(int)Define.UnitUILv.One];
 
-        }
+
+        //for (int ii = 0; ii < classObj.Length; ii++)
+        //{
+        //    if (classObj[ii] == null)
+        //        classObj[ii] = this.transform.GetChild(ii).gameObject;
+
+        //}
 
         RefreshUnitImg(unitLv);
     }
@@ -162,28 +212,43 @@ public class UpgradeUnitNode : MonoBehaviour
     public void RefreshUnitImg(int unitLv)
     {
         Debug.Log("Å×½ºÆ®");
-        if(upgradeUnit < UnitClass.Magician)
+
+        if(spriteUnitParentObj != null)
         {
-            if (unitLv < 5)
-            {
-                classObj[(int)Define.UnitUILv.One].SetActive(true);
-                classObj[(int)Define.UnitUILv.Two].SetActive(false);
-                classObj[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
-
-            else
-            {
-
-                classObj[(int)Define.UnitUILv.Two].SetActive(true);
-                classObj[(int)Define.UnitUILv.One].SetActive(false);
-                classObj[(int)Define.UnitUILv.Three].SetActive(false);
-
-            }
+            for (int ii = 0; ii < spriteUnitParentObj.transform.childCount; ii++)
+                Managers.Resource.Destroy(spriteUnitParentObj.transform.GetChild(ii).gameObject);
         }
 
 
-        
+        Debug.Log(unitStat.level);
+
+        Managers.Resource.Instantiate(unitStat.unitSpriteUIPrefabs, spriteUnitParentObj.transform);
+
+
+
+
+        //if(upgradeUnit < UnitClass.Magician)
+        //{
+        //    if (unitLv < 5)
+        //    {
+        //        classObj[(int)Define.UnitUILv.One].SetActive(true);
+        //        classObj[(int)Define.UnitUILv.Two].SetActive(false);
+        //        classObj[(int)Define.UnitUILv.Three].SetActive(false);
+
+        //    }
+
+        //    else
+        //    {
+
+        //        classObj[(int)Define.UnitUILv.Two].SetActive(true);
+        //        classObj[(int)Define.UnitUILv.One].SetActive(false);
+        //        classObj[(int)Define.UnitUILv.Three].SetActive(false);
+
+        //    }
+        //}
+
+
+
         lvText.text = $"<#FF9F13>Lv</color> {unitLv}";
     }
            

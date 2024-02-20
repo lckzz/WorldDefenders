@@ -14,7 +14,7 @@ public class InGameStartUI : MonoBehaviour
     [SerializeField] private PlayableDirector playable;
     [SerializeField] private TextMeshProUGUI stageNameTxt;
 
-    private Define.SubStage subStage;
+    private Define.Stage subStage;
 
 
     void Start()
@@ -35,21 +35,8 @@ public class InGameStartUI : MonoBehaviour
     private void StageTextInit()
     {
         subStage = Managers.Game.CurStageType;
-        switch (subStage)
-        {
-            case Define.SubStage.West:
-                stageNameTxt.text = "¼­ºÎ ½£ Áö´ë";
+        stageNameTxt.text = Managers.Game.OneChapterStageInfoList[(int)subStage].StageData.name;
 
-                break;
-            case Define.SubStage.East:
-                stageNameTxt.text = "µ¿ºÎ ½£ Áö´ë";
-
-                break;
-            case Define.SubStage.South:
-                stageNameTxt.text = "³²ºÎ ½£ Áö´ë";
-                break;
-
-        }
     }
 
 

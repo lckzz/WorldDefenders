@@ -30,17 +30,10 @@ public class LobbyScene : BaseScene
     {
         //Managers.UI.ShowSceneUI<UI_Lobby>();
         Init();
-        Debug.Log(Managers.Game.SlotUnitClass.Count);
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        //SceneMove();
-        //MouseClick();
 
-
-    }
 
 
     protected override void Init()
@@ -134,7 +127,7 @@ public class LobbyScene : BaseScene
 
   
 
-    public void LobbyTouchUnitInit()
+    public void LobbyUnitInit()
     {
         if (lobbyUnit != null)
         {

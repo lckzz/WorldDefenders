@@ -50,6 +50,11 @@ public class UnitStat
     public int price;
     public string attackDesc;
     public string desc;
+    public string unitUIPrefabs;
+    public string unitSpriteUIPrefabs;
+    public string unitLobbyPrefabs;
+    public string unitSprite;
+    public string unitInGamePrefabs;
 }
 
 
@@ -155,6 +160,7 @@ public class MonsterStat
     public float attackRange;
     public int dropGold;
     public int dropCost;
+    public string monsterPrefab;
 
 }
 
@@ -214,7 +220,7 @@ public class SkillData
     public string skillImg;
     public string desc;
     public int skillValue;  //스킬데미지는 퍼센트로 받고 유닛의 공격력 * 퍼센트형식
-    public int skillTargetCount;
+    public int skillHitCount;
     public int skillCoolTime;
     public string skillPrefab;
 }
@@ -291,6 +297,20 @@ public class EliteShamanSkillData : ILoader<int, SkillData>
     }
 }
 
+public class SkeletonKingSkillData : ILoader<int, SkillData>
+{
+    public List<SkillData> skeletonKingSkill = new List<SkillData>();
+
+    public Dictionary<int, SkillData> MakeDict()
+    {
+        Dictionary<int, SkillData> dict = new Dictionary<int, SkillData>();
+        foreach (SkillData skill in skeletonKingSkill)
+            dict.Add(skill.id, skill);
+
+        return dict;
+    }
+}
+
 
 
 
@@ -304,6 +324,7 @@ public class EliteShamanSkillData : ILoader<int, SkillData>
 public class PlayerSkillData : SkillData
 {
     public int skillDuration;       //스킬지속시간
+    public string skillSound;       //스킬사운드
 
 }
 
@@ -366,6 +387,17 @@ public class StageData
     public string monster2;
     public int minLevel;
     public int maxLevel;
+    public int appearMonsterCount;
+    public int appearMonster1;
+    public int appearMonster2;
+    public int appearMonster3;
+    public int appearMonster4;
+    public int appearMonster5;
+    public int eliteMonster;
+    public int bossMonster;
+
+
+
 }
 
 public class OneChapterStageData : ILoader<int, StageData>

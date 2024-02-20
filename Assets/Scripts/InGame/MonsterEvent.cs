@@ -39,19 +39,19 @@ public class MonsterEvent
             monSpawnType = value;
             switch (monSpawnType)
             {
-                case Define.MonsterSpawnType.Normal:
+                case Define.MonsterSpawnType.Normal:        //일반적인 몬스터 스폰
                     monsterSpawnNormalisOn = true;
                     monsterWaveisOn = false;
                     eliteMonsterisOn = false;
                     finalMonsterisOn = false;
                     break;
-                case Define.MonsterSpawnType.Wave:
+                case Define.MonsterSpawnType.Wave:         //몬스터가 몰려오는 웨이브
                     monsterSpawnNormalisOn = false;
                     monsterWaveisOn = true;
                     eliteMonsterisOn = false;
                     finalMonsterisOn = false;
                     break;
-                case Define.MonsterSpawnType.Final:
+                case Define.MonsterSpawnType.Final:        //마지막에 돌입하면 보스웨이브만오고 나머지 웨이브는 오지않는다.
                     monsterSpawnNormalisOn = false;
                     monsterWaveisOn = false;
                     eliteMonsterisOn = false;
@@ -131,7 +131,7 @@ public class MonsterEvent
     }
 
 
-    public void MonsterWave()
+    public void MonsterWave()             //일반적인 이벤트
     {
         //웨이브 이벤트중이라면
         monsterWaveDuration -= Time.deltaTime;
@@ -153,11 +153,12 @@ public class MonsterEvent
     {
         eliteMonsterisOn = true;
         action(warningTxt);
+
         Managers.Game.EliteMonsterSpawn();
 
     }
 
-    public void FinalMonsterWave(Action<string> action, string warningTxt, int eliteMonsterCount)
+    public void FinalMonsterWave(Action<string> action, string warningTxt, int eliteMonsterCount)  //일반 스테이지에서 마지막 웨이브
     {
         if (finalEliteMonsterCount >= eliteMonsterCount)
             return;
@@ -166,19 +167,41 @@ public class MonsterEvent
         {
             finalOneWarningUI = true;
             action(warningTxt);       //경고창 띄우기
-            Debug.Log("파이널 이벤튼ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ");
 
 
         }
-        finalEliteMonsterTime -= Time.deltaTime;
 
-        if(finalEliteMonsterTime <= 0.0f)
+        if(Managers.Game.CurStageType != Define.Stage.Boss)         //보스 스테이지가 아닐때는 엘리트몹 3마리 소환함
         {
-            Managers.Game.EliteMonsterSpawn();  //몬스터를 소환하고
-            finalEliteMonsterCount++;
-            finalEliteMonsterTime = 1.5f;
+
+            finalEliteMonsterTime -= Time.deltaTime;
+
+            if (finalEliteMonsterTime <= 0.0f)
+            {
+                Managers.Game.EliteMonsterSpawn();  //몬스터를 소환하고
+                finalEliteMonsterCount++;
+                finalEliteMonsterTime = 1.5f;
+            }
         }
+
+        else           //보스 스테이지일떄는 보스한마리만 소환함
+        {
+
+            BossFinalWave();
+            finalEliteMonsterCount++;
+
+        }
+
 
 
     }
+
+
+    private void BossFinalWave()
+    {
+        Managers.Game.BossMonsterSpawn();  //해당 보스몬스터를 소환함
+
+    }
+
+
 }

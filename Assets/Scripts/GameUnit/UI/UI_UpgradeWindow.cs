@@ -20,7 +20,7 @@ public class UI_UpgradeWindow : UI_Base
 
     [SerializeField] private Image fadeImg;
 
-    [SerializeField] private GameObject[] unitUpgradePrefabs;
+    [SerializeField] private GameObject unitUpgradePrefab;
     [SerializeField] private GameObject[] unitUpgradeObjs;
 
 
@@ -48,9 +48,6 @@ public class UI_UpgradeWindow : UI_Base
     private TutorialMaskCtrl tutorialMaskCtrl;
     private float dialogYPos = -32.5f;
 
-    private Dictionary<int, Action<int>> upgradeUnitRefreshDict = new Dictionary<int, Action<int>>();
-
-    private Action<int> upgradeActionInt;
 
     // Start is called before the first frame update
     public override void Start()
@@ -60,8 +57,6 @@ public class UI_UpgradeWindow : UI_Base
 
         
        
-
-        unitUpgradePrefabs =  new GameObject[(int)UnitClass.Count];
         unitUpgradeObjs =  new GameObject[(int)UnitClass.Count];
         tutorialDialogObj = gameObject.transform.Find("DialogueCanvas").gameObject; 
         GameObject parentGo = backLobbyBtn?.gameObject.transform.parent.gameObject;
@@ -93,7 +88,7 @@ public class UI_UpgradeWindow : UI_Base
                 if (Managers.Scene.CurrentScene is LobbyScene lobby)
                 {
                     lobby.LobbyUIOnOff(true);
-                    lobby.LobbyTouchUnitInit();
+                    lobby.LobbyUnitInit();
                 }
                 if (Managers.Game.TutorialEnd == false)
                     Managers.UI.GetSceneUI<UI_Lobby>().DialogMaskSet((int)Define.DialogId.DialogMask,(int)Define.DialogOrder.Party);
@@ -124,46 +119,47 @@ public class UI_UpgradeWindow : UI_Base
 
     void UnitInit()
     {
-        for (int ii = 0; ii < (int)UnitClass.Count; ii++)
-        {
-            Debug.Log(unitUpgradePrefabs.Length);
-            switch (ii)
-            {
-                case (int)UnitClass.Warrior:
-                    unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/WarriorUpgrade");
-                    break;
-                case (int)UnitClass.Archer:
-                    unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/ArcherUpgrade");
-                    break;
-                case (int)UnitClass.Spear:
-                    unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/SpearManUpgrade");
-                    break;
-                case (int)UnitClass.Priest:
-                    unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/PriestUpgrade");
-                    break;
-                case (int)UnitClass.Magician:
-                    unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/MagicianUpgrade");
-                    break;
+        //for (int ii = 0; ii < (int)UnitClass.Count; ii++)
+        //{
+        //    Debug.Log(unitUpgradePrefabs.Length);
+        //    switch (ii)
+        //    {
+        //        case (int)UnitClass.Warrior:
+        //            unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/WarriorUpgrade");
+        //            break;
+        //        case (int)UnitClass.Archer:
+        //            unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/ArcherUpgrade");
+        //            break;
+        //        case (int)UnitClass.Spear:
+        //            unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/SpearManUpgrade");
+        //            break;
+        //        case (int)UnitClass.Priest:
+        //            unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/PriestUpgrade");
+        //            break;
+        //        case (int)UnitClass.Magician:
+        //            unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/MagicianUpgrade");
+        //            break;
 
-                case (int)UnitClass.Cavalry:
-                    unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/CavalryUpgrade");
-                    break;
+        //        case (int)UnitClass.Cavalry:
+        //            unitUpgradePrefabs[ii] = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/CavalryUpgrade");
+        //            break;
 
-                default:
-                    Debug.Log("아직 못넣음");
-                    break;
-            }
-        }
-
+        //        default:
+        //            Debug.Log("아직 못넣음");
+        //            break;
+        //    }
+        //}
+        unitUpgradePrefab = Managers.Resource.Load<GameObject>("Prefabs/UI/UIUnit/UnitUpgrade");
 
         if (upgradeContent != null)
         {
             for (int i = 0; i < (int)UnitClass.Count; i++)
             {
-                if (unitUpgradePrefabs[i] != null)
-                {
-                    unitUpgradeObjs[i] = Managers.Resource.Instantiate(unitUpgradePrefabs[i], upgradeContent.transform);
-                }
+
+                unitUpgradeObjs[i] = Managers.Resource.Instantiate(unitUpgradePrefab, upgradeContent.transform);
+                unitUpgradeObjs[i].TryGetComponent(out unitUpgradeNode);
+                unitUpgradeNode.UpgradeUnitInit(i);
+                
             }
         }
     }
@@ -243,43 +239,24 @@ public class UI_UpgradeWindow : UI_Base
         if (unitUpgradeObjs[idx] != null)
         {
             unitLv = Managers.Game.UpgradeUnitLvDict[idx];      //현재 인덱스의 유닛레벨을 받아온다.
-            Debug.Log(unitLv);
+
+           
             unitUpgradeObjs[idx].TryGetComponent(out unitUpgradeNode);
-            
-            if(upgradeUnitRefreshDict.TryGetValue(idx,out upgradeActionInt) == false)
-            {
-                //만약에 딕셔너리에 값이 검색이 안된다면 그값을 넣어주기
-                upgradeActionInt = unitUpgradeNode.RefreshUnitImg;
-                upgradeActionInt(unitLv);
-                upgradeUnitRefreshDict.Add(idx, upgradeActionInt);
-            }
 
-            if (upgradeUnitRefreshDict.TryGetValue(idx, out upgradeActionInt))
-                upgradeActionInt(unitLv);
-
-
-            //switch (idx)
+            unitUpgradeNode.UpgradeUnitInit(idx);
+            ////unitUpgradeNode.UnitIdx = idx;
+            //if(upgradeUnitRefreshDict.TryGetValue(idx,out upgradeActionInt) == false)
             //{
-
-            //    case (int)UnitClass.Warrior:
-            //        unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitWarriorLv);
-            //        break;
-            //    case (int)UnitClass.Archer:
-            //        unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitArcherLv);
-            //        break;
-            //    case (int)UnitClass.Spear:
-            //        unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitSpearLv);
-            //        break;
-            //    case (int)UnitClass.Priest:
-            //        unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitPriestLv);
-            //        break;
-            //    case (int)UnitClass.Magician:
-            //        unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitMagicianLv);
-            //        break;
-            //    case (int)UnitClass.Cavalry:
-            //        unitUpgradeNode.RefreshUnitImg(Managers.Game.UnitCarlvlry);
-            //        break;
+            //    //만약에 딕셔너리에 값이 검색이 안된다면 그값을 넣어주기
+            //    upgradeActionInt = unitUpgradeNode.RefreshUnitImg;
+            //    upgradeActionInt(unitLv);
+            //    upgradeUnitRefreshDict.Add(idx, upgradeActionInt);
             //}
+
+            //if (upgradeUnitRefreshDict.TryGetValue(idx, out upgradeActionInt))
+            //    upgradeUnitRefreshDict[idx](unitLv);
+
+
         }
         
     }
@@ -313,7 +290,7 @@ public class UI_UpgradeWindow : UI_Base
                         if (Managers.Scene.CurrentScene is LobbyScene lobby)
                         {
                             lobby.LobbyUIOnOff(true);
-                            lobby.LobbyTouchUnitInit();
+                            lobby.LobbyUnitInit();
                         }
 
 

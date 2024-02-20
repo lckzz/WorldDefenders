@@ -12,8 +12,8 @@ public class UnitArcherController : UnitController
     public override void OnEnable()
     {
         base.OnEnable();
-        if (sp != null && myColl != null)
-            speechBubble.SpeechBubbuleOn(appearTitleKey, appearDialogSubKey, appearProbability);
+        if (myColl != null)
+            SpeechBubbleOn(appearTitleKey, appearDialogSubKey, appearProbability);
 
     }
 
@@ -21,22 +21,12 @@ public class UnitArcherController : UnitController
     {
         base.Init();
 
-        unitStat = Managers.Data.archerDict[Managers.Game.UnitArcherLv];
-
-        hp = unitStat.hp;
-        att = unitStat.att;
-        knockbackForce = unitStat.knockBackForce;
-        attackRange = unitStat.attackRange;
-
-        moveSpeed = 2.5f;
-        maxHp = hp;
-
         posTr = transform.Find("ArrowPos");
 
 
         SetUnitState(UnitState.Run);
 
-        speechBubble.SpeechBubbuleOn(appearTitleKey, appearDialogSubKey, appearProbability);
+        SpeechBubbleOn(appearTitleKey, appearDialogSubKey, appearProbability);
     }
 
     // Start is called before the first frame update

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Linq;
+using static Define;
 
 [Serializable]
 public class GameData
@@ -26,19 +27,19 @@ public class GameData
 
     public bool tutorialEnd;
 
-    public bool westStageClear;
-    public bool eastStageClear;
-    public bool southStageClear;
-    public bool stage1AllClear;
+    //public bool westStageClear;
+    //public bool eastStageClear;
+    //public bool southStageClear;
+    public bool onechapterAllClear;
 
     public float bgmValue;
     public float effValue;
     public bool bgmisOn;
     public bool effisOn;
 
-    public float westStageBestTime;
-    public float eastStageBestTime;
-    public float southStageBestTime;
+    //public float westStageBestTime;
+    //public float eastStageBestTime;
+    //public float southStageBestTime;
 
 }
 
@@ -46,12 +47,15 @@ public class GameData
 public class GameArrayData
 {
     public List<UnitClass> slotUnitClass = new List<UnitClass>();
+    public List<OneChapterStageInfo> oneChapterStageInfoList = new List<OneChapterStageInfo>();
+
 }
 
 [Serializable]
 public class GameTotalData
 {
     public UnitClass[] unitClasses;
+    public OneChapterStageInfo[] oneChapterInfos;
     public GameData gameData;
 }
 
@@ -71,12 +75,49 @@ public class GameManagerEx
     private MonsterEvent monsterEvent = new MonsterEvent();
     private StageState stageState = new StageState();
 
-    private List<Define.MonsterType> monsterTypeList = new List<Define.MonsterType>();
+    private int unitMagicianSkillLv = 0;                //따로 저장되지않고 해당 유닛의 레벨에 따라서 시작할때 셋팅됨
+    private int unitCavalrySkillLv = 0;                 //따로 저장되지않고 해당 유닛의 레벨에 따라서 시작할때 셋팅됨
+
+    private const int NORMAL_SKELETON_ID = 0001;        //몬스터들의 고유 넘버
+    private const int BOW_SKELETON_ID = 0002;
+    private const int SPEAR_SKELETON_ID = 0003;
+    private const int MID_SKELETON_ID = 0004;
+    private const int MID_BOW_SKELETON_ID = 0005;
+    private const int MID_SPEAR_SKELETON_ID = 0006;
+    private const int HIGH_SKELETON_ID = 0007;
+    private const int HIGH_BOW_SKELETON_ID = 0008;
+    private const int HIGH_SPEAR_SKELETON_ID = 0009;
+    private const int ELITE_WARRIOR_ID = 0101;
+    private const int ELITE_SHAMAN_ID = 0102;
+    private const int ELITE_CAVALRY_ID = 0103;
+    private const int SKELETON_KING_ID = 0104;
+
+
+    private List<MonsterType> monsterTypeList = new List<MonsterType>();
     private bool lobbyToGameScene = false;
+
+
+    private Dictionary<MonsterType, int> monsterTypeIdDict;
+    public Dictionary<MonsterType, int> MonsterTypeIdDict { get { return monsterTypeIdDict; } }
+
+
+    private Dictionary<UnitClass, int> specialUnitSkillLvDict;
+    public Dictionary<UnitClass, int> SpecialUnitSkillLvDict {  get { return specialUnitSkillLvDict; } }
+
 
     private Dictionary<int, int> upgradeUnitLvDict;
 
     public Dictionary<int,int> UpgradeUnitLvDict { get { return upgradeUnitLvDict; } }
+
+    private Dictionary<UnitClass, Dictionary<int, UnitStat>> unitStatDict;
+
+    public Dictionary<UnitClass, Dictionary<int, UnitStat>> UnitStatDict { get { return unitStatDict; } }
+
+    public List<OneChapterStageInfo> OneChapterStageInfoList { 
+        get { return gameSaveArrayData.oneChapterStageInfoList; }  
+        set { gameSaveArrayData.oneChapterStageInfoList = value; }
+    }
+
 
     public List<UnitClass> SlotUnitClass { 
         get { return gameSaveArrayData.slotUnitClass; } 
@@ -94,7 +135,7 @@ public class GameManagerEx
     }
 
     #region 유닛 레벨
-    public void UnitLvDictInit()
+    public void UnitDictInit()
     {
         upgradeUnitLvDict = new Dictionary<int, int>
         {
@@ -103,7 +144,44 @@ public class GameManagerEx
             { (int)UnitClass.Spear, Managers.Game.UnitSpearLv },
             { (int)UnitClass.Priest, Managers.Game.UnitPriestLv },
             { (int)UnitClass.Magician, Managers.Game.UnitMagicianLv },
-            { (int)UnitClass.Cavalry, Managers.Game.UnitCarlvlry },
+            { (int)UnitClass.Cavalry, Managers.Game.UnitCavalryLv },
+        };
+
+        specialUnitSkillLvDict = new Dictionary<UnitClass, int>
+        {
+            {UnitClass.Magician, unitMagicianSkillLv },
+            {UnitClass.Cavalry, unitCavalrySkillLv }
+
+        };
+
+        unitStatDict = new Dictionary<UnitClass, Dictionary<int, UnitStat>>
+        {
+            {UnitClass.Warrior, Managers.Data.warriorDict },
+            {UnitClass.Archer, Managers.Data.archerDict },
+            {UnitClass.Spear, Managers.Data.spearDict },
+            {UnitClass.Priest, Managers.Data.priestDict },
+            {UnitClass.Magician, Managers.Data.magicDict },
+            {UnitClass.Cavalry, Managers.Data.cavarlyDict },
+
+        };
+
+        monsterTypeIdDict = new Dictionary<MonsterType, int>
+        {
+            {MonsterType.NormalSkeleton, NORMAL_SKELETON_ID },
+            {MonsterType.NormalBowSkeleton, BOW_SKELETON_ID },
+            {MonsterType.SpearSkeleton, SPEAR_SKELETON_ID },
+            {MonsterType.MidSkeleton, MID_SKELETON_ID },
+            {MonsterType.MidBowSkeleton, MID_BOW_SKELETON_ID },
+            {MonsterType.MidSpearSkeleton, MID_SPEAR_SKELETON_ID },
+            {MonsterType.HighSkeleton, HIGH_SKELETON_ID },
+            {MonsterType.HighBowSkeleton, HIGH_BOW_SKELETON_ID },
+            {MonsterType.HighSpearSkeleton, HIGH_SPEAR_SKELETON_ID },
+            {MonsterType.EliteWarrior, ELITE_WARRIOR_ID },
+            {MonsterType.EliteShaman, ELITE_SHAMAN_ID },
+            {MonsterType.EliteCavalry, ELITE_CAVALRY_ID },
+            {MonsterType.SkeletonKing, SKELETON_KING_ID },
+
+
         };
 
     }
@@ -117,7 +195,12 @@ public class GameManagerEx
         }
     }
 
-    private int GetUnitLevel(UnitClass unitClass)
+    public void SpecialUnitLvDictRefresh(UnitClass unit)
+    {
+
+    }
+
+    public int GetUnitLevel(UnitClass unitClass)
     {
         switch (unitClass)
         { 
@@ -132,7 +215,7 @@ public class GameManagerEx
             case UnitClass.Magician:
                 return Managers.Game.UnitMagicianLv;
             case UnitClass.Cavalry:
-                return Managers.Game.UnitCarlvlry;
+                return Managers.Game.UnitCavalryLv;
             default:
                 return 0;
         }
@@ -180,7 +263,7 @@ public class GameManagerEx
         set { gameData.unitMagicianLv = value; }
     }
 
-    public int UnitCarlvlry
+    public int UnitCavalryLv
     {
         get { return gameData.unitCarlvryLv; }
         set { gameData.unitCarlvryLv = value; }
@@ -204,7 +287,7 @@ public class GameManagerEx
         set { gameData.weaknessSkillLv = value; }
     }
 
-    public Define.PlayerSkill CurPlayerEquipSkill
+    public PlayerSkill CurPlayerEquipSkill
     {
         get { return gameData.curPlayerEquipSkill; }
         set { gameData.curPlayerEquipSkill = value; }
@@ -222,29 +305,6 @@ public class GameManagerEx
         set { gameData.tutorialEnd = value; }
     }
 
-    public bool WestStageClear
-    {
-        get { return gameData.westStageClear; }
-        set { gameData.westStageClear = value; }
-    }
-
-    public bool EastStageClear
-    {
-        get { return gameData.eastStageClear; }
-        set { gameData.eastStageClear = value; }
-    }
-
-    public bool SouthStageClear
-    {
-        get { return gameData.southStageClear; }
-        set { gameData.southStageClear = value; }
-    }
-
-    public bool Stage1AllClear
-    {
-        get { return gameData.stage1AllClear; }
-        set { gameData.stage1AllClear = value; }
-    }
 
     public float BgmValue
     {
@@ -270,32 +330,48 @@ public class GameManagerEx
         set { gameData.effisOn = value; }
     }
 
-    public float WestStageBestTime
+    public bool OneChapterAllClear
     {
-        get { return gameData.westStageBestTime; }
-        set { gameData.westStageBestTime = value; }
+        get { return gameData.onechapterAllClear; }
+        set { gameData.onechapterAllClear = value; }
     }
 
-    public float EastStageBestTime
-    {
-        get { return gameData.eastStageBestTime; }
-        set { gameData.eastStageBestTime = value; }
-    }
-
-    public float SouthStageBestTime
-    {
-        get { return gameData.southStageBestTime; }
-        set { gameData.southStageBestTime = value; }
-    }
 
 
 
     #endregion
 
+    public void SetSpecialUnitSkillInit(UnitClass unitclass,int lv)
+    {
+        specialUnitSkillLvDict[unitclass] = SkillLvToSpecialUnitLv(lv);
+
+    }
+
+    private int SkillLvToSpecialUnitLv(int unitLv)
+    {
+        if (0 < unitLv && unitLv < 4)        //1~3렙일때는
+            return 1;        //스킬레벨 1
+        else if (4 <= unitLv && unitLv < 8)        //4~7렙일때는
+            return 2;        //스킬레벨 2
+        else                                   //8렙부터 만렙까지
+            return 3;
+    }
+
+    private void SpecialUnitSkillInit()
+    {
+        for(int ii = (int)UnitClass.Magician; ii < (int)UnitClass.Count; ii++)
+        {
+            //스페셜유닛을 전부 돌아서
+            SetSpecialUnitSkillInit((UnitClass)ii, GetUnitLevel((UnitClass)ii));
+        }
+
+
+    }
+
 
     public void GameDataInit()
     {
-
+        //처음 데이터 초기화
         Gold = 0;
         PlayerLevel = 1;
         UnitWarriorLv = 1;
@@ -303,24 +379,26 @@ public class GameManagerEx
         UnitSpearLv = 1;
         UnitPriestLv = 1;
         UnitMagicianLv = 1;
-        UnitCarlvlry = 1;
+        UnitCavalryLv = 1;
         TowerHealSkillLv = 1;
         FireArrowSkillLv = 0;
         WeaknessSkillLv = 0;
         CurPlayerEquipSkill = Define.PlayerSkill.Count;
         FirstInit = false;
         TutorialEnd = false;
-        WestStageClear = false;
-        EastStageClear = false;
-        SouthStageClear = false;
-        Stage1AllClear = false;
         BgmValue = 0.5f;
         EffValue = 0.5f;
         BgmisOn = false;
         EffisOn = false;
 
+        unitMagicianSkillLv = 1;
+        unitCavalrySkillLv = 1;
+
+        stageState.StageInfoInit();
 
     }
+
+
 
 
 
@@ -350,9 +428,7 @@ public class GameManagerEx
 
     public int GameGold { get { return moneyCost.GameMoney; } set { moneyCost.GameMoney = value; } }
 
-    public int WestStageGold { get { return moneyCost.WestStageGold; } }
-    public int EastStageGold { get { return moneyCost.EastStageGold; }  }
-    public int SouthStageGold { get { return moneyCost.SouthStageGold; } }
+
 
 
     public void MoneyCostInit()
@@ -427,6 +503,12 @@ public class GameManagerEx
     {
         monsterSpawn.EliteMonsterSpawn();
     }
+
+    public void BossMonsterSpawn()
+    {
+        monsterSpawn.BossMonsterSpawn();
+
+    }
     //몬스터 소환
     #endregion
 
@@ -499,7 +581,7 @@ public class GameManagerEx
     #region 스테이지상태
 
 
-    public Define.SubStage CurStageType { get { return stageState.CurStageType; } set { stageState.CurStageType = value; } }
+    public Define.Stage CurStageType { get { return stageState.CurStageType; } set { stageState.CurStageType = value; } }
 
 
     public Define.StageStageType GetStageStateType()
@@ -516,6 +598,11 @@ public class GameManagerEx
     {
         stageState.ResultState(type);
     }
+    
+    public IEnumerable GetStageData()
+    {
+        return stageState.GetStageData();
+    }
 
     public bool GameEndResult()
     {
@@ -524,14 +611,16 @@ public class GameManagerEx
 
     public bool StageAllClear()
     {
-        if (Stage1AllClear == true)
-            return false;
 
-        if (WestStageClear == true && EastStageClear == true && SouthStageClear == true)
-            return true;
+        for(int ii = 0; ii < Managers.Game.OneChapterStageInfoList.Count; ii++)
+        {
+            if (OneChapterStageInfoList[ii].clear == false)     //리스트를 돌아서 단 한개라도 클리어한개 없다면 false리턴
+                return false;
+
+        }
 
 
-        return false;
+        return true;
     }
 
 
@@ -542,9 +631,6 @@ public class GameManagerEx
 
     #region 저장 & 로드
 
-    //public string path => Path.Combine(Application.persistentDataPath,"/SaveData.json");
-
-
 
     public void FileSave()
     {
@@ -552,11 +638,14 @@ public class GameManagerEx
         {
             //리스트를 json으로 변환이 안되기때문에 배열로 감싸줘서 json으로 저장
             unitClasses = gameSaveArrayData.slotUnitClass.ToArray(),
+            oneChapterInfos = gameSaveArrayData.oneChapterStageInfoList.ToArray(),
             gameData = Managers.Game.gameData
         };
 
+
         string path = Application.persistentDataPath + "/SaveData.json";
         string jsonStr = JsonUtility.ToJson(arrayData);
+
 
         File.WriteAllText(path, jsonStr);
         Debug.Log($"게임 세이브됨: {path}");
@@ -575,17 +664,38 @@ public class GameManagerEx
         string fileStr = File.ReadAllText(path);
         GameTotalData data = JsonUtility.FromJson<GameTotalData>(fileStr);
 
+        Debug.Log(data.oneChapterInfos);
         gameSaveArrayData.slotUnitClass.Clear();
+        gameSaveArrayData.oneChapterStageInfoList.Clear();
 
-        for(int ii = 0;  ii < data.unitClasses.Length; ii++)
+        stageState.StageInfoInit();     //스테이지데이터를 전부 다 생성해준다.
+
+
+        for (int ii = 0;  ii < data.unitClasses.Length; ii++)
+            gameSaveArrayData.slotUnitClass.Add(data.unitClasses[ii]);          //저장되어있는 유닛슬롯을 불러와서 넣어준다.
+
+        if (data.oneChapterInfos != null)  //이미 저장되어있는 스테이지데이터는 돌아가면서 덮어씌워준다.
         {
-            gameSaveArrayData.slotUnitClass.Add(data.unitClasses[ii]);
+            for (int ii = 0; ii < data.oneChapterInfos.Length; ii++)
+            {
+                data.oneChapterInfos[ii].StageData = Managers.Data.stageDict[data.oneChapterInfos[ii].StageData.id];  //고정된데이터값을 로드할때마다 초기화해줌
+                gameSaveArrayData.oneChapterStageInfoList[ii] = data.oneChapterInfos[ii];
+            }
         }
+        //else
+        //{
+        //    //만약 데이터가 없다면;; (구)버전 스테이지버전을 실행해서 저장했다면
+        //}
+
 
         if (data != null)
             gameData = data.gameData;
 
         Debug.Log($"게임 로드 : {path}");
+
+
+        SpecialUnitSkillInit();
+        //SetSpecialUnitSkillInit();      //데이터로드한다음에 스킬레벨도 유닛레벨에 따라서 초기화
 
         return true;
     }

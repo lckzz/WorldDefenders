@@ -1,36 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine;
+using static Define;
 
 public class SkeletonSummonController : SkillBase
 {
     //포탈이 생성되고 생성된 포탈에서 스켈레톤을 생성한다.
 
     
-    Unit owener;
-    Vector3 pos;
-    Vector3 curPos;
+    private Unit owener;
+    private Vector3 pos;
+    private Vector3 curPos;
 
-    Animator anim;
-    int summonidx;
-    bool firstSummon = false;
+    private Animator anim;
+    //int summonidx;
+    private bool firstSummon = false;
 
-    private List<string> monList = new List<string>();
-    private List<GameObject> spawnList = new List<GameObject>();
+    private EliteMonsterController eliteMonsterController;
+    private GameObject summonObj;
 
 
-    public SkeletonSummonController() : base(Define.SkillType.Count)
-    {
+    private List<GameObject> summonMonList;
+    private MonsterType[] monTypes = { MonsterType.EliteWarrior, MonsterType.EliteShaman, MonsterType.EliteCavalry };
 
-    }
-    public void SetInfo(int Unitlv, int summonCount ,Unit owner, SkillData data, Vector3 startPos)
+
+
+    public void SetInfo(Unit owner, SkillData data, Vector3 startPos)
     {
         //if (Managers.Data.magicSkillDict.TryGetValue(Unitlv, out SkillData data) == false)
         //{
         //    Debug.LogError("ProjecteController SetInfo Failed");
         //    return;
         //}
-        summonidx = summonCount;
+
         owener = owner;
         pos = startPos;
         SkillData = data;
@@ -42,7 +45,13 @@ public class SkeletonSummonController : SkillBase
     {
         base.Init();
         TryGetComponent(out anim);
+        summonMonList = new List<GameObject>();
 
+        foreach (MonsterType monType in monTypes)
+        {
+            GameObject prefabObj = Managers.Resource.Load<GameObject>($"Prefabs/{Managers.Data.monsterDict[Managers.Game.MonsterTypeIdDict[monType]].monsterPrefab}");
+            summonMonList.Add(prefabObj);
+        }
         return true;
     }
 
@@ -71,22 +80,19 @@ public class SkeletonSummonController : SkillBase
     IEnumerator SkeletonSummon()
     {
 
-        for(int ii = 0;  ii < Managers.Game.MonsterTypeList.Count - 1;ii++)
+
+        yield return wfs;   //시간초 대기후 소환
+
+
+        for (int ii = 0; ii < summonMonList.Count; ii++)
         {
-            monList.Add(System.Enum.GetName(typeof(Define.MonsterType), Managers.Game.MonsterTypeList[ii]));
-            spawnList.Add(Managers.Resource.Load<GameObject>($"Prefabs/Monster/{monList[ii]}"));
+            summonObj = Managers.Resource.Instantiate(summonMonList[ii], this.transform.position);          //게임오브젝트를 생성해주고
+            summonObj.TryGetComponent(out eliteMonsterController);
+            eliteMonsterController.IsSummon = true;                 //소환된 엘리트몬스터는 등장시 넉백을 일으키지 않는다.
+            yield return wfs;   //시간초 대기후 소환
 
         }
 
-        Debug.Log(spawnList.Count);
-        //GameObject go = Managers.Resource.Load<GameObject>("Prefabs/Monster/NormalSkele");
-        for(int ii = 0; ii < summonidx; ii++)
-        {
-            Debug.Log("테테");
-            yield return wfs;
-            int randidx = Random.Range(0, 2);
-            Managers.Resource.Instantiate(spawnList[randidx], this.transform.position);
-        }
 
         if (anim != null)
         {

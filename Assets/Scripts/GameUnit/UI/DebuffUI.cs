@@ -8,6 +8,8 @@ using static Define;
 
 public class DebuffUI : MonoBehaviour
 {
+    
+
     [SerializeField] private Image debuffIconImg;
     private Sprite fireIconSprite;
     private Sprite weaknessIconSprite;

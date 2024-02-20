@@ -10,8 +10,6 @@ public class UI_GameResult : UI_Base
 {
 
     [SerializeField]
-    private Image failOrVictoryImg;
-    [SerializeField]
     private Button retryBtn;
     [SerializeField]
     private Button exitBtn;
@@ -24,8 +22,9 @@ public class UI_GameResult : UI_Base
     [SerializeField]
     private GameObject bestScoreObj;
 
+    [SerializeField] private GameObject victoryObj;
+    [SerializeField] private GameObject defeatObj;
 
-    [SerializeField] private Sprite[] resultSprite;
     [SerializeField] private GameObject victoryParticleObj;
     [SerializeField] private GameObject resultObj;
 
@@ -58,35 +57,16 @@ public class UI_GameResult : UI_Base
         if (Managers.Game.GetStageStateType() == Define.StageStageType.Victory)
         {
             //∞‘¿”¿« ªÛ≈¬∞° Ω¬∏Æ∂Û∏È
-            failOrVictoryImg.sprite = resultSprite[(int)Managers.Game.GetStageStateType() - 1];
+            victoryObj.SetActive(true);
+            defeatObj.SetActive(false);
+
             victoryParticleObj.SetActive(true);
-            switch (Managers.Game.CurStageType)
-            {
-                case Define.SubStage.West:
-                    Managers.Game.WestStageClear = true;
-                    stageGold = Managers.Game.WestStageGold;
-                    stageBestTime = Managers.Game.WestStageBestTime;
-                    Managers.Game.WestStageBestTime = RefreshBestClearTime();
-                    speed = 500.0f;
 
-                    break;
-                case Define.SubStage.East:
-                    Managers.Game.EastStageClear = true;
-                    stageGold = Managers.Game.EastStageGold;
-                    stageBestTime = Managers.Game.EastStageBestTime;
-                    Managers.Game.EastStageBestTime = RefreshBestClearTime();
-                    speed = 850.0f;
-
-                    break;
-                case Define.SubStage.South:
-                    Managers.Game.SouthStageClear = true;
-                    stageGold = Managers.Game.SouthStageGold;
-                    stageBestTime = Managers.Game.SouthStageBestTime;
-                    Managers.Game.SouthStageBestTime = RefreshBestClearTime();
-                    speed = 1100.0f;
-
-                    break;
-            }
+            Managers.Game.OneChapterStageInfoList[(int)Managers.Game.CurStageType].clear = true;
+            stageGold = Managers.Game.OneChapterStageInfoList[(int)Managers.Game.CurStageType].StageData.gold;
+            stageBestTime = Managers.Game.OneChapterStageInfoList[(int)Managers.Game.CurStageType].bestTime;
+            Managers.Game.OneChapterStageInfoList[(int)Managers.Game.CurStageType].bestTime = RefreshBestClearTime();
+            speed = 1100.0f;
 
             Managers.Game.Gold += stageGold;
             Managers.Game.FileSave();
@@ -97,22 +77,13 @@ public class UI_GameResult : UI_Base
 
         else if (Managers.Game.GetStageStateType() == Define.StageStageType.Defeat)
         {
-            failOrVictoryImg.sprite = resultSprite[(int)Managers.Game.GetStageStateType() - 1];
-            switch (Managers.Game.CurStageType)
-            {
-                case Define.SubStage.West:
-                    stageGold = Managers.Game.WestStageGold / 10;     //Ω«∆–Ω√ ±‚∫ª∞ÒµÂ¿« 1/10»πµÊ
-                    break;
-                case Define.SubStage.East:
-                    stageGold = Managers.Game.EastStageGold / 10;
-                    break;
-                case Define.SubStage.South:
-                    stageGold = Managers.Game.SouthStageGold / 10;
-                    break;
-            }
+            victoryObj.SetActive(false);
+            defeatObj.SetActive(true);
+
+            stageGold = Managers.Game.OneChapterStageInfoList[(int)Managers.Game.CurStageType].StageData.gold / 10;   
             Managers.Game.Gold += stageGold;
             Managers.Game.FileSave();
-            speed = 200.0f;
+            speed = 1100.0f;
 
         }
 

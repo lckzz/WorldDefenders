@@ -18,7 +18,7 @@ public class LoadingScene : MonoBehaviour
 
 
     private Define.Scene nextScene;
-    private Define.SubStage subStage;
+    private Define.Stage subStage;
     private List<string> loadingStrs = new List<string>();
 
     private readonly string loadingStr1 = "Loading.";
@@ -115,17 +115,17 @@ public class LoadingScene : MonoBehaviour
     {
         switch (subStage)
         {
-            case Define.SubStage.West:
+            case Define.Stage.West:
                 loadingTitleTxt.text = "¼­ºÎ ½£ Áö´ë";
                 loadingTipTxt.text = westStageStr;
 
                 break;
-            case Define.SubStage.East:
+            case Define.Stage.South:
                 loadingTitleTxt.text = "µ¿ºÎ ½£ Áö´ë";
                 loadingTipTxt.text = eastStageStr;
 
                 break;
-            case Define.SubStage.South:
+            case Define.Stage.East:
                 loadingTitleTxt.text = "³²ºÎ ½£ Áö´ë";
                 loadingTipTxt.text = southStageStr;
 

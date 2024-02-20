@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +15,12 @@ public class UnitNode : MonoBehaviour
     private Image unitCoolImg;
     [SerializeField]
     private TextMeshProUGUI unitCostTxt;
+    private Image unitBgImg;
     private RectTransform unitRt;
+    private RectTransform unitImgRt;
+    [SerializeField] private Button unitSpawnBtn;
+    [SerializeField] private Sprite uniqueUnitSprite;
+
 
     [SerializeField]
     private float spawnCoolTime = 0.0f;
@@ -28,11 +34,14 @@ public class UnitNode : MonoBehaviour
     [SerializeField] Sprite unitMagicianimg;
     [SerializeField] Sprite unitCavalryimg;
 
+    private Vector3 cavalryVec = new Vector3(0.0f, -19.6f, 0.0f);
+    private Vector3 magicianVec = new Vector3(0.0f, -1.28f, 0.0f);
 
 
 
     UnitStat unitStat;
     private float unitCost = 0f;
+    private GameObject unitObj;
 
     bool coolCheck = false;     //쿨타임 체크
     Color grayColor = new Color32(99, 99, 99, 255);
@@ -44,6 +53,10 @@ public class UnitNode : MonoBehaviour
     void Start()
     {
         Init();
+
+
+        if (unitSpawnBtn != null)
+            unitSpawnBtn.onClick.AddListener(UnitSummonBtnClick);
     }
 
     // Update is called once per frame
@@ -82,6 +95,31 @@ public class UnitNode : MonoBehaviour
         //unitCost = 30.0f;
         if(unitRt == null)
             TryGetComponent(out unitRt);
+        if (unitImgRt == null)
+            unitImg?.TryGetComponent(out unitImgRt);
+
+    }
+
+    //유닛 버튼을 누를시 소환
+    private void UnitSummonBtnClick()
+    {
+        if (Managers.Game.GameEndResult())       //개임이 끝났으면 유닛버튼은 눌리지 않는다.
+            return;
+
+        unitObj = Managers.Resource.Load<GameObject>($"Prefabs/{unitStat.unitInGamePrefabs}");
+
+
+        if (coolCheck == false) //쿨타임이 돌고 있지않을 때
+        {
+            Managers.Game.UnitSummonEnqueue(unitObj, unitCost, this);
+            Managers.Sound.Play("Effect/UI_Click");
+        }
+        else
+        {
+            Managers.Sound.Play("Effect/Error");
+
+        }
+
     }
 
     public void UnitInit(UnitClass unitClass)      //생성하면서 유닛노드는 유닛에 맞게 갱신
@@ -89,89 +127,39 @@ public class UnitNode : MonoBehaviour
         unit = unitClass;
         unitStat = new UnitStat();
 
-        switch (unit)
+        if(Managers.Game.UnitStatDict.TryGetValue(unitClass,out Dictionary<int, UnitStat> unitStatDict))
+            unitStat = unitStatDict[Managers.Game.GetUnitLevel(unitClass)];
+
+        unitImg.sprite = Managers.Resource.Load<Sprite>($"Prefabs/{unitStat.unitSprite}");
+        unitCost = unitStat.cost;
+        unitCostTxt.text = unitCost.ToString();
+
+
+        if (unitImgRt == null)
+            unitImg?.TryGetComponent(out unitImgRt);
+
+
+        if (unitBgImg == null)
+            TryGetComponent(out unitBgImg);
+
+
+        if (unitClass == UnitClass.Cavalry)
         {
-            case UnitClass.Warrior:
-                if (Managers.Game.UnitWarriorLv < 5)
-                    unitImg.sprite = unitWarriorimgs[0];
-                else
-                    unitImg.sprite = unitWarriorimgs[1];
+            unitImgRt.anchoredPosition = cavalryVec;
+            unitBgImg.sprite = uniqueUnitSprite;
+        }
 
-                if (unitStat != null)
-                {
-                    unitStat = Managers.Data.warriorDict[Managers.Game.UnitWarriorLv];
-                    unitCost = unitStat.cost;
-                }
+        else if(unitClass == UnitClass.Magician)
+        {
+            unitImgRt.anchoredPosition = magicianVec;
+            unitBgImg.sprite = uniqueUnitSprite;
 
-
-                break;
-
-            case UnitClass.Archer:
-                if (Managers.Game.UnitArcherLv < 5)
-                    unitImg.sprite = unitArcherimgs[0];
-                else
-                    unitImg.sprite = unitArcherimgs[1];
-
-                if (unitStat != null)
-                {
-                    unitStat = Managers.Data.archerDict[Managers.Game.UnitArcherLv];
-                    unitCost = unitStat.cost;
-
-                }
-                break;
-
-            case UnitClass.Spear:
-                if (Managers.Game.UnitSpearLv < 5)
-                    unitImg.sprite = unitSpearimgs[0];
-                else
-                    unitImg.sprite = unitSpearimgs[1];
-
-                if (unitStat != null)
-                {
-                    unitStat = Managers.Data.spearDict[Managers.Game.UnitSpearLv];
-                    unitCost = unitStat.cost;
-
-                }
-                break;
-
-            case UnitClass.Priest:
-                if (Managers.Game.UnitPriestLv < 5)
-                    unitImg.sprite = unitPriestimgs[0];
-                else
-                    unitImg.sprite = unitPriestimgs[1];
-
-                if (unitStat != null)
-                {
-                    unitStat = Managers.Data.priestDict[Managers.Game.UnitPriestLv];
-                    unitCost = unitStat.cost;
-
-                }
-                break;
-            case UnitClass.Magician:
-                    unitImg.sprite = unitMagicianimg;
-                if (unitStat != null)
-                {
-                    unitStat = Managers.Data.magicDict[Managers.Game.UnitMagicianLv];
-                    unitCost = unitStat.cost;
-
-                }
-                break;
-
-            case UnitClass.Cavalry:
-                unitImg.sprite = unitCavalryimg;
-                if (unitStat != null)
-                {
-                    unitStat = Managers.Data.cavarlyDict[Managers.Game.UnitCarlvlry];
-                    unitCost = unitStat.cost;
-
-                }
-                break;
         }
 
 
-        unitCostTxt.text = unitCost.ToString();
-
     }
+
+
 
     public void UnitPositionSet(Vector3 pos)
     {

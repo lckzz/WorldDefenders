@@ -1,21 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using UnityEngine;
 
 public class SwordSummonController :SkillBase
 {
-    Unit owener;
+
     Unit enemy;
     Vector3 pos;
     Vector3 curPos;
-    float _speed = 20.0f;
     float _lifeTime = 3.0f;
     Animator anim;
 
-    public SwordSummonController() : base(Define.SkillType.Count)
-    {
-
-    }
     public void SetInfo(Unit owner, Unit enemy, SkillData data, Vector3 startPos)
     {
         //if (Managers.Data.magicSkillDict.TryGetValue(Unitlv, out SkillData data) == false)
@@ -24,7 +20,7 @@ public class SwordSummonController :SkillBase
         //    return;
         //}
 
-        owener = owner;
+        Owner = owner;
         this.enemy = enemy;
         pos = startPos;
         SkillData = data;
@@ -36,6 +32,7 @@ public class SwordSummonController :SkillBase
     {
         base.Init();
         TryGetComponent(out anim);
+        Debug.Log("테스틈ㄴㅇㅁㄴㅇ");
         StartDestroy(_lifeTime);
 
         return true;
@@ -63,7 +60,10 @@ public class SwordSummonController :SkillBase
         if (enemy != null && enemy.gameObject.tag.Contains("Monster"))
         {
             enemy.TryGetComponent(out Unit mon);
-            mon.OnDamage(100);
+            if (Owner.CriticalCheck())
+                mon.OnDamage(Mathf.RoundToInt(Owner.Att * (SkillData.skillValue * 0.01f)) * 2, 0, true);      //넉백은 없고 크리티컬은 터짐
+            else
+                mon.OnDamage(Mathf.RoundToInt(Owner.Att * (SkillData.skillValue * 0.01f)));      //노크리티컬
             Managers.Resource.ResourceEffect(enemy.transform.position, "HitEff");
 
         }

@@ -6,8 +6,8 @@ public class UI_PlayerController : MonoBehaviour
 {
     private Animator anim;
     [SerializeField] private RectTransform[] rtTrs;
-    Define.SubStage targetStage = Define.SubStage.South;
-    Define.SubStage curStage;
+    Define.Stage targetStage = Define.Stage.East;
+    Define.Stage curStage;
     [SerializeField] bool isGo = false;     //도착했는지 판단하는 변수
     [SerializeField] float speed = 5.0f;
 
@@ -64,12 +64,12 @@ public class UI_PlayerController : MonoBehaviour
                 if(this.gameObject.transform.localScale != rightMoveScale)
                     this.gameObject.transform.localScale = rightMoveScale;
 
-                if (gameObject.transform.position.x <= rtTrs[(int)Define.SubStage.East].transform.position.x - 5.0f)
+                if (gameObject.transform.position.x <= rtTrs[(int)Define.Stage.South].transform.position.x - 5.0f)
                 {
-                    if (!isDistance[(int)Define.SubStage.East - 1])
+                    if (!isDistance[(int)Define.Stage.South - 1])
                     {
-                        isDistance[(int)Define.SubStage.East - 1] = true;
-                        dir = rtTrs[(int)Define.SubStage.East].position - this.gameObject.transform.position;
+                        isDistance[(int)Define.Stage.South - 1] = true;
+                        dir = rtTrs[(int)Define.Stage.South].position - this.gameObject.transform.position;
                         norDir = dir.normalized;
                     }
 
@@ -77,27 +77,27 @@ public class UI_PlayerController : MonoBehaviour
 
 
                 }
-                else if (gameObject.transform.position.x <= rtTrs[(int)Define.SubStage.South].transform.position.x - 5.0f)
+                else if (gameObject.transform.position.x <= rtTrs[(int)Define.Stage.East].transform.position.x - 5.0f)
                 {
 
                     
 
-                    if (!isDistance[(int)Define.SubStage.South - 1])
+                    if (!isDistance[(int)Define.Stage.East - 1])
                     {
-                        isDistance[(int)Define.SubStage.South - 1] = true;
-                        dir = rtTrs[(int)Define.SubStage.South].position - this.gameObject.transform.position;
+                        isDistance[(int)Define.Stage.East - 1] = true;
+                        dir = rtTrs[(int)Define.Stage.East].position - this.gameObject.transform.position;
                         norDir = dir.normalized;
                     }
 
                     this.gameObject.transform.position += dir * Time.deltaTime * speed;
 
                 }
-                else if (gameObject.transform.position.x <= rtTrs[(int)Define.SubStage.Boss].transform.position.x - 5.0f)
+                else if (gameObject.transform.position.x <= rtTrs[(int)Define.Stage.Boss].transform.position.x - 5.0f)
                 {
-                    if (!isDistance[(int)Define.SubStage.Boss - 1])
+                    if (!isDistance[(int)Define.Stage.Boss - 1])
                     {
-                        isDistance[(int)Define.SubStage.Boss - 1] = true;
-                        dir = rtTrs[(int)Define.SubStage.Boss].position - this.gameObject.transform.position;
+                        isDistance[(int)Define.Stage.Boss - 1] = true;
+                        dir = rtTrs[(int)Define.Stage.Boss].position - this.gameObject.transform.position;
                         norDir = dir.normalized;
                     }
 
@@ -117,39 +117,39 @@ public class UI_PlayerController : MonoBehaviour
                 if (this.gameObject.transform.localScale != leftMoveScale)
                     this.gameObject.transform.localScale = leftMoveScale;
 
-                if (gameObject.transform.position.x > rtTrs[(int)Define.SubStage.South].transform.position.x + 5.0f)
+                if (gameObject.transform.position.x > rtTrs[(int)Define.Stage.East].transform.position.x + 5.0f)
                 {
 
-                    if (!isLeftDistance[(int)Define.SubStage.South])
+                    if (!isLeftDistance[(int)Define.Stage.East])
                     {
-                        isLeftDistance[(int)Define.SubStage.South] = true;
-                        dir = rtTrs[(int)Define.SubStage.South].position - this.gameObject.transform.position;
+                        isLeftDistance[(int)Define.Stage.East] = true;
+                        dir = rtTrs[(int)Define.Stage.East].position - this.gameObject.transform.position;
                         norDir = dir.normalized;
                     }
 
                     this.gameObject.transform.position += dir * Time.deltaTime * speed;
 
                 }
-                else if (gameObject.transform.position.x > rtTrs[(int)Define.SubStage.East].transform.position.x + 5.0f)
+                else if (gameObject.transform.position.x > rtTrs[(int)Define.Stage.South].transform.position.x + 5.0f)
                 {
 
-                    if (!isLeftDistance[(int)Define.SubStage.East])
+                    if (!isLeftDistance[(int)Define.Stage.South])
                     {
-                        isLeftDistance[(int)Define.SubStage.East] = true;
-                        dir = rtTrs[(int)Define.SubStage.East].position - this.gameObject.transform.position;
+                        isLeftDistance[(int)Define.Stage.South] = true;
+                        dir = rtTrs[(int)Define.Stage.South].position - this.gameObject.transform.position;
                         norDir = dir.normalized;
                     }
 
                     this.gameObject.transform.position += dir * Time.deltaTime * speed;
 
                 }
-                else if (gameObject.transform.position.x > rtTrs[(int)Define.SubStage.West].transform.position.x + 5.0f)
+                else if (gameObject.transform.position.x > rtTrs[(int)Define.Stage.West].transform.position.x + 5.0f)
                 {
 
-                    if (!isLeftDistance[(int)Define.SubStage.West])
+                    if (!isLeftDistance[(int)Define.Stage.West])
                     {
-                        isLeftDistance[(int)Define.SubStage.West] = true;
-                        dir = rtTrs[(int)Define.SubStage.West].position - this.gameObject.transform.position;
+                        isLeftDistance[(int)Define.Stage.West] = true;
+                        dir = rtTrs[(int)Define.Stage.West].position - this.gameObject.transform.position;
                         norDir = dir.normalized;
                     }
 
@@ -185,7 +185,7 @@ public class UI_PlayerController : MonoBehaviour
 
 
 
-    public void SetTarget(Define.SubStage targetStage,bool isGo)
+    public void SetTarget(Define.Stage targetStage,bool isGo)
     {
 
         if (this.isGo)

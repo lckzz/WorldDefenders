@@ -27,7 +27,6 @@ public class WeaknessDebuff : Debuff, ISubject
 
         if (debuffInstantiateisOn == false)
         {
-            Debug.Log("여기 디버프생성");
             debuffInstantiateisOn = true;
             weaknessDebuffGo = Managers.Resource.Instantiate(weaknessDebuffPrefab, debuffObj.transform);
 
@@ -58,10 +57,10 @@ public class WeaknessDebuff : Debuff, ISubject
         unitAtt -= Mathf.RoundToInt(floatidx);
 
         floatidx = (unitSpeed * (debuffIdx / 100));     //몬스터속도 75값을 구함
-        unitSpeed -= Mathf.RoundToInt(floatidx);
+        unitSpeed -= floatidx;
 
         Debug.Log("디버프" + debuffIdx / 100);
-        Debug.Log("디버프공격" + unitAtt);
+        Debug.Log("디버프공격" + unitSpeed);
 
         NotifyToObserver();     //변화된 값들을 옵저버들에게 전해줌
 

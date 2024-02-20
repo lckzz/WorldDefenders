@@ -199,8 +199,9 @@ public class PriestController : UnitController
             Managers.Resource.ResourceEffectAndSound(unitTarget.transform.position, soundPath, hitPath);
         }
 
-        else if(unit is MonsterController monsterCtrl)
+        else if(unit is MonsterBase monsterCtrl)
         {
+
             if (CriticalCheck())//true면 크리티컬데미지 false면 일반데미지
             {
                 int attack = att * 2;
@@ -223,6 +224,7 @@ public class PriestController : UnitController
 
     public override void OnAttack()
     {
+
         if (unitTarget != null)
         {
             float dist = (unitTarget.transform.position - this.gameObject.transform.position).magnitude;
@@ -231,7 +233,9 @@ public class PriestController : UnitController
         }
 
         else if (monTarget != null)
-             CriticalAttack(monTarget, priestSound, priestSound, priestHitEff);
+            CriticalAttack(monTarget, priestSound, priestSound, priestHitEff);
+
+        
 
         else if(monsterPortal != null)
             CriticalAttack(monsterPortal, priestSound, priestSound, priestHitEff);

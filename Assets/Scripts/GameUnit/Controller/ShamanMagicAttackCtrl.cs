@@ -86,7 +86,6 @@ public class ShamanMagicAttackCtrl : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D coll)
     {
 
-        Managers.Sound.Play("Effect/MagicianAttackHit");
         if (coll.tag == "Unit")
         {
 
@@ -95,6 +94,8 @@ public class ShamanMagicAttackCtrl : MonoBehaviour
             coll.TryGetComponent(out ctrl);
             if (ctrl != null && unitCtrl == ctrl)
             {
+                Managers.Sound.Play("Effect/MagicianAttackHit");
+
                 ctrl.OnDamage(monCtrl.Att);
 
                 Vector3 pos = coll.transform.position;
@@ -112,6 +113,8 @@ public class ShamanMagicAttackCtrl : MonoBehaviour
             coll.TryGetComponent<Tower>(out playerTower);
             if (playerTower != null)
             {
+                Managers.Sound.Play("Effect/MagicianAttackHit");
+
                 playerTower.TowerDamage(monCtrl.Att);
 
                 Vector3 pos = coll.transform.position;

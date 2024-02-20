@@ -5,81 +5,37 @@ using UnityEngine.UI;
 
 public abstract class UI_BaseSettingUnit : MonoBehaviour
 {
-    [SerializeField] protected Image unitImg;
+    [SerializeField] protected GameObject unitPosObj;
     [SerializeField] protected GameObject clickImgObj;
     [SerializeField] protected UnitClass e_UnitClass = UnitClass.Count;
     protected RectTransform rt;
+    protected UnitStat unitStat;
 
 
-    protected abstract void Init();
-
-    protected void UnitUISpriteInit(UnitClass uniClass, int unitLv, string pathLv1, string pathLv2)
+    protected virtual void Init()
     {
-        if (unitImg != null)
-            unitImg.gameObject.SetActive(true);
-        
+        if (unitStat == null)
+            unitStat = new UnitStat();
+    }
 
-        //유닛노드UI의 이미지 스프라이트를 바꿔준다.
-
-         switch (uniClass)
-        {
-            case UnitClass.Warrior:
-                if (unitLv < 5)
-                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Warrior/Lv1/{pathLv1}");
-                
-                else
-                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Warrior/Lv2/{pathLv2}");
-                
-                break;
-            case UnitClass.Archer:
-                if (unitLv < 5)
-                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Archer/Lv1/{pathLv1}");
+    protected virtual void UnitUISpriteInit()
+    {
+        if (e_UnitClass == UnitClass.Count)
+            return;
 
 
-                
-                else
-                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Archer/Lv2/{pathLv2}");
+        if (unitPosObj.transform.childCount > 0)     //만약 초기화하는데 유닛포스안에 하위오브젝트가 있다면
+            Destroy(unitPosObj.transform.GetChild(0).gameObject);           //그 오브젝트는 삭제해준다.
+
+        if (Managers.Game.UnitStatDict.TryGetValue(e_UnitClass, out Dictionary<int, UnitStat> unitStatDict))  //해당 유닛클래스에 맞는 유닛데이터를 받아온다.
+            unitStat = unitStatDict[Managers.Game.GetUnitLevel(e_UnitClass)];
 
 
-                
-                break;
-            case UnitClass.Spear:
-                if (unitLv < 5)
-                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Spear/Lv1/{pathLv1}");
-                else
-                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Spear/Lv2/{pathLv2}");
-                break;
 
-            case UnitClass.Priest:
-                if (unitLv < 5)
-                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Priest/Lv1/{pathLv1}");
-                else
-                    unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Priest/Lv2/{pathLv2}");
-                break;
-        }
 
     }
 
-    protected void UnitUISpriteInit(UnitClass uniClass, string path)
-    {
-        if (unitImg != null)
-            unitImg.gameObject.SetActive(true);
 
-
-        //유닛노드UI의 이미지 스프라이트를 바꿔준다.
-
-        switch (uniClass)
-        {
-            case UnitClass.Magician:
-                unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Magician/{path}");
-                break;
-            case UnitClass.Cavalry:
-                unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/UnitSprite/Cavalry/{path}");
-                break;
-
-        }
-
-    }
 
 
     public void ClickImageOnOff(bool check)

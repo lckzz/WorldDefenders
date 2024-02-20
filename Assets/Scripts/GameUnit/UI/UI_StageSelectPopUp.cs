@@ -76,7 +76,9 @@ public class UI_StageSelectPopUp : UI_Base
 
         for (int ii = 0; ii < onestageSels.Length; ii++)
         {
+            Debug.Log(onestageSels[ii].gameObject.name);
             OnClickStage(onestageSels[ii].gameObject, ii, GetStageInfo, UIEvent.PointerDown);
+
         }
         player.TryGetComponent(out ui_PlayerCtrl);
         StartBtnInActive();
@@ -103,7 +105,8 @@ public class UI_StageSelectPopUp : UI_Base
         UI_EventHandler evt = null;
         stageObj.TryGetComponent(out evt);
 
-        
+
+
 
         if (evt != null)
         {
@@ -127,6 +130,8 @@ public class UI_StageSelectPopUp : UI_Base
 
     void GetStageInfo(int ii)
     {
+
+
         if (gameStart == true)
             return;
 
@@ -152,9 +157,9 @@ public class UI_StageSelectPopUp : UI_Base
         {
             Managers.Sound.Play("Effect/StageClick");
 
-            Managers.Game.SetMonsterList(stagenode.StageMonsterList);  //정적변수에 몬스터의 정보들을 받아둔다.
-            if (ui_PlayerCtrl.IsGo == false)
-                SelectStageTextRefresh(Define.MainStage.One, Managers.Game.CurStageType);
+            Managers.Game.SetMonsterList(stagenode.StageMonsterList);  //몬스터의 정보들을 받아둔다.
+            //if (ui_PlayerCtrl.IsGo == false)
+            //    SelectStageTextRefresh(Define.Chapter.One, Managers.Game.CurStageType);
             ui_PlayerCtrl.SetTarget(Managers.Game.CurStageType, true);
             StartBtnActive();
             stagenode.ClickStageDoOn();
@@ -182,7 +187,7 @@ public class UI_StageSelectPopUp : UI_Base
 
     void TutorialGateClick(int gateIdx)
     {
-        if (Managers.Game.TutorialEnd == false && gateIdx == (int)SubStage.West)       //튜토리얼상태면서 서부스테이지를 클릭했다면
+        if (Managers.Game.TutorialEnd == false && gateIdx == (int)Stage.West)       //튜토리얼상태면서 서부스테이지를 클릭했다면
         {
             Managers.Game.TutorialEnd = true;
             Managers.Game.FileSave();
@@ -195,22 +200,22 @@ public class UI_StageSelectPopUp : UI_Base
 
 
 
-    void SelectStageTextRefresh(Define.MainStage mainstage, Define.SubStage subStage)
+    void SelectStageTextRefresh(Define.Chapter mainstage, Define.Stage subStage)
     {
-        if(mainstage == Define.MainStage.One)
+        if(mainstage == Define.Chapter.One)
         {
             switch (subStage)
             {
-                case Define.SubStage.West:
+                case Define.Stage.West:
                     curSelectText.text = "Stage 1 - 1";
                     break;
-                case Define.SubStage.East:
+                case Define.Stage.South:
                     curSelectText.text = "Stage 1 - 2";
                     break;
-                case Define.SubStage.South:
+                case Define.Stage.East:
                     curSelectText.text = "Stage 1 - 3";
                     break;
-                case Define.SubStage.Boss:
+                case Define.Stage.Boss:
                     curSelectText.text = "Stage 1 - 4";
                     break;
                  default:
@@ -229,7 +234,7 @@ public class UI_StageSelectPopUp : UI_Base
         if (Managers.Scene.CurrentScene is LobbyScene lobby)
         {
             lobby.LobbyUIOnOff(true);
-            lobby.LobbyTouchUnitInit();
+            lobby.LobbyUnitInit();
         }
 
 
@@ -337,6 +342,8 @@ public class UI_StageSelectPopUp : UI_Base
 
     private void StageDialogSelect()
     {
+        if (Managers.Game.OneChapterAllClear)               //1챕터 모두 완료하면 켜지는변수라 true가 되면 다이얼로그가 실행되지않음
+            return;
 
         if (Managers.Game.TutorialEnd == false)
         {
@@ -348,8 +355,8 @@ public class UI_StageSelectPopUp : UI_Base
 
         if (Managers.Game.StageAllClear())           //팝업에 들어왔을때 스테이지가 올클리어가 되면
         {
-            Managers.Game.Stage1AllClear = true;
-            dialogCtrl?.StartDialog(DialogKey.stage1Ending.ToString(), DialogType.Dialog, DialogSize.Large);
+            Managers.Game.OneChapterAllClear = true;   //올클리어시 월드맵에 들어오면 해당변수가 트루로 된다.
+            dialogCtrl?.StartDialog(DialogKey.stage1Ending.ToString(), DialogType.Dialog, DialogSize.Large);  //1챕터 엔딩 다이얼로그실행
 
         }
     }
@@ -396,7 +403,7 @@ public class UI_StageSelectPopUp : UI_Base
                         if (Managers.Scene.CurrentScene is LobbyScene lobby)
                         {
                             lobby.LobbyUIOnOff(true);
-                            lobby.LobbyTouchUnitInit();
+                            lobby.LobbyUnitInit();
                         }
 
 
@@ -412,7 +419,8 @@ public class UI_StageSelectPopUp : UI_Base
     private void OnDestroy()
     {
         //파괴되면 참조를 끊어준다.
-        Managers.Dialog.dialogEnded -= ShowTutorialArrow;
+        if(Managers.Instance != null)
+            Managers.Dialog.dialogEnded -= ShowTutorialArrow;
 
     }
 }

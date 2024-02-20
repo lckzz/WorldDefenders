@@ -6,18 +6,7 @@ public class DarkPowerController : SkillBase
 {
     //최대 3명의 적을 받아와서 해당 스킬의 위치로 끌어당긴뒤 3번공격하고 스턴 상태이상을 준다.
 
-
-    private Unit owener;
     [SerializeField] private List<Unit> enemy;
-
-
-
-
-
-    public DarkPowerController() : base(Define.SkillType.Count)
-    {
-
-    }
 
     public void SetInfo(Unit owner, List<Unit> enemy, SkillData data)
     {
@@ -27,11 +16,17 @@ public class DarkPowerController : SkillBase
         //    return;
         //}
 
-        owener = owner;
-        this.enemy = enemy;
+        Owner = owner;
+        this.enemy = new List<Unit>(enemy);
         SkillData = data;
+
+
         if (enemy.Count > 0)
             this.transform.position = enemy[0].transform.position;
+        else
+            GameObjectDestroy();
+
+
         // TODO : Data Parsing
     }
 
@@ -42,14 +37,14 @@ public class DarkPowerController : SkillBase
         base.UpdateController();
 
         //적이 사라지면 프리팹도 사라지게 해야댐
-        if (owener == null)
+        if (Owner == null)
             Destroy(this.gameObject);
 
 
-        if(enemy.Count > 0)
+        if (enemy.Count > 0)
         {
             //몬스터가 있다면
-            for(int ii = 0; ii < enemy.Count; ii++)
+            for (int ii = 0; ii < enemy.Count; ii++)
             {
                 if (!enemy[ii].IsDie)
                 {
@@ -57,6 +52,11 @@ public class DarkPowerController : SkillBase
                 }
             }
         }
+        else
+        {
+            enemy.Clear();
+        }
+
 
 
 
@@ -73,8 +73,12 @@ public class DarkPowerController : SkillBase
     {
         for (int ii = 0; ii < enemy.Count; ii++)
         {
-            enemy[ii].gameObject.TryGetComponent(out Unit mon);
-            mon.OnDamage(mon.Att);
+            enemy[ii].gameObject.TryGetComponent(out Unit unit);
+            if (Owner.CriticalCheck())
+                unit.OnDamage(Mathf.RoundToInt(Owner.Att * (SkillData.skillValue * 0.01f)) * 2, 0, true);      //넉백은 없고 크리티컬은 터짐
+            else
+                unit.OnDamage(Mathf.RoundToInt(Owner.Att * (SkillData.skillValue * 0.01f)));      //노크리티컬
+
             Managers.Resource.ResourceEffect(enemy[ii].gameObject.transform.position, "HitEff");
             
         }

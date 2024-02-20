@@ -157,7 +157,10 @@ public class ResourceManager
         if (time > .0f)
             Object.Destroy(go);
         else
+        {
             Object.Destroy(go, time);
+
+        }
     }
 
 

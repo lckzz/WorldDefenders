@@ -12,10 +12,12 @@ public class SwordSummonSkill : ActiveSkill
         for (int ii = 0; ii < enemys.Count; ii++)
         {
             //리스트안에 있는 수만큼 메테오를 소환
+
+            Debug.Log(ii);
             Vector3 pos = enemys[ii].transform.position;
             pos.y += 1.5f;
 
-            GenerateSword(1, unit, enemys[ii], pos);
+            GenerateSword(Managers.Game.SpecialUnitSkillLvDict[UnitClass.Cavalry], unit, enemys[ii], pos);
         }
     }
 
