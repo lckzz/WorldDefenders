@@ -12,11 +12,11 @@ public class DialogueCtrl : MonoBehaviour
     protected BaseDialogueUI dialogUI;
     private GameObject dialogUIGo;
 
+    public bool click = false;
 
     protected string dialogKey;
     private JSONNode node;
 
-    private bool click = false;
     private float typingSpeed = 25f;
 
     private Coroutine dialogCo;
@@ -29,17 +29,6 @@ public class DialogueCtrl : MonoBehaviour
     private Action yesDialogAction = null;
     private Action noDialogAction = null;
 
-
-    private void Start()
-    {
-    
-    }
-
-    //public void DialogNodeInit(string dialogKey,Define.DialogType dialogType)
-    //{
-    //    node = Managers.Dialog.DialogJsonParsing(dialogKey, dialogType);
-    //    Managers.Dialog.DialogSetting(dialogKey, node);
-    //}
 
 
     public void ChangeDialogPos(float yPos)
@@ -102,15 +91,15 @@ public class DialogueCtrl : MonoBehaviour
 
     }
 
-    void Update()
-    {
-        if(Input.GetMouseButtonDown(0))
-        {
-            click = true;
+    //void Update()
+    //{
+    //    if(Input.GetMouseButtonDown(0))
+    //    {
+    //        click = true;
+    //        Managers.Sound.Play("Effect/UI_Click");
 
-
-        }
-    }
+    //    }
+    //}
 
     IEnumerator StartDialogCo()
     {

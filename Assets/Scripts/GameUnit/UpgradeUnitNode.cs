@@ -93,54 +93,6 @@ public class UpgradeUnitNode : MonoBehaviour
         }
 
 
-        //if (this.gameObject.name.Contains("Warrior"))
-        //{
-        //    upgradeUnit = UnitClass.Warrior;
-        //    unitLv = Managers.Game.UnitWarriorLv;
-        //}
-        //else if (gameObject.name.Contains("Archer"))
-        //{
-        //    upgradeUnit = UnitClass.Archer;
-        //    unitLv = Managers.Game.UnitArcherLv;
-
-        //}
-        //else if (gameObject.name.Contains("Spear"))
-        //{
-        //    upgradeUnit = UnitClass.Spear;
-        //    unitLv = Managers.Game.UnitSpearLv;
-        //}
-        //else if (gameObject.name.Contains("Priest"))
-        //{
-        //    upgradeUnit = UnitClass.Priest;
-        //    unitLv = Managers.Game.UnitPriestLv;
-
-        //}
-        //else if (gameObject.name.Contains("Magician"))
-        //{
-        //    upgradeUnit = UnitClass.Magician;
-        //    unitLv = Managers.Game.UnitMagicianLv;
-
-        //}
-        //else if (gameObject.name.Contains("Cavalry"))
-        //{
-        //    upgradeUnit = UnitClass.Cavalry;
-        //    unitLv = Managers.Game.UnitCavalryLv;
-
-        //}
-
-
-        //if ((int)upgradeUnit < (int)UnitClass.Magician)
-        //    classObj = new GameObject[(int)Define.UnitUILv.Count];
-        //else 
-        //    classObj = new GameObject[(int)Define.UnitUILv.One];
-
-
-        //for (int ii = 0; ii < classObj.Length; ii++)
-        //{
-        //    if (classObj[ii] == null)
-        //        classObj[ii] = this.transform.GetChild(ii).gameObject;
-
-        //}
 
         RefreshUnitImg(unitLv);
     }
@@ -223,29 +175,6 @@ public class UpgradeUnitNode : MonoBehaviour
         Debug.Log(unitStat.level);
 
         Managers.Resource.Instantiate(unitStat.unitSpriteUIPrefabs, spriteUnitParentObj.transform);
-
-
-
-
-        //if(upgradeUnit < UnitClass.Magician)
-        //{
-        //    if (unitLv < 5)
-        //    {
-        //        classObj[(int)Define.UnitUILv.One].SetActive(true);
-        //        classObj[(int)Define.UnitUILv.Two].SetActive(false);
-        //        classObj[(int)Define.UnitUILv.Three].SetActive(false);
-
-        //    }
-
-        //    else
-        //    {
-
-        //        classObj[(int)Define.UnitUILv.Two].SetActive(true);
-        //        classObj[(int)Define.UnitUILv.One].SetActive(false);
-        //        classObj[(int)Define.UnitUILv.Three].SetActive(false);
-
-        //    }
-        //}
 
 
 

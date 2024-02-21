@@ -17,6 +17,10 @@ public class UnitSpawn
             spawnQueue.Enqueue(unitObj);
             node.CoolCheck = true;          //큐에 넣어주면서 유닛 쿨타임 온
         }
+        else
+        {
+            Managers.Sound.Play("Effect/Error");
+        }
     }
 
     public void UnitSummonDequeue(GameObject go, Transform[] tr)

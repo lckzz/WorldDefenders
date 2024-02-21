@@ -354,7 +354,7 @@ public class UI_UnitSettingWindow : UI_Base
 
             else if(curUnitSlotUI == null && curUnitNodeUI == null)
             {
-                Managers.Sound.Play("Effect/UI_Click");
+                //Managers.Sound.Play("Effect/UI_Click");
 
                 if (nodeUiClick)
                 {
@@ -410,6 +410,7 @@ public class UI_UnitSettingWindow : UI_Base
                 slotUiClick = false;
                 curUnitSlotUI?.ClickImageOnOff(slotUiClick);
                 curUnitSlotUI?.SlotClickUnitInfoBtnOnOff(false);
+                curUnitSlotUI?.RefreshUnitImg();
                 unitSlotUI = null;
                 curUnitSlotUI = null;
             }

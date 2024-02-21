@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public abstract class BaseDialogueUI : MonoBehaviour
+public abstract class BaseDialogueUI : MonoBehaviour,IPointerDownHandler
 {
     [SerializeField] protected GameObject dialogPanelObj;
     [SerializeField] protected TextMeshProUGUI dialogtxt;
@@ -59,5 +60,11 @@ public abstract class BaseDialogueUI : MonoBehaviour
             return true;
         else
             return false;
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        Managers.Sound.Play("Effect/UI_Click");
+        dialogCtrl.click = true;
     }
 }

@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using static Define;
+using static Unity.Collections.AllocatorManager;
 
 public class MaskDialogCtrl : DialogueCtrl
 {
@@ -157,5 +159,4 @@ public class MaskDialogCtrl : DialogueCtrl
     }
 
 
- 
 }

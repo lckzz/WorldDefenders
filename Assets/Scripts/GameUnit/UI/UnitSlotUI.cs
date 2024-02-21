@@ -19,6 +19,11 @@ public class UnitSlotUI : UI_BaseSettingUnit
     [SerializeField] private Button slotUnitInfoBtn;
     [SerializeField] private TextMeshProUGUI slotUnitLvTxt;
 
+    [SerializeField] private Image unitFrameImg;
+    [SerializeField] private Sprite specialUnitSprite;
+    [SerializeField] private Sprite basicUnitSprite;
+
+
     private RectTransform slotUnitClearRt;
     private RectTransform slotUnitInfoRt;
 
@@ -93,8 +98,7 @@ public class UnitSlotUI : UI_BaseSettingUnit
             selectImgObj.SetActive(false);
 
 
-
-
+        UnitSlotFrameImageChange();
         RefreshUnitImg();
     }
 
@@ -116,10 +120,13 @@ public class UnitSlotUI : UI_BaseSettingUnit
 
     public void RefreshUnitImg()
     {
+
         if(e_UnitClass == UnitClass.Count)
         {
             SlotUnitLvTxtObjOnOff(false);
             SlotClickUnitInfoBtnOnOff(false);       //슬롯클릭시 나오는  UI를 일단 꺼두기
+            UnitSlotFrameImageChange();
+
 
             if (unitPosObj.transform.childCount > 0)     //만약 초기화하는데 유닛포스안에 하위오브젝트가 있다면
                 Destroy(unitPosObj.transform.GetChild(0).gameObject);           //그 오브젝트는 삭제해준다.
@@ -133,6 +140,7 @@ public class UnitSlotUI : UI_BaseSettingUnit
         UnitUISpriteInit();
         SlotUnitLvInit(Managers.Game.GetUnitLevel(e_UnitClass));
 
+        UnitSlotFrameImageChange();
     }
 
 
@@ -188,7 +196,19 @@ public class UnitSlotUI : UI_BaseSettingUnit
         }
     }
 
+    private void UnitSlotFrameImageChange()
+    {
+        if (e_UnitClass >= UnitClass.Magician && UnitClass.Count > e_UnitClass)
+        {
+            unitFrameImg.sprite = specialUnitSprite;
+        }
+        else
+        {
+            unitFrameImg.sprite = basicUnitSprite;
 
+        }
+
+    }
 
 
 

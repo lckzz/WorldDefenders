@@ -24,6 +24,7 @@ public class LargeDialogUI : BaseDialogueUI
         if (dialogSelectYesBtn != null)
             dialogSelectYesBtn.onClick.AddListener(() =>
             {
+                Managers.Sound.Play("Effect/UI_Click");
                 OnYesBtnClick();
                 dialogPanelObj.SetActive(false);
                 HideDialogSelectBtns();
@@ -34,9 +35,9 @@ public class LargeDialogUI : BaseDialogueUI
         if (dialogSelectNoBtn != null)
             dialogSelectNoBtn.onClick.AddListener(() =>
             {
+                Managers.Sound.Play("Effect/UI_Click");
                 OnNoBtnClick();           
                 dialogPanelObj.SetActive(false);
-
                 dialogCtrl.StartDialog(noDialogKey.ToString(), DialogType.Dialog, DialogSize.Large);
 
             });

@@ -27,10 +27,12 @@ public class MonsterSpawn
     public void MonsterSpawnInit(Transform parentTr)
     {
         monNameList.Clear();
+        spawnList.Clear();
         //인게임 들어올 때 스테이지에 맞는 몬스터들을 받는다.
         for (int ii = 0; ii < Managers.Game.MonsterTypeList.Count; ii++)
         {
             monNameList.Add(Enum.GetName(typeof(Define.MonsterType), Managers.Game.MonsterTypeList[ii]));
+            Debug.Log(Managers.Game.MonsterTypeList[ii]);
             spawnList.Add(Managers.Resource.Load<GameObject>($"Prefabs/Monster/{monNameList[ii]}"));
         }
          

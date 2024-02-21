@@ -749,6 +749,7 @@ public class SpecialUnitController : UnitBase
         {
             if(!skillOn)     //스킬이 안돌았다면
             {
+                Debug.Log(cool);
                 cool -= Time.deltaTime;
 
                 if (cool <= 0.0f)        //0보다 작아지면

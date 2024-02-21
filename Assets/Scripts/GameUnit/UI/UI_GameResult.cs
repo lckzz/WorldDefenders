@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static System.Collections.Specialized.BitVector32;
 
-public class UI_GameResult : UI_Base
+public class UI_GameResult : UI_Base,IOpenPanel
 {
 
     [SerializeField]
@@ -28,7 +29,9 @@ public class UI_GameResult : UI_Base
     [SerializeField] private GameObject victoryParticleObj;
     [SerializeField] private GameObject resultObj;
 
-    private RectTransform resultRt;
+
+
+    [SerializeField] private RectTransform resultRt;
 
     private bool exitFade = false;
     private bool retryFade = false;
@@ -122,6 +125,8 @@ public class UI_GameResult : UI_Base
 
     private void OnEnable()
     {
+
+        OpenRectTransformScaleSet();
         Managers.UI.GetSceneUI<UI_GamePlay>().gameObject.SetActive(false);
         TimerSetting();
         ResultSound();
@@ -321,5 +326,21 @@ public class UI_GameResult : UI_Base
 
     }
 
+    public void OpenRectTransformScaleSet()
+    {
+        if (resultRt == null)
+            resultObj.TryGetComponent(out resultRt);
 
+        resultRt.localScale = new Vector3(0, 1, 1);
+
+        if (Managers.Game.GetStageStateType() == Define.StageStageType.Victory)
+        {
+            resultRt.DOScale(new Vector3(1.0f, 1.0f, 1.0f), 0.2f).SetEase(Ease.OutQuad);
+        }
+        else
+        {
+            resultRt.DOScale(new Vector3(1.0f, 1.0f, 1.0f), 0.7f).SetEase(Ease.OutBounce);
+
+        }
+    }
 }

@@ -150,9 +150,12 @@ public class StageNode : MonoBehaviour
         {
             //딕셔너리를 돌아서
             if(idx >= 0)  //0보다 같거나 크면
+            {
                 stageMonsterList.Add(StageEnumToInt<Define.MonsterType>(idx));      //스테이지 몬스터리스트에 넣어주기
+            }
 
-            
+
+
         }
 
             
