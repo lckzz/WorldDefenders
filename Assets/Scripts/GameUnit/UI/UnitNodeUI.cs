@@ -36,9 +36,9 @@ public class UnitNodeUI : UI_BaseSettingUnit
 
         UnitUISpriteInit();
 
+        unitLvTxt.text = $"<#FF9F13> Lv</color> {Managers.Game.GetUnitLevel(e_UnitClass)}";
 
-
-        if(e_UnitClass >= UnitClass.Magician)  //스페셜유닛이라면
+        if (e_UnitClass >= UnitClass.Magician)  //스페셜유닛이라면
         {
             unitFrameImg.sprite = specialUnitSprite;
         }
@@ -72,20 +72,6 @@ public class UnitNodeUI : UI_BaseSettingUnit
 
 
 
-    //private void Update()
-    //{
-        
-    //}
-
-
-    //private void UnitNodeUISpriteInit(int unitLv, string pathLv1, string pathLv2)
-    //{
-    //    //유닛노드UI의 이미지 스프라이트를 바꿔준다.
-    //    if (unitLv < 5)
-    //        unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{pathLv1}");
-    //    else
-    //        unitImg.sprite = Managers.Resource.Load<Sprite>($"Sprite/{pathLv2}");
-    //}
 
 
     public UnitClass SetUnitClass(UnitClass uniclass)

@@ -90,12 +90,6 @@ public class AttackAfterImageController : SkillBase
 
             coll.TryGetComponent(out Unit unit);
 
-
-
-            //if (skillAttackHitCo != null)
-            //    StopCoroutine(skillAttackHitCo);
-
-
             StartCoroutine(SkillAttackHit(unit));
             hitCount++;
             

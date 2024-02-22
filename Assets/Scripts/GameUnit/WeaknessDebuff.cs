@@ -51,16 +51,13 @@ public class WeaknessDebuff : Debuff, ISubject
         originalUnitAtt = unitAtt;
 
         //디버프당하면 속도랑 공격력이 낮아짐
-        //unitSpeed -= unitSpeed * (debuffIdx / 100);
-        //unitAtt -= (int)(unitAtt * (debuffIdx / 100));
+
         float floatidx = (unitAtt * (debuffIdx / 100));     //몬스터공격력 75값을 구함
         unitAtt -= Mathf.RoundToInt(floatidx);
 
         floatidx = (unitSpeed * (debuffIdx / 100));     //몬스터속도 75값을 구함
         unitSpeed -= floatidx;
 
-        Debug.Log("디버프" + debuffIdx / 100);
-        Debug.Log("디버프공격" + unitSpeed);
 
         NotifyToObserver();     //변화된 값들을 옵저버들에게 전해줌
 
@@ -85,11 +82,6 @@ public class WeaknessDebuff : Debuff, ISubject
 
     public override void DebuffOnOff(bool isOn,Unit unit = null) 
     {
-        Debug.Log("여기에옴ㄴㅇㄴㅁㅇㄴㅁ" + weaknessDebuffGo);
-        Debug.Log("여기에옴ㄴㅇㄴㅁㅇㄴㅁ2222" + debuffUI);
-        Debug.Log("인스탄트" + debuffInstantiateisOn);
-
-
         if (debuffUI == null)
             return;
 
@@ -99,7 +91,6 @@ public class WeaknessDebuff : Debuff, ISubject
             DebuffInstantiate();
         else
         {
-            Debug.Log("여기 디버프 다사라짐" );
 
             Managers.Resource.Destroy(weaknessDebuffGo);
             debuffUI?.DebuffUIDestroy();

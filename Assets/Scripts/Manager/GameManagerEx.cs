@@ -75,8 +75,8 @@ public class GameManagerEx
     private MonsterEvent monsterEvent = new MonsterEvent();
     private StageState stageState = new StageState();
 
-    private int unitMagicianSkillLv = 0;                //따로 저장되지않고 해당 유닛의 레벨에 따라서 시작할때 셋팅됨
-    private int unitCavalrySkillLv = 0;                 //따로 저장되지않고 해당 유닛의 레벨에 따라서 시작할때 셋팅됨
+    private int unitMagicianSkillLv = 1;                //따로 저장되지않고 해당 유닛의 레벨에 따라서 시작할때 셋팅됨
+    private int unitCavalrySkillLv = 1;                 //따로 저장되지않고 해당 유닛의 레벨에 따라서 시작할때 셋팅됨
 
     private const int NORMAL_SKELETON_ID = 0001;        //몬스터들의 고유 넘버
     private const int BOW_SKELETON_ID = 0002;

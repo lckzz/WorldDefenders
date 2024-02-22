@@ -193,53 +193,6 @@ public class UI_GamePlay : UI_Base
         }
 
 
-
-        //for (int i = 0; i < uiUnit.Length; i++)
-        //{
-        //    uiUnit[i].TryGetComponent<UnitNode>(out UnitNode node);
-
-
-        //    //switch (node.Unit)
-        //    //{
-        //    //    case UnitClass.Warrior:
-        //    //        if(Managers.Game.UnitWarriorLv < 5)
-        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Warrior/WarriorUnitLv1");
-        //    //        else if(Managers.Game.UnitWarriorLv >= 5)
-        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Warrior/WarriorUnitLv2");
-        //    //        break;
-
-        //    //    case UnitClass.Archer:
-        //    //        if(Managers.Game.UnitArcherLv < 5)
-        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Archer/ArcherUnitLv1");
-        //    //        else
-        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Archer/ArcherUnitLv2");
-
-        //    //        break;
-
-        //    //    case UnitClass.Spear:
-        //    //        if(Managers.Game.UnitSpearLv < 5)
-        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Spear/SpearUnitLv1");
-        //    //        else
-        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Spear/SpearUnitLv2");
-
-        //    //        break;
-
-        //    //    case UnitClass.Priest:
-        //    //        if (Managers.Game.UnitPriestLv < 5)
-        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Priest/PriestUnitLv1");
-        //    //        else
-        //    //            UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/Priest/PriestUnitLv2");
-
-        //    //        break;
-        //    //    case UnitClass.Magician:
-        //    //        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/MagicianUnit");
-        //    //        break;
-        //    //    case UnitClass.Cavalry:
-        //    //        UnitButtonSetting(i, "Prefabs/Unit/InGameUnit/CavalryUnit");
-        //    //        break;
-        //    //}
-        //}
-
         StartUISet = StartCoroutine(StartUnitNodeUIMove());
 
 
@@ -309,10 +262,10 @@ public class UI_GamePlay : UI_Base
     }
 
 
-    private void SkillUIInit()
+    private void SkillUIInit()              //스킬 UI를 초기화시켜준다.
     {
         skillsprites = new Sprite[(int)Define.PlayerSkill.Count];
-        for(int ii = 0; ii < skillsprites.Length; ii++)
+        for(int ii = 0; ii < skillsprites.Length; ii++)     //스킬이미지들을 넣어준다.
         {
             switch (ii)
             {
@@ -327,7 +280,7 @@ public class UI_GamePlay : UI_Base
                     break;
             }
         }
-        skillImg.sprite = skillsprites[(int)Managers.Game.CurPlayerEquipSkill];
+        skillImg.sprite = skillsprites[(int)Managers.Game.CurPlayerEquipSkill];  //현재 장착하고있는 스킬들을 이미지에 넣어준다.
 
         
     }
@@ -353,29 +306,6 @@ public class UI_GamePlay : UI_Base
         
     }
 
-    //private void ButtonEventActionStringInt(GameObject obj, string path,int idx, Action<string,int> action = null, UIEvent type = UIEvent.PointerDown)
-    //{
-    //    UI_EventHandler evt;
-    //    obj.TryGetComponent(out evt);
-
-
-    //    switch (type)
-    //    {
-    //        case UIEvent.PointerDown:
-    //            evt.OnPointerDownUnitHandler -= (unUsedPath,unUsedIdx) => action(path,idx);
-    //            evt.OnPointerDownUnitHandler += (unUsedPath,unUsedIdx) => action(path,idx);
-                
-    //            break;
-
-    //    }
-
-    //}
-
-
-    //private void UnitButtonSetting(int i , string path)
-    //{
-    //    ButtonEventActionStringInt(uiUnit[i].gameObject, path, i, UnitSummonBtnClick, UIEvent.PointerDown);
-    //}
 
     private void InGameSetting()
     {
@@ -443,22 +373,20 @@ public class UI_GamePlay : UI_Base
         if (skillOnOff)
             return;
 
-
-
-        player.ActiveSkillUse();
+        player.ActiveSkillUse();                //플레이어에서 작동할 스킬을 사용한다.
 
         //스킬을 누르면 해당 스킬의 쿨타임을 받고
         skillCoolTime = player.SkillData.skillCoolTime;
         skillOnOff = true; //스킬이 나가서 쿨타임 시작
-        skillCoolImg.gameObject.SetActive(skillOnOff);
+        skillCoolImg.gameObject.SetActive(skillOnOff);      //쿨타임을 켜준다.
 
         if(Managers.Game.CurPlayerEquipSkill != Define.PlayerSkill.Heal) //폭발화살일때 약화일때 지속시간을 보여준다.
         {
             skillDurationObj.SetActive(true);
-            skillDurationImg.sprite = skillsprites[(int)Managers.Game.CurPlayerEquipSkill];
+            skillDurationImg.sprite = skillsprites[(int)Managers.Game.CurPlayerEquipSkill];             //지속시간을 켜주고 이미지도 현재 스킬로 바꿔준다.
 
             if (skillDurationCo != null)
-                StopCoroutine(skillDurationCo);
+                StopCoroutine(skillDurationCo);                         //지속시간 코루틴
 
             skillDurationCo = StartCoroutine(SkillDurationTime());
 

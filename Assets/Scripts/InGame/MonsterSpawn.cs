@@ -28,6 +28,9 @@ public class MonsterSpawn
     {
         monNameList.Clear();
         spawnList.Clear();
+        eliteSpawn = null;
+        bossSpawn = null;
+
         //인게임 들어올 때 스테이지에 맞는 몬스터들을 받는다.
         for (int ii = 0; ii < Managers.Game.MonsterTypeList.Count; ii++)
         {

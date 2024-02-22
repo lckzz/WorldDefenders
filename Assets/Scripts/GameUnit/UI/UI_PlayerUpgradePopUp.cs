@@ -179,14 +179,14 @@ public class UI_PlayerUpgradePopUp : UI_Base,IOpenPanel
 
 
 
-        if (towerLv == 3)  //3레벨 달성시 폭발화살 레벨업!해서 개방
+        if (towerLv == 3 && Managers.Game.FireArrowSkillLv < 1)  //3레벨 달성시 폭발화살 레벨업!해서 개방
         {
             Managers.Game.FireArrowSkillLv = 1;
             skillOpen.SetActive(true);
             skillOpenNotice.SetPlayerSkillInfo(Define.PlayerSkill.FireArrow);
         }
 
-        if (towerLv == 7) //7레벨 달성시 약화 레벨업해서 개방
+        if (towerLv == 7 && Managers.Game.WeaknessSkillLv < 1) //7레벨 달성시 약화 레벨업해서 개방
         {
             Managers.Game.WeaknessSkillLv = 1;
             skillOpen.SetActive(true);

@@ -211,11 +211,11 @@ public class PlayerController : MonoBehaviour
         ready1 = true;
         aimMove = true;
         lineSet = true;
-        if (lineSet)
+        if (lineSet)                    //라인렌더러를 생성할지 판단
             lr.enabled = true;
 
 
-        PlayerAimOnOff(true);
+        PlayerAimOnOff(true);           //플레이어의 에임을 켜준다.
 
 
     }
@@ -241,17 +241,17 @@ public class PlayerController : MonoBehaviour
         dist = vecDir.magnitude;
         dir = vecDir.normalized;
 
-        ArrowInstance();
+        ArrowInstance();                                            //화살을 생성
 
         playerAimTr.position = startPlayerAimTr;
-        PlayerAimOnOff(false);
+        PlayerAimOnOff(false);                                      //에임을 꺼준다.
 
-        ready1 = false;
+        ready1 = false;                                             //라인렌더러도 꺼준다.
         lineSet = false;
         if (!lineSet)
             lr.enabled = false;
 
-        if (fireArrowCount > 0)
+        if (fireArrowCount > 0)                                             //폭발화살이 켜져있다면 폭발화살 카운트를 까준다.
             fireArrowCount--;
 
     }
