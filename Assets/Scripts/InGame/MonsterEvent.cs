@@ -61,7 +61,7 @@ public class MonsterEvent
         } 
     }
 
-    public void EventInit()
+    public void EventInit()             //이벤트의 변수들을 초기화해준다.
     {
         monSpawnType = Define.MonsterSpawnType.Normal;
         monsterWaveTime = 30.0f;
@@ -115,14 +115,14 @@ public class MonsterEvent
         //일반 이벤트중일때
 
         //Debug.Log(monsterWaveTime);
-        monsterWaveTime -= Time.deltaTime;
-        if(monsterWaveTime <= 0.0f)
+        monsterWaveTime -= Time.deltaTime;      //몬스터 웨이브 시간이 흐른다.
+        if(monsterWaveTime <= 0.0f)         //몬스터 웨이브시간이 되면
         {
-            monsterWaveTime = 0.0f;
-            monsterWaveisOn = true;
-            monsterWaveDuration = 15.0f;
-            MonSpawnType = Define.MonsterSpawnType.Wave;
-            action(warningTxt);  //받아온 액션함수를 사용
+            monsterWaveTime = 0.0f;     
+            monsterWaveisOn = true;         //몬스터웨이브를 켜준다.
+            monsterWaveDuration = 15.0f;      //해당 시간동안 웨이브
+            MonSpawnType = Define.MonsterSpawnType.Wave;        //타입을 웨이브로 바꿔준다.
+            action(warningTxt);  //받아온 액션함수를 사용(경고 텍스트가 나타난다)
             //Debug.Log("여기 웨이브");
         }
 
@@ -134,14 +134,14 @@ public class MonsterEvent
     public void MonsterWave()             //일반적인 이벤트
     {
         //웨이브 이벤트중이라면
-        monsterWaveDuration -= Time.deltaTime;
-        if(monsterWaveDuration <= 0.0f)
+        monsterWaveDuration -= Time.deltaTime;          //웨이브 지속시간
+        if(monsterWaveDuration <= 0.0f)         //지속시간이 다되면
         {
 
-            monsterWaveisOn = false;
+            monsterWaveisOn = false;            //웨이브를 꺼준다.
             monsterWaveDuration = 0.0f;
-            monsterWaveTime = 30.0f;
-            MonSpawnType = Define.MonsterSpawnType.Normal;
+            monsterWaveTime = 30.0f;            //웨이브시간을 다시 설정해준다.
+            MonSpawnType = Define.MonsterSpawnType.Normal;      //일반상태로 변환한다.
             
 
         }
@@ -149,18 +149,18 @@ public class MonsterEvent
     }
 
 
-    public void EliteMonsterEvent(Action<string> action, string warningTxt)
+    public void EliteMonsterEvent(Action<string> action, string warningTxt)         //엘리트몬스터 등장 이벤트
     {
-        eliteMonsterisOn = true;
-        action(warningTxt);
+        eliteMonsterisOn = true;            //엘리트몬스터 등장을 켜준다.
+        action(warningTxt);                 //경고텍스트를 보여준다.
 
-        Managers.Game.EliteMonsterSpawn();
+        Managers.Game.EliteMonsterSpawn();      //엘리트몬스터를 소환한다.
 
     }
 
     public void FinalMonsterWave(Action<string> action, string warningTxt, int eliteMonsterCount)  //일반 스테이지에서 마지막 웨이브
     {
-        if (finalEliteMonsterCount >= eliteMonsterCount)
+        if (finalEliteMonsterCount >= eliteMonsterCount)            //마지막몬스터갯수가 설정된값보다 많아지면 리턴
             return;
 
         if(finalOneWarningUI == false)
@@ -187,21 +187,14 @@ public class MonsterEvent
         else           //보스 스테이지일떄는 보스한마리만 소환함
         {
 
-            BossFinalWave();
+            Managers.Game.BossMonsterSpawn();  //해당 보스몬스터를 소환함
             finalEliteMonsterCount++;
 
         }
 
 
 
-    }
 
-
-    private void BossFinalWave()
-    {
-        Managers.Game.BossMonsterSpawn();  //해당 보스몬스터를 소환함
-
-    }
 
 
 }
