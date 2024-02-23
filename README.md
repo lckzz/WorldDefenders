@@ -2,6 +2,8 @@
  
 ![Play InGame](https://postfiles.pstatic.net/MjAyNDAyMjRfMTc2/MDAxNzA4NzA3Mzc1NDI5.xU7Wta7w_enRNSoR12hBvjjrHPOyUyb7_jfS9hsG5wMg.4Absw8zSfU2wIh6384bPWnYsyHZU0xRil-DE5MxtJ0Ig.PNG/play.PNG?type=w966)
 
+### [Play Video(YouTube)](https://www.youtube.com/watch/T7jK_kP1Ko8)
+
 __Unity로 만든 유닛디펜스게임 입니다__
 
 ### __플레이방식__
@@ -33,4 +35,5 @@ __구현 목록__
 - 스테이지 이벤트 및 몬스터 스폰
 - 타임라인을 이용한 게임시작,패배,승리연출
 - 다이얼로그(튜토리얼,엔딩)
-  
+
+
