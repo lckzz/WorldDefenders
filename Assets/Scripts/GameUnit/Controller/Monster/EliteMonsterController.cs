@@ -100,7 +100,6 @@ public class EliteMonsterController : MonsterBase
         if (startCoolTimeCo != null)
             StopCoroutine(startCoolTimeCo);
 
-        startCoolTimeCo = StartCoroutine(UnitSkillCoolTime(coolTime));
         if(!isSummon)
             appearDust?.SetActive(true);
 

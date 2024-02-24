@@ -163,7 +163,7 @@ public class MonsterEvent
         if (finalEliteMonsterCount >= eliteMonsterCount)            //마지막몬스터갯수가 설정된값보다 많아지면 리턴
             return;
 
-        if(finalOneWarningUI == false)
+        if (finalOneWarningUI == false)
         {
             finalOneWarningUI = true;
             action(warningTxt);       //경고창 띄우기
@@ -171,7 +171,7 @@ public class MonsterEvent
 
         }
 
-        if(Managers.Game.CurStageType != Define.Stage.Boss)         //보스 스테이지가 아닐때는 엘리트몹 3마리 소환함
+        if (Managers.Game.CurStageType != Define.Stage.Boss)         //보스 스테이지가 아닐때는 엘리트몹 3마리 소환함
         {
 
             finalEliteMonsterTime -= Time.deltaTime;
@@ -196,5 +196,5 @@ public class MonsterEvent
 
 
 
-
+    }
 }

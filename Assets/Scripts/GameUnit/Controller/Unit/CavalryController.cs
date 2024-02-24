@@ -27,6 +27,12 @@ public class CavalryController : SpecialUnitController
     // Update is called once per frame
     void FixedUpdate()
     {
+
+        if (Managers.Game.GameEndResult())       //게임이 끝났으면 리턴
+            return;
+
+
+
         EnemySensor();
         UnitStateCheck();
     }

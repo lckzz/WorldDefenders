@@ -37,6 +37,7 @@ public class EliteWarriorController : EliteMonsterController
 
         swordPos = transform.Find("SwordPos");
         speechBubble.SpeechBubbleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
+        startCoolTimeCo = StartCoroutine(UnitSkillCoolTime(coolTime));
 
 
     }

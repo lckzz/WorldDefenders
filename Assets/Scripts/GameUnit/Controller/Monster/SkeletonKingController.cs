@@ -13,7 +13,7 @@ public class SkeletonKingController : EliteMonsterController
     //private GameObject miniPortal3;
     //¹Ì´Ï Æ÷Å»
 
-    private float skeletonKingFristSkillCoolTime = 5.0f;
+    private float skeletonKingFristSkillCoolTime = 3.0f;
 
     private readonly string skillDialogSubKey = "skeletonKingSkillDialog";
     private readonly string appearDialogSubKey = "skeletonKingAppear";
@@ -58,6 +58,9 @@ public class SkeletonKingController : EliteMonsterController
             //    miniPortal2 = transform.GetChild(ii).gameObject;
 
         }
+
+        startCoolTimeCo = StartCoroutine(UnitSkillCoolTime(coolTime));
+
 
 
     }

@@ -37,6 +37,9 @@ public class EliteCavalryController : EliteMonsterController
 
         speechBubble.SpeechBubbleOn(monsterAppearTitleKey, appearDialogSubKey,appearProbability);
 
+        startCoolTimeCo = StartCoroutine(UnitSkillCoolTime(coolTime));
+
+
     }
 
 

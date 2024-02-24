@@ -37,6 +37,7 @@ public class EliteShamanController : EliteMonsterController
         magicPos = transform.Find("MagicPos");
 
         speechBubble.SpeechBubbleOn(monsterAppearTitleKey, appearDialogSubKey, appearProbability);
+        startCoolTimeCo = StartCoroutine(UnitSkillCoolTime(coolTime));
 
 
     }
