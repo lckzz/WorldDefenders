@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Unity.Burst.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 using static Define;
